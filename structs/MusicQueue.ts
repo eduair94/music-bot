@@ -29,8 +29,8 @@ import { QueueOptions } from "../interfaces/QueueOptions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
-import { Song } from "./Song";
 import { safeReply } from "../utils/safeReply";
+import { Song } from "./Song";
 
 const wait = promisify(setTimeout);
 
@@ -190,7 +190,6 @@ export class MusicQueue {
 
     try {
       const resource = await next.makeResource();
-
       this.resource = resource!;
       this.player.play(this.resource);
       this.resource.volume?.setVolumeLogarithmic(this.volume / 100);

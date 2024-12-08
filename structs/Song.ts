@@ -1,9 +1,9 @@
-import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
+import { AudioResource, createAudioResource } from "@discordjs/voice";
+import ytdl from "@distube/ytdl-core"; // ESM
+import { stream, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
-import { videoPattern, isURL } from "../utils/patterns";
-
-const { stream, video_basic_info } = require("play-dl");
+import { isURL, videoPattern } from "../utils/patterns";
 
 export interface SongData {
   url: string;
@@ -32,8 +32,8 @@ export class Song {
 
       return new this({
         url: songInfo.video_details.url,
-        title: songInfo.video_details.title,
-        duration: parseInt(songInfo.video_details.durationInSec)
+        title: songInfo.video_details.title as string,
+        duration: parseInt(songInfo.video_details.durationInSec.toString()) as number
       });
     } else {
       const result = await youtube.searchOne(search);
@@ -54,8 +54,8 @@ export class Song {
 
       return new this({
         url: songInfo.video_details.url,
-        title: songInfo.video_details.title,
-        duration: parseInt(songInfo.video_details.durationInSec)
+        title: songInfo.video_details.title as string,
+        duration: parseInt(songInfo.video_details.durationInSec.toString())
       });
     }
   }
@@ -66,12 +66,12 @@ export class Song {
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
     if (source === "youtube") {
-      playStream = await stream(this.url);
+      playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
     }
 
-    if (!stream) return;
+    if (!playStream || !stream) return;
 
-    return createAudioResource(playStream.stream, { metadata: this, inputType: playStream.type, inlineVolume: true });
+    return createAudioResource(playStream, { metadata: this });
   }
 
   public startMessage() {
