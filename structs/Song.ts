@@ -27,10 +27,11 @@ export class Song {
 
 
   public async set_cookies() {
+    console.log("Set cookies");
     // read cookies.txt file
     try {
       const cookies = fs.readFileSync("./cookies.txt", "utf-8");
-
+      console.log("cookies", cookies);
       // pass them to play-dl
       setToken({
         youtube: {
