@@ -61,7 +61,7 @@ export class Song {
       const cookies = fs.readFileSync("./cookies.txt", "utf-8");
       console.log("cookies", cookies);
       const parsedCookies = parseCookies(cookies);
-      this.ytdl = ytdl.createAgent(parsedCookies);
+      Song.ytdl = ytdl.createAgent(parsedCookies);
       // pass them to play-dl
       setToken({
         youtube: {
@@ -122,6 +122,7 @@ export class Song {
 
     if (source === "youtube") {
       if (Song.ytdl) {
+        console.log("Use song ytdl");
         // Use the agent to create the stream
         playStream = ytdl(this.url, { 
           filter: "audioonly", 
