@@ -17,16 +17,17 @@ export class Song {
   public readonly title: string;
   public readonly duration: number;
 
+  public static setCookies = false
+
   public constructor({ url, title, duration }: SongData) {
     this.url = url;
     this.title = title;
     this.duration = duration;
-
-    this.set_cookies();
   }
 
 
-  public async set_cookies() {
+  public static async set_cookies() {
+    if(this.setCookies) return;
     console.log("Set cookies");
     // read cookies.txt file
     try {
@@ -38,6 +39,7 @@ export class Song {
           cookie: cookies
         }
       })
+      this.setCookies = true;
     } catch (e) {
       console.error(e);
     }
@@ -45,6 +47,7 @@ export class Song {
 
   public static async from(url: string = "", search: string = "") {
     const isYoutubeUrl = videoPattern.test(url);
+    await this.set_cookies();
 
     let songInfo;
 
@@ -83,6 +86,7 @@ export class Song {
 
   public async makeResource(): Promise<AudioResource<Song> | void> {
     let playStream;
+    await Song.set_cookies();
 
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
