@@ -1,5 +1,5 @@
 import { AudioResource, createAudioResource } from "@discordjs/voice";
-import ytdl from "@distube/ytdl-core"; // ESM
+import { Agent, createAgent, parse } from "@distube/ytdl-core"; // ESM
 import fs from 'fs';
 import { setToken, stream, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
@@ -19,6 +19,8 @@ export class Song {
 
   public static setCookies = false
 
+  public static ytdl: Agent
+
   public constructor({ url, title, duration }: SongData) {
     this.url = url;
     this.title = title;
@@ -33,12 +35,16 @@ export class Song {
     try {
       const cookies = fs.readFileSync("./cookies.txt", "utf-8");
       console.log("cookies", cookies);
+      this.ytdl = createAgent(parse(cookies));
       // pass them to play-dl
       setToken({
         youtube: {
           cookie: cookies
         }
       })
+
+
+
       this.setCookies = true;
     } catch (e) {
       console.error(e);
@@ -91,7 +97,7 @@ export class Song {
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
     if (source === "youtube") {
-      playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+      playStream = Song.ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
     }
 
     if (!playStream || !stream) return;
