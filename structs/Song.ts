@@ -1,10 +1,35 @@
 import { AudioResource, createAudioResource } from "@discordjs/voice";
-import { Agent, createAgent, parse } from "@distube/ytdl-core"; // ESM
+import ytdl from "@distube/ytdl-core"; // ESM
 import fs from 'fs';
-import { setToken, stream, video_basic_info } from "play-dl"; // Everything
+import { setToken, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
+
+// Cookie parsing function for Netscape cookie format
+function parseCookies(cookieString: string): ytdl.Cookie[] {
+  const cookies: ytdl.Cookie[] = [];
+  
+  cookieString.split('\n').forEach(line => {
+    line = line.trim();
+    if (line && !line.startsWith('#') && line.includes('\t')) {
+      const parts = line.split('\t');
+      if (parts.length >= 7) {
+        cookies.push({
+          domain: parts[0],
+          httpOnly: parts[1] === 'TRUE',
+          path: parts[2],
+          secure: parts[3] === 'TRUE',
+          expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
+          name: parts[5],
+          value: parts[6]
+        });
+      }
+    }
+  });
+  
+  return cookies;
+}
 
 export interface SongData {
   url: string;
@@ -19,7 +44,7 @@ export class Song {
 
   public static setCookies = false
 
-  public static ytdl: Agent
+  public static ytdl: ytdl.Agent
 
   public constructor({ url, title, duration }: SongData) {
     this.url = url;
@@ -35,7 +60,8 @@ export class Song {
     try {
       const cookies = fs.readFileSync("./cookies.txt", "utf-8");
       console.log("cookies", cookies);
-      this.ytdl = createAgent(parse(cookies));
+      const parsedCookies = parseCookies(cookies);
+      this.ytdl = ytdl.createAgent(parsedCookies);
       // pass them to play-dl
       setToken({
         youtube: {
@@ -43,11 +69,9 @@ export class Song {
         }
       })
 
-
-
       this.setCookies = true;
     } catch (e) {
-      console.error(e);
+      console.error("Error setting cookies:", e);
     }
   }
 
@@ -97,10 +121,20 @@ export class Song {
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
     if (source === "youtube") {
-      playStream = Song.ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+      if (Song.ytdl) {
+        // Use the agent to create the stream
+        playStream = ytdl(this.url, { 
+          filter: "audioonly", 
+          highWaterMark: 1 << 25,
+          agent: Song.ytdl
+        });
+      } else {
+        // Fallback to regular ytdl if no agent is set
+        playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+      }
     }
 
-    if (!playStream || !stream) return;
+    if (!playStream) return;
 
     return createAudioResource(playStream, { metadata: this });
   }
