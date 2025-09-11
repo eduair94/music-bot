@@ -1,6 +1,7 @@
 import { AudioResource, createAudioResource } from "@discordjs/voice";
 import ytdl from "@distube/ytdl-core"; // ESM
-import { stream, video_basic_info } from "play-dl"; // Everything
+import fs from 'fs';
+import { setToken, stream, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
@@ -20,6 +21,25 @@ export class Song {
     this.url = url;
     this.title = title;
     this.duration = duration;
+
+    this.set_cookies();
+  }
+
+
+  public async set_cookies() {
+    // read cookies.txt file
+    try {
+      const cookies = fs.readFileSync("./cookies.txt", "utf-8");
+
+      // pass them to play-dl
+      setToken({
+        youtube: {
+          cookie: cookies
+        }
+      })
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   public static async from(url: string = "", search: string = "") {
