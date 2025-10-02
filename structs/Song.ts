@@ -6,27 +6,51 @@ import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
 
-// Cookie parsing function for Netscape cookie format
+// Cookie parsing function - supports both Netscape format and header format
 function parseCookies(cookieString: string): ytdl.Cookie[] {
   const cookies: ytdl.Cookie[] = [];
   
-  cookieString.split('\n').forEach(line => {
-    line = line.trim();
-    if (line && !line.startsWith('#') && line.includes('\t')) {
-      const parts = line.split('\t');
-      if (parts.length >= 7) {
-        cookies.push({
-          domain: parts[0],
-          httpOnly: parts[1] === 'TRUE',
-          path: parts[2],
-          secure: parts[3] === 'TRUE',
-          expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
-          name: parts[5],
-          value: parts[6]
-        });
+  // Check if it's header format (contains semicolons and equals)
+  if (cookieString.includes(';') && cookieString.includes('=') && !cookieString.includes('\t')) {
+    // Parse header format: "NAME1=VALUE1; NAME2=VALUE2; ..."
+    cookieString.split(';').forEach(cookie => {
+      const trimmed = cookie.trim();
+      if (trimmed) {
+        const [name, ...valueParts] = trimmed.split('=');
+        const value = valueParts.join('='); // In case value contains '='
+        if (name && value) {
+          cookies.push({
+            domain: '.youtube.com',
+            httpOnly: name.startsWith('__Secure') || name.startsWith('__Host'),
+            path: '/',
+            secure: name.startsWith('__Secure') || name.startsWith('__Host'),
+            expirationDate: undefined,
+            name: name.trim(),
+            value: value.trim()
+          });
+        }
       }
-    }
-  });
+    });
+  } else {
+    // Parse Netscape format (tab-separated)
+    cookieString.split('\n').forEach(line => {
+      line = line.trim();
+      if (line && !line.startsWith('#') && line.includes('\t')) {
+        const parts = line.split('\t');
+        if (parts.length >= 7) {
+          cookies.push({
+            domain: parts[0],
+            httpOnly: parts[1] === 'TRUE',
+            path: parts[2],
+            secure: parts[3] === 'TRUE',
+            expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
+            name: parts[5],
+            value: parts[6]
+          });
+        }
+      }
+    });
+  }
   
   return cookies;
 }
@@ -55,21 +79,35 @@ export class Song {
 
   public static async set_cookies() {
     if(this.setCookies) return;
-    console.log("Set cookies");
+    console.log("Setting up cookies...");
     // read cookies.txt file
     try {
-      const cookies = fs.readFileSync("./cookies.txt", "utf-8");
-      console.log("cookies", cookies);
-      const parsedCookies = parseCookies(cookies);
-      Song.ytdl = ytdl.createAgent(parsedCookies);
-      // pass them to play-dl
+      const cookiesRaw = fs.readFileSync("./cookies.txt", "utf-8");
+      
+      // Clean cookies: remove newlines, extra spaces, and invalid characters
+      const cleanedCookies = cookiesRaw
+        .replace(/\r?\n/g, '') // Remove all newlines
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .trim();
+      
+      console.log(`Cookies cleaned, length: ${cleanedCookies.length}`);
+      
+      const parsedCookies = parseCookies(cookiesRaw);
+      
+      if (parsedCookies.length > 0) {
+        Song.ytdl = ytdl.createAgent(parsedCookies);
+        console.log(`ytdl agent created with ${parsedCookies.length} cookies`);
+      }
+      
+      // Pass cleaned cookies to play-dl
       setToken({
         youtube: {
-          cookie: cookies
+          cookie: cleanedCookies
         }
       })
 
       this.setCookies = true;
+      console.log("Cookies setup complete");
     } catch (e) {
       console.error("Error setting cookies:", e);
     }
