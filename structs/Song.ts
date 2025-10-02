@@ -1,5 +1,5 @@
 import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
-import { exec } from "child_process";
+import { exec, spawn } from "child_process";
 import { promisify } from "util";
 import fs from 'fs';
 import youtube from "youtube-sr";
@@ -67,12 +67,13 @@ export class Song {
       duration = result.duration || 0;
     }
 
-    // Use yt-dlp to get video info
+    // Use yt-dlp to get video info with better options
     try {
       const cookieArg = this.hasCookies ? '--cookies ./cookies.txt' : '';
-      const cmd = `yt-dlp --dump-json --no-playlist ${cookieArg} "${videoUrl}"`;
+      // Add extractor args to handle YouTube's new restrictions
+      const cmd = `yt-dlp --dump-json --no-playlist --extractor-args "youtube:player_client=android" ${cookieArg} "${videoUrl}"`;
       
-      const { stdout } = await execAsync(cmd);
+      const { stdout } = await execAsync(cmd, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
       const info = JSON.parse(stdout);
 
       return new this({
@@ -95,22 +96,35 @@ export class Song {
     Song.checkCookies();
 
     try {
-      const cookieArg = Song.hasCookies ? '--cookies ./cookies.txt' : '';
+      const cookieArg = Song.hasCookies ? ['--cookies', './cookies.txt'] : [];
       
-      // Use yt-dlp to get the direct audio URL
-      const cmd = `yt-dlp --format bestaudio --get-url ${cookieArg} "${this.url}"`;
-      const { stdout } = await execAsync(cmd);
-      const audioUrl = stdout.trim();
+      // Stream audio directly from yt-dlp using spawn
+      // Use android client to bypass YouTube's restrictions
+      const ytdlpArgs = [
+        '--format', 'bestaudio/best',
+        '--no-playlist',
+        '--extractor-args', 'youtube:player_client=android',
+        '--output', '-', // Output to stdout
+        ...cookieArg,
+        this.url
+      ];
 
-      if (!audioUrl) {
-        console.error("Failed to get audio URL from yt-dlp");
-        return;
-      }
+      console.log("Starting yt-dlp stream with android client...");
+      const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
+        stdio: ['ignore', 'pipe', 'pipe']
+      });
 
-      console.log("Successfully got audio URL from yt-dlp");
-      
-      // Create audio resource from the direct URL
-      return createAudioResource(audioUrl, {
+      // Log errors from stderr
+      ytdlpProcess.stderr.on('data', (data) => {
+        console.error(`yt-dlp: ${data.toString()}`);
+      });
+
+      ytdlpProcess.on('error', (error) => {
+        console.error('yt-dlp process error:', error);
+      });
+
+      // Create audio resource from the stdout stream
+      return createAudioResource(ytdlpProcess.stdout, {
         metadata: this,
         inputType: StreamType.Arbitrary,
         inlineVolume: true
