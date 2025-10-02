@@ -1,7 +1,7 @@
 import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
 import { exec, spawn } from "child_process";
-import { promisify } from "util";
 import fs from 'fs';
+import { promisify } from "util";
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
