@@ -114,7 +114,7 @@ export class Song {
       songInfo = await video_basic_info(url);
 
       return new this({
-        url: songInfo.video_details.url,
+        url: songInfo.video_details.url || url, // Fallback to original URL if not provided
         title: songInfo.video_details.title as string,
         duration: parseInt(songInfo.video_details.durationInSec.toString()) as number
       });
@@ -136,7 +136,7 @@ export class Song {
       songInfo = await video_basic_info(`https://youtube.com/watch?v=${result.id}`);
 
       return new this({
-        url: songInfo.video_details.url,
+        url: songInfo.video_details.url || `https://youtube.com/watch?v=${result.id}`,
         title: songInfo.video_details.title as string,
         duration: parseInt(songInfo.video_details.durationInSec.toString())
       });
