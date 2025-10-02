@@ -245,11 +245,11 @@ export class MusicQueue {
   }
 
   private async handleIncreaseVolume(interaction: ButtonInteraction): Promise<void> {
-    if (this.volume == 100) return;
+    if (this.volume == 500) return;
 
     if (!canModifyQueue(interaction.member as GuildMember)) return;
 
-    this.volume = Math.min(this.volume + 10, 100);
+    this.volume = Math.min(this.volume + 10, 500);
 
     this.resource.volume?.setVolumeLogarithmic(this.volume / 100);
 
