@@ -99,24 +99,32 @@ export class Song {
       const cookieArg = Song.hasCookies ? ['--cookies', './cookies.txt'] : [];
       
       // Stream audio directly from yt-dlp using spawn
-      // Use android client to bypass YouTube's restrictions
+      // Use android client with audio extraction to bypass YouTube's restrictions
       const ytdlpArgs = [
-        '--format', 'bestaudio/best',
+        '--format', 'bestaudio[ext=m4a]/bestaudio/best',
+        '--extract-audio', // Extract audio only
+        '--audio-format', 'best',
         '--no-playlist',
-        '--extractor-args', 'youtube:player_client=android',
+        '--extractor-args', 'youtube:player_client=android;formats=missing_pot', // Allow formats even without PO token
         '--output', '-', // Output to stdout
+        '--quiet', // Reduce verbose output
+        '--no-warnings', // Suppress warnings in stderr
         ...cookieArg,
         this.url
       ];
 
-      console.log("Starting yt-dlp stream with android client...");
+      console.log("Starting yt-dlp audio stream with android client...");
       const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
-      // Log errors from stderr
+      // Log errors from stderr (only important ones now)
       ytdlpProcess.stderr.on('data', (data) => {
-        console.error(`yt-dlp: ${data.toString()}`);
+        const msg = data.toString();
+        // Only log actual errors, not warnings
+        if (msg.includes('ERROR')) {
+          console.error(`yt-dlp error: ${msg}`);
+        }
       });
 
       ytdlpProcess.on('error', (error) => {
