@@ -6,7 +6,7 @@ import { canModifyQueue } from "../utils/queue";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("move")
+    .setName("edu_move")
     .setDescription(i18n.__("move.description"))
     .addIntegerOption((option) =>
       option.setName("movefrom").setDescription(i18n.__("move.args.movefrom")).setRequired(true)

@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, CommandInteraction, ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { bot } from "../index";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
@@ -8,7 +8,7 @@ const pattern = /^[0-9]{1,2}(\s*,\s*[0-9]{1,2})*$/;
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("remove")
+    .setName("edu_remove")
     .setDescription(i18n.__("remove.description"))
     .addStringOption((option) =>
       option.setName("slot").setDescription(i18n.__("remove.description")).setRequired(true)

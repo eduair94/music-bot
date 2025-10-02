@@ -77,7 +77,7 @@ export class Song {
 
   public static async from(url: string = "", search: string = "") {
     const isYoutubeUrl = videoPattern.test(url);
-    await this.set_cookies();
+    await Song.set_cookies();
 
     let songInfo;
 

@@ -11,7 +11,7 @@ import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("search")
+    .setName("edu_search")
     .setDescription(i18n.__("search.description"))
     .addStringOption((option) =>
       option.setName("query").setDescription(i18n.__("search.optionQuery")).setRequired(true)
@@ -73,11 +73,11 @@ export default {
         selectInteraction.update({ content: "⏳ Loading the selected songs...", components: [] });
 
         bot.slashCommandsMap
-          .get("play")!
+          .get("edu_play")!
           .execute(interaction, selectInteraction.values[0])
           .then(() => {
             selectInteraction.values.slice(1).forEach((url) => {
-              bot.slashCommandsMap.get("play")!.execute(interaction, url);
+              bot.slashCommandsMap.get("edu_play")!.execute(interaction, url);
             });
           });
       })

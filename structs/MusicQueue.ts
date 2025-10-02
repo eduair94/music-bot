@@ -203,14 +203,14 @@ export class MusicQueue {
   }
 
   private async handleSkip(interaction: ButtonInteraction): Promise<void> {
-    await this.bot.slashCommandsMap.get("skip")!.execute(interaction);
+    await this.bot.slashCommandsMap.get("edu_skip")!.execute(interaction);
   }
 
   private async handlePlayPause(interaction: ButtonInteraction): Promise<void> {
     if (this.player.state.status === AudioPlayerStatus.Playing) {
-      await this.bot.slashCommandsMap.get("pause")!.execute(interaction);
+      await this.bot.slashCommandsMap.get("edu_pause")!.execute(interaction);
     } else {
-      await this.bot.slashCommandsMap.get("resume")!.execute(interaction);
+      await this.bot.slashCommandsMap.get("edu_resume")!.execute(interaction);
     }
   }
 
@@ -259,40 +259,40 @@ export class MusicQueue {
   }
 
   private async handleLoop(interaction: ButtonInteraction): Promise<void> {
-    await this.bot.slashCommandsMap.get("loop")!.execute(interaction);
+    await this.bot.slashCommandsMap.get("edu_loop")!.execute(interaction);
   }
 
   private async handleShuffle(interaction: ButtonInteraction): Promise<void> {
-    await this.bot.slashCommandsMap.get("shuffle")!.execute(interaction);
+    await this.bot.slashCommandsMap.get("edu_shuffle")!.execute(interaction);
   }
 
   private async handleStop(interaction: ButtonInteraction): Promise<void> {
-    await this.bot.slashCommandsMap.get("stop")!.execute(interaction);
+    await this.bot.slashCommandsMap.get("edu_stop")!.execute(interaction);
   }
 
   private commandHandlers = new Map([
-    ["skip", this.handleSkip],
-    ["play_pause", this.handlePlayPause],
-    ["mute", this.handleMute],
-    ["decrease_volume", this.handleDecreaseVolume],
-    ["increase_volume", this.handleIncreaseVolume],
-    ["loop", this.handleLoop],
-    ["shuffle", this.handleShuffle],
-    ["stop", this.handleStop]
+    ["edu_skip", this.handleSkip],
+    ["edu_play_pause", this.handlePlayPause],
+    ["edu_mute", this.handleMute],
+    ["edu_decrease_volume", this.handleDecreaseVolume],
+    ["edu_increase_volume", this.handleIncreaseVolume],
+    ["edu_loop", this.handleLoop],
+    ["edu_shuffle", this.handleShuffle],
+    ["edu_stop", this.handleStop]
   ]);
 
   private createButtonRow() {
     const firstRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId("skip").setLabel("⏭").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("play_pause").setLabel("⏯").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("mute").setLabel("🔇").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("decrease_volume").setLabel("🔉").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("increase_volume").setLabel("🔊").setStyle(ButtonStyle.Secondary)
+      new ButtonBuilder().setCustomId("edu_skip").setLabel("⏭").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_play_pause").setLabel("⏯").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_mute").setLabel("🔇").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_decrease_volume").setLabel("🔉").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_increase_volume").setLabel("🔊").setStyle(ButtonStyle.Secondary)
     );
     const secondRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId("loop").setLabel("🔁").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("shuffle").setLabel("🔀").setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId("stop").setLabel("⏹").setStyle(ButtonStyle.Secondary)
+      new ButtonBuilder().setCustomId("edu_loop").setLabel("🔁").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_shuffle").setLabel("🔀").setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId("edu_stop").setLabel("⏹").setStyle(ButtonStyle.Secondary)
     );
 
     return [firstRow, secondRow];

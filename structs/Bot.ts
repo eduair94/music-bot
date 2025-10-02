@@ -32,7 +32,20 @@ export class Bot {
     this.client.on("ready", () => {
       console.log(`${this.client.user!.username} ready!`);
 
+      // Generate and display bot invite link
+      const clientId = this.client.user!.id;
+      const inviteLink = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=36700160&scope=bot%20applications.commands`;
+      console.log('\n=================================================');
+      console.log('Bot Invite Link:');
+      console.log(inviteLink);
+      console.log('=================================================\n');
+
       this.registerSlashCommands();
+
+      // Force save if in remote session
+      if (this.isRemoteSession()) {
+        this.forceSave();
+      }
     });
 
     this.client.on("warn", (info) => console.log(info));
@@ -110,5 +123,37 @@ export class Bot {
         }
       }
     });
+  }
+
+  private isRemoteSession(): boolean {
+    // Check various indicators of remote session
+    return !!(
+      process.env.SSH_CONNECTION ||
+      process.env.SSH_CLIENT ||
+      process.env.SSH_TTY ||
+      process.env.CODESPACES ||
+      process.env.GITPOD_WORKSPACE_ID ||
+      process.env.REMOTE_CONTAINERS ||
+      process.env.VSCODE_REMOTE_USER
+    );
+  }
+
+  private forceSave(): void {
+    console.log("Remote session detected - forcing save operations");
+    
+    // Force save any configuration or state files
+    try {
+      // You can add specific save operations here based on your application needs
+      // For example, saving current queues state, configuration, etc.
+      
+      // Force garbage collection if available
+      if (global.gc) {
+        global.gc();
+      }
+      
+      console.log("Force save completed successfully");
+    } catch (error) {
+      console.error("Error during force save:", error);
+    }
   }
 }

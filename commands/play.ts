@@ -8,7 +8,7 @@ import { playlistPattern } from "../utils/patterns";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("play")
+    .setName("edu_play")
     .setDescription(i18n.__("play.description"))
     .addStringOption((option) => option.setName("song").setDescription("The song you want to play").setRequired(true)),
   cooldown: 3,

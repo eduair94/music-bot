@@ -5,7 +5,7 @@ import { canModifyQueue } from "../utils/queue";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("skipto")
+    .setName("edu_skipto")
     .setDescription(i18n.__("skipto.description"))
     .addIntegerOption((option) =>
       option.setName("number").setDescription(i18n.__("skipto.args.number")).setRequired(true)

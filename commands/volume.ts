@@ -5,7 +5,7 @@ import { canModifyQueue } from "../utils/queue";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("volume")
+    .setName("edu_volume")
     .setDescription(i18n.__("volume.description"))
     .addIntegerOption((option) => option.setName("volume").setDescription(i18n.__("volume.description"))),
   execute(interaction: ChatInputCommandInteraction) {
