@@ -1,7 +1,7 @@
-import { AudioResource, createAudioResource } from "@discordjs/voice";
+import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
 import ytdl from "@distube/ytdl-core"; // ESM
 import fs from 'fs';
-import { setToken, video_basic_info } from "play-dl"; // Everything
+import { setToken, stream, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
@@ -150,23 +150,34 @@ export class Song {
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
     if (source === "youtube") {
-      if (Song.ytdl) {
-        console.log("Use song ytdl");
-        // Use the agent to create the stream
-        playStream = ytdl(this.url, { 
-          filter: "audioonly", 
-          highWaterMark: 1 << 25,
-          agent: Song.ytdl
+      try {
+        // Use play-dl which is more reliable with cookies
+        const streamInfo = await stream(this.url, {
+          quality: 2 // 0 = low, 1 = medium, 2 = high
         });
-      } else {
-        // Fallback to regular ytdl if no agent is set
-        playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+        playStream = streamInfo.stream;
+        console.log("Using play-dl stream with cookies");
+      } catch (error) {
+        console.error("play-dl failed, trying ytdl as fallback:", error);
+        // Fallback to ytdl if play-dl fails
+        if (Song.ytdl) {
+          playStream = ytdl(this.url, { 
+            filter: "audioonly", 
+            highWaterMark: 1 << 25,
+            agent: Song.ytdl
+          });
+        } else {
+          playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+        }
       }
     }
 
     if (!playStream) return;
 
-    return createAudioResource(playStream, { metadata: this });
+    return createAudioResource(playStream, { 
+      metadata: this,
+      inputType: source === "youtube" ? StreamType.Arbitrary : StreamType.OggOpus
+    });
   }
 
   public startMessage() {
