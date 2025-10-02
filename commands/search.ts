@@ -1,9 +1,9 @@
 import {
-  ActionRowBuilder,
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-  StringSelectMenuBuilder,
-  StringSelectMenuInteraction
+    ActionRowBuilder,
+    ChatInputCommandInteraction,
+    SlashCommandBuilder,
+    StringSelectMenuBuilder,
+    StringSelectMenuInteraction
 } from "discord.js";
 import youtube, { Video } from "youtube-sr";
 import { bot } from "..";
@@ -11,7 +11,7 @@ import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("edu_search")
+    .setName("search")
     .setDescription(i18n.__("search.description"))
     .addStringOption((option) =>
       option.setName("query").setDescription(i18n.__("search.optionQuery")).setRequired(true)
@@ -73,11 +73,11 @@ export default {
         selectInteraction.update({ content: "⏳ Loading the selected songs...", components: [] });
 
         bot.slashCommandsMap
-          .get("edu_play")!
+          .get("play")!
           .execute(interaction, selectInteraction.values[0])
           .then(() => {
             selectInteraction.values.slice(1).forEach((url) => {
-              bot.slashCommandsMap.get("edu_play")!.execute(interaction, url);
+              bot.slashCommandsMap.get("play")!.execute(interaction, url);
             });
           });
       })

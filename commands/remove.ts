@@ -8,7 +8,7 @@ const pattern = /^[0-9]{1,2}(\s*,\s*[0-9]{1,2})*$/;
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("edu_remove")
+    .setName("remove")
     .setDescription(i18n.__("remove.description"))
     .addStringOption((option) =>
       option.setName("slot").setDescription(i18n.__("remove.description")).setRequired(true)

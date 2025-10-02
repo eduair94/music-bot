@@ -1,10 +1,10 @@
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice";
 import {
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  PermissionsBitField,
-  SlashCommandBuilder,
-  TextChannel
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    PermissionsBitField,
+    SlashCommandBuilder,
+    TextChannel
 } from "discord.js";
 import { bot } from "../index";
 import { MusicQueue } from "../structs/MusicQueue";
@@ -14,7 +14,7 @@ import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("edu_playlist")
+    .setName("playlist")
     .setDescription(i18n.__("playlist.description"))
     .addStringOption((option) => option.setName("playlist").setDescription("Playlist name or link").setRequired(true)),
   cooldown: 5,
