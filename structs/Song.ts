@@ -1,59 +1,12 @@
-import { AudioResource, createAudioResource } from "@discordjs/voice";
-import ytdl from "@distube/ytdl-core"; // ESM
+import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
+import { exec } from "child_process";
+import { promisify } from "util";
 import fs from 'fs';
-import { setToken, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
 
-// Cookie parsing function - supports both Netscape format and header format
-function parseCookies(cookieString: string): ytdl.Cookie[] {
-  const cookies: ytdl.Cookie[] = [];
-  
-  // Check if it's header format (contains semicolons and equals)
-  if (cookieString.includes(';') && cookieString.includes('=') && !cookieString.includes('\t')) {
-    // Parse header format: "NAME1=VALUE1; NAME2=VALUE2; ..."
-    cookieString.split(';').forEach(cookie => {
-      const trimmed = cookie.trim();
-      if (trimmed) {
-        const [name, ...valueParts] = trimmed.split('=');
-        const value = valueParts.join('='); // In case value contains '='
-        if (name && value) {
-          cookies.push({
-            domain: '.youtube.com',
-            httpOnly: name.startsWith('__Secure') || name.startsWith('__Host'),
-            path: '/',
-            secure: name.startsWith('__Secure') || name.startsWith('__Host'),
-            expirationDate: undefined,
-            name: name.trim(),
-            value: value.trim()
-          });
-        }
-      }
-    });
-  } else {
-    // Parse Netscape format (tab-separated)
-    cookieString.split('\n').forEach(line => {
-      line = line.trim();
-      if (line && !line.startsWith('#') && line.includes('\t')) {
-        const parts = line.split('\t');
-        if (parts.length >= 7) {
-          cookies.push({
-            domain: parts[0],
-            httpOnly: parts[1] === 'TRUE',
-            path: parts[2],
-            secure: parts[3] === 'TRUE',
-            expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
-            name: parts[5],
-            value: parts[6]
-          });
-        }
-      }
-    });
-  }
-  
-  return cookies;
-}
+const execAsync = promisify(exec);
 
 export interface SongData {
   url: string;
@@ -66,9 +19,7 @@ export class Song {
   public readonly title: string;
   public readonly duration: number;
 
-  public static setCookies = false
-
-  public static ytdl: ytdl.Agent
+  public static hasCookies = false;
 
   public constructor({ url, title, duration }: SongData) {
     this.url = url;
@@ -76,106 +27,98 @@ export class Song {
     this.duration = duration;
   }
 
-
-  public static async set_cookies() {
-    if(this.setCookies) return;
-    console.log("Setting up cookies...");
-    // read cookies.txt file
+  public static checkCookies() {
+    if (this.hasCookies) return true;
+    
     try {
-      const cookiesRaw = fs.readFileSync("./cookies.txt", "utf-8");
-      
-      // Clean cookies: remove newlines, extra spaces, and invalid characters
-      const cleanedCookies = cookiesRaw
-        .replace(/\r?\n/g, '') // Remove all newlines
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .trim();
-      
-      console.log(`Cookies cleaned, length: ${cleanedCookies.length}`);
-      
-      const parsedCookies = parseCookies(cookiesRaw);
-      
-      if (parsedCookies.length > 0) {
-        Song.ytdl = ytdl.createAgent(parsedCookies);
-        console.log(`ytdl agent created with ${parsedCookies.length} cookies`);
+      // Check if cookies.txt exists
+      if (fs.existsSync("./cookies.txt")) {
+        this.hasCookies = true;
+        console.log("Cookies file found");
+        return true;
       }
-      
-      // Pass cleaned cookies to play-dl
-      setToken({
-        youtube: {
-          cookie: cleanedCookies
-        }
-      })
-
-      this.setCookies = true;
-      console.log("Cookies setup complete");
     } catch (e) {
-      console.error("Error setting cookies:", e);
+      console.log("No cookies file found");
     }
+    return false;
   }
 
   public static async from(url: string = "", search: string = "") {
     const isYoutubeUrl = videoPattern.test(url);
-    await this.set_cookies();
+    this.checkCookies();
 
-    let songInfo;
+    let videoUrl = url;
+    let title = "";
+    let duration = 0;
 
-    if (isYoutubeUrl) {
-      songInfo = await video_basic_info(url);
-
-      return new this({
-        url: songInfo.video_details.url,
-        title: songInfo.video_details.title as string,
-        duration: parseInt(songInfo.video_details.durationInSec.toString()) as number
-      });
-    } else {
+    if (!isYoutubeUrl) {
+      // Search for the video
       const result = await youtube.searchOne(search);
-
-      result ? null : console.log(`No results found for ${search}`);
 
       if (!result) {
         let err = new Error(`No search results found for ${search}`);
-
         err.name = "NoResults";
-
         if (isURL.test(url)) err.name = "InvalidURL";
-
         throw err;
       }
 
-      songInfo = await video_basic_info(`https://youtube.com/watch?v=${result.id}`);
+      videoUrl = `https://youtube.com/watch?v=${result.id}`;
+      title = result.title || "";
+      duration = result.duration || 0;
+    }
+
+    // Use yt-dlp to get video info
+    try {
+      const cookieArg = this.hasCookies ? '--cookies ./cookies.txt' : '';
+      const cmd = `yt-dlp --dump-json --no-playlist ${cookieArg} "${videoUrl}"`;
+      
+      const { stdout } = await execAsync(cmd);
+      const info = JSON.parse(stdout);
 
       return new this({
-        url: songInfo.video_details.url,
-        title: songInfo.video_details.title as string,
-        duration: parseInt(songInfo.video_details.durationInSec.toString())
+        url: videoUrl,
+        title: info.title || title || "Unknown",
+        duration: info.duration || duration || 0
+      });
+    } catch (error) {
+      console.error("yt-dlp info error:", error);
+      // Fallback if yt-dlp fails
+      return new this({
+        url: videoUrl,
+        title: title || "Unknown",
+        duration: duration || 0
       });
     }
   }
 
   public async makeResource(): Promise<AudioResource<Song> | void> {
-    let playStream;
-    await Song.set_cookies();
+    Song.checkCookies();
 
-    const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
+    try {
+      const cookieArg = Song.hasCookies ? '--cookies ./cookies.txt' : '';
+      
+      // Use yt-dlp to get the direct audio URL
+      const cmd = `yt-dlp --format bestaudio --get-url ${cookieArg} "${this.url}"`;
+      const { stdout } = await execAsync(cmd);
+      const audioUrl = stdout.trim();
 
-    if (source === "youtube") {
-      if (Song.ytdl) {
-        console.log("Use song ytdl");
-        // Use the agent to create the stream
-        playStream = ytdl(this.url, { 
-          filter: "audioonly", 
-          highWaterMark: 1 << 25,
-          agent: Song.ytdl
-        });
-      } else {
-        // Fallback to regular ytdl if no agent is set
-        playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
+      if (!audioUrl) {
+        console.error("Failed to get audio URL from yt-dlp");
+        return;
       }
+
+      console.log("Successfully got audio URL from yt-dlp");
+      
+      // Create audio resource from the direct URL
+      return createAudioResource(audioUrl, {
+        metadata: this,
+        inputType: StreamType.Arbitrary,
+        inlineVolume: true
+      });
+    } catch (error) {
+      console.error("yt-dlp streaming error:", error);
+      return;
     }
-
-    if (!playStream) return;
-
-    return createAudioResource(playStream, { metadata: this });
   }
 
   public startMessage() {
