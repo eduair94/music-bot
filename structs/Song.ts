@@ -1,56 +1,32 @@
-import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
+import { AudioResource, createAudioResource } from "@discordjs/voice";
 import ytdl from "@distube/ytdl-core"; // ESM
 import fs from 'fs';
-import { setToken, stream, video_basic_info } from "play-dl"; // Everything
+import { setToken, video_basic_info } from "play-dl"; // Everything
 import youtube from "youtube-sr";
 import { i18n } from "../utils/i18n";
 import { isURL, videoPattern } from "../utils/patterns";
 
-// Cookie parsing function - supports both Netscape format and header format
+// Cookie parsing function for Netscape cookie format
 function parseCookies(cookieString: string): ytdl.Cookie[] {
   const cookies: ytdl.Cookie[] = [];
   
-  // Check if it's header format (contains semicolons and equals)
-  if (cookieString.includes(';') && cookieString.includes('=') && !cookieString.includes('\t')) {
-    // Parse header format: "NAME1=VALUE1; NAME2=VALUE2; ..."
-    cookieString.split(';').forEach(cookie => {
-      const trimmed = cookie.trim();
-      if (trimmed) {
-        const [name, ...valueParts] = trimmed.split('=');
-        const value = valueParts.join('='); // In case value contains '='
-        if (name && value) {
-          cookies.push({
-            domain: '.youtube.com',
-            httpOnly: name.startsWith('__Secure') || name.startsWith('__Host'),
-            path: '/',
-            secure: name.startsWith('__Secure') || name.startsWith('__Host'),
-            expirationDate: undefined,
-            name: name.trim(),
-            value: value.trim()
-          });
-        }
+  cookieString.split('\n').forEach(line => {
+    line = line.trim();
+    if (line && !line.startsWith('#') && line.includes('\t')) {
+      const parts = line.split('\t');
+      if (parts.length >= 7) {
+        cookies.push({
+          domain: parts[0],
+          httpOnly: parts[1] === 'TRUE',
+          path: parts[2],
+          secure: parts[3] === 'TRUE',
+          expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
+          name: parts[5],
+          value: parts[6]
+        });
       }
-    });
-  } else {
-    // Parse Netscape format (tab-separated)
-    cookieString.split('\n').forEach(line => {
-      line = line.trim();
-      if (line && !line.startsWith('#') && line.includes('\t')) {
-        const parts = line.split('\t');
-        if (parts.length >= 7) {
-          cookies.push({
-            domain: parts[0],
-            httpOnly: parts[1] === 'TRUE',
-            path: parts[2],
-            secure: parts[3] === 'TRUE',
-            expirationDate: parts[4] !== '0' ? parseInt(parts[4]) : undefined,
-            name: parts[5],
-            value: parts[6]
-          });
-        }
-      }
-    });
-  }
+    }
+  });
   
   return cookies;
 }
@@ -79,18 +55,13 @@ export class Song {
 
   public static async set_cookies() {
     if(this.setCookies) return;
-    console.log("Setting up cookies...");
+    console.log("Set cookies");
     // read cookies.txt file
     try {
       const cookies = fs.readFileSync("./cookies.txt", "utf-8");
+      console.log("cookies", cookies);
       const parsedCookies = parseCookies(cookies);
-      console.log(`Parsed ${parsedCookies.length} cookies successfully`);
-      
-      if (parsedCookies.length > 0) {
-        Song.ytdl = ytdl.createAgent(parsedCookies);
-        console.log("ytdl agent created with cookies");
-      }
-      
+      Song.ytdl = ytdl.createAgent(parsedCookies);
       // pass them to play-dl
       setToken({
         youtube: {
@@ -106,7 +77,7 @@ export class Song {
 
   public static async from(url: string = "", search: string = "") {
     const isYoutubeUrl = videoPattern.test(url);
-    await Song.set_cookies();
+    await this.set_cookies();
 
     let songInfo;
 
@@ -114,7 +85,7 @@ export class Song {
       songInfo = await video_basic_info(url);
 
       return new this({
-        url: songInfo.video_details.url || url, // Fallback to original URL if not provided
+        url: songInfo.video_details.url,
         title: songInfo.video_details.title as string,
         duration: parseInt(songInfo.video_details.durationInSec.toString()) as number
       });
@@ -136,7 +107,7 @@ export class Song {
       songInfo = await video_basic_info(`https://youtube.com/watch?v=${result.id}`);
 
       return new this({
-        url: songInfo.video_details.url || `https://youtube.com/watch?v=${result.id}`,
+        url: songInfo.video_details.url,
         title: songInfo.video_details.title as string,
         duration: parseInt(songInfo.video_details.durationInSec.toString())
       });
@@ -150,34 +121,23 @@ export class Song {
     const source = this.url.includes("youtube") ? "youtube" : "soundcloud";
 
     if (source === "youtube") {
-      try {
-        // Use play-dl which is more reliable with cookies
-        const streamInfo = await stream(this.url, {
-          quality: 2 // 0 = low, 1 = medium, 2 = high
+      if (Song.ytdl) {
+        console.log("Use song ytdl");
+        // Use the agent to create the stream
+        playStream = ytdl(this.url, { 
+          filter: "audioonly", 
+          highWaterMark: 1 << 25,
+          agent: Song.ytdl
         });
-        playStream = streamInfo.stream;
-        console.log("Using play-dl stream with cookies");
-      } catch (error) {
-        console.error("play-dl failed, trying ytdl as fallback:", error);
-        // Fallback to ytdl if play-dl fails
-        if (Song.ytdl) {
-          playStream = ytdl(this.url, { 
-            filter: "audioonly", 
-            highWaterMark: 1 << 25,
-            agent: Song.ytdl
-          });
-        } else {
-          playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
-        }
+      } else {
+        // Fallback to regular ytdl if no agent is set
+        playStream = ytdl(this.url, { filter: "audioonly", highWaterMark: 1 << 25 });
       }
     }
 
     if (!playStream) return;
 
-    return createAudioResource(playStream, { 
-      metadata: this,
-      inputType: source === "youtube" ? StreamType.Arbitrary : StreamType.OggOpus
-    });
+    return createAudioResource(playStream, { metadata: this });
   }
 
   public startMessage() {
