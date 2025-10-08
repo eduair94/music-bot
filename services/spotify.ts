@@ -4,9 +4,10 @@
  */
 
 import axios, { AxiosInstance } from 'axios';
-import youtube from 'youtube-sr';
 import { detectSpotifyType, extractSpotifyId } from '../utils/patterns';
 import { SpotifyAlbumRes, SpotifyPlaylistRes, SpotifyTrackRes } from "./spotify.interface";
+import { searchYoutube } from "./youtube";
+import { YoutubeTrack } from "./youtube.interface";
 
 
 export interface SpotifyTrackInfo {
@@ -240,15 +241,16 @@ export class SpotifyService {
           console.log(`Spotify → YouTube: Searching for "${searchQuery}"`);
           
           // Use youtube-sr to search
-          const results = await youtube.search(searchQuery, { limit: 5, type: "video" });
+          const youtubeRes = await searchYoutube(searchQuery);
+          const results = youtubeRes.data;
           
           if (results && results.length > 0) {
             // Prefer results that are closer to the track duration
             const bestMatch = this.findBestMatch(results, track);
             
             if (bestMatch) {
-              const youtubeUrl = `https://youtube.com/watch?v=${bestMatch.id}`;
-              console.log(`Spotify → YouTube: Found "${bestMatch.title}" (duration match: ${Math.abs((bestMatch.duration || 0) - track.duration)}s difference)`);
+              const youtubeUrl = `https://youtube.com/watch?v=${bestMatch.videoId}`;
+              console.log(`Spotify → YouTube: Found "${bestMatch.name}" (duration match: ${Math.abs((bestMatch.duration || 0) - track.duration)}s difference)`);
               return youtubeUrl;
             }
           }
@@ -269,7 +271,7 @@ export class SpotifyService {
   /**
    * Find the best matching YouTube video based on duration
    */
-  private findBestMatch(results: any[], track: SpotifyTrackInfo): any {
+  private findBestMatch(results: YoutubeTrack[], track: SpotifyTrackInfo): YoutubeTrack | null {
     if (results.length === 0) return null;
     
     // If we have duration info, prefer videos with similar duration (within 10 seconds)
@@ -278,7 +280,7 @@ export class SpotifyService {
       if (withDuration.length > 0) {
         // Return the one with closest duration
         return withDuration.reduce((prev, curr) => 
-          Math.abs(curr.duration - track.duration) < Math.abs(prev.duration - track.duration) ? curr : prev
+          Math.abs((curr.duration || 0) - track.duration) < Math.abs((prev.duration || 0) - track.duration) ? curr : prev
         );
       }
     }

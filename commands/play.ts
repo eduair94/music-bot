@@ -4,7 +4,7 @@ import { bot } from "../index";
 import { MusicQueue } from "../structs/MusicQueue";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
-import { playlistPattern, isSpotifyUrl, detectSpotifyType } from "../utils/patterns";
+import { detectSpotifyType, isSpotifyUrl, playlistPattern } from "../utils/patterns";
 import { getPlatformInfo } from "../utils/platformDetector";
 
 export default {
