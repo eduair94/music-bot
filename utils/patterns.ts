@@ -50,7 +50,7 @@ export const platformPatterns = {
 export const musicPlatforms = {
   youtube: /^(https?:\/\/)?(www\.)?(m\.|music\.)?(youtube\.com|youtu\.?be)\/.+$/,
   soundcloud8: /^https?:\/\/(www\.|m\.)?soundcloud\.com\/(.*)$/,
-  spotify: /^https?:\/\/(open\.)?spotify\.com\/(track|album|playlist)\/([a-zA-Z0-9]+)/,
+  spotify: /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(track|album|playlist)\/([a-zA-Z0-9]+)/,
   bandcamp: /^https?:\/\/([^.]+\.)?bandcamp\.com\/(track|album)\/([^/?]+)/,
   audiomack: /^https?:\/\/(www\.)?audiomack\.com\/[^/?]+\/[^/?]+/,
   mixcloud: /^https?:\/\/(www\.)?mixcloud\.com\/([^/]+)\/([^/?]+)/,
@@ -130,7 +130,8 @@ export function detectSpotifyType(url: string): SpotifyType {
  */
 export function extractSpotifyId(url: string): string | null {
   const match = spotifyRegex.exec(url);
-  return match ? match[3] : null;
+  // With the updated regex, the ID is now in group 4 (after intl-locale and type)
+  return match ? match[4] : null;
 }
 
 /**
