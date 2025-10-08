@@ -159,7 +159,7 @@ export class Song {
       const youtubeUrls = await spotifyService.processSpotifyUrl(url);
       
       if (!youtubeUrls || youtubeUrls.length === 0) {
-        let err = new Error("Could not find matching songs on YouTube for the Spotify URL");
+        let err = new Error("Could not find matching songs on YouTube for the Spotify track. The song might not be available on YouTube or the search failed.");
         err.name = "NoYouTubeMatch";
         throw err;
       }

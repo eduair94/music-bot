@@ -76,6 +76,8 @@ export class SpotifyService {
     const type = detectSpotifyType(url);
     const id = extractSpotifyId(url);
 
+    console.log(`Spotify URL detected. Type: ${type}, ID: ${id}`, url);
+
     if (!id) {
       throw new Error('Invalid Spotify URL');
     }
@@ -219,26 +221,64 @@ export class SpotifyService {
   private async searchYouTube(track: SpotifyTrackInfo): Promise<string | null> {
     try {
       // Build search query with artist and track name
-      const searchQuery = `${track.artists.join(' ')} ${track.name}`;
+      // Try multiple search strategies for better results
+      const searchQueries = [
+        `${track.artists.join(' ')} ${track.name} official audio`,
+        `${track.artists.join(' ')} ${track.name} audio`,
+        `${track.artists.join(' ')} ${track.name}`,
+        `${track.name} ${track.artists[0]}` // Try reversed order
+      ];
       
-      console.log(`Spotify → YouTube: Searching for "${searchQuery}"`);
-      
-      // Use youtube-sr to search
-      const result = await youtube.searchOne(searchQuery);
-      
-      if (!result) {
-        console.warn(`Spotify → YouTube: No results found for "${searchQuery}"`);
-        return null;
+      for (const searchQuery of searchQueries) {
+        try {
+          console.log(`Spotify → YouTube: Searching for "${searchQuery}"`);
+          
+          // Use youtube-sr to search
+          const results = await youtube.search(searchQuery, { limit: 5, type: "video" });
+          
+          if (results && results.length > 0) {
+            // Prefer results that are closer to the track duration
+            const bestMatch = this.findBestMatch(results, track);
+            
+            if (bestMatch) {
+              const youtubeUrl = `https://youtube.com/watch?v=${bestMatch.id}`;
+              console.log(`Spotify → YouTube: Found "${bestMatch.title}" (duration match: ${Math.abs((bestMatch.duration || 0) - track.duration)}s difference)`);
+              return youtubeUrl;
+            }
+          }
+        } catch (searchError) {
+          console.warn(`Spotify → YouTube: Search attempt failed for "${searchQuery}":`, searchError);
+          continue; // Try next query
+        }
       }
       
-      const youtubeUrl = `https://youtube.com/watch?v=${result.id}`;
-      console.log(`Spotify → YouTube: Found "${result.title}"`);
-      
-      return youtubeUrl;
+      console.warn(`Spotify → YouTube: No results found after trying all search strategies for "${track.artists.join(', ')} - ${track.name}"`);
+      return null;
     } catch (error) {
       console.error(`Spotify → YouTube: Search failed for "${track.name}":`, error);
       return null;
     }
+  }
+
+  /**
+   * Find the best matching YouTube video based on duration
+   */
+  private findBestMatch(results: any[], track: SpotifyTrackInfo): any {
+    if (results.length === 0) return null;
+    
+    // If we have duration info, prefer videos with similar duration (within 10 seconds)
+    if (track.duration > 0) {
+      const withDuration = results.filter(r => r.duration && Math.abs(r.duration - track.duration) <= 10);
+      if (withDuration.length > 0) {
+        // Return the one with closest duration
+        return withDuration.reduce((prev, curr) => 
+          Math.abs(curr.duration - track.duration) < Math.abs(prev.duration - track.duration) ? curr : prev
+        );
+      }
+    }
+    
+    // Otherwise, return the first result
+    return results[0];
   }
 
   /**
