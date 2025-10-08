@@ -1,0 +1,273 @@
+/**
+ * Spotify Service
+ * Handles Spotify API integration and bridges to YouTube search
+ */
+
+import axios, { AxiosInstance } from 'axios';
+import youtube from 'youtube-sr';
+import { detectSpotifyType, extractSpotifyId } from '../utils/patterns';
+import { SpotifyAlbumRes, SpotifyPlaylistRes, SpotifyTrackRes } from "./spotify.interface";
+
+
+export interface SpotifyTrackInfo {
+  id: string;
+  name: string;
+  artists: string[];
+  album: string;
+  duration: number;
+  thumbnail?: string;
+  releaseDate?: string;
+  isrc?: string;
+  youtubeUrl?: string;
+}
+
+export interface SpotifyAlbumInfo {
+  id: string;
+  name: string;
+  artists: string[];
+  tracks: SpotifyTrackInfo[];
+  thumbnail?: string;
+  releaseDate?: string;
+}
+
+export interface SpotifyPlaylistInfo {
+  id: string;
+  name: string;
+  owner: string;
+  tracks: SpotifyTrackInfo[];
+  thumbnail?: string;
+  description?: string;
+}
+
+export class SpotifyService {
+  private tokenExpiry: number = 0;
+  private static instance: SpotifyService;
+
+  baseUrl = 'https://trustpilot.digitalshopuy.com/spotify-data/'
+
+  private axios: AxiosInstance;
+
+  private constructor() {
+    this.axios = axios.create({
+      baseURL: this.baseUrl,
+      timeout: 15000,
+    });
+  }
+
+  public static getInstance(): SpotifyService {
+    if (!SpotifyService.instance) {
+      SpotifyService.instance = new SpotifyService();
+    }
+    return SpotifyService.instance;
+  }
+
+  /**
+   * Check if Spotify credentials are configured
+   */
+  public static isConfigured(): boolean {
+    return !!(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET);
+  }
+
+  /**
+   * Process a Spotify URL and return YouTube URLs
+   */
+  public async processSpotifyUrl(url: string): Promise<string[]> {
+
+    const type = detectSpotifyType(url);
+    const id = extractSpotifyId(url);
+
+    if (!id) {
+      throw new Error('Invalid Spotify URL');
+    }
+
+    switch (type) {
+      case 'track':
+        return await this.getTrackYoutubeUrl(id);
+      
+      case 'album':
+        return await this.getAlbumYoutubeUrls(id);
+      
+      case 'playlist':
+        return await this.getPlaylistYoutubeUrls(id);
+      
+      case 'artist':
+        throw new Error('Artist URLs are not supported yet. Please use a specific track, album, or playlist.');
+      
+      default:
+        throw new Error('Unsupported Spotify URL type');
+    }
+  }
+
+  getTrack(trackId: string): Promise<SpotifyTrackRes> {
+    return this.axios.get('/tracks', {
+      params: {
+        ids: trackId
+      },
+    }).then(res=> res.data).catch(err => null);
+  }
+
+  /**
+   * Get track information and find it on YouTube
+   */
+  private async getTrackYoutubeUrl(trackId: string): Promise<string[]> {
+    try {
+      const track = await this.getTrack(trackId);
+      const trackInfo = this.parseTrack(track);
+      
+      // Search YouTube for the track
+      const youtubeUrl = await this.searchYouTube(trackInfo);
+      
+      return youtubeUrl ? [youtubeUrl] : [];
+    } catch (error) {
+      console.error(`Spotify: Failed to get track ${trackId}:`, error);
+      throw new Error('Failed to fetch Spotify track');
+    }
+  }
+
+  /**
+   * Get album information and find tracks on YouTube
+   */
+  private async getAlbumYoutubeUrls(albumId: string): Promise<string[]> {
+    try {
+      const albumRes = await this.getAlbum(albumId);
+      const album = albumRes.albums[0];
+      const tracks = album.tracks.items;
+      
+      console.log(`Spotify: Processing album "${album.name}" with ${tracks.length} tracks`);
+      
+      const youtubeUrls: string[] = [];
+      
+      for (const track of tracks) {
+        const trackInfo: SpotifyTrackInfo = {
+          id: track.id,
+          name: track.name,
+          artists: track.artists.map((a: any) => a.name),
+          album: album.name,
+          duration: Math.floor(track.duration_ms / 1000),
+          thumbnail: album.images[0]?.url
+        };
+        
+        const youtubeUrl = await this.searchYouTube(trackInfo);
+        if (youtubeUrl) {
+          youtubeUrls.push(youtubeUrl);
+        }
+      }
+      
+      return youtubeUrls;
+    } catch (error) {
+      console.error(`Spotify: Failed to get album ${albumId}:`, error);
+      throw new Error('Failed to fetch Spotify album');
+    }
+  }
+  getAlbum(albumId: string): Promise<SpotifyAlbumRes> {
+   return this.axios.get('/albums', {
+      params: {
+        ids: albumId
+      },
+    }).then(res=> res.data).catch(err => null);
+  }
+
+  getPlaylist(playlistId: string): Promise<SpotifyPlaylistRes> {
+    return this.axios.get('/playlist', {
+      params: {
+        id: playlistId
+      },
+    }).then(res=> res.data).catch(err => null);
+  }
+
+  /**
+   * Get playlist information and find tracks on YouTube
+   */
+  private async getPlaylistYoutubeUrls(playlistId: string): Promise<string[]> {
+    try {
+      const playlist = await this.getPlaylist(playlistId);
+      const items = playlist.tracks.items;
+
+      console.log(`Spotify: Processing playlist "${playlist.name}" with ${items.length} tracks`);
+
+      const youtubeUrls: string[] = [];
+      
+      for (const item of items) {
+        if (!item.track || item.track.type !== 'track') continue;
+        
+        const track = item.track;
+        const trackInfo: SpotifyTrackInfo = {
+          id: track.id,
+          name: track.name,
+          artists: track.artists.map(a => a.name),
+          album: track.album.name,
+          duration: Math.floor(track.duration_ms / 1000),
+          thumbnail: track.album.images[0]?.url
+        };
+        
+        const youtubeUrl = await this.searchYouTube(trackInfo);
+        if (youtubeUrl) {
+          youtubeUrls.push(youtubeUrl);
+        }
+      }
+      
+      return youtubeUrls;
+    } catch (error) {
+      console.error(`Spotify: Failed to get playlist ${playlistId}:`, error);
+      throw new Error('Failed to fetch Spotify playlist');
+    }
+  }
+
+  /**
+   * Search YouTube for a Spotify track
+   */
+  private async searchYouTube(track: SpotifyTrackInfo): Promise<string | null> {
+    try {
+      // Build search query with artist and track name
+      const searchQuery = `${track.artists.join(' ')} ${track.name}`;
+      
+      console.log(`Spotify → YouTube: Searching for "${searchQuery}"`);
+      
+      // Use youtube-sr to search
+      const result = await youtube.searchOne(searchQuery);
+      
+      if (!result) {
+        console.warn(`Spotify → YouTube: No results found for "${searchQuery}"`);
+        return null;
+      }
+      
+      const youtubeUrl = `https://youtube.com/watch?v=${result.id}`;
+      console.log(`Spotify → YouTube: Found "${result.title}"`);
+      
+      return youtubeUrl;
+    } catch (error) {
+      console.error(`Spotify → YouTube: Search failed for "${track.name}":`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Parse Spotify track response
+   */
+  private parseTrack(trackRes: SpotifyTrackRes): SpotifyTrackInfo {
+    const track = trackRes.tracks[0];
+    return {
+      id: track.id,
+      name: track.name,
+      artists: track.artists.map((a: any) => a.name),
+      album: track.album.name,
+      duration: Math.floor(track.duration_ms / 1000),
+      thumbnail: track.album.images[0]?.url,
+      releaseDate: track.album.release_date,
+      isrc: track.external_ids?.isrc
+    };
+  }
+
+  /**
+   * Get track metadata only (without YouTube search)
+   */
+  public async getTrackMetadata(trackId: string): Promise<SpotifyTrackInfo> {    
+    try {
+      const track = await this.getTrack(trackId);
+      return this.parseTrack(track);
+    } catch (error) {
+      console.error(`Spotify: Failed to get track metadata ${trackId}:`, error);
+      throw new Error('Failed to fetch Spotify track metadata');
+    }
+  }
+}

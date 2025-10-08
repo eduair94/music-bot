@@ -4,7 +4,8 @@ import { bot } from "../index";
 import { MusicQueue } from "../structs/MusicQueue";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
-import { playlistPattern } from "../utils/patterns";
+import { playlistPattern, isSpotifyUrl, detectSpotifyType } from "../utils/patterns";
+import { getPlatformInfo } from "../utils/platformDetector";
 
 export default {
   data: new SlashCommandBuilder()
@@ -53,7 +54,69 @@ export default {
     let song;
 
     try {
-      song = await Song.from(url, url);
+      const result = await Song.from(url, url);
+      
+      // Handle Spotify playlists/albums (multiple songs)
+      if (Array.isArray(result)) {
+        const songs = result as Song[];
+        
+        if (songs.length === 0) {
+          return interaction
+            .reply({ content: "❌ No songs found from Spotify URL", ephemeral: true })
+            .catch(console.error);
+        }
+
+        // Determine if it's playlist or album
+        const spotifyType = isSpotifyUrl(url) ? detectSpotifyType(url) : 'unknown';
+        const contentType = spotifyType === 'album' ? 'album' : 'playlist';
+        
+        console.log(`Adding ${songs.length} songs from Spotify ${contentType}`);
+
+        // Create or get queue
+        const queue = bot.queues.get(interaction.guild!.id);
+        
+        if (queue) {
+          // Add all songs to existing queue
+          songs.forEach(s => queue.enqueue(s));
+          
+          return interaction
+            .editReply({ 
+              content: `🎧 Added **${songs.length}** songs from Spotify ${contentType} to the queue!` 
+            })
+            .catch(console.error);
+        } else {
+          // Create new queue
+          const newQueue = new MusicQueue({
+            interaction,
+            textChannel: interaction.channel! as TextChannel,
+            connection: joinVoiceChannel({
+              channelId: channel!.id,
+              guildId: channel!.guild.id,
+              adapterCreator: channel!.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
+            })
+          });
+
+          bot.queues.set(interaction.guild!.id, newQueue);
+
+          // Add all songs
+          songs.forEach(s => newQueue.enqueue(s));
+          
+          interaction
+            .editReply({ 
+              content: `🎧 Added **${songs.length}** songs from Spotify ${contentType}!` 
+            })
+            .catch(console.error);
+          
+          return;
+        }
+      }
+      
+      // Single song
+      song = result as Song;
+      
+      // Log platform information
+      const platformInfo = getPlatformInfo(song.url);
+      console.log(`Playing from ${platformInfo.platform}: ${song.title}`);
     } catch (error: any) {
       console.error(error);
 
@@ -62,10 +125,25 @@ export default {
           .reply({ content: i18n.__mf("play.errorNoResults", { url: `<${url}>` }), ephemeral: true })
           .catch(console.error);
 
-      if (error.name == "InvalidURL")
+      if (error.name == "InvalidURL") {
+        // Provide more helpful error message with supported platforms
+        const errorMsg = error.message || i18n.__mf("play.errorInvalidURL", { url: `<${url}>` });
         return interaction
-          .reply({ content: i18n.__mf("play.errorInvalidURL", { url: `<${url}>` }), ephemeral: true })
+          .reply({ 
+            content: `❌ ${errorMsg}\n\n**Supported platforms:** YouTube, SoundCloud, Bandcamp, Spotify, Audiomack, Mixcloud`, 
+            ephemeral: true 
+          })
           .catch(console.error);
+      }
+
+      if (error.name == "SpotifyNotConfigured") {
+        return interaction
+          .reply({ 
+            content: `❌ ${error.message}`, 
+            ephemeral: true 
+          })
+          .catch(console.error);
+      }
 
       if (interaction.replied)
         return await interaction.editReply({ content: i18n.__("common.errorCommand") }).catch(console.error);

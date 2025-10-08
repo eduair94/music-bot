@@ -3,8 +3,15 @@ import { exec, spawn } from "child_process";
 import fs from 'fs';
 import { promisify } from "util";
 import youtube from "youtube-sr";
+import { MusicPlatform } from "../interfaces/MusicPlatform";
+import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
-import { isURL, videoPattern } from "../utils/patterns";
+import { isSpotifyUrl, isURL } from "../utils/patterns";
+import {
+  getExtractorArgs,
+  getPlatformInfo,
+  validateMusicUrl
+} from "../utils/platformDetector";
 
 const execAsync = promisify(exec);
 
@@ -12,19 +19,28 @@ export interface SongData {
   url: string;
   title: string;
   duration: number;
+  platform?: MusicPlatform;
+  thumbnail?: string;
+  artist?: string;
 }
 
 export class Song {
   public readonly url: string;
   public readonly title: string;
   public readonly duration: number;
+  public readonly platform: MusicPlatform;
+  public readonly thumbnail?: string;
+  public readonly artist?: string;
 
   public static hasCookies = false;
 
-  public constructor({ url, title, duration }: SongData) {
+  public constructor({ url, title, duration, platform, thumbnail, artist }: SongData) {
     this.url = url;
     this.title = title;
     this.duration = duration;
+    this.platform = platform || MusicPlatform.YouTube;
+    this.thumbnail = thumbnail;
+    this.artist = artist;
   }
 
   public static checkCookies() {
@@ -44,51 +60,132 @@ export class Song {
   }
 
   public static async from(url: string = "", search: string = "") {
-    const isYoutubeUrl = videoPattern.test(url);
     this.checkCookies();
 
-    let videoUrl = url;
-    let title = "";
-    let duration = 0;
+    // Check if it's a direct URL
+    if (isURL.test(url)) {
+      // Special handling for Spotify URLs
+      if (isSpotifyUrl(url)) {
+        return await this.fromSpotifyUrl(url);
+      }
 
-    if (!isYoutubeUrl) {
-      // Search for the video
-      const result = await youtube.searchOne(search);
-
-      if (!result) {
-        let err = new Error(`No search results found for ${search}`);
-        err.name = "NoResults";
-        if (isURL.test(url)) err.name = "InvalidURL";
+      // Validate the platform
+      const validation = validateMusicUrl(url);
+      
+      if (!validation.valid) {
+        let err = new Error(validation.error || "Unsupported URL");
+        err.name = "InvalidURL";
         throw err;
       }
 
-      videoUrl = `https://youtube.com/watch?v=${result.id}`;
-      title = result.title || "";
-      duration = result.duration || 0;
+      // Get platform information
+      const platformInfo = getPlatformInfo(url);
+      
+      // Handle different platforms
+      return await this.fromPlatformUrl(url, platformInfo.platform);
     }
 
-    // Use yt-dlp to get video info with better options
+    // If not a URL, search YouTube
+    const result = await youtube.searchOne(search);
+
+    if (!result) {
+      let err = new Error(`No search results found for ${search}`);
+      err.name = "NoResults";
+      throw err;
+    }
+
+    const videoUrl = `https://youtube.com/watch?v=${result.id}`;
+    
+    // Get info from yt-dlp for YouTube
+    return await this.fromPlatformUrl(videoUrl, MusicPlatform.YouTube);
+  }
+
+  /**
+   * Create Song from a platform-specific URL
+   */
+  private static async fromPlatformUrl(url: string, platform: MusicPlatform) {
     try {
       const cookieArg = this.hasCookies ? '--cookies ./cookies.txt' : '';
-      // Add extractor args to handle YouTube's new restrictions
-      const cmd = `yt-dlp --dump-json --no-playlist --extractor-args "youtube:player_client=android" ${cookieArg} "${videoUrl}"`;
+      const extractorArgs = getExtractorArgs(url);
+      
+      // Build yt-dlp command with platform-specific args
+      const extractorArgsStr = extractorArgs.length > 0 
+        ? extractorArgs.join(' ') 
+        : '';
+      
+      const cmd = `yt-dlp --dump-json --no-playlist ${extractorArgsStr} ${cookieArg} "${url}"`;
       
       const { stdout } = await execAsync(cmd, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
       const info = JSON.parse(stdout);
 
       return new this({
-        url: videoUrl,
-        title: info.title || title || "Unknown",
-        duration: info.duration || duration || 0
+        url: url,
+        title: info.title || "Unknown",
+        duration: info.duration || 0,
+        platform: platform,
+        thumbnail: info.thumbnail || info.thumbnails?.[0]?.url,
+        artist: info.uploader || info.artist || info.creator
       });
     } catch (error) {
-      console.error("yt-dlp info error:", error);
-      // Fallback if yt-dlp fails
+      console.error(`yt-dlp info error for ${platform}:`, error);
+      
+      // Fallback with basic info
       return new this({
-        url: videoUrl,
-        title: title || "Unknown",
-        duration: duration || 0
+        url: url,
+        title: "Unknown",
+        duration: 0,
+        platform: platform
       });
+    }
+  }
+
+  /**
+   * Create Song from Spotify URL by bridging to YouTube
+   */
+  private static async fromSpotifyUrl(url: string): Promise<Song | Song[]> {
+    try {
+      const spotifyService = SpotifyService.getInstance();
+      
+      // Check if Spotify is configured
+      if (!SpotifyService.isConfigured()) {
+        let err = new Error("Spotify integration is not configured. Please add SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET to your .env file.");
+        err.name = "SpotifyNotConfigured";
+        throw err;
+      }
+
+      console.log(`Processing Spotify URL: ${url}`);
+      
+      // Get YouTube URLs from Spotify
+      const youtubeUrls = await spotifyService.processSpotifyUrl(url);
+      
+      if (!youtubeUrls || youtubeUrls.length === 0) {
+        let err = new Error("Could not find matching songs on YouTube for the Spotify URL");
+        err.name = "NoYouTubeMatch";
+        throw err;
+      }
+
+      // If multiple tracks (album/playlist), return array
+      if (youtubeUrls.length > 1) {
+        console.log(`Found ${youtubeUrls.length} tracks from Spotify`);
+        const songs: Song[] = [];
+        
+        for (const ytUrl of youtubeUrls) {
+          try {
+            const song = await this.fromPlatformUrl(ytUrl, MusicPlatform.Spotify);
+            songs.push(song);
+          } catch (error) {
+            console.error(`Failed to process YouTube URL ${ytUrl}:`, error);
+          }
+        }
+        
+        return songs.length > 0 ? songs : songs[0];
+      }
+
+      // Single track
+      return await this.fromPlatformUrl(youtubeUrls[0], MusicPlatform.Spotify);
+    } catch (error) {
+      console.error("Spotify processing error:", error);
+      throw error;
     }
   }
 
@@ -97,19 +194,19 @@ export class Song {
 
     try {
       const cookieArg = Song.hasCookies ? ['--cookies', './cookies.txt'] : [];
+      const extractorArgs = getExtractorArgs(this.url);
       
-      // Stream audio directly from yt-dlp using spawn
-      // Use android client to bypass YouTube's restrictions
+      // Build yt-dlp arguments based on platform
       const ytdlpArgs = [
-        '--format', 'bestaudio/best',
+        '--format', this.getFormatString(),
         '--no-playlist',
-        '--extractor-args', 'youtube:player_client=android',
+        ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
         this.url
       ];
 
-      console.log("Starting yt-dlp stream with android client...");
+      console.log(`Starting yt-dlp stream for ${this.platform}...`);
       const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
         stdio: ['ignore', 'pipe', 'pipe']
       });
@@ -135,7 +232,51 @@ export class Song {
     }
   }
 
+  /**
+   * Get the optimal format string for yt-dlp based on platform
+   */
+  private getFormatString(): string {
+    switch (this.platform) {
+      case MusicPlatform.SoundCloud:
+        // Prefer opus/aac for SoundCloud
+        return 'bestaudio[ext=opus]/bestaudio[ext=aac]/bestaudio/best';
+      
+      case MusicPlatform.Bandcamp:
+        // Bandcamp typically has high-quality MP3
+        return 'bestaudio[ext=mp3]/bestaudio/best';
+      
+      case MusicPlatform.YouTube:
+      default:
+        // YouTube: prefer opus for efficiency
+        return 'bestaudio/best';
+    }
+  }
+
   public startMessage() {
-    return i18n.__mf("play.startedPlaying", { title: this.title, url: this.url });
+    const platformEmoji = this.getPlatformEmoji();
+    const artistInfo = this.artist ? ` by ${this.artist}` : '';
+    return `${platformEmoji} ${i18n.__mf("play.startedPlaying", { title: this.title, url: this.url })}${artistInfo}`;
+  }
+
+  /**
+   * Get emoji representation for the platform
+   */
+  private getPlatformEmoji(): string {
+    switch (this.platform) {
+      case MusicPlatform.YouTube:
+        return '▶️';
+      case MusicPlatform.SoundCloud:
+        return '🔊';
+      case MusicPlatform.Bandcamp:
+        return '🎵';
+      case MusicPlatform.Spotify:
+        return '🎧';
+      case MusicPlatform.Audiomack:
+        return '🎶';
+      case MusicPlatform.Mixcloud:
+        return '☁️';
+      default:
+        return '🎵';
+    }
   }
 }

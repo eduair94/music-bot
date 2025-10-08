@@ -16,10 +16,19 @@ export default {
     const seek = queue.resource.playbackDuration / 1000;
     const left = song.duration - seek;
 
+    // Get platform emoji
+    const platformDisplay = song.platform ? `**Platform:** ${song.platform}` : '';
+    const artistDisplay = song.artist ? `**Artist:** ${song.artist}\n` : '';
+    
     let nowPlaying = new EmbedBuilder()
       .setTitle(i18n.__("nowplaying.embedTitle"))
-      .setDescription(`${song.title}\n${song.url}`)
+      .setDescription(`${song.title}\n${song.url}\n\n${artistDisplay}${platformDisplay}`)
       .setColor("#F8AA2A");
+
+    // Add thumbnail if available
+    if (song.thumbnail) {
+      nowPlaying.setThumbnail(song.thumbnail);
+    }
 
     if (song.duration > 0) {
       nowPlaying.addFields({
