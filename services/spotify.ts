@@ -135,11 +135,14 @@ export class SpotifyService {
       const album = albumRes.albums[0];
       const tracks = album.tracks.items;
       
-      console.log(`Spotify: Processing album "${album.name}" with ${tracks.length} tracks`);
+      // Limit to first 5 tracks
+      const tracksToProcess = tracks.slice(0, 5);
+      
+      console.log(`Spotify: Processing album "${album.name}" - queuing first ${tracksToProcess.length} of ${tracks.length} tracks`);
       
       const youtubeUrls: string[] = [];
       
-      for (const track of tracks) {
+      for (const track of tracksToProcess) {
         const trackInfo: SpotifyTrackInfo = {
           id: track.id,
           name: track.name,
@@ -185,11 +188,14 @@ export class SpotifyService {
       const playlist = await this.getPlaylist(playlistId);
       const items = playlist.tracks.items;
 
-      console.log(`Spotify: Processing playlist "${playlist.name}" with ${items.length} tracks`);
+      // Limit to first 5 tracks
+      const itemsToProcess = items.slice(0, 5);
+
+      console.log(`Spotify: Processing playlist "${playlist.name}" - queuing first ${itemsToProcess.length} of ${items.length} tracks`);
 
       const youtubeUrls: string[] = [];
       
-      for (const item of items) {
+      for (const item of itemsToProcess) {
         if (!item.track || item.track.type !== 'track') continue;
         
         const track = item.track;
