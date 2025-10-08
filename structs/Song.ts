@@ -145,13 +145,6 @@ export class Song {
   private static async fromSpotifyUrl(url: string): Promise<Song | Song[]> {
     try {
       const spotifyService = SpotifyService.getInstance();
-      
-      // Check if Spotify is configured
-      if (!SpotifyService.isConfigured()) {
-        let err = new Error("Spotify integration is not configured. Please add SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET to your .env file.");
-        err.name = "SpotifyNotConfigured";
-        throw err;
-      }
 
       console.log(`Processing Spotify URL: ${url}`);
       
