@@ -71,7 +71,7 @@ export function getPlatformInfo(url: string): PlatformInfo {
         platform: PlatformEnum.Spotify,
         rawPlatform,
         isSupported: true, // Now supported via YouTube bridge
-        requiresSpecialHandling: true
+        requiresSpecialHandling: false // Changed to false - we handle it via YouTube bridge
       };
 
     case 'audiomack':
@@ -133,7 +133,7 @@ export function validateMusicUrl(url: string): {
   if (info.platform === PlatformEnum.Unknown) {
     return { 
       valid: false, 
-      error: 'Unsupported platform. Supported platforms: YouTube, SoundCloud, Bandcamp, Audiomack, Mixcloud' 
+      error: 'Unsupported platform. Supported platforms: YouTube, SoundCloud, Spotify, Bandcamp, Audiomack, Mixcloud' 
     };
   }
 

@@ -21,16 +21,16 @@ export const scUserRegex = /^https?:\/\/(www\.)?soundcloud\.com\/[^/]+\/?$/;
 // ============================================================================
 // Spotify Patterns
 // ============================================================================
-// Spotify track URL
-export const spotifyTrackRegex = /^https?:\/\/(open\.)?spotify\.com\/track\/([a-zA-Z0-9]+)/;
-// Spotify album URL
-export const spotifyAlbumRegex = /^https?:\/\/(open\.)?spotify\.com\/album\/([a-zA-Z0-9]+)/;
-// Spotify playlist URL
-export const spotifyPlaylistRegex = /^https?:\/\/(open\.)?spotify\.com\/playlist\/([a-zA-Z0-9]+)/;
-// Spotify artist URL
-export const spotifyArtistRegex = /^https?:\/\/(open\.)?spotify\.com\/artist\/([a-zA-Z0-9]+)/;
-// General Spotify URL
-export const spotifyRegex = /^https?:\/\/(open\.)?spotify\.com\/(track|album|playlist|artist)\/([a-zA-Z0-9]+)/;
+// Spotify track URL (with optional intl- locale prefix)
+export const spotifyTrackRegex = /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(track)\/([a-zA-Z0-9]+)/;
+// Spotify album URL (with optional intl- locale prefix)
+export const spotifyAlbumRegex = /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(album)\/([a-zA-Z0-9]+)/;
+// Spotify playlist URL (with optional intl- locale prefix)
+export const spotifyPlaylistRegex = /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(playlist)\/([a-zA-Z0-9]+)/;
+// Spotify artist URL (with optional intl- locale prefix)
+export const spotifyArtistRegex = /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(artist)\/([a-zA-Z0-9]+)/;
+// General Spotify URL (with optional intl- locale prefix)
+export const spotifyRegex = /^https?:\/\/(open\.)?spotify\.com\/(intl-[a-z]{2}\/)?(track|album|playlist|artist)\/([a-zA-Z0-9]+)/;
 
 // ============================================================================
 // Platform Detection Patterns
