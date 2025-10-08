@@ -189,8 +189,8 @@ export class SpotifyService {
       const playlist = await this.getPlaylist(playlistId);
       const items = playlist.tracks.items;
 
-      // Limit to first 5 tracks
-      const itemsToProcess = items.slice(0, 5);
+      // Limit to first 50 tracks
+      const itemsToProcess = items.slice(0, 50);
 
       console.log(`Spotify: Processing playlist "${playlist.name}" - queuing first ${itemsToProcess.length} of ${items.length} tracks`);
 
