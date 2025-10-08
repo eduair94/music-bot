@@ -137,7 +137,7 @@ export class SpotifyService {
       const tracks = album.tracks.items;
       
       // Limit to first 5 tracks
-      const tracksToProcess = tracks.slice(0, 5);
+      const tracksToProcess = tracks.slice(0, 50);
       
       console.log(`Spotify: Processing album "${album.name}" - queuing first ${tracksToProcess.length} of ${tracks.length} tracks`);
       
