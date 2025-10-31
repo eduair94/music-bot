@@ -41,7 +41,7 @@ export function getPlatformInfo(url: string): PlatformInfo {
         rawPlatform,
         isSupported: true,
         requiresSpecialHandling: false,
-        extractorArgs: ['--extractor-args', 'youtube:player_client=android']
+        //extractorArgs: ['--extractor-args', 'youtube:player_client=android']
       };
 
     case 'soundcloud8':
