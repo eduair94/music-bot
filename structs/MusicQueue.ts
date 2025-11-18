@@ -73,23 +73,29 @@ export class MusicQueue {
     };
 
     this.connection.on("stateChange", async (oldState: VoiceConnectionState, newState: VoiceConnectionState) => {
-      console.log(`Connection state changed: ${oldState.status} -> ${newState.status}`);
+      console.log(`[MusicQueue] 🔊 Connection state: ${oldState.status} -> ${newState.status}`);
       
       Reflect.get(oldState, "networking")?.off("stateChange", networkStateChangeHandler);
       Reflect.get(newState, "networking")?.on("stateChange", networkStateChangeHandler);
 
       if (newState.status === VoiceConnectionStatus.Disconnected) {
-        if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && newState.closeCode === 4014) {
+        console.log(`[MusicQueue] ❌ DISCONNECTED - Reason: ${newState.reason}, Close code: ${(newState as any).closeCode || 'N/A'}`);
+        console.log(`[MusicQueue] 📊 Rejoin attempts: ${this.connection.rejoinAttempts}/5`);
+        
+        if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && (newState as any).closeCode === 4014) {
+          console.log(`[MusicQueue] 🛑 WebSocket close 4014 - Stopping playback`);
           try {
             this.stop();
           } catch (e) {
-            console.log(e);
+            console.log(`[MusicQueue] ⚠️ Error stopping:`, e);
             this.stop();
           }
         } else if (this.connection.rejoinAttempts < 5) {
+          console.log(`[MusicQueue] 🔄 Attempting to rejoin in ${(this.connection.rejoinAttempts + 1) * 5} seconds...`);
           await wait((this.connection.rejoinAttempts + 1) * 5_000);
           this.connection.rejoin();
         } else {
+          console.log(`[MusicQueue] 💀 Max rejoin attempts reached - Destroying connection`);
           this.connection.destroy();
         }
       } else if (
@@ -97,9 +103,12 @@ export class MusicQueue {
         (newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)
       ) {
         this.readyLock = true;
+        console.log(`[MusicQueue] 🔒 Waiting for connection to be ready...`);
         try {
           await entersState(this.connection, VoiceConnectionStatus.Ready, 30_000); // Increased from 20s to 30s
+          console.log(`[MusicQueue] ✅ Connection is ready!`);
         } catch {
+          console.log(`[MusicQueue] ⏰ Connection ready timeout - Destroying connection`);
           if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
             try {
               this.connection.destroy();
@@ -112,57 +121,90 @@ export class MusicQueue {
     });
 
     this.player.on("stateChange", async (oldState: AudioPlayerState, newState: AudioPlayerState) => {
-      console.log(`Player state changed: ${oldState.status} -> ${newState.status}`);
+      console.log(`[MusicQueue] 🎵 Player state: ${oldState.status} -> ${newState.status}`);
       
       if (oldState.status !== AudioPlayerStatus.Idle && newState.status === AudioPlayerStatus.Idle) {
+        console.log(`[MusicQueue] 🔚 Song finished playing`);
+        
         if (this.loop && this.songs.length) {
+          console.log(`[MusicQueue] 🔁 Loop enabled - Re-queuing song`);
           this.songs.push(this.songs.shift()!);
         } else {
+          console.log(`[MusicQueue] ⏭️ Moving to next song`);
           this.songs.shift();
-          if (!this.songs.length) return this.stop();
+          if (!this.songs.length) {
+            console.log(`[MusicQueue] 📭 Queue empty - Stopping`);
+            return this.stop();
+          }
         }
 
-        if (this.songs.length || this.resource.audioPlayer) this.processQueue();
+        if (this.songs.length || this.resource.audioPlayer) {
+          console.log(`[MusicQueue] 📋 Processing next in queue (${this.songs.length} songs remaining)`);
+          this.processQueue();
+        }
       } else if (oldState.status === AudioPlayerStatus.Buffering && newState.status === AudioPlayerStatus.Playing) {
+        console.log(`[MusicQueue] ▶️ Started playing - Sending "Now Playing" message`);
         this.sendPlayingMessage(newState);
       }
     });
 
     this.player.on("error", (error) => {
-      console.error("Player error:", error);
-      console.error("Error details:", error.message, error.resource?.metadata);
+      console.error("[MusicQueue] ❌ Player error occurred!");
+      console.error("[MusicQueue] 🔴 Error message:", error.message);
+      console.error("[MusicQueue] 📄 Error resource metadata:", error.resource?.metadata);
+      console.error("[MusicQueue] 📚 Full error:", error);
 
       if (this.loop && this.songs.length) {
+        console.log(`[MusicQueue] 🔁 Error occurred but loop enabled - Re-queuing song`);
         this.songs.push(this.songs.shift()!);
       } else {
+        console.log(`[MusicQueue] ⏭️ Error occurred - Skipping to next song`);
         this.songs.shift();
       }
 
+      console.log(`[MusicQueue] 🔄 Processing queue after error (${this.songs.length} songs remaining)`);
       this.processQueue();
     });
   }
 
   public enqueue(...songs: Song[]) {
-    if (this.waitTimeout !== null) clearTimeout(this.waitTimeout);
+    console.log(`[MusicQueue] ➕ Enqueuing ${songs.length} song(s)`);
+    
+    if (this.waitTimeout !== null) {
+      console.log(`[MusicQueue] ⏰ Clearing wait timeout`);
+      clearTimeout(this.waitTimeout);
+    }
     this.waitTimeout = null;
     this.stopped = false;
+    
     this.songs = this.songs.concat(songs);
+    console.log(`[MusicQueue] 📋 Queue now has ${this.songs.length} song(s)`);
+    
     this.processQueue();
   }
 
   public stop() {
+    console.log(`[MusicQueue] 🛑 Stop called (already stopped: ${this.stopped})`);
+    
     if (this.stopped) return;
 
     this.stopped = true;
     this.loop = false;
     this.songs = [];
+    
+    console.log(`[MusicQueue] ⏹️ Stopping player`);
     this.player.stop();
 
     !config.PRUNING && this.textChannel.send(i18n.__("play.queueEnded")).catch(console.error);
 
-    if (this.waitTimeout !== null) return;
+    if (this.waitTimeout !== null) {
+      console.log(`[MusicQueue] ⏰ Wait timeout already exists - not creating new one`);
+      return;
+    }
 
+    console.log(`[MusicQueue] ⏰ Setting wait timeout for ${config.STAY_TIME} seconds`);
     this.waitTimeout = setTimeout(() => {
+      console.log(`[MusicQueue] 💀 Wait timeout expired - Destroying connection`);
       if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
         try {
           this.connection.destroy();
@@ -181,26 +223,33 @@ export class MusicQueue {
    * continues to play smoothly, handling transitions between songs, including loop and stop behaviors.
    */
   public async processQueue(): Promise<void> {
+    console.log(`[MusicQueue] 🔄 processQueue called - queueLock: ${this.queueLock}, player status: ${this.player.state.status}`);
+    
     if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle) {
+      console.log(`[MusicQueue] 🚫 Queue locked or player busy - skipping`);
       return;
     }
 
     if (!this.songs.length) {
+      console.log(`[MusicQueue] 📭 No songs in queue - stopping`);
       return this.stop();
     }
 
+    console.log(`[MusicQueue] 🔒 Locking queue`);
     this.queueLock = true;
 
     const next = this.songs[0];
+    console.log(`[MusicQueue] 🎵 Next song: "${next.title}" (${next.duration}s) from ${next.url}`);
 
     try {
       // Ensure the voice connection is ready before attempting to play
       if (this.connection.state.status !== VoiceConnectionStatus.Ready) {
-        console.log("Waiting for voice connection to be ready...");
+        console.log("[MusicQueue] 🔒 Waiting for voice connection to be ready...");
         try {
           await entersState(this.connection, VoiceConnectionStatus.Ready, 30_000);
+          console.log("[MusicQueue] ✅ Voice connection ready!");
         } catch (error) {
-          console.error("Voice connection failed to become ready:", error);
+          console.error("[MusicQueue] ⏰ Voice connection failed to become ready:", error);
           this.textChannel.send("❌ Failed to establish voice connection. Please try again.").catch(console.error);
           this.queueLock = false;
           return this.stop();
@@ -208,34 +257,44 @@ export class MusicQueue {
       }
 
       // Send a loading message for user feedback
+      console.log(`[MusicQueue] 💬 Sending loading message`);
       const loadingMsg = await this.textChannel.send(`⏳ Preparing to play: **${next.title}**...`).catch(console.error);
       
+      console.log(`[MusicQueue] 🎧 Creating audio resource for ${next.title}`);
       const resource = await next.makeResource();
       
       // Check if resource was created successfully
       if (!resource) {
+        console.error(`[MusicQueue] ❌ Failed to create audio resource for ${next.title}`);
         if (loadingMsg) {
           await loadingMsg.delete().catch(console.error);
         }
         throw new Error("Failed to create audio resource");
       }
       
+      console.log(`[MusicQueue] ✅ Audio resource created successfully`);
+      
       // Delete the loading message once ready
       if (loadingMsg) {
+        console.log(`[MusicQueue] 🗑️ Deleting loading message`);
         await loadingMsg.delete().catch(console.error);
       }
       
       this.resource = resource;
+      console.log(`[MusicQueue] ▶️ Starting playback`);
       this.player.play(this.resource);
       this.resource.volume?.setVolumeLogarithmic(this.volume / 100);
+      console.log(`[MusicQueue] 🔊 Volume set to ${this.volume}%`);
     } catch (error) {
-      console.error(error);
+      console.error("[MusicQueue] ❌ Error in processQueue:", error);
       
       // Inform user of the error
       this.textChannel.send(`❌ Failed to play: **${next.title}**. Skipping to next song...`).catch(console.error);
 
+      console.log(`[MusicQueue] 🔄 Retrying processQueue after error`);
       return this.processQueue();
     } finally {
+      console.log(`[MusicQueue] 🔓 Unlocking queue`);
       this.queueLock = false;
     }
   }
@@ -346,6 +405,7 @@ export class MusicQueue {
    */
   private async sendPlayingMessage(newState: AudioPlayerPlayingState) {
     const song = (newState.resource as AudioResource<Song>).metadata;
+    console.log(`[MusicQueue] 💬 Sending "Now Playing" message for: ${song.title}`);
 
     let playingMessage: Message;
 
@@ -354,8 +414,9 @@ export class MusicQueue {
         content: song.startMessage(),
         components: this.createButtonRow()
       });
+      console.log(`[MusicQueue] ✅ "Now Playing" message sent (ID: ${playingMessage.id})`);
     } catch (error: unknown) {
-      console.error(error);
+      console.error("[MusicQueue] ❌ Failed to send playing message:", error);
       if (error instanceof Error) this.textChannel.send(error.message);
       return;
     }
@@ -364,6 +425,7 @@ export class MusicQueue {
 
     // Calculate collector timeout - use 1 hour if duration is 0 or invalid
     const collectorTimeout = song.duration > 0 ? song.duration * 1000 : 3600000; // 1 hour default
+    console.log(`[MusicQueue] ⏱️ Collector timeout: ${collectorTimeout}ms (song duration: ${song.duration}s)`);
 
     const collector = playingMessage.createMessageComponentCollector({
       filter,
@@ -371,22 +433,33 @@ export class MusicQueue {
     });
 
     collector.on("collect", async (interaction) => {
+      console.log(`[MusicQueue] 🔘 Button interaction: ${interaction.customId}`);
+      
       if (!interaction.isButton()) return;
       if (!this.songs) return;
 
       const handler = this.commandHandlers.get(interaction.customId);
 
-      if (["skip", "stop"].includes(interaction.customId)) collector.stop();
+      if (["skip", "stop"].includes(interaction.customId)) {
+        console.log(`[MusicQueue] 🛑 Stopping collector due to ${interaction.customId}`);
+        collector.stop();
+      }
 
-      if (handler) await handler.call(this, interaction);
+      if (handler) {
+        console.log(`[MusicQueue] ⚡ Executing handler for ${interaction.customId}`);
+        await handler.call(this, interaction);
+      }
     });
 
-    collector.on("end", () => {
+    collector.on("end", (collected, reason) => {
+      console.log(`[MusicQueue] 🏁 Collector ended - Reason: ${reason}, Collected: ${collected.size} interactions`);
+      
       // Remove the buttons when the song ends
       playingMessage.edit({ components: [] }).catch(console.error);
 
       // Delete the message if pruning is enabled
       if (config.PRUNING) {
+        console.log(`[MusicQueue] 🗑️ Pruning enabled - Deleting message in 3s`);
         setTimeout(() => {
           playingMessage.delete().catch();
         }, 3000);

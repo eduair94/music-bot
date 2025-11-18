@@ -213,20 +213,27 @@ export class Song {
         this.url
       ];
 
-      console.log(`Starting yt-dlp stream for ${this.platform}...`);
+      console.log(`[Song] 🎧 Starting yt-dlp stream for ${this.platform}: ${this.title}`);
+      console.log(`[Song] 🔧 yt-dlp args:`, ytdlpArgs.join(' '));
+      
       const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
       // Log errors from stderr
       ytdlpProcess.stderr.on('data', (data) => {
-        console.error(`yt-dlp: ${data.toString()}`);
+        console.error(`[Song] ⚠️ yt-dlp stderr: ${data.toString()}`);
       });
 
       ytdlpProcess.on('error', (error) => {
-        console.error('yt-dlp process error:', error);
+        console.error('[Song] ❌ yt-dlp process error:', error);
       });
 
+      ytdlpProcess.on('close', (code) => {
+        console.log(`[Song] 🏁 yt-dlp process closed with code ${code}`);
+      });
+
+      console.log(`[Song] ✅ Creating audio resource from yt-dlp stdout`);
       // Create audio resource from the stdout stream
       return createAudioResource(ytdlpProcess.stdout, {
         metadata: this,
@@ -234,7 +241,7 @@ export class Song {
         inlineVolume: true
       });
     } catch (error) {
-      console.error("yt-dlp streaming error:", error);
+      console.error("[Song] ❌ yt-dlp streaming error:", error);
       return;
     }
   }
