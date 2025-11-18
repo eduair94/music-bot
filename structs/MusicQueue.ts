@@ -189,6 +189,19 @@ export class MusicQueue {
     const next = this.songs[0];
 
     try {
+      // Ensure the voice connection is ready before attempting to play
+      if (this.connection.state.status !== VoiceConnectionStatus.Ready) {
+        console.log("Waiting for voice connection to be ready...");
+        try {
+          await entersState(this.connection, VoiceConnectionStatus.Ready, 30_000);
+        } catch (error) {
+          console.error("Voice connection failed to become ready:", error);
+          this.textChannel.send("❌ Failed to establish voice connection. Please try again.").catch(console.error);
+          this.queueLock = false;
+          return this.stop();
+        }
+      }
+
       // Send a loading message for user feedback
       const loadingMsg = await this.textChannel.send(`⏳ Preparing to play: **${next.title}**...`).catch(console.error);
       
