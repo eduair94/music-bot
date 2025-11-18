@@ -151,6 +151,17 @@ export default {
           .catch(console.error);
       }
 
+      // Check if it's a yt-dlp signature/format error
+      if (error.stderr && (error.stderr.includes('Signature solving failed') || 
+                          error.stderr.includes('Requested format is not available') ||
+                          error.stderr.includes('n challenge solving failed'))) {
+        return interaction
+          .editReply({ 
+            content: `❌ Failed to extract video information. YouTube may be blocking the request. Please try again in a moment.\n\n**Technical details:** Signature solving failed. The bot is attempting to resolve this automatically.`
+          })
+          .catch(console.error);
+      }
+
       if (interaction.replied)
         return await interaction.editReply({ content: i18n.__("common.errorCommand") }).catch(console.error);
       else return interaction.reply({ content: i18n.__("common.errorCommand"), ephemeral: true }).catch(console.error);

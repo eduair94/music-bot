@@ -96,7 +96,7 @@ export class MusicQueue {
       ) {
         this.readyLock = true;
         try {
-          await entersState(this.connection, VoiceConnectionStatus.Ready, 20_000);
+          await entersState(this.connection, VoiceConnectionStatus.Ready, 30_000); // Increased from 20s to 30s
         } catch {
           if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
             try {
@@ -189,12 +189,24 @@ export class MusicQueue {
     const next = this.songs[0];
 
     try {
+      // Send a loading message for user feedback
+      const loadingMsg = await this.textChannel.send(`⏳ Preparing to play: **${next.title}**...`).catch(console.error);
+      
       const resource = await next.makeResource();
+      
+      // Delete the loading message once ready
+      if (loadingMsg) {
+        await loadingMsg.delete().catch(console.error);
+      }
+      
       this.resource = resource!;
       this.player.play(this.resource);
       this.resource.volume?.setVolumeLogarithmic(this.volume / 100);
     } catch (error) {
       console.error(error);
+      
+      // Inform user of the error
+      this.textChannel.send(`❌ Failed to play: **${next.title}**. Skipping to next song...`).catch(console.error);
 
       return this.processQueue();
     } finally {

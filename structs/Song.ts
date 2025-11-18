@@ -116,11 +116,18 @@ export class Song {
       // Add Node.js runtime and EJS remote components for YouTube signature solving
       const jsRuntimeArgs = '--js-runtimes node --remote-components ejs:github';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${jsRuntimeArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      // Add performance optimizations
+      const perfArgs = '--no-check-certificates --socket-timeout 10 --extractor-retries 3';
       
-      const { stdout } = await execAsync(cmd, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
+      const cmd = `yt-dlp --dump-json --no-playlist ${jsRuntimeArgs} ${perfArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      
+      const { stdout } = await execAsync(cmd, { 
+        maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+        timeout: 30000 // 30 second timeout
+      });
       const info = JSON.parse(stdout);
 
+      console.log("info", info);
       return new this({
         url: url,
         title: info.title || "Unknown",
@@ -129,16 +136,14 @@ export class Song {
         thumbnail: info.thumbnail || info.thumbnails?.[0]?.url,
         artist: info.uploader || info.artist || info.creator
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`yt-dlp info error for ${platform}:`, error);
+      console.error(`Error stderr:`, error.stderr);
+      console.error(`Error stdout:`, error.stdout);
       
-      // Fallback with basic info
-      return new this({
-        url: url,
-        title: "Unknown",
-        duration: 0,
-        platform: platform
-      });
+      // Re-throw the error instead of falling back to Unknown
+      // This will allow the error to be properly handled in the play command
+      throw error;
     }
   }
 
@@ -193,11 +198,15 @@ export class Song {
       const extractorArgs = getExtractorArgs(this.url);
       
       // Build yt-dlp arguments based on platform
+      // Add --no-check-certificates and --no-call-home for faster startup
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
         '--js-runtimes', 'node',
         '--remote-components', 'ejs:github',
+        '--no-check-certificates', // Skip SSL verification for faster startup
+        '--extractor-retries', '3', // Limit retries
+        '--socket-timeout', '10', // 10 second socket timeout
         ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
