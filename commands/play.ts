@@ -122,25 +122,31 @@ export default {
 
       if (error.name == "NoResults")
         return interaction
-          .reply({ content: i18n.__mf("play.errorNoResults", { url: `<${url}>` }), ephemeral: true })
+          .editReply({ content: i18n.__mf("play.errorNoResults", { url: `<${url}>` }) })
           .catch(console.error);
 
       if (error.name == "InvalidURL") {
         // Provide more helpful error message with supported platforms
         const errorMsg = error.message || i18n.__mf("play.errorInvalidURL", { url: `<${url}>` });
         return interaction
-          .reply({ 
-            content: `❌ ${errorMsg}\n\n**Supported platforms:** YouTube, SoundCloud, Bandcamp, Spotify, Audiomack, Mixcloud`, 
-            ephemeral: true 
+          .editReply({ 
+            content: `❌ ${errorMsg}\n\n**Supported platforms:** YouTube, SoundCloud, Bandcamp, Spotify, Audiomack, Mixcloud`
           })
           .catch(console.error);
       }
 
       if (error.name == "SpotifyNotConfigured") {
         return interaction
-          .reply({ 
-            content: `❌ ${error.message}`, 
-            ephemeral: true 
+          .editReply({ 
+            content: `❌ ${error.message}`
+          })
+          .catch(console.error);
+      }
+
+      if (error.name == "NoYouTubeMatch") {
+        return interaction
+          .editReply({ 
+            content: `❌ ${error.message}`
           })
           .catch(console.error);
       }
