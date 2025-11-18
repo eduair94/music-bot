@@ -113,7 +113,10 @@ export class Song {
         ? extractorArgs.join(' ') 
         : '';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${extractorArgsStr} ${cookieArg} "${url}"`;
+      // Add Node.js runtime and EJS remote components for YouTube signature solving
+      const jsRuntimeArgs = '--js-runtimes node --remote-components ejs:github';
+      
+      const cmd = `yt-dlp --dump-json --no-playlist ${jsRuntimeArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
       const { stdout } = await execAsync(cmd, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
       const info = JSON.parse(stdout);
@@ -193,6 +196,8 @@ export class Song {
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
+        '--js-runtimes', 'node',
+        '--remote-components', 'ejs:github',
         ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
