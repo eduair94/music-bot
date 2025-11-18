@@ -73,6 +73,8 @@ export class MusicQueue {
     };
 
     this.connection.on("stateChange", async (oldState: VoiceConnectionState, newState: VoiceConnectionState) => {
+      console.log(`Connection state changed: ${oldState.status} -> ${newState.status}`);
+      
       Reflect.get(oldState, "networking")?.off("stateChange", networkStateChangeHandler);
       Reflect.get(newState, "networking")?.on("stateChange", networkStateChangeHandler);
 
@@ -110,6 +112,8 @@ export class MusicQueue {
     });
 
     this.player.on("stateChange", async (oldState: AudioPlayerState, newState: AudioPlayerState) => {
+      console.log(`Player state changed: ${oldState.status} -> ${newState.status}`);
+      
       if (oldState.status !== AudioPlayerStatus.Idle && newState.status === AudioPlayerStatus.Idle) {
         if (this.loop && this.songs.length) {
           this.songs.push(this.songs.shift()!);
@@ -125,7 +129,8 @@ export class MusicQueue {
     });
 
     this.player.on("error", (error) => {
-      console.error(error);
+      console.error("Player error:", error);
+      console.error("Error details:", error.message, error.resource?.metadata);
 
       if (this.loop && this.songs.length) {
         this.songs.push(this.songs.shift()!);
@@ -207,12 +212,20 @@ export class MusicQueue {
       
       const resource = await next.makeResource();
       
+      // Check if resource was created successfully
+      if (!resource) {
+        if (loadingMsg) {
+          await loadingMsg.delete().catch(console.error);
+        }
+        throw new Error("Failed to create audio resource");
+      }
+      
       // Delete the loading message once ready
       if (loadingMsg) {
         await loadingMsg.delete().catch(console.error);
       }
       
-      this.resource = resource!;
+      this.resource = resource;
       this.player.play(this.resource);
       this.resource.volume?.setVolumeLogarithmic(this.volume / 100);
     } catch (error) {
@@ -349,9 +362,12 @@ export class MusicQueue {
 
     const filter = (i: Interaction) => i.isButton() && i.message.id === playingMessage.id;
 
+    // Calculate collector timeout - use 1 hour if duration is 0 or invalid
+    const collectorTimeout = song.duration > 0 ? song.duration * 1000 : 3600000; // 1 hour default
+
     const collector = playingMessage.createMessageComponentCollector({
       filter,
-      time: song.duration > 0 ? song.duration * 1000 : 60000
+      time: collectorTimeout
     });
 
     collector.on("collect", async (interaction) => {
