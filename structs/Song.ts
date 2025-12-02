@@ -123,14 +123,16 @@ export class Song {
         console.log(`[Song] 🔄 Using proxy: ${proxy}`);
       }
       
-      // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
-      // --remote-components ejs:github only works with Deno/Bun runtimes, not Node.js
-      // Since we're using the yt-dlp-ejs pip package, we don't need these flags
+      // Use android client to bypass n-challenge JavaScript requirement
+      // This works without needing Deno/Node.js runtime for signature solving
+      const youtubeArgs = platform === MusicPlatform.YouTube || platform === MusicPlatform.Spotify
+        ? '--extractor-args "youtube:player_client=android,web"'
+        : '';
       
       // Add performance optimizations and extended timeout
       const perfArgs = '--no-check-certificates --socket-timeout 30 --extractor-retries 5';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${proxyArg} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${youtubeArgs} ${proxyArg} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
       console.log(`[Song] Running yt-dlp command: ${cmd}`);
       
@@ -219,16 +221,19 @@ export class Song {
         console.log(`[Song] 🔄 Using proxy for stream: ${proxy}`);
       }
       
+      // Use android client to bypass n-challenge JavaScript requirement for YouTube
+      const youtubeArgs = (this.platform === MusicPlatform.YouTube || this.platform === MusicPlatform.Spotify)
+        ? ['--extractor-args', 'youtube:player_client=android,web']
+        : [];
+      
       // Build yt-dlp arguments based on platform
-      // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
-      // We don't need --js-runtimes or --remote-components when using yt-dlp-ejs pip package
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
         '--no-check-certificates', // Skip SSL verification for faster startup
         '--extractor-retries', '5', // More retries for reliability
         '--socket-timeout', '30', // 30 second socket timeout
-        ...proxyArg,
+        ...youtubeArgs,
         ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
