@@ -12,7 +12,6 @@ import {
   getPlatformInfo,
   validateMusicUrl
 } from "../utils/platformDetector";
-import { ProxyFileService } from "../utils/ProxyFileService";
 
 const execAsync = promisify(exec);
 
@@ -114,36 +113,31 @@ export class Song {
         ? extractorArgs.join(' ') 
         : '';
       
-      // Get rotating proxy for YouTube requests
-      const proxyService = ProxyFileService.getInstance();
-      const proxy = await proxyService.getRandomProxy();
-      const proxyArg = proxy ? `--proxy "${proxy}"` : '';
-      
-      if (proxy) {
-        console.log(`[Song] 🔄 Using proxy: ${proxy}`);
-      }
-      
       // Use tv client - it's not impacted by SABR issues and doesn't require n-challenge solving
       // tv client works with cookies unlike android client
-      // Fallback chain: tv -> ios -> web (in case tv fails)
       const youtubeArgs = platform === MusicPlatform.YouTube || platform === MusicPlatform.Spotify
         ? '--extractor-args youtube:player_client=tv,ios'
         : '';
       
-      // Add performance optimizations and extended timeout
-      const perfArgs = '--no-check-certificates --socket-timeout 30 --extractor-retries 5';
+      // Performance optimizations:
+      // - flat-playlist: Don't resolve playlist items
+      // - no-warnings: Skip warning output
+      // - skip-download: Only get metadata, don't download
+      // - socket-timeout 10: Faster timeout for metadata
+      // - extractor-retries 2: Fewer retries for speed
+      const perfArgs = '--no-check-certificates --no-warnings --socket-timeout 10 --extractor-retries 2';
       
       const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${youtubeArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
-      console.log(`[Song] Running yt-dlp command: ${cmd}`);
+      console.log(`[Song] Running yt-dlp command for: ${url}`);
       
       const { stdout } = await execAsync(cmd, { 
         maxBuffer: 1024 * 1024 * 10, // 10MB buffer
-        timeout: 120000 // 120 second timeout (YouTube extraction can take time)
+        timeout: 60000 // 60 second timeout (reduced from 120)
       });
       const info = JSON.parse(stdout);
 
-      console.log("info", info);
+      console.log(`[Song] ✅ Got metadata: ${info.title} (${info.duration}s)`);
       return new this({
         url: url,
         title: info.title || "Unknown",
@@ -213,56 +207,45 @@ export class Song {
       const cookieArg = Song.hasCookies ? ['--cookies', './cookies.txt'] : [];
       const extractorArgs = getExtractorArgs(this.url);
       
-      // Get rotating proxy for streaming
-      const proxyService = ProxyFileService.getInstance();
-      const proxy = await proxyService.getRandomProxy();
-      const proxyArg = proxy ? ['--proxy', proxy] : [];
-      
-      if (proxy) {
-        console.log(`[Song] 🔄 Using proxy for stream: ${proxy}`);
-      }
-      
       // Use tv client - it's not impacted by SABR issues and doesn't require n-challenge solving
       // tv client works with cookies unlike android client
       const youtubeArgs = (this.platform === MusicPlatform.YouTube || this.platform === MusicPlatform.Spotify)
         ? ['--extractor-args', 'youtube:player_client=tv,ios']
         : [];
       
-      // Build yt-dlp arguments based on platform
+      // Build yt-dlp arguments based on platform - optimized for speed
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
-        '--no-check-certificates', // Skip SSL verification for faster startup
-        '--extractor-retries', '5', // More retries for reliability
-        '--socket-timeout', '30', // 30 second socket timeout
+        '--no-check-certificates',
+        '--no-warnings',
+        '--extractor-retries', '2',
+        '--socket-timeout', '10',
         ...youtubeArgs,
         ...extractorArgs,
-        '--output', '-', // Output to stdout
+        '--output', '-',
         ...cookieArg,
         this.url
       ];
 
-      console.log(`[Song] 🎧 Starting yt-dlp stream for ${this.platform}: ${this.title}`);
-      console.log(`[Song] 🔧 yt-dlp args:`, ytdlpArgs.join(' '));
+      console.log(`[Song] 🎧 Starting stream: ${this.title}`);
       
       const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
         stdio: ['ignore', 'pipe', 'pipe']
       });
 
-      // Log errors from stderr
+      // Only log errors, not all stderr (reduces noise)
       ytdlpProcess.stderr.on('data', (data) => {
-        console.error(`[Song] ⚠️ yt-dlp stderr: ${data.toString()}`);
+        const msg = data.toString();
+        if (msg.includes('ERROR') || msg.includes('error')) {
+          console.error(`[Song] ⚠️ yt-dlp: ${msg}`);
+        }
       });
 
       ytdlpProcess.on('error', (error) => {
         console.error('[Song] ❌ yt-dlp process error:', error);
       });
 
-      ytdlpProcess.on('close', (code) => {
-        console.log(`[Song] 🏁 yt-dlp process closed with code ${code}`);
-      });
-
-      console.log(`[Song] ✅ Creating audio resource from yt-dlp stdout`);
       // Create audio resource from the stdout stream
       return createAudioResource(ytdlpProcess.stdout, {
         metadata: this,

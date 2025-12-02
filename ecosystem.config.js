@@ -2,7 +2,6 @@ module.exports = {
   apps: [{
     name: 'music-bot',
     script: './dist/index.js',
-    cwd: '/root/music-bot',
     instances: 1,
     autorestart: true,
     watch: false,
