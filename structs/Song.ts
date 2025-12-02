@@ -132,7 +132,7 @@ export class Song {
       // Add performance optimizations and extended timeout
       const perfArgs = '--no-check-certificates --socket-timeout 30 --extractor-retries 5';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${youtubeArgs} ${proxyArg} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${youtubeArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
       console.log(`[Song] Running yt-dlp command: ${cmd}`);
       
