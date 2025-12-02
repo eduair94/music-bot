@@ -113,17 +113,20 @@ export class Song {
         ? extractorArgs.join(' ') 
         : '';
       
-      // Add Node.js runtime and EJS remote components for YouTube signature solving
-      const jsRuntimeArgs = '--js-runtimes node --remote-components ejs:github';
+      // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
+      // --remote-components ejs:github only works with Deno/Bun runtimes, not Node.js
+      // Since we're using the yt-dlp-ejs pip package, we don't need these flags
       
-      // Add performance optimizations
-      const perfArgs = '--no-check-certificates --socket-timeout 10 --extractor-retries 3';
+      // Add performance optimizations and extended timeout
+      const perfArgs = '--no-check-certificates --socket-timeout 30 --extractor-retries 5';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${jsRuntimeArgs} ${perfArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      
+      console.log(`[Song] Running yt-dlp command: ${cmd}`);
       
       const { stdout } = await execAsync(cmd, { 
         maxBuffer: 1024 * 1024 * 10, // 10MB buffer
-        timeout: 30000 // 30 second timeout
+        timeout: 120000 // 120 second timeout (YouTube extraction can take time)
       });
       const info = JSON.parse(stdout);
 
@@ -198,15 +201,14 @@ export class Song {
       const extractorArgs = getExtractorArgs(this.url);
       
       // Build yt-dlp arguments based on platform
-      // Add --no-check-certificates and --no-call-home for faster startup
+      // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
+      // We don't need --js-runtimes or --remote-components when using yt-dlp-ejs pip package
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
-        '--js-runtimes', 'node',
-        '--remote-components', 'ejs:github',
         '--no-check-certificates', // Skip SSL verification for faster startup
-        '--extractor-retries', '3', // Limit retries
-        '--socket-timeout', '10', // 10 second socket timeout
+        '--extractor-retries', '5', // More retries for reliability
+        '--socket-timeout', '30', // 30 second socket timeout
         ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
