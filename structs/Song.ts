@@ -120,12 +120,10 @@ export class Song {
         : '';
       
       // Performance optimizations:
-      // - flat-playlist: Don't resolve playlist items
       // - no-warnings: Skip warning output
-      // - skip-download: Only get metadata, don't download
-      // - socket-timeout 10: Faster timeout for metadata
-      // - extractor-retries 2: Fewer retries for speed
-      const perfArgs = '--no-check-certificates --no-warnings --socket-timeout 10 --extractor-retries 2';
+      // - socket-timeout 30: Network timeout per request
+      // - extractor-retries 3: Balance between speed and reliability
+      const perfArgs = '--no-check-certificates --no-warnings --socket-timeout 30 --extractor-retries 3';
       
       const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${youtubeArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
@@ -133,7 +131,7 @@ export class Song {
       
       const { stdout } = await execAsync(cmd, { 
         maxBuffer: 1024 * 1024 * 10, // 10MB buffer
-        timeout: 60000 // 60 second timeout (reduced from 120)
+        timeout: 180000 // 180 second timeout (3 minutes - yt-dlp can be slow)
       });
       const info = JSON.parse(stdout);
 
@@ -213,14 +211,14 @@ export class Song {
         ? ['--extractor-args', 'youtube:player_client=tv,ios']
         : [];
       
-      // Build yt-dlp arguments based on platform - optimized for speed
+      // Build yt-dlp arguments based on platform - optimized for reliability
       const ytdlpArgs = [
         '--format', this.getFormatString(),
         '--no-playlist',
         '--no-check-certificates',
         '--no-warnings',
-        '--extractor-retries', '2',
-        '--socket-timeout', '10',
+        '--extractor-retries', '3',
+        '--socket-timeout', '30',
         ...youtubeArgs,
         ...extractorArgs,
         '--output', '-',
