@@ -7,6 +7,7 @@ import { MusicPlatform } from "../interfaces/MusicPlatform";
 import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
 import { isSpotifyUrl, isURL } from "../utils/patterns";
+import { ProxyFileService } from "../utils/ProxyFileService";
 import {
   getExtractorArgs,
   getPlatformInfo,
@@ -113,6 +114,15 @@ export class Song {
         ? extractorArgs.join(' ') 
         : '';
       
+      // Get rotating proxy for YouTube requests
+      const proxyService = ProxyFileService.getInstance();
+      const proxy = await proxyService.getRandomProxy();
+      const proxyArg = proxy ? `--proxy "${proxy}"` : '';
+      
+      if (proxy) {
+        console.log(`[Song] 🔄 Using proxy: ${proxy}`);
+      }
+      
       // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
       // --remote-components ejs:github only works with Deno/Bun runtimes, not Node.js
       // Since we're using the yt-dlp-ejs pip package, we don't need these flags
@@ -120,7 +130,7 @@ export class Song {
       // Add performance optimizations and extended timeout
       const perfArgs = '--no-check-certificates --socket-timeout 30 --extractor-retries 5';
       
-      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${extractorArgsStr} ${cookieArg} "${url}"`;
+      const cmd = `yt-dlp --dump-json --no-playlist ${perfArgs} ${proxyArg} ${extractorArgsStr} ${cookieArg} "${url}"`;
       
       console.log(`[Song] Running yt-dlp command: ${cmd}`);
       
@@ -200,6 +210,15 @@ export class Song {
       const cookieArg = Song.hasCookies ? ['--cookies', './cookies.txt'] : [];
       const extractorArgs = getExtractorArgs(this.url);
       
+      // Get rotating proxy for streaming
+      const proxyService = ProxyFileService.getInstance();
+      const proxy = await proxyService.getRandomProxy();
+      const proxyArg = proxy ? ['--proxy', proxy] : [];
+      
+      if (proxy) {
+        console.log(`[Song] 🔄 Using proxy for stream: ${proxy}`);
+      }
+      
       // Build yt-dlp arguments based on platform
       // Note: yt-dlp-ejs package must be installed via pip for JS challenge solving
       // We don't need --js-runtimes or --remote-components when using yt-dlp-ejs pip package
@@ -209,6 +228,7 @@ export class Song {
         '--no-check-certificates', // Skip SSL verification for faster startup
         '--extractor-retries', '5', // More retries for reliability
         '--socket-timeout', '30', // 30 second socket timeout
+        ...proxyArg,
         ...extractorArgs,
         '--output', '-', // Output to stdout
         ...cookieArg,
