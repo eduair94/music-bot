@@ -7,12 +7,12 @@ import { MusicPlatform } from "../interfaces/MusicPlatform";
 import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
 import { isSpotifyUrl, isURL } from "../utils/patterns";
-import { ProxyFileService } from "../utils/ProxyFileService";
 import {
   getExtractorArgs,
   getPlatformInfo,
   validateMusicUrl
 } from "../utils/platformDetector";
+import { ProxyFileService } from "../utils/ProxyFileService";
 
 const execAsync = promisify(exec);
 
