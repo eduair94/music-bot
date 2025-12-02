@@ -123,10 +123,11 @@ export class Song {
         console.log(`[Song] 🔄 Using proxy: ${proxy}`);
       }
       
-      // Use android client to bypass n-challenge JavaScript requirement
-      // This works without needing Deno/Node.js runtime for signature solving
+      // Use tv client - it's not impacted by SABR issues and doesn't require n-challenge solving
+      // tv client works with cookies unlike android client
+      // Fallback chain: tv -> ios -> web (in case tv fails)
       const youtubeArgs = platform === MusicPlatform.YouTube || platform === MusicPlatform.Spotify
-        ? '--extractor-args "youtube:player_client=android,web"'
+        ? '--extractor-args youtube:player_client=tv,ios'
         : '';
       
       // Add performance optimizations and extended timeout
@@ -221,9 +222,10 @@ export class Song {
         console.log(`[Song] 🔄 Using proxy for stream: ${proxy}`);
       }
       
-      // Use android client to bypass n-challenge JavaScript requirement for YouTube
+      // Use tv client - it's not impacted by SABR issues and doesn't require n-challenge solving
+      // tv client works with cookies unlike android client
       const youtubeArgs = (this.platform === MusicPlatform.YouTube || this.platform === MusicPlatform.Spotify)
-        ? ['--extractor-args', 'youtube:player_client=android,web']
+        ? ['--extractor-args', 'youtube:player_client=tv,ios']
         : [];
       
       // Build yt-dlp arguments based on platform
