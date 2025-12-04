@@ -1,9 +1,9 @@
 import { AudioResource, createAudioResource, StreamType } from "@discordjs/voice";
-import play, { YouTubeStream, SoundCloudStream, video_basic_info, search, validate, InfoData, SoundCloudTrack } from "play-dl";
+import play, { InfoData, search, SoundCloudStream, SoundCloudTrack, validate, video_basic_info, YouTubeStream } from "play-dl";
 import { MusicPlatform } from "../interfaces/MusicPlatform";
+import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
 import { isSpotifyUrl } from "../utils/patterns";
-import { SpotifyService } from "../services/spotify";
 
 export interface SongFastData {
   url: string;
