@@ -17,17 +17,22 @@
     "build": "tsc --build",
     "prod": "npm run build && node ./dist/index.js",
     "commit": "cz",
-    "format": "npx prettier --write '**/*.ts' --config .prettierrc"
+    "format": "npx prettier --write '**/*.ts' --config .prettierrc",
+    "test:search": "ts-node tests/testSearch.ts"
   },
   "dependencies": {
+    "@discord-player/extractor": "^7.1.0",
     "@discordjs/voice": "^0.17.0",
     "@distube/ytdl-core": "^4.16.12",
     "array-move": "^3.0.1",
+    "discord-player": "^7.1.0",
+    "discord-player-youtubei": "^1.5.0",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "ffmpeg-static": "^4.4.1",
     "i18n": "^0.15.1",
     "lyrics-finder": "^21.0.5",
+    "mediaplex": "^1.0.0",
     "play-dl": "^1.9.7",
     "soundcloud-downloader": "^0.2.3",
     "string-progressbar": "^1.0.4",

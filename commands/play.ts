@@ -1,193 +1,141 @@
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice";
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
-import { bot } from "../index";
-import { MusicQueue } from "../structs/MusicQueue";
-import { Song } from "../structs/Song";
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
-import { detectSpotifyType, isSpotifyUrl, playlistPattern } from "../utils/patterns";
-import { getPlatformInfo } from "../utils/platformDetector";
 
+/**
+ * /play command - Ultra-fast music playback using discord-player
+ * 
+ * This command uses discord-player with discord-player-youtubei for:
+ * - Instant playback (typically < 500ms)
+ * - No process spawning (native Node.js streaming)
+ * - Built-in queue management
+ * - Native Opus streaming for Discord
+ * - Support for YouTube, SoundCloud, Spotify, and more
+ * 
+ * For legacy yt-dlp based playback, use /play_old
+ */
 export default {
   data: new SlashCommandBuilder()
     .setName("play")
     .setDescription(i18n.__("play.description"))
-    .addStringOption((option) => option.setName("song").setDescription("The song you want to play").setRequired(true)),
-  cooldown: 3,
+    .addStringOption((option) => 
+      option
+        .setName("song")
+        .setDescription("Song name, YouTube URL, SoundCloud URL, or Spotify URL")
+        .setRequired(true)
+    ),
+  cooldown: 1, // Very fast cooldown since discord-player is quick
   permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
-  async execute(interaction: ChatInputCommandInteraction, input: string) {
-    let argSongName = interaction.options.getString("song");
-    if (!argSongName) argSongName = input;
+  
+  async execute(interaction: ChatInputCommandInteraction, input?: string) {
+    const startTime = Date.now();
+    let argSongName: string | null = interaction.options.getString("song");
+    if (!argSongName) argSongName = input || null;
 
-    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
-    const { channel } = guildMember!.voice;
+    const guildMember = interaction.member as GuildMember;
+    const voiceChannel = guildMember?.voice?.channel;
 
-    if (!channel)
-      return interaction.reply({ content: i18n.__("play.errorNotChannel"), ephemeral: true }).catch(console.error);
-
-    const queue = bot.queues.get(interaction.guild!.id);
-
-    if (queue && channel.id !== queue.connection.joinConfig.channelId)
-      return interaction
-        .reply({
-          content: i18n.__mf("play.errorNotInSameChannel", { user: bot.client.user!.username }),
-          ephemeral: true
-        })
-        .catch(console.error);
-
-    if (!argSongName)
-      return interaction
-        .reply({ content: i18n.__mf("play.usageReply", { prefix: bot.prefix }), ephemeral: true })
-        .catch(console.error);
-
-    const url = argSongName;
-
-    if (interaction.replied) await interaction.editReply("⏳ Loading...").catch(console.error);
-    else await interaction.reply("⏳ Loading...");
-
-    // Start the playlist if playlist url was provided
-    if (playlistPattern.test(url)) {
-      await interaction.editReply("🔗 Link is playlist").catch(console.error);
-
-      return bot.slashCommandsMap.get("playlist")!.execute(interaction, "song");
+    // Check if user is in a voice channel
+    if (!voiceChannel) {
+      return interaction.reply({ 
+        content: i18n.__("play.errorNotChannel"), 
+        ephemeral: true 
+      }).catch(console.error);
     }
 
-    let song;
+    // Check if song name was provided
+    if (!argSongName) {
+      return interaction.reply({ 
+        content: i18n.__mf("play.usageReply", { prefix: "/" }), 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    // Get the discord-player service
+    const playerService = DiscordPlayerService.getInstance();
+    
+    if (!playerService.isInitialized()) {
+      return interaction.reply({ 
+        content: "❌ Music player is still initializing. Please try again in a few seconds.", 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    // Check if bot is already in a different voice channel
+    const existingQueue = playerService.getQueue(interaction.guild!.id);
+    if (existingQueue && existingQueue.channel && existingQueue.channel.id !== voiceChannel.id) {
+      return interaction.reply({
+        content: i18n.__mf("play.errorNotInSameChannel", { user: interaction.client.user!.username }),
+        ephemeral: true
+      }).catch(console.error);
+    }
+
+    // Defer reply for loading indicator
+    await interaction.deferReply();
+
+    const query = argSongName;
+    const textChannel = interaction.channel as TextChannel;
 
     try {
-      const result = await Song.from(url, url);
-      
-      // Handle Spotify playlists/albums (multiple songs)
-      if (Array.isArray(result)) {
-        const songs = result as Song[];
-        
-        if (songs.length === 0) {
-          return interaction
-            .reply({ content: "❌ No songs found from Spotify URL", ephemeral: true })
-            .catch(console.error);
-        }
+      console.log(`[play] ⚡ Fast play request: "${query}"`);
 
-        // Determine if it's playlist or album
-        const spotifyType = isSpotifyUrl(url) ? detectSpotifyType(url) : 'unknown';
-        const contentType = spotifyType === 'album' ? 'album' : 'playlist';
-        
-        console.log(`Adding ${songs.length} songs from Spotify ${contentType}`);
+      // Use discord-player's built-in play method for instant playback
+      const result = await playerService.play(voiceChannel, query, textChannel);
 
-        // Create or get queue
-        const queue = bot.queues.get(interaction.guild!.id);
-        
-        if (queue) {
-          // Add all songs to existing queue
-          songs.forEach(s => queue.enqueue(s));
-          
-          return interaction
-            .editReply({ 
-              content: `🎧 Added **${songs.length}** songs from Spotify ${contentType} to the queue!` 
-            })
-            .catch(console.error);
-        } else {
-          // Create new queue
-          const newQueue = new MusicQueue({
-            interaction,
-            textChannel: interaction.channel! as TextChannel,
-            connection: joinVoiceChannel({
-              channelId: channel!.id,
-              guildId: channel!.guild.id,
-              adapterCreator: channel!.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
-            })
-          });
-
-          bot.queues.set(interaction.guild!.id, newQueue);
-
-          // Add all songs
-          songs.forEach(s => newQueue.enqueue(s));
-          
-          interaction
-            .editReply({ 
-              content: `🎧 Added **${songs.length}** songs from Spotify ${contentType}!` 
-            })
-            .catch(console.error);
-          
-          return;
-        }
+      if (!result) {
+        return interaction.editReply({ 
+          content: i18n.__mf("play.errorNoResults", { url: `<${query}>` })
+        }).catch(console.error);
       }
-      
-      // Single song
-      song = result as Song;
-      
-      // Log platform information
-      const platformInfo = getPlatformInfo(song.url);
-      console.log(`Playing from ${platformInfo.platform}: ${song.title}`);
+
+      const loadTime = Date.now() - startTime;
+      const { track, queue } = result;
+
+      // Create a nice embed response
+      const embed = new EmbedBuilder()
+        .setColor(0x00FF00)
+        .setTitle(queue.size > 0 ? "➕ Added to Queue" : "▶️ Now Playing")
+        .setDescription(`**[${track.title}](${track.url})**`)
+        .addFields(
+          { name: "Artist", value: track.author || "Unknown", inline: true },
+          { name: "Duration", value: track.duration || "Unknown", inline: true },
+          { name: "Load Time", value: `${loadTime}ms`, inline: true }
+        )
+        .setThumbnail(track.thumbnail || null)
+        .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
+
+      // Show queue position if added to queue
+      if (queue.size > 0) {
+        embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+      }
+
+      return interaction.editReply({ embeds: [embed] }).catch(console.error);
+
     } catch (error: any) {
-      console.error(error);
+      console.error("[play] ❌ Error:", error);
 
-      if (error.name == "NoResults")
-        return interaction
-          .editReply({ content: i18n.__mf("play.errorNoResults", { url: `<${url}>` }) })
-          .catch(console.error);
+      // Handle specific error types
+      let errorMessage = "❌ An error occurred while playing the track.";
 
-      if (error.name == "InvalidURL") {
-        // Provide more helpful error message with supported platforms
-        const errorMsg = error.message || i18n.__mf("play.errorInvalidURL", { url: `<${url}>` });
-        return interaction
-          .editReply({ 
-            content: `❌ ${errorMsg}\n\n**Supported platforms:** YouTube, SoundCloud, Bandcamp, Spotify, Audiomack, Mixcloud`
-          })
-          .catch(console.error);
+      if (error.message?.includes("No results")) {
+        errorMessage = i18n.__mf("play.errorNoResults", { url: `<${query}>` });
+      } else if (error.message?.includes("Sign in")) {
+        errorMessage = "❌ This video requires sign-in. Try a different video or use /play_old with cookies.";
+      } else if (error.message?.includes("age")) {
+        errorMessage = "❌ This video is age-restricted. Try using /play_old with cookies.";
+      } else if (error.message?.includes("private")) {
+        errorMessage = "❌ This video is private and cannot be played.";
+      } else if (error.message?.includes("unavailable")) {
+        errorMessage = "❌ This video is unavailable in your region.";
+      } else if (error.message) {
+        errorMessage = `❌ ${error.message}`;
       }
 
-      if (error.name == "SpotifyNotConfigured") {
-        return interaction
-          .editReply({ 
-            content: `❌ ${error.message}`
-          })
-          .catch(console.error);
+      if (interaction.deferred || interaction.replied) {
+        return interaction.editReply({ content: errorMessage }).catch(console.error);
+      } else {
+        return interaction.reply({ content: errorMessage, ephemeral: true }).catch(console.error);
       }
-
-      if (error.name == "NoYouTubeMatch") {
-        return interaction
-          .editReply({ 
-            content: `❌ ${error.message}`
-          })
-          .catch(console.error);
-      }
-
-      // Check if it's a yt-dlp signature/format error
-      if (error.stderr && (error.stderr.includes('Signature solving failed') || 
-                          error.stderr.includes('Requested format is not available') ||
-                          error.stderr.includes('n challenge solving failed'))) {
-        return interaction
-          .editReply({ 
-            content: `❌ Failed to extract video information. YouTube may be blocking the request. Please try again in a moment.\n\n**Technical details:** Signature solving failed. The bot is attempting to resolve this automatically.`
-          })
-          .catch(console.error);
-      }
-
-      if (interaction.replied)
-        return await interaction.editReply({ content: i18n.__("common.errorCommand") }).catch(console.error);
-      else return interaction.reply({ content: i18n.__("common.errorCommand"), ephemeral: true }).catch(console.error);
     }
-
-    if (queue) {
-      queue.enqueue(song);
-
-      return (interaction.channel as TextChannel)
-        .send({ content: i18n.__mf("play.queueAdded", { title: song.title, author: interaction.user.id }) })
-        .catch(console.error);
-    }
-
-    const newQueue = new MusicQueue({
-      interaction,
-      textChannel: interaction.channel! as TextChannel,
-      connection: joinVoiceChannel({
-        channelId: channel.id,
-        guildId: channel.guild.id,
-        adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
-      })
-    });
-
-    bot.queues.set(interaction.guild!.id, newQueue);
-
-    newQueue.enqueue(song);
-    interaction.deleteReply().catch(console.error);
   }
 };

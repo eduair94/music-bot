@@ -12,6 +12,7 @@ import {
 import { readdirSync } from "fs";
 import { join } from "path";
 import { Command } from "../interfaces/Command";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
@@ -29,8 +30,17 @@ export class Bot {
   public constructor(public readonly client: Client) {
     this.client.login(config.TOKEN);
 
-    this.client.on("ready", () => {
+    this.client.on("ready", async () => {
       console.log(`${this.client.user!.username} ready!`);
+
+      // Initialize the fast discord-player service
+      try {
+        const playerService = DiscordPlayerService.getInstance();
+        await playerService.initialize(this.client);
+        console.log("✅ Discord Player service initialized for fast playback");
+      } catch (error) {
+        console.error("❌ Failed to initialize Discord Player service:", error);
+      }
 
       // Generate and display bot invite link
       const clientId = this.client.user!.id;

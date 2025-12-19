@@ -8,19 +8,52 @@ import {
   Interaction,
   SlashCommandBuilder
 } from "discord.js";
+import { Track } from "discord-player";
 import { bot } from "../index";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
+
+interface TrackInfo {
+  title: string;
+  url: string;
+}
 
 export default {
   data: new SlashCommandBuilder().setName("queue").setDescription(i18n.__("queue.description")),
   cooldown: 5,
   async execute(interaction: ChatInputCommandInteraction) {
-    const queue = bot.queues.get(interaction.guild!.id);
-    if (!queue || !queue.songs.length) return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
+    // Try discord-player first (new fast system)
+    const playerService = DiscordPlayerService.getInstance();
+    const dpQueue = playerService.getQueue(interaction.guild!.id);
+    
+    let tracks: TrackInfo[] = [];
+    
+    if (dpQueue && dpQueue.tracks.size > 0) {
+      // Get current track
+      const currentTrack = dpQueue.currentTrack;
+      if (currentTrack) {
+        tracks.push({ title: currentTrack.title, url: currentTrack.url });
+      }
+      // Get queue tracks
+      dpQueue.tracks.toArray().forEach((track: Track) => {
+        tracks.push({ title: track.title, url: track.url });
+      });
+    } else {
+      // Fall back to legacy queue system
+      const queue = bot.queues.get(interaction.guild!.id);
+      if (!queue || !queue.songs.length) {
+        return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
+      }
+      tracks = queue.songs.map((song: Song) => ({ title: song.title, url: song.url }));
+    }
+
+    if (tracks.length === 0) {
+      return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
+    }
 
     let currentPage = 0;
-    const embeds = generateQueueEmbed(interaction, queue.songs);
+    const embeds = generateQueueEmbed(interaction, tracks);
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder().setCustomId("previous").setLabel("⬅️").setStyle(ButtonStyle.Secondary),
@@ -101,7 +134,7 @@ export default {
   }
 };
 
-function generateQueueEmbed(interaction: CommandInteraction, songs: Song[]) {
+function generateQueueEmbed(interaction: CommandInteraction, songs: TrackInfo[]) {
   let embeds = [];
   let k = 10;
 
