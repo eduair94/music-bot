@@ -69,15 +69,18 @@ export class DiscordPlayerService {
       await this.player.extractors.register(YoutubeiExtractor, {
         // Use cookies if available for better reliability
         cookie: cookieString,
-        // Disable the JavaScript player when using ANDROID client
-        disablePlayer: true,
+        // Fix for signature decipher algorithm issue
+        // See: https://github.com/LuanRT/YouTube.js/issues/1043
+        innertubeConfigRaw: {
+          // Use a known working player_id to bypass decipher issues
+          player_id: "0004de42"
+        },
         // Stream options for best performance
         streamOptions: {
-          useClient: "ANDROID", // ANDROID client is fastest and most reliable
+          // ANDROID client works best and doesn't require signature deciphering
+          useClient: "ANDROID",
           highWaterMark: 1024 * 1024 * 32, // 32MB buffer for smooth playback
         },
-        // Override bridge mode to prefer YouTube Music for better audio quality
-        overrideBridgeMode: "ytmusic",
       });
       console.log("[DiscordPlayer] ✅ YoutubeiExtractor registered (YouTube support)");
     } catch (error) {
@@ -124,6 +127,7 @@ export class DiscordPlayerService {
     // Track start event
     this.player.events.on("playerStart", (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title}`);
+      console.log(`[DiscordPlayer] 📋 Track info: source=${track.source}, duration=${track.duration}, url=${track.url}`);
       
       const channel = queue.metadata as TextChannel;
       if (channel && typeof channel.send === "function") {
@@ -132,48 +136,63 @@ export class DiscordPlayerService {
       }
     });
 
-    // Track added to queue
+    // Player finish - track finished playing
+    this.player.events.on("playerFinish", (queue: GuildQueue, track: Track) => {
+      console.log(`[DiscordPlayer] ✅ Finished playing: ${track.title}`);
+    });
+
+    // Player skip - track was skipped
+    this.player.events.on("playerSkip", (queue: GuildQueue, track: Track) => {
+      console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title}`);
+    });
+
+    // Audio track add
     this.player.events.on("audioTrackAdd", (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ➕ Added to queue: ${track.title}`);
     });
 
     // Queue ended
     this.player.events.on("emptyQueue", (queue: GuildQueue) => {
-      console.log("[DiscordPlayer]  Queue ended");
+      console.log("[DiscordPlayer] 🏁 Queue ended");
       const channel = queue.metadata as TextChannel;
       if (channel && typeof channel.send === "function") {
-        channel.send(" Queue finished! Add more songs to keep the music going.").catch(console.error);
+        channel.send("🏁 Queue finished! Add more songs to keep the music going.").catch(console.error);
       }
+    });
+
+    // Empty channel (everyone left)
+    this.player.events.on("emptyChannel", (queue: GuildQueue) => {
+      console.log("[DiscordPlayer] 👥 Voice channel is empty");
     });
 
     // Error handling
     this.player.events.on("error", (queue: GuildQueue, error: Error) => {
-      console.error("[DiscordPlayer] ❌ Player error:", error);
+      console.error("[DiscordPlayer] ❌ Queue error:", error);
+      console.error("[DiscordPlayer] ❌ Error stack:", error.stack);
     });
 
-    this.player.events.on("playerError", (queue: GuildQueue, error: Error) => {
-      console.error("[DiscordPlayer] ❌ Player error:", error);
+    this.player.events.on("playerError", (queue: GuildQueue, error: Error, track: Track) => {
+      console.error(`[DiscordPlayer] ❌ Player error on track: ${track?.title || 'unknown'}`);
+      console.error("[DiscordPlayer] ❌ Error:", error.message);
+      console.error("[DiscordPlayer] ❌ Stack:", error.stack);
       const channel = queue.metadata as TextChannel;
       if (channel && typeof channel.send === "function") {
-        channel.send(`❌ Error playing track: ${error.message}`).catch(console.error);
+        channel.send(`❌ Error playing **${track?.title || 'track'}**: ${error.message}`).catch(console.error);
       }
     });
 
     // Connection events
     this.player.events.on("connection", (queue: GuildQueue) => {
-      console.log("[DiscordPlayer]  Connected to voice channel");
+      console.log("[DiscordPlayer] 🔊 Connected to voice channel");
     });
 
     this.player.events.on("disconnect", (queue: GuildQueue) => {
-      console.log("[DiscordPlayer]  Disconnected from voice channel");
+      console.log("[DiscordPlayer] 🔇 Disconnected from voice channel");
     });
 
-    // Debug event for troubleshooting
+    // Debug event - log ALL debug messages to catch issues
     this.player.events.on("debug", (queue: GuildQueue, message: string) => {
-      // Only log important debug messages
-      if (message.includes("error") || message.includes("Error")) {
-        console.log(`[DiscordPlayer]  Debug: ${message}`);
-      }
+      console.log(`[DiscordPlayer] 🐛 Debug: ${message}`);
     });
   }
 
@@ -243,10 +262,18 @@ export class DiscordPlayerService {
     const extractors = Array.from(this.player.extractors.store.keys());
     console.log(`[DiscordPlayer] 📋 Available extractors: ${extractors.length > 0 ? extractors.join(', ') : 'NONE!'}`);
 
+    if (extractors.length === 0) {
+      console.error("[DiscordPlayer] ❌ No extractors available! Cannot play.");
+      throw new Error("No extractors registered. Please restart the bot.");
+    }
+
     try {
       console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
       const startTime = Date.now();
 
+      // Determine if query is a URL or search term
+      const isUrl = query.startsWith('http://') || query.startsWith('https://');
+      
       const result = await this.player.play(voiceChannel, query, {
         nodeOptions: {
           metadata: textChannel, // Store text channel for event messages
@@ -262,6 +289,8 @@ export class DiscordPlayerService {
         connectionOptions: {
           deaf: true,
         },
+        // Force YouTube search for non-URL queries
+        searchEngine: isUrl ? undefined : "youtube",
       });
 
       const loadTime = Date.now() - startTime;
