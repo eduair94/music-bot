@@ -1,9 +1,9 @@
 import { SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
+import { spawn } from "child_process";
 import { GuildQueue, Player, SearchResult, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
-import { spawn } from "child_process";
 import { Readable } from "stream";
 
 /**
