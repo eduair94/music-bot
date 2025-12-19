@@ -67,10 +67,11 @@ export class DiscordPlayerService {
       
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
-      // Build yt-dlp arguments - use multiple format fallbacks for better compatibility
-      // The format string tries: bestaudio with various codecs, then any audio, then best overall
+      // Build yt-dlp arguments - use simple format selection for best compatibility
+      // Use format IDs directly: 251 (opus 128k), 250 (opus 70k), 249 (opus 50k), 140 (m4a 128k), 139 (m4a 48k)
+      // Or use 'ba' (best audio) / 'wa' (worst audio) as fallback
       const ytdlpArgs = [
-        '--format', 'bestaudio[acodec=opus]/bestaudio[acodec=aac]/bestaudio[acodec=mp3]/bestaudio/best[acodec=opus]/best[acodec=aac]/best',
+        '--format', '251/250/249/140/139/ba/b',
         '--no-playlist',
         '--no-check-certificates',
         '--no-warnings',
@@ -78,7 +79,6 @@ export class DiscordPlayerService {
         '--socket-timeout', '30',
         '--retries', '3',
         '--fragment-retries', '3',
-        '--extractor-args', 'youtube:player_client=ios,web',
         '--output', '-',
         ...cookieArgs,
         track.url
