@@ -67,37 +67,99 @@ export class DiscordPlayerService {
       
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
-      // Build yt-dlp arguments - use tv client for best compatibility
+      // Build yt-dlp arguments - use multiple format fallbacks for better compatibility
+      // The format string tries: bestaudio with various codecs, then any audio, then best overall
       const ytdlpArgs = [
-        '--format', 'bestaudio/best',
+        '--format', 'bestaudio[acodec=opus]/bestaudio[acodec=aac]/bestaudio[acodec=mp3]/bestaudio/best[acodec=opus]/best[acodec=aac]/best',
         '--no-playlist',
         '--no-check-certificates',
         '--no-warnings',
-        '--extractor-retries', '3',
+        '--extractor-retries', '5',
         '--socket-timeout', '30',
-        '--extractor-args', 'youtube:player_client=tv,ios',
+        '--retries', '3',
+        '--fragment-retries', '3',
+        '--extractor-args', 'youtube:player_client=ios,web',
         '--output', '-',
         ...cookieArgs,
         track.url
       ];
 
-      const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
-        stdio: ['ignore', 'pipe', 'pipe']
-      });
+      return new Promise((resolve, reject) => {
+        const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
+          stdio: ['ignore', 'pipe', 'pipe']
+        });
 
-      // Log any errors from yt-dlp
-      ytdlpProcess.stderr.on('data', (data) => {
-        const msg = data.toString();
-        if (msg.includes('ERROR') || msg.includes('error')) {
-          console.error(`[DiscordPlayer] ⚠️ yt-dlp: ${msg}`);
-        }
-      });
+        let hasReceivedData = false;
+        let errorOutput = '';
+        let processExited = false;
+        let streamResolved = false;
 
-      ytdlpProcess.on('error', (error) => {
-        console.error('[DiscordPlayer] ❌ yt-dlp process error:', error);
-      });
+        // Collect stderr output
+        ytdlpProcess.stderr.on('data', (data) => {
+          const msg = data.toString();
+          errorOutput += msg;
+          if (msg.includes('ERROR') || msg.includes('error')) {
+            console.error(`[DiscordPlayer] ⚠️ yt-dlp: ${msg.trim()}`);
+          }
+        });
 
-      return ytdlpProcess.stdout;
+        // Track when we receive actual audio data
+        ytdlpProcess.stdout.on('data', () => {
+          if (!hasReceivedData) {
+            hasReceivedData = true;
+            console.log(`[DiscordPlayer] 📡 Receiving audio data for: ${track.title}`);
+          }
+        });
+
+        ytdlpProcess.on('error', (error) => {
+          console.error('[DiscordPlayer] ❌ yt-dlp process error:', error);
+          if (!streamResolved) {
+            streamResolved = true;
+            reject(new Error(`yt-dlp process error: ${error.message}`));
+          }
+        });
+
+        ytdlpProcess.on('exit', (code, signal) => {
+          processExited = true;
+          if (code !== 0 && code !== null && !hasReceivedData) {
+            console.error(`[DiscordPlayer] ❌ yt-dlp exited with code ${code} for: ${track.title}`);
+            // If we haven't resolved yet and there was an error, reject
+            if (!streamResolved) {
+              const errorMsg = errorOutput.includes('ERROR') 
+                ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || `yt-dlp exited with code ${code}`
+                : `yt-dlp exited with code ${code}`;
+              // Emit error on the stream if already resolved
+              ytdlpProcess.stdout.destroy(new Error(errorMsg));
+            }
+          }
+        });
+
+        // Give yt-dlp a short time to start and check for immediate failures
+        setTimeout(() => {
+          if (!streamResolved) {
+            streamResolved = true;
+            if (processExited && !hasReceivedData) {
+              // Process already exited without sending data - this is an error
+              const errorMsg = errorOutput.includes('ERROR') 
+                ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || 'yt-dlp failed to stream'
+                : 'yt-dlp failed to stream - no audio data received';
+              console.error(`[DiscordPlayer] ❌ ${errorMsg}`);
+              reject(new Error(errorMsg));
+            } else {
+              // Process is running or has sent data, return the stream
+              resolve(ytdlpProcess.stdout);
+            }
+          }
+        }, 500);
+
+        // Also resolve immediately if we start receiving data
+        ytdlpProcess.stdout.once('data', () => {
+          if (!streamResolved) {
+            streamResolved = true;
+            resolve(ytdlpProcess.stdout);
+          }
+        });
+      });
     };
 
     // Register YoutubeiExtractor with custom stream function using yt-dlp
