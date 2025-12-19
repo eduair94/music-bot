@@ -3,6 +3,8 @@ import { GuildQueue, Player, SearchResult, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
+import { spawn } from "child_process";
+import { Readable } from "stream";
 
 /**
  * DiscordPlayerService - Manages the discord-player instance
@@ -53,36 +55,63 @@ export class DiscordPlayerService {
       skipFFmpeg: false, // We need FFmpeg for transcoding
     });
 
-    // Check for cookies file
-    let cookieString: string | undefined;
-    try {
-      if (fs.existsSync("./cookies.txt")) {
-        cookieString = fs.readFileSync("./cookies.txt", "utf-8");
-        console.log("[DiscordPlayer] 🍪 Found cookies.txt, will use for YouTube authentication");
-      }
-    } catch (e) {
-      console.log("[DiscordPlayer] No cookies file found");
+    // Check if cookies file exists
+    const hasCookies = fs.existsSync("./cookies.txt");
+    if (hasCookies) {
+      console.log("[DiscordPlayer] 🍪 Found cookies.txt, will use for YouTube authentication");
     }
 
-    // Register YoutubeiExtractor for fast YouTube streaming
+    // Custom stream function that uses yt-dlp for reliable streaming
+    const createYtDlpStream = async (track: Track): Promise<Readable> => {
+      console.log(`[DiscordPlayer] 🎧 Creating yt-dlp stream for: ${track.title}`);
+      
+      const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
+      
+      // Build yt-dlp arguments - use tv client for best compatibility
+      const ytdlpArgs = [
+        '--format', 'bestaudio/best',
+        '--no-playlist',
+        '--no-check-certificates',
+        '--no-warnings',
+        '--extractor-retries', '3',
+        '--socket-timeout', '30',
+        '--extractor-args', 'youtube:player_client=tv,ios',
+        '--output', '-',
+        ...cookieArgs,
+        track.url
+      ];
+
+      const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
+        stdio: ['ignore', 'pipe', 'pipe']
+      });
+
+      // Log any errors from yt-dlp
+      ytdlpProcess.stderr.on('data', (data) => {
+        const msg = data.toString();
+        if (msg.includes('ERROR') || msg.includes('error')) {
+          console.error(`[DiscordPlayer] ⚠️ yt-dlp: ${msg}`);
+        }
+      });
+
+      ytdlpProcess.on('error', (error) => {
+        console.error('[DiscordPlayer] ❌ yt-dlp process error:', error);
+      });
+
+      return ytdlpProcess.stdout;
+    };
+
+    // Register YoutubeiExtractor with custom stream function using yt-dlp
     try {
       await this.player.extractors.register(YoutubeiExtractor, {
-        // Use cookies if available for better reliability
-        cookie: cookieString,
-        // Fix for signature decipher algorithm issue
-        // See: https://github.com/LuanRT/YouTube.js/issues/1043
-        innertubeConfigRaw: {
-          // Use a known working player_id to bypass decipher issues
-          player_id: "0004de42"
-        },
-        // Stream options for best performance
+        // Stream options for metadata fetching
         streamOptions: {
-          // ANDROID client works best and doesn't require signature deciphering
-          useClient: "ANDROID",
-          highWaterMark: 1024 * 1024 * 32, // 32MB buffer for smooth playback
+          useClient: "IOS",
+          highWaterMark: 1024 * 1024 * 10, // 10MB buffer
         },
+        // Use our custom yt-dlp stream function for reliable streaming
+        createStream: createYtDlpStream,
       });
-      console.log("[DiscordPlayer] ✅ YoutubeiExtractor registered (YouTube support)");
+      console.log("[DiscordPlayer] ✅ YoutubeiExtractor registered (with yt-dlp streaming)");
     } catch (error) {
       console.error("[DiscordPlayer] ❌ Failed to register YoutubeiExtractor:", error);
     }
