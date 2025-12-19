@@ -1,7 +1,7 @@
-import { Client, GuildMember, TextChannel } from "discord.js";
-import { Player, GuildQueue, Track, SearchResult } from "discord-player";
+import { SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
+import { GuildQueue, Player, SearchResult, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { SpotifyExtractor, SoundCloudExtractor } from "@discord-player/extractor";
+import { Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
 
 /**
@@ -46,7 +46,7 @@ export class DiscordPlayerService {
       return;
     }
 
-    console.log("[DiscordPlayer]  Initializing discord-player...");
+    console.log("[DiscordPlayer] 🎵 Initializing discord-player...");
 
     // Create the player instance
     this.player = new Player(client, {
@@ -58,7 +58,7 @@ export class DiscordPlayerService {
     try {
       if (fs.existsSync("./cookies.txt")) {
         cookieString = fs.readFileSync("./cookies.txt", "utf-8");
-        console.log("[DiscordPlayer]  Found cookies.txt, will use for YouTube authentication");
+        console.log("[DiscordPlayer] 🍪 Found cookies.txt, will use for YouTube authentication");
       }
     } catch (e) {
       console.log("[DiscordPlayer] No cookies file found");
@@ -69,6 +69,8 @@ export class DiscordPlayerService {
       await this.player.extractors.register(YoutubeiExtractor, {
         // Use cookies if available for better reliability
         cookie: cookieString,
+        // Disable the JavaScript player when using ANDROID client
+        disablePlayer: true,
         // Stream options for best performance
         streamOptions: {
           useClient: "ANDROID", // ANDROID client is fastest and most reliable
@@ -96,6 +98,14 @@ export class DiscordPlayerService {
       console.log("[DiscordPlayer] ✅ SpotifyExtractor registered");
     } catch (error) {
       console.error("[DiscordPlayer] ⚠️ SpotifyExtractor registration failed:", error);
+    }
+
+    // Log all registered extractors for debugging
+    const registeredExtractors = Array.from(this.player.extractors.store.keys());
+    console.log(`[DiscordPlayer] 📋 Registered extractors: ${registeredExtractors.length > 0 ? registeredExtractors.join(', ') : 'NONE!'}`);
+    
+    if (registeredExtractors.length === 0) {
+      console.error("[DiscordPlayer] ❌ WARNING: No extractors registered! Playback will fail.");
     }
 
     // Set up event listeners for debugging
@@ -229,8 +239,12 @@ export class DiscordPlayerService {
       return null;
     }
 
+    // Debug: show available extractors
+    const extractors = Array.from(this.player.extractors.store.keys());
+    console.log(`[DiscordPlayer] 📋 Available extractors: ${extractors.length > 0 ? extractors.join(', ') : 'NONE!'}`);
+
     try {
-      console.log(`[DiscordPlayer]  Searching: ${query}`);
+      console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
       const startTime = Date.now();
 
       const result = await this.player.play(voiceChannel, query, {

@@ -1,5 +1,5 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { QueueRepeatMode } from "discord-player";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { bot } from "../index";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";

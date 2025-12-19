@@ -1,13 +1,13 @@
 import {
-  ApplicationCommandDataResolvable,
-  ChatInputCommandInteraction,
-  Client,
-  Collection,
-  Events,
-  Interaction,
-  REST,
-  Routes,
-  Snowflake
+    ApplicationCommandDataResolvable,
+    ChatInputCommandInteraction,
+    Client,
+    Collection,
+    Events,
+    Interaction,
+    REST,
+    Routes,
+    Snowflake
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";

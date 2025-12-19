@@ -1,14 +1,14 @@
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ChatInputCommandInteraction,
-  CommandInteraction,
-  EmbedBuilder,
-  Interaction,
-  SlashCommandBuilder
-} from "discord.js";
 import { Track } from "discord-player";
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    CommandInteraction,
+    EmbedBuilder,
+    Interaction,
+    SlashCommandBuilder
+} from "discord.js";
 import { bot } from "../index";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { Song } from "../structs/Song";
