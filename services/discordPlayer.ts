@@ -74,11 +74,13 @@ export class DiscordPlayerService {
         '--format', '251/250/249/140/139/ba/b',
         '--no-playlist',
         '--no-check-certificates',
+        '--quiet',
         '--no-warnings',
         '--extractor-retries', '5',
         '--socket-timeout', '30',
         '--retries', '3',
         '--fragment-retries', '3',
+        '--js-runtimes', 'nodejs,deno', // Use Node.js or Deno for JS extraction
         '--output', '-',
         ...cookieArgs,
         track.url
