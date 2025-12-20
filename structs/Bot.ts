@@ -96,13 +96,21 @@ export class Bot {
   private async registerSlashCommands() {
     const rest = new REST({ version: "9" }).setToken(config.TOKEN);
 
-    const commandFiles = readdirSync(join(__dirname, "..", "commands")).filter((file) => !file.endsWith(".map"));
+    const commandsPath = join(__dirname, "..", "commands");
+    const commandFiles = readdirSync(commandsPath).filter((file) => {
+      // Only include .ts or .js files, exclude .map files and directories
+      const isValidExtension = file.endsWith(".ts") || file.endsWith(".js");
+      const isNotMapFile = !file.endsWith(".map") && !file.endsWith(".d.ts");
+      return isValidExtension && isNotMapFile;
+    });
 
     for (const file of commandFiles) {
-      const command = await import(join(__dirname, "..", "commands", `${file}`));
+      const command = await import(join(commandsPath, file));
 
-      this.slashCommands.push(command.default.data);
-      this.slashCommandsMap.set(command.default.data.name, command.default);
+      if (command.default?.data) {
+        this.slashCommands.push(command.default.data);
+        this.slashCommandsMap.set(command.default.data.name, command.default);
+      }
     }
 
     await rest.put(Routes.applicationCommands(this.client.user!.id), { body: this.slashCommands });
