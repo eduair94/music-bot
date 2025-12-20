@@ -26,7 +26,7 @@ export default {
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
     
-    if (!queue) {
+    if (!queue || !queue.currentTrack) {
       return interaction.reply({ content: i18n.__("pause.errorNotQueue") }).catch(console.error);
     }
 

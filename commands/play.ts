@@ -112,24 +112,31 @@ export default {
       // Get embed color from settings
       const embedColor = parseInt(settings.embedColor.replace("#", ""), 16);
 
-      // Check if this is a playlist
-      const isPlaylist = playlist !== null;
+      // Check if this is a playlist - use multiple detection methods
       const totalTracks = searchResult.tracks.length;
+      const isSpotifyPlaylist = query.includes("spotify.com") && query.includes("/playlist/");
+      const isYouTubePlaylist = query.includes("youtube.com") && query.includes("list=");
+      const hasMultipleTracks = totalTracks > 1;
+      const isPlaylist = playlist !== null || isSpotifyPlaylist || isYouTubePlaylist || hasMultipleTracks;
 
       let embed: EmbedBuilder;
 
-      if (isPlaylist && playlist) {
+      if (isPlaylist) {
         // Playlist embed - show playlist info
+        const playlistTitle = playlist?.title || (isSpotifyPlaylist ? "Spotify Playlist" : isYouTubePlaylist ? "YouTube Playlist" : "Playlist");
+        const playlistUrl = playlist?.url || query;
+        const playlistThumbnail = playlist?.thumbnail || track.thumbnail || null;
+
         embed = new EmbedBuilder()
           .setColor(embedColor)
           .setTitle("📋 Playlist Added to Queue")
-          .setDescription(`**[${playlist.title}](${playlist.url})**`)
+          .setDescription(`**[${playlistTitle}](${playlistUrl})**`)
           .addFields(
             { name: "Tracks", value: `${totalTracks} songs`, inline: true },
             { name: "Source", value: track.source || "Unknown", inline: true },
             { name: "Load Time", value: `${loadTime}ms`, inline: true }
           )
-          .setThumbnail(playlist.thumbnail || track.thumbnail || null)
+          .setThumbnail(playlistThumbnail)
           .setFooter({ text: `Requested by ${interaction.user.username}` });
 
         // Show first track that will play

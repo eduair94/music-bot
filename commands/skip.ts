@@ -27,15 +27,23 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
     
     if (!queue) {
+      console.log(`[skip] No queue found for guild ${interaction.guild!.id}`);
       return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
 
-    // Check if there's actually a track to skip (use currentTrack instead of isPlaying for reliability)
+    // Get current track info before skipping
     const currentTrack = queue.currentTrack;
-    if (!currentTrack) {
+    
+    // Check if there's a track in queue (either currently playing or in tracks list)
+    if (!currentTrack && queue.tracks.size === 0) {
+      console.log(`[skip] No current track and empty queue for guild ${interaction.guild!.id}`);
       return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
 
+    // If there's a currentTrack, skip it. If not but there are tracks in queue, still try to skip
+    const trackTitle = currentTrack?.title || "current track";
+    console.log(`[skip] Skipping: ${trackTitle}`);
+    
     // Skip the current track
     queue.node.skip();
     
