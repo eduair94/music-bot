@@ -104,7 +104,7 @@ export default {
       }
 
       const loadTime = Date.now() - startTime;
-      const { track, queue } = result;
+      const { track, queue, playlist, searchResult } = result;
 
       // Increment song played counter
       await settingsService.incrementSongPlayed(guildId);
@@ -112,20 +112,50 @@ export default {
       // Get embed color from settings
       const embedColor = parseInt(settings.embedColor.replace("#", ""), 16);
 
-      const embed = new EmbedBuilder()
-        .setColor(embedColor)
-        .setTitle(queue.size > 0 ? "➕ Added to Queue" : "▶️ Now Playing")
-        .setDescription(`**[${track.title}](${track.url})**`)
-        .addFields(
-          { name: "Artist", value: track.author || "Unknown", inline: true },
-          { name: "Duration", value: track.duration || "Unknown", inline: true },
-          { name: "Load Time", value: `${loadTime}ms`, inline: true }
-        )
-        .setThumbnail(track.thumbnail || null)
-        .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
+      // Check if this is a playlist
+      const isPlaylist = playlist !== null;
+      const totalTracks = searchResult.tracks.length;
 
-      if (queue.size > 0) {
-        embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+      let embed: EmbedBuilder;
+
+      if (isPlaylist && playlist) {
+        // Playlist embed - show playlist info
+        embed = new EmbedBuilder()
+          .setColor(embedColor)
+          .setTitle("📋 Playlist Added to Queue")
+          .setDescription(`**[${playlist.title}](${playlist.url})**`)
+          .addFields(
+            { name: "Tracks", value: `${totalTracks} songs`, inline: true },
+            { name: "Source", value: track.source || "Unknown", inline: true },
+            { name: "Load Time", value: `${loadTime}ms`, inline: true }
+          )
+          .setThumbnail(playlist.thumbnail || track.thumbnail || null)
+          .setFooter({ text: `Requested by ${interaction.user.username}` });
+
+        // Show first track that will play
+        embed.addFields({ 
+          name: "▶️ Now Playing", 
+          value: `**${track.title}** by ${track.author || "Unknown"}`, 
+          inline: false 
+        });
+      } else {
+        // Single track embed
+        const isFirstTrack = queue.size === 0;
+        embed = new EmbedBuilder()
+          .setColor(embedColor)
+          .setTitle(isFirstTrack ? "▶️ Now Playing" : "➕ Added to Queue")
+          .setDescription(`**[${track.title}](${track.url})**`)
+          .addFields(
+            { name: "Artist", value: track.author || "Unknown", inline: true },
+            { name: "Duration", value: track.duration || "Unknown", inline: true },
+            { name: "Load Time", value: `${loadTime}ms`, inline: true }
+          )
+          .setThumbnail(track.thumbnail || null)
+          .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
+
+        if (!isFirstTrack) {
+          embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+        }
       }
 
       return interaction.editReply({ embeds: [embed] }).catch(console.error);

@@ -1,6 +1,6 @@
 import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
 import { spawn } from "child_process";
-import { GuildQueue, Player, SearchResult, Track } from "discord-player";
+import { GuildQueue, Player, Playlist, SearchResult, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
@@ -331,6 +331,11 @@ export class DiscordPlayerService {
       console.log("[DiscordPlayer] 🔇 Disconnected from voice channel");
     });
 
+    // Queue deleted event
+    this.player.events.on("queueDelete", (queue: GuildQueue) => {
+      console.log(`[DiscordPlayer] 🗑️ Queue deleted for guild: ${queue.guild?.id}`);
+    });
+
     // Debug event - log ALL debug messages to catch issues
     this.player.events.on("debug", (queue: GuildQueue, message: string) => {
       console.log(`[DiscordPlayer] 🐛 Debug: ${message}`);
@@ -393,7 +398,7 @@ export class DiscordPlayerService {
     voiceChannel: GuildMember["voice"]["channel"],
     query: string,
     textChannel: TextChannel
-  ): Promise<{ track: Track; queue: GuildQueue } | null> {
+  ): Promise<{ track: Track; queue: GuildQueue; searchResult: SearchResult; playlist: Playlist | null } | null> {
     if (!this.player || !voiceChannel) {
       console.error("[DiscordPlayer] Player not initialized or no voice channel");
       return null;
@@ -424,7 +429,7 @@ export class DiscordPlayerService {
           leaveOnEndCooldown: 300000, // 5 minutes
           selfDeaf: true,
           volume: 80,
-          bufferingTimeout: 3000, // 3 second buffering timeout for fast start
+          bufferingTimeout: 15000, // 15 second buffering timeout
         },
         requestedBy: textChannel.client.user,
         connectionOptions: {
@@ -435,11 +440,20 @@ export class DiscordPlayerService {
       });
 
       const loadTime = Date.now() - startTime;
-      console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title}`);
+      const isPlaylist = result.searchResult.hasPlaylist();
+      const playlist = result.searchResult.playlist;
+      
+      if (isPlaylist && playlist) {
+        console.log(`[DiscordPlayer] ⚡ Loaded playlist in ${loadTime}ms: ${playlist.title} (${result.searchResult.tracks.length} tracks)`);
+      } else {
+        console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title}`);
+      }
 
       return {
         track: result.track,
         queue: result.queue,
+        searchResult: result.searchResult,
+        playlist: playlist || null,
       };
     } catch (error) {
       console.error("[DiscordPlayer] Play error:", error);

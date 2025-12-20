@@ -27,10 +27,18 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
     
     if (!queue) {
-      return interaction.reply(i18n.__("skip.errorNotQueue")).catch(console.error);
+      return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
 
+    // Check if there's actually a track to skip (use currentTrack instead of isPlaying for reliability)
+    const currentTrack = queue.currentTrack;
+    if (!currentTrack) {
+      return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
+    }
+
+    // Skip the current track
     queue.node.skip();
+    
     return safeReply(interaction, i18n.__mf("skip.result", { author: interaction.user.id }));
   }
 };
