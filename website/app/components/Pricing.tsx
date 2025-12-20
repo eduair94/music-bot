@@ -90,10 +90,11 @@ export default function Pricing() {
               key={index}
               onMouseEnter={() => setHoveredTier(index)}
               onMouseLeave={() => setHoveredTier(null)}
+              className={`relative glass-card rounded-2xl p-8 transition-all duration-300 ${tier.highlighted ? "border-[#5865f2]/50 scale-105 shadow-xl shadow-[#5865f2]/20" : ""}`}
             >
               {tier.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 bg-gradient-to-r from-[#f96854] to-[#eb459e] text-white text-sm font-bold rounded-full shadow-lg">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="px-4 py-1 bg-gradient-to-r from-[#f96854] to-[#eb459e] text-white text-sm font-bold rounded-full shadow-lg whitespace-nowrap">
                     {tier.badge}
                   </span>
                 </div>

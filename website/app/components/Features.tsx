@@ -127,13 +127,27 @@ export default function Features() {
 
         <div className="mt-16 text-center">
           <div className="inline-block glass-card rounded-2xl p-8">
-            <h3 className="text-2xl font-semibold mb-4">Media Controls via Buttons</h3>
+            <h3 className="text-2xl font-semibold mb-4">Interactive Button Controls</h3>
+            <p className="text-gray-400 mb-6 max-w-md">Control playback directly from Discord with interactive buttons - no commands needed!</p>
             <div className="flex gap-3 justify-center flex-wrap">
-              {["Prev", "Pause", "Next", "Shuffle", "Loop", "Stop"].map((label, i) => (
-                <div key={i} className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center text-sm cursor-pointer transition-all duration-200 hover:scale-110">
-                  {label.slice(0, 2)}
-                </div>
-              ))}
+              <div className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Previous">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+              </div>
+              <div className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Pause">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </div>
+              <div className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Next">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+              </div>
+              <div className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Shuffle">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+              </div>
+              <div className="w-12 h-12 bg-[#5865f2] hover:bg-[#4752c4] rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Loop">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+              </div>
+              <div className="w-12 h-12 bg-red-500 hover:bg-red-600 rounded-lg flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110" title="Stop">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+              </div>
             </div>
           </div>
         </div>
