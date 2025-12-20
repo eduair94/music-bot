@@ -1,10 +1,11 @@
-import { SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
+import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
 import { spawn } from "child_process";
 import { GuildQueue, Player, SearchResult, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { Client, GuildMember, TextChannel } from "discord.js";
+import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
 import { Readable } from "stream";
+import { GuildSettingsService } from "./guildSettings";
 
 /**
  * DiscordPlayerService - Manages the discord-player instance
@@ -196,6 +197,14 @@ export class DiscordPlayerService {
       console.error("[DiscordPlayer] ⚠️ SpotifyExtractor registration failed:", error);
     }
 
+    // Register Attachment extractor for direct audio file URLs
+    try {
+      await this.player.extractors.register(AttachmentExtractor, {});
+      console.log("[DiscordPlayer] ✅ AttachmentExtractor registered");
+    } catch (error) {
+      console.error("[DiscordPlayer] ⚠️ AttachmentExtractor registration failed:", error);
+    }
+
     // Log all registered extractors for debugging
     const registeredExtractors = Array.from(this.player.extractors.store.keys());
     console.log(`[DiscordPlayer] 📋 Registered extractors: ${registeredExtractors.length > 0 ? registeredExtractors.join(', ') : 'NONE!'}`);
@@ -212,18 +221,57 @@ export class DiscordPlayerService {
   }
 
   /**
+   * Get the log channel for a guild
+   * Priority: 1) Configured log channel, 2) "bot-commands" channel, 3) null (no logging)
+   * If logChannelId is "disabled", always return null (no logging)
+   */
+  private async getLogChannel(queue: GuildQueue): Promise<TextChannel | null> {
+    const guild = queue.guild;
+    if (!guild) return null;
+
+    const settingsService = GuildSettingsService.getInstance();
+    
+    // Check for configured log channel
+    const logChannelId = await settingsService.getLogChannelId(guild.id);
+    
+    // If explicitly disabled, don't log
+    if (logChannelId === "disabled") {
+      return null;
+    }
+    
+    if (logChannelId) {
+      const configuredChannel = guild.channels.cache.get(logChannelId);
+      if (configuredChannel && configuredChannel.type === ChannelType.GuildText) {
+        return configuredChannel as TextChannel;
+      }
+    }
+    
+    // Fall back to "bot-commands" channel
+    const botCommandsChannel = guild.channels.cache.find(
+      (channel) => channel.type === ChannelType.GuildText && channel.name === "bot-commands"
+    );
+    
+    if (botCommandsChannel) {
+      return botCommandsChannel as TextChannel;
+    }
+    
+    // No log channel found - don't log
+    return null;
+  }
+
+  /**
    * Set up event listeners for the player
    */
   private setupEventListeners(): void {
     if (!this.player) return;
 
     // Track start event
-    this.player.events.on("playerStart", (queue: GuildQueue, track: Track) => {
+    this.player.events.on("playerStart", async (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title}`);
       console.log(`[DiscordPlayer] 📋 Track info: source=${track.source}, duration=${track.duration}, url=${track.url}`);
       
-      const channel = queue.metadata as TextChannel;
-      if (channel && typeof channel.send === "function") {
+      const channel = await this.getLogChannel(queue);
+      if (channel) {
         const emoji = this.getPlatformEmoji(track.source);
         channel.send(`${emoji} Now playing: **${track.title}** by ${track.author}`).catch(console.error);
       }
@@ -245,10 +293,10 @@ export class DiscordPlayerService {
     });
 
     // Queue ended
-    this.player.events.on("emptyQueue", (queue: GuildQueue) => {
+    this.player.events.on("emptyQueue", async (queue: GuildQueue) => {
       console.log("[DiscordPlayer] 🏁 Queue ended");
-      const channel = queue.metadata as TextChannel;
-      if (channel && typeof channel.send === "function") {
+      const channel = await this.getLogChannel(queue);
+      if (channel) {
         channel.send("🏁 Queue finished! Add more songs to keep the music going.").catch(console.error);
       }
     });
@@ -264,12 +312,12 @@ export class DiscordPlayerService {
       console.error("[DiscordPlayer] ❌ Error stack:", error.stack);
     });
 
-    this.player.events.on("playerError", (queue: GuildQueue, error: Error, track: Track) => {
+    this.player.events.on("playerError", async (queue: GuildQueue, error: Error, track: Track) => {
       console.error(`[DiscordPlayer] ❌ Player error on track: ${track?.title || 'unknown'}`);
       console.error("[DiscordPlayer] ❌ Error:", error.message);
       console.error("[DiscordPlayer] ❌ Stack:", error.stack);
-      const channel = queue.metadata as TextChannel;
-      if (channel && typeof channel.send === "function") {
+      const channel = await this.getLogChannel(queue);
+      if (channel) {
         channel.send(`❌ Error playing **${track?.title || 'track'}**: ${error.message}`).catch(console.error);
       }
     });

@@ -1,5 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { DiscordPlayerService } from "../services/discordPlayer";
+import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
@@ -10,42 +11,51 @@ export default {
     .addIntegerOption((option) =>
       option.setName("number").setDescription(i18n.__("skipto.args.number")).setRequired(true)
     ),
-  execute(interaction: ChatInputCommandInteraction) {
-    const playlistSlotArg = interaction.options.getInteger("number");
-    const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
+  async execute(interaction: ChatInputCommandInteraction) {
+    const position = interaction.options.getInteger("number");
+    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
 
-    if (!playlistSlotArg || isNaN(playlistSlotArg))
-      return interaction
-        .reply({
-          content: i18n.__mf("skipto.usageReply", { prefix: bot.prefix, name: module.exports.name }),
-          ephemeral: true
-        })
-        .catch(console.error);
-
-    const queue = bot.queues.get(interaction.guild!.id);
-
-    if (!queue)
-      return interaction.reply({ content: i18n.__("skipto.errorNotQueue"), ephemeral: true }).catch(console.error);
-
-    if (!canModifyQueue(guildMemer!)) return i18n.__("common.errorNotChannel");
-
-    if (playlistSlotArg > queue.songs.length)
-      return interaction
-        .reply({ content: i18n.__mf("skipto.errorNotValid", { length: queue.songs.length }), ephemeral: true })
-        .catch(console.error);
-
-    if (queue.loop) {
-      for (let i = 0; i < playlistSlotArg - 2; i++) {
-        queue.songs.push(queue.songs.shift()!);
-      }
-    } else {
-      queue.songs = queue.songs.slice(playlistSlotArg - 2);
+    if (!position || isNaN(position)) {
+      return interaction.reply({
+        content: i18n.__mf("skipto.usageReply", { prefix: "/", name: "skipto" }),
+        ephemeral: true
+      }).catch(console.error);
     }
 
-    queue.player.stop();
+    if (!canModifyQueue(guildMember!)) {
+      return interaction.reply({ content: i18n.__("common.errorNotChannel"), ephemeral: true }).catch(console.error);
+    }
 
-    interaction
-      .reply({ content: i18n.__mf("skipto.result", { author: interaction.user.id, arg: playlistSlotArg - 1 }) })
-      .catch(console.error);
+    // Check DJ permission
+    const hasDJ = await hasDJPermission(guildMember as GuildMember);
+    if (!hasDJ) {
+      return interaction.reply({ 
+        content: "❌ You need the DJ role to use this command.", 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    const playerService = DiscordPlayerService.getInstance();
+    const queue = playerService.getQueue(interaction.guild!.id);
+
+    if (!queue) {
+      return interaction.reply({ content: i18n.__("skipto.errorNotQueue"), ephemeral: true }).catch(console.error);
+    }
+
+    const queueSize = queue.tracks.size + 1; // +1 for current track
+    
+    if (position < 1 || position > queueSize) {
+      return interaction.reply({ 
+        content: i18n.__mf("skipto.errorNotValid", { length: queueSize }), 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    // Skip to position by removing tracks before it
+    queue.node.skipTo(position - 1);
+
+    interaction.reply({ 
+      content: i18n.__mf("skipto.result", { author: interaction.user.id, arg: position }) 
+    }).catch(console.error);
   }
 };

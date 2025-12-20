@@ -1,6 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
-import { Song } from "../structs/Song";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { DiscordPlayerService } from "../services/discordPlayer";
+import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
@@ -13,45 +13,69 @@ export default {
     .addStringOption((option) =>
       option.setName("slot").setDescription(i18n.__("remove.description")).setRequired(true)
     ),
-  execute(interaction: ChatInputCommandInteraction) {
-    const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
+  async execute(interaction: ChatInputCommandInteraction) {
+    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
     const removeArgs = interaction.options.getString("slot");
 
-    const queue = bot.queues.get(interaction.guild!.id);
+    if (!canModifyQueue(guildMember!)) {
+      return interaction.reply({ content: i18n.__("common.errorNotChannel"), ephemeral: true }).catch(console.error);
+    }
 
-    if (!queue)
+    // Check DJ permission
+    const hasDJ = await hasDJPermission(guildMember as GuildMember);
+    if (!hasDJ) {
+      return interaction.reply({ 
+        content: "❌ You need the DJ role to use this command.", 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    const playerService = DiscordPlayerService.getInstance();
+    const queue = playerService.getQueue(interaction.guild!.id);
+
+    if (!queue) {
       return interaction.reply({ content: i18n.__("remove.errorNotQueue"), ephemeral: true }).catch(console.error);
+    }
 
-    if (!canModifyQueue(guildMemer!)) return i18n.__("common.errorNotChannel");
+    if (!removeArgs) {
+      return interaction.reply({ content: i18n.__mf("remove.usageReply", { prefix: "/" }), ephemeral: true });
+    }
 
-    if (!removeArgs)
-      return interaction.reply({ content: i18n.__mf("remove.usageReply", { prefix: bot.prefix }), ephemeral: true });
-
-    const songs = removeArgs.split(",").map((arg) => parseInt(arg));
-
-    let removed: Song[] = [];
+    const tracks = queue.tracks.toArray();
+    const songs = removeArgs.split(",").map((arg) => parseInt(arg.trim()));
 
     if (pattern.test(removeArgs)) {
-      queue.songs = queue.songs.filter((item, index) => {
-        if (songs.find((songIndex) => songIndex - 1 === index)) removed.push(item);
-        else return true;
+      const removed: string[] = [];
+      // Remove tracks in reverse order to maintain indices
+      songs.sort((a, b) => b - a).forEach((index) => {
+        if (index >= 1 && index <= tracks.length) {
+          const track = queue.tracks.at(index - 1);
+          if (track) {
+            removed.push(track.title);
+            queue.removeTrack(index - 1);
+          }
+        }
       });
 
-      interaction.reply(
-        i18n.__mf("remove.result", {
-          title: removed.map((song) => song.title).join("\n"),
-          author: interaction.user.id
-        })
-      );
-    } else if (!isNaN(+removeArgs) && +removeArgs >= 1 && +removeArgs <= queue.songs.length) {
+      if (removed.length > 0) {
+        return interaction.reply(
+          i18n.__mf("remove.result", {
+            title: removed.join("\n"),
+            author: interaction.user.id
+          })
+        );
+      }
+    } else if (!isNaN(+removeArgs) && +removeArgs >= 1 && +removeArgs <= tracks.length) {
+      const track = queue.tracks.at(+removeArgs - 1);
+      queue.removeTrack(+removeArgs - 1);
       return interaction.reply(
         i18n.__mf("remove.result", {
-          title: queue.songs.splice(+removeArgs - 1, 1)[0].title,
+          title: track?.title || "Unknown",
           author: interaction.user.id
         })
       );
-    } else {
-      return interaction.reply({ content: i18n.__mf("remove.usageReply", { prefix: bot.prefix }) });
     }
+    
+    return interaction.reply({ content: i18n.__mf("remove.usageReply", { prefix: "/" }) });
   }
 };

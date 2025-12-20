@@ -1,18 +1,17 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
 
 /**
- * /play command - Ultra-fast music playback using discord-player
+ * /play command - Music playback using discord-player
  * 
- * This command uses discord-player with discord-player-youtubei for:
- * - Instant playback (typically < 500ms)
- * - No process spawning (native Node.js streaming)
+ * Features:
+ * - Fast playback via discord-player with yt-dlp streaming
  * - Built-in queue management
  * - Native Opus streaming for Discord
- * - Support for YouTube, SoundCloud, Spotify, and more
- * 
- * For legacy yt-dlp based playback, use /play_old
+ * - Support for YouTube, SoundCloud, Spotify, and direct audio URLs
+ * - Voice channel restrictions based on guild settings
  */
 export default {
   data: new SlashCommandBuilder()
@@ -24,18 +23,17 @@ export default {
         .setDescription("Song name, YouTube URL, SoundCloud URL, or Spotify URL")
         .setRequired(true)
     ),
-  cooldown: 1, // Very fast cooldown since discord-player is quick
+  cooldown: 1,
   permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
   
   async execute(interaction: ChatInputCommandInteraction, input?: string) {
     const startTime = Date.now();
-    let argSongName: string | null = interaction.options.getString("song");
-    if (!argSongName) argSongName = input || null;
-
+    const query = interaction.options.getString("song") || input;
     const guildMember = interaction.member as GuildMember;
     const voiceChannel = guildMember?.voice?.channel;
+    const guildId = interaction.guild!.id;
 
-    // Check if user is in a voice channel
+    // Validation checks
     if (!voiceChannel) {
       return interaction.reply({ 
         content: i18n.__("play.errorNotChannel"), 
@@ -43,15 +41,24 @@ export default {
       }).catch(console.error);
     }
 
-    // Check if song name was provided
-    if (!argSongName) {
+    if (!query) {
       return interaction.reply({ 
         content: i18n.__mf("play.usageReply", { prefix: "/" }), 
         ephemeral: true 
       }).catch(console.error);
     }
 
-    // Get the discord-player service
+    // Check guild settings for voice channel restriction
+    const settingsService = GuildSettingsService.getInstance();
+    const isVoiceChannelAllowed = await settingsService.isVoiceChannelAllowed(guildId, voiceChannel.id);
+    
+    if (!isVoiceChannelAllowed) {
+      return interaction.reply({
+        content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel.",
+        ephemeral: true
+      }).catch(console.error);
+    }
+
     const playerService = DiscordPlayerService.getInstance();
     
     if (!playerService.isInitialized()) {
@@ -61,25 +68,33 @@ export default {
       }).catch(console.error);
     }
 
-    // Check if bot is already in a different voice channel
-    const existingQueue = playerService.getQueue(interaction.guild!.id);
-    if (existingQueue && existingQueue.channel && existingQueue.channel.id !== voiceChannel.id) {
+    // Get settings for queue size check and volume
+    const settings = await settingsService.getSettings(guildId);
+
+    // Check queue size limit
+    const existingQueue = playerService.getQueue(guildId);
+    if (existingQueue && existingQueue.size >= settings.maxQueueSize) {
       return interaction.reply({
-        content: i18n.__mf("play.errorNotInSameChannel", { user: interaction.client.user!.username }),
+        content: `❌ Queue is full! Maximum ${settings.maxQueueSize} songs allowed.`,
         ephemeral: true
       }).catch(console.error);
     }
 
-    // Defer reply for loading indicator
-    await interaction.deferReply();
+    // Move bot to user's channel if in different channel
+    if (existingQueue?.channel && existingQueue.channel.id !== voiceChannel.id) {
+      try {
+        existingQueue.delete();
+        console.log(`[play] 🔄 Moving bot to ${voiceChannel.id}`);
+      } catch (error) {
+        console.error("[play] Error moving to new channel:", error);
+      }
+    }
 
-    const query = argSongName;
+    await interaction.deferReply();
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      console.log(`[play] ⚡ Fast play request: "${query}"`);
-
-      // Use discord-player's built-in play method for instant playback
+      console.log(`[play] ⚡ Playing: "${query}"`);
       const result = await playerService.play(voiceChannel, query, textChannel);
 
       if (!result) {
@@ -91,9 +106,14 @@ export default {
       const loadTime = Date.now() - startTime;
       const { track, queue } = result;
 
-      // Create a nice embed response
+      // Increment song played counter
+      await settingsService.incrementSongPlayed(guildId);
+
+      // Get embed color from settings
+      const embedColor = parseInt(settings.embedColor.replace("#", ""), 16);
+
       const embed = new EmbedBuilder()
-        .setColor(0x00FF00)
+        .setColor(embedColor)
         .setTitle(queue.size > 0 ? "➕ Added to Queue" : "▶️ Now Playing")
         .setDescription(`**[${track.title}](${track.url})**`)
         .addFields(
@@ -104,7 +124,6 @@ export default {
         .setThumbnail(track.thumbnail || null)
         .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
 
-      // Show queue position if added to queue
       if (queue.size > 0) {
         embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
       }
@@ -113,29 +132,37 @@ export default {
 
     } catch (error: any) {
       console.error("[play] ❌ Error:", error);
-
-      // Handle specific error types
-      let errorMessage = "❌ An error occurred while playing the track.";
-
-      if (error.message?.includes("No results")) {
-        errorMessage = i18n.__mf("play.errorNoResults", { url: `<${query}>` });
-      } else if (error.message?.includes("Sign in")) {
-        errorMessage = "❌ This video requires sign-in. Try a different video or use /play_old with cookies.";
-      } else if (error.message?.includes("age")) {
-        errorMessage = "❌ This video is age-restricted. Try using /play_old with cookies.";
-      } else if (error.message?.includes("private")) {
-        errorMessage = "❌ This video is private and cannot be played.";
-      } else if (error.message?.includes("unavailable")) {
-        errorMessage = "❌ This video is unavailable in your region.";
-      } else if (error.message) {
-        errorMessage = `❌ ${error.message}`;
-      }
+      const errorMessage = getErrorMessage(error, query);
 
       if (interaction.deferred || interaction.replied) {
         return interaction.editReply({ content: errorMessage }).catch(console.error);
-      } else {
-        return interaction.reply({ content: errorMessage, ephemeral: true }).catch(console.error);
       }
+      return interaction.reply({ content: errorMessage, ephemeral: true }).catch(console.error);
     }
   }
 };
+
+/**
+ * Get user-friendly error message based on error type
+ */
+function getErrorMessage(error: any, query: string): string {
+  const message = error.message?.toLowerCase() || '';
+  
+  if (message.includes("no results")) {
+    return i18n.__mf("play.errorNoResults", { url: `<${query}>` });
+  }
+  if (message.includes("sign in")) {
+    return "❌ This video requires sign-in. Try a different video.";
+  }
+  if (message.includes("age")) {
+    return "❌ This video is age-restricted.";
+  }
+  if (message.includes("private")) {
+    return "❌ This video is private and cannot be played.";
+  }
+  if (message.includes("unavailable")) {
+    return "❌ This video is unavailable in your region.";
+  }
+  
+  return error.message ? `❌ ${error.message}` : "❌ An error occurred while playing the track.";
+}

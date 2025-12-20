@@ -1,5 +1,6 @@
 {
   "TOKEN": "",
+  "MONGODB_URI": "",
   "MAX_PLAYLIST_SIZE": 10,
   "PRUNING": false,
   "LOCALE": "en",

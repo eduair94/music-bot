@@ -1,102 +1,76 @@
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice";
+import { Track } from "discord-player";
 import {
     ChatInputCommandInteraction,
     EmbedBuilder,
+    GuildMember,
     PermissionsBitField,
     SlashCommandBuilder,
     TextChannel
 } from "discord.js";
-import { bot } from "../index";
-import { MusicQueue } from "../structs/MusicQueue";
-import { Playlist } from "../structs/Playlist";
-import { Song } from "../structs/Song";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("playlist")
     .setDescription(i18n.__("playlist.description"))
-    .addStringOption((option) => option.setName("playlist").setDescription("Playlist name or link").setRequired(true)),
+    .addStringOption((option) => option.setName("playlist").setDescription("Playlist URL").setRequired(true)),
   cooldown: 5,
   permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
-  async execute(interaction: ChatInputCommandInteraction, queryOptionName = "playlist") {
-    let argSongName = interaction.options.getString(queryOptionName);
+  async execute(interaction: ChatInputCommandInteraction) {
+    const playlistUrl = interaction.options.getString("playlist");
+    const guildMember = interaction.member as GuildMember;
+    const voiceChannel = guildMember?.voice?.channel;
 
-    const guildMemer = interaction.guild!.members.cache.get(interaction.user.id);
-    const { channel } = guildMemer!.voice;
-
-    const queue = bot.queues.get(interaction.guild!.id);
-
-    if (!channel)
+    if (!voiceChannel) {
       return interaction.reply({ content: i18n.__("playlist.errorNotChannel"), ephemeral: true }).catch(console.error);
+    }
 
-    if (queue && channel.id !== queue.connection.joinConfig.channelId)
-      if (interaction.replied)
-        return interaction
-          .editReply({ content: i18n.__mf("play.errorNotInSameChannel", { user: interaction.client.user!.username }) })
-          .catch(console.error);
-      else
-        return interaction
-          .reply({
-            content: i18n.__mf("play.errorNotInSameChannel", { user: interaction.client.user!.username }),
-            ephemeral: true
-          })
-          .catch(console.error);
+    if (!playlistUrl) {
+      return interaction.reply({ content: "Please provide a playlist URL.", ephemeral: true }).catch(console.error);
+    }
 
-    let playlist;
+    const playerService = DiscordPlayerService.getInstance();
+    
+    if (!playerService.isInitialized()) {
+      return interaction.reply({ 
+        content: "❌ Music player is still initializing. Please try again in a few seconds.", 
+        ephemeral: true 
+      }).catch(console.error);
+    }
+
+    await interaction.deferReply();
 
     try {
-      playlist = await Playlist.from(argSongName!.split(" ")[0], argSongName!);
-    } catch (error) {
-      console.error(error);
+      const textChannel = interaction.channel as TextChannel;
+      const result = await playerService.play(voiceChannel, playlistUrl, textChannel);
 
-      if (interaction.replied)
+      if (!result) {
         return interaction.editReply({ content: i18n.__("playlist.errorNotFoundPlaylist") }).catch(console.error);
-      else
-        return interaction
-          .reply({ content: i18n.__("playlist.errorNotFoundPlaylist"), ephemeral: true })
-          .catch(console.error);
-    }
+      }
 
-    if (queue) {
-      queue.songs.push(...playlist.videos);
-    } else {
-      const newQueue = new MusicQueue({
-        interaction,
-        textChannel: interaction.channel! as TextChannel,
-        connection: joinVoiceChannel({
-          channelId: channel.id,
-          guildId: channel.guild.id,
-          adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
-        })
-      });
+      const { track, queue } = result;
+      const tracks = queue.tracks.toArray();
+      
+      const embed = new EmbedBuilder()
+        .setTitle("📋 Playlist Added")
+        .setDescription(
+          tracks.slice(0, 20)
+            .map((t: Track, index: number) => `${index + 1}. ${t.title}`)
+            .join("\n")
+            .slice(0, 4095) + (tracks.length > 20 ? `\n... and ${tracks.length - 20} more` : "")
+        )
+        .setColor("#F8AA2A")
+        .addFields({ name: "Total Tracks", value: `${tracks.length + 1}`, inline: true })
+        .setTimestamp();
 
-      bot.queues.set(interaction.guild!.id, newQueue);
-      newQueue.enqueue(...playlist.videos);
-    }
-
-    let playlistEmbed = new EmbedBuilder()
-      .setTitle(`${playlist.data.title}`)
-      .setDescription(
-        playlist.videos
-          .map((song: Song, index: number) => `${index + 1}. ${song.title}`)
-          .join("\n")
-          .slice(0, 4095)
-      )
-      .setURL(playlist.data.url!)
-      .setColor("#F8AA2A")
-      .setTimestamp();
-
-    if (interaction.replied)
       return interaction.editReply({
         content: i18n.__mf("playlist.startedPlaylist", { author: interaction.user.id }),
-        embeds: [playlistEmbed]
+        embeds: [embed]
       });
-    interaction
-      .reply({
-        content: i18n.__mf("playlist.startedPlaylist", { author: interaction.user.id }),
-        embeds: [playlistEmbed]
-      })
-      .catch(console.error);
+    } catch (error) {
+      console.error("[playlist] Error:", error);
+      return interaction.editReply({ content: i18n.__("playlist.errorNotFoundPlaylist") }).catch(console.error);
+    }
   }
 };

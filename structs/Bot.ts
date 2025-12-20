@@ -5,6 +5,7 @@ import {
     Collection,
     Events,
     Interaction,
+    PermissionsBitField,
     REST,
     Routes,
     Snowflake
@@ -12,12 +13,13 @@ import {
 import { readdirSync } from "fs";
 import { join } from "path";
 import { Command } from "../interfaces/Command";
+import { DatabaseService } from "../services/database";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { GuildSettingsService } from "../services/guildSettings";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
-import { MusicQueue } from "./MusicQueue";
 
 export class Bot {
   public readonly prefix = "/";
@@ -25,7 +27,6 @@ export class Bot {
   public slashCommands = new Array<ApplicationCommandDataResolvable>();
   public slashCommandsMap = new Collection<string, Command>();
   public cooldowns = new Collection<string, Collection<Snowflake, number>>();
-  public queues = new Collection<Snowflake, MusicQueue>();
 
   public constructor(public readonly client: Client) {
     this.client.login(config.TOKEN);
@@ -33,11 +34,22 @@ export class Bot {
     this.client.on("ready", async () => {
       console.log(`${this.client.user!.username} ready!`);
 
-      // Initialize the fast discord-player service
+      // Initialize database connection
+      try {
+        const dbService = DatabaseService.getInstance();
+        await dbService.connect(config.MONGODB_URI || "");
+        if (dbService.isConnected()) {
+          console.log("✅ Database service initialized");
+        }
+      } catch (error) {
+        console.error("⚠️ Database initialization skipped:", error);
+      }
+
+      // Initialize the discord-player service
       try {
         const playerService = DiscordPlayerService.getInstance();
         await playerService.initialize(this.client);
-        console.log("✅ Discord Player service initialized for fast playback");
+        console.log("✅ Discord Player service initialized");
       } catch (error) {
         console.error("❌ Failed to initialize Discord Player service:", error);
       }
@@ -51,11 +63,6 @@ export class Bot {
       console.log('=================================================\n');
 
       this.registerSlashCommands();
-
-      // Force save if in remote session
-      if (this.isRemoteSession()) {
-        this.forceSave();
-      }
     });
 
     this.client.on("warn", (info) => console.log(info));
@@ -86,6 +93,33 @@ export class Bot {
       const command = this.slashCommandsMap.get(interaction.commandName);
 
       if (!command) return;
+
+      // Check guild settings for blacklisted users and allowed channels
+      const guildId = interaction.guild?.id;
+      if (guildId) {
+        const settingsService = GuildSettingsService.getInstance();
+        
+        // Check if user is blacklisted
+        const isBlacklisted = await settingsService.isUserBlacklisted(guildId, interaction.user.id);
+        if (isBlacklisted) {
+          return interaction.reply({
+            content: "❌ You are not allowed to use this bot.",
+            ephemeral: true
+          });
+        }
+
+        // Check if text channel is allowed
+        const channelId = interaction.channel?.id;
+        if (channelId) {
+          const isChannelAllowed = await settingsService.isTextChannelAllowed(guildId, channelId);
+          if (!isChannelAllowed) {
+            return interaction.reply({
+              content: "❌ Bot commands are not allowed in this channel.",
+              ephemeral: true
+            });
+          }
+        }
+      }
 
       if (!this.cooldowns.has(interaction.commandName)) {
         this.cooldowns.set(interaction.commandName, new Collection());
@@ -133,37 +167,5 @@ export class Bot {
         }
       }
     });
-  }
-
-  private isRemoteSession(): boolean {
-    // Check various indicators of remote session
-    return !!(
-      process.env.SSH_CONNECTION ||
-      process.env.SSH_CLIENT ||
-      process.env.SSH_TTY ||
-      process.env.CODESPACES ||
-      process.env.GITPOD_WORKSPACE_ID ||
-      process.env.REMOTE_CONTAINERS ||
-      process.env.VSCODE_REMOTE_USER
-    );
-  }
-
-  private forceSave(): void {
-    console.log("Remote session detected - forcing save operations");
-    
-    // Force save any configuration or state files
-    try {
-      // You can add specific save operations here based on your application needs
-      // For example, saving current queues state, configuration, etc.
-      
-      // Force garbage collection if available
-      if (global.gc) {
-        global.gc();
-      }
-      
-      console.log("Force save completed successfully");
-    } catch (error) {
-      console.error("Error during force save:", error);
-    }
   }
 }

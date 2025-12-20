@@ -9,9 +9,7 @@ import {
     Interaction,
     SlashCommandBuilder
 } from "discord.js";
-import { bot } from "../index";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { Song } from "../structs/Song";
 import { i18n } from "../utils/i18n";
 
 interface TrackInfo {
@@ -23,30 +21,25 @@ export default {
   data: new SlashCommandBuilder().setName("queue").setDescription(i18n.__("queue.description")),
   cooldown: 5,
   async execute(interaction: ChatInputCommandInteraction) {
-    // Try discord-player first (new fast system)
     const playerService = DiscordPlayerService.getInstance();
-    const dpQueue = playerService.getQueue(interaction.guild!.id);
+    const queue = playerService.getQueue(interaction.guild!.id);
     
-    let tracks: TrackInfo[] = [];
-    
-    if (dpQueue && dpQueue.tracks.size > 0) {
-      // Get current track
-      const currentTrack = dpQueue.currentTrack;
-      if (currentTrack) {
-        tracks.push({ title: currentTrack.title, url: currentTrack.url });
-      }
-      // Get queue tracks
-      dpQueue.tracks.toArray().forEach((track: Track) => {
-        tracks.push({ title: track.title, url: track.url });
-      });
-    } else {
-      // Fall back to legacy queue system
-      const queue = bot.queues.get(interaction.guild!.id);
-      if (!queue || !queue.songs.length) {
-        return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
-      }
-      tracks = queue.songs.map((song: Song) => ({ title: song.title, url: song.url }));
+    if (!queue) {
+      return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
     }
+
+    const tracks: TrackInfo[] = [];
+    
+    // Get current track
+    const currentTrack = queue.currentTrack;
+    if (currentTrack) {
+      tracks.push({ title: currentTrack.title, url: currentTrack.url });
+    }
+    
+    // Get queue tracks
+    queue.tracks.toArray().forEach((track: Track) => {
+      tracks.push({ title: track.title, url: track.url });
+    });
 
     if (tracks.length === 0) {
       return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
@@ -61,14 +54,11 @@ export default {
       new ButtonBuilder().setCustomId("next").setLabel("➡️").setStyle(ButtonStyle.Secondary)
     );
 
-    await interaction.reply("⏳ Loading queue...");
-
-    if (interaction.replied)
-      await interaction.editReply({
-        content: `**${i18n.__mf("queue.currentPage")} ${currentPage + 1}/${embeds.length}**`,
-        embeds: [embeds[currentPage]],
-        components: [row]
-      });
+    await interaction.reply({
+      content: `**${i18n.__mf("queue.currentPage")} ${currentPage + 1}/${embeds.length}**`,
+      embeds: [embeds[currentPage]],
+      components: [row]
+    });
 
     const queueEmbed = await interaction.fetchReply();
 
@@ -77,65 +67,34 @@ export default {
 
     const collector = queueEmbed.createMessageComponentCollector({ filter, time: 60000 });
 
-    const buttonHandlers = {
-      next: async () => {
-        if (currentPage >= embeds.length - 1) return;
-
-        currentPage++;
-
-        await interaction.editReply({
-          content: `**${i18n.__mf("queue.currentPage", {
-            page: currentPage + 1,
-            length: embeds.length
-          })}**`,
-          embeds: [embeds[currentPage]],
-          components: [row]
-        });
-      },
-      previous: async () => {
-        if (currentPage === 0) return;
-
-        currentPage--;
-        await interaction.editReply({
-          content: `**${i18n.__mf("queue.currentPage", {
-            page: currentPage + 1,
-            length: embeds.length
-          })}**`,
-          embeds: [embeds[currentPage]],
-          components: [row]
-        });
-      },
-      stop: async () => {
-        await interaction.editReply({
-          components: []
-        });
-
-        collector.stop();
-      }
-    };
-
     collector.on("collect", async (buttonInteraction) => {
       buttonInteraction.deferUpdate();
 
-      const handler = buttonHandlers[buttonInteraction.customId as keyof typeof buttonHandlers];
-
-      if (handler) {
-        await handler();
+      if (buttonInteraction.customId === "next" && currentPage < embeds.length - 1) {
+        currentPage++;
+      } else if (buttonInteraction.customId === "previous" && currentPage > 0) {
+        currentPage--;
+      } else if (buttonInteraction.customId === "stop") {
+        await interaction.editReply({ components: [] });
+        collector.stop();
+        return;
       }
+
+      await interaction.editReply({
+        content: `**${i18n.__mf("queue.currentPage", { page: currentPage + 1, length: embeds.length })}**`,
+        embeds: [embeds[currentPage]],
+        components: [row]
+      });
     });
 
     collector.on("end", () => {
-      queueEmbed
-        .edit({
-          components: []
-        })
-        .catch(console.error);
+      queueEmbed.edit({ components: [] }).catch(console.error);
     });
   }
 };
 
 function generateQueueEmbed(interaction: CommandInteraction, songs: TrackInfo[]) {
-  let embeds = [];
+  const embeds = [];
   let k = 10;
 
   for (let i = 0; i < songs.length; i += 10) {
