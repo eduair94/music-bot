@@ -1,3 +1,4 @@
+import { Client } from "discord.js";
 import express, { Express, Request, Response } from "express";
 import { config } from "../utils/config";
 import { PatreonService } from "./patreon";
@@ -13,6 +14,7 @@ export class WebhookServer {
   private app: Express | null = null;
   private server: any = null;
   private port: number = DEFAULT_PORT;
+  private discordClient: Client | null = null;
 
   private constructor() {}
 
@@ -21,6 +23,13 @@ export class WebhookServer {
       this.instance = new WebhookServer();
     }
     return this.instance;
+  }
+
+  /**
+   * Set the Discord client for generating invite links
+   */
+  public setClient(client: Client): void {
+    this.discordClient = client;
   }
 
   /**
@@ -57,13 +66,20 @@ export class WebhookServer {
         }
       }));
 
-      // Health check endpoint
+      // Redirect to bot invite link
       this.app.get("/", (req: Request, res: Response) => {
-        res.json({ 
-          status: "ok", 
-          service: "Music Bot Webhook Server",
-          timestamp: new Date().toISOString()
-        });
+        if (this.discordClient?.user?.id) {
+          const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${this.discordClient.user.id}&permissions=36700160&scope=bot%20applications.commands`;
+          res.redirect(inviteUrl);
+        } else {
+          // Fallback if client not set
+          res.json({ 
+            status: "ok", 
+            service: "Music Bot Webhook Server",
+            message: "Bot invite link not yet available - bot is starting up",
+            timestamp: new Date().toISOString()
+          });
+        }
       });
 
       // Health check endpoint

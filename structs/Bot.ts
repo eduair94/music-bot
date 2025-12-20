@@ -74,6 +74,7 @@ export class Bot {
           try {
             const { useWebhookServer } = await import("../services/webhookServer");
             const webhookServer = useWebhookServer();
+            webhookServer.setClient(this.client);
             const result = await webhookServer.start();
             if (result.success) {
               console.log(`✅ Webhook server started on port ${webhookServer.getPort()}`);

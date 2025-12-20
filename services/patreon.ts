@@ -1,7 +1,7 @@
-import { config } from "../utils/config";
-import { PatreonUser, IPatreonUser } from "../models/PatreonUser";
-import { DatabaseService } from "./database";
 import crypto from "crypto";
+import { IPatreonUser, PatreonUser } from "../models/PatreonUser";
+import { config } from "../utils/config";
+import { DatabaseService } from "./database";
 
 /**
  * Patreon API v2 Response Types
@@ -180,6 +180,87 @@ export class PatreonService {
 
     console.log(`[Patreon] Synced ${syncedCount} patrons`);
     return syncedCount;
+  }
+
+  /**
+   * Sync a single patron by their Discord ID
+   * Searches through all campaign members to find the one with matching Discord
+   */
+  public async syncSinglePatron(discordId: string): Promise<{
+    found: boolean;
+    message: string;
+    status?: string;
+    tierTitle?: string;
+  }> {
+    if (!this.isConfigured()) {
+      return { found: false, message: "Patreon integration not configured" };
+    }
+
+    console.log(`[Patreon] Syncing patron for Discord ID: ${discordId}`);
+    let cursor: string | null = null;
+
+    do {
+      const endpoint = `/campaigns/${config.PATREON_CAMPAIGN_ID}/members` +
+        `?include=user,currently_entitled_tiers` +
+        `&fields[member]=full_name,patron_status,currently_entitled_amount_cents,lifetime_support_cents,last_charge_date,last_charge_status,email` +
+        `&fields[user]=full_name,email,social_connections` +
+        `&fields[tier]=title,amount_cents` +
+        `&page[count]=100` +
+        (cursor ? `&page[cursor]=${cursor}` : "");
+
+      const response = await this.apiRequest(endpoint);
+      if (!response) break;
+
+      const members = Array.isArray(response.data) ? response.data : [response.data];
+      const included = response.included || [];
+
+      for (const member of members) {
+        const user = included.find(
+          (i): i is PatreonUser => 
+            i.id === member.relationships.user.data.id && 
+            (i as any).attributes?.social_connections !== undefined
+        );
+
+        const memberDiscordId = user?.attributes?.social_connections?.discord?.user_id;
+        
+        if (memberDiscordId === discordId) {
+          // Found the user!
+          const tierId = member.relationships.currently_entitled_tiers?.data?.[0]?.id;
+          const tier = included.find(
+            (i): i is PatreonTier => i.id === tierId && (i as any).attributes?.title !== undefined
+          );
+
+          await this.updatePatronData({
+            discordId,
+            patreonId: member.relationships.user.data.id,
+            fullName: member.attributes.full_name,
+            email: member.attributes.email,
+            patronStatus: (member.attributes.patron_status as any) || "not_patron",
+            pledgeAmountCents: member.attributes.currently_entitled_amount_cents || 0,
+            lifetimeSupportCents: member.attributes.lifetime_support_cents || 0,
+            lastChargeDate: member.attributes.last_charge_date 
+              ? new Date(member.attributes.last_charge_date) 
+              : undefined,
+            lastChargeStatus: member.attributes.last_charge_status || undefined,
+            tierId,
+            tierTitle: tier?.attributes?.title,
+          });
+
+          console.log(`[Patreon] Found and synced patron: ${member.attributes.full_name}`);
+          return {
+            found: true,
+            message: `Successfully synced your Patreon data!`,
+            status: member.attributes.patron_status || undefined,
+            tierTitle: tier?.attributes?.title,
+          };
+        }
+      }
+
+      cursor = response.meta?.pagination?.cursors?.next || null;
+    } while (cursor);
+
+    console.log(`[Patreon] No patron found for Discord ID: ${discordId}`);
+    return { found: false, message: "No Patreon account found linked to your Discord" };
   }
 
   /**
