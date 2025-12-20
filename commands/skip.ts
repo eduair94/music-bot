@@ -26,25 +26,25 @@ export default {
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
     
+    // Only check if queue exists - if it does, we can skip
+    // The queue existing means there's an active player session
     if (!queue) {
       console.log(`[skip] No queue found for guild ${interaction.guild!.id}`);
       return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
 
-    // Get current track info before skipping
-    const currentTrack = queue.currentTrack;
-    
-    // Check if there's a track in queue (either currently playing or in tracks list)
-    if (!currentTrack && queue.tracks.size === 0) {
-      console.log(`[skip] No current track and empty queue for guild ${interaction.guild!.id}`);
+    // Check if queue is deleted/inactive
+    if (queue.deleted) {
+      console.log(`[skip] Queue is deleted for guild ${interaction.guild!.id}`);
       return interaction.reply({ content: i18n.__("skip.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
 
-    // If there's a currentTrack, skip it. If not but there are tracks in queue, still try to skip
+    // Get current track info for logging (may be null during transitions)
+    const currentTrack = queue.currentTrack;
     const trackTitle = currentTrack?.title || "current track";
     console.log(`[skip] Skipping: ${trackTitle}`);
     
-    // Skip the current track
+    // Skip the current track - this works even during track transitions
     queue.node.skip();
     
     return safeReply(interaction, i18n.__mf("skip.result", { author: interaction.user.id }));

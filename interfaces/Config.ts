@@ -6,6 +6,7 @@ export interface Config {
   STAY_TIME: number;
   DEFAULT_VOLUME: number;
   LOCALE: string;
+  OWNER_ID?: string;
   // Patreon integration
   PATREON_CLIENT_ID?: string;
   PATREON_CLIENT_SECRET?: string;
