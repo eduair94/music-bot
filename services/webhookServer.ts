@@ -67,12 +67,13 @@ export class WebhookServer {
         }
       }));
 
-      // Serve static website from website/out folder
+      // Calculate website path
       // Note: __dirname will be in dist/services after compilation, so we go up to find website/out
+      console.log("__dirname:", __dirname);
       const websitePath = path.join(__dirname, "..", "..", "website", "out");
-      this.app.use(express.static(websitePath));
+      console.log("Website path:", websitePath);
 
-      // Redirect to bot invite link at /invite
+      // Redirect to bot invite link at /invite (before static to override the static page)
       this.app.get("/invite", (req: Request, res: Response) => {
         if (this.discordClient?.user?.id) {
           const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${this.discordClient.user.id}&permissions=36700160&scope=bot%20applications.commands`;
@@ -83,6 +84,22 @@ export class WebhookServer {
           res.redirect(inviteUrl);
         }
       });
+
+      // Check if the website folder exists and serve static files
+      const fs = require("fs");
+      if (fs.existsSync(websitePath)) {
+        console.log("Website folder exists, files:", fs.readdirSync(websitePath).slice(0, 5));
+        
+        // Serve static files with index option enabled
+        this.app.use(express.static(websitePath, { index: "index.html" }));
+        
+        // Explicit fallback for root path
+        this.app.get("/", (req: Request, res: Response) => {
+          res.sendFile(path.join(websitePath, "index.html"));
+        });
+      } else {
+        console.warn("Website folder not found at:", websitePath);
+      }
 
       // Health check endpoint
       this.app.get("/health", (req: Request, res: Response) => {

@@ -135,3 +135,31 @@ Currently available locales are:
 5. Commit your changes: `cz` OR `npm run commit` do not use `git commit`
 6. Push to the branch: `git push origin my-new-feature`
 7. Submit a pull request
+
+## 🌐 Promotional Website
+
+The bot includes a modern, responsive promotional website built with Next.js:
+
+- **Features**: Hero section, feature cards, command list, pricing tiers, FAQ
+- **Served by**: Express webhook server at port 4123
+- **Routes**: `/` (website), `/invite` (Discord OAuth redirect)
+
+### Quick Setup
+
+```bash
+cd website
+npm install
+npm run build
+```
+
+For detailed customization instructions, see [docs/WEBSITE_SETUP.md](docs/WEBSITE_SETUP.md).
+
+## 💰 Patreon Integration
+
+The bot supports Patreon premium features with automatic webhook sync:
+
+- **Founder Tier**: $1.50/month with premium features
+- **Webhook Server**: Automatic patron status sync
+- **Premium Features**: Audio filters, 24/7 mode, priority queue, and more
+
+For setup instructions, see [docs/PATREON_SETUP_ES.md](docs/PATREON_SETUP_ES.md).
