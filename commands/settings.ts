@@ -5,20 +5,20 @@ import {
 } from "discord.js";
 import { GuildSettingsService } from "../services/guildSettings";
 import {
-  handleView,
-  handleDJRole,
   handleAdminRole,
-  handleVolume,
-  handleQueue,
   handleBehavior,
-  handleVoiceChannels,
-  handleTextChannels,
-  handleLogChannel,
   handleBlacklist,
-  handleLanguage,
+  handleDJRole,
   handleEmbedColor,
+  handleLanguage,
+  handleLogChannel,
+  handleQueue,
   handleReset,
   handleStats,
+  handleTextChannels,
+  handleView,
+  handleVoiceChannels,
+  handleVolume,
   SettingsHandlerContext,
 } from "./settings/index";
 

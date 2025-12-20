@@ -10,11 +10,12 @@ This document provides comprehensive information for developers who want to work
 4. [Commands](#commands)
 5. [Configuration](#configuration)
 6. [Database & Guild Settings](#database--guild-settings)
-7. [Localization](#localization)
-8. [Adding New Features](#adding-new-features)
-9. [External Dependencies](#external-dependencies)
-10. [Development Workflow](#development-workflow)
-11. [Troubleshooting](#troubleshooting)
+7. [Patreon Integration](#patreon-integration)
+8. [Localization](#localization)
+9. [Adding New Features](#adding-new-features)
+10. [External Dependencies](#external-dependencies)
+11. [Development Workflow](#development-workflow)
+12. [Troubleshooting](#troubleshooting)
 
 ---
 
@@ -493,6 +494,182 @@ if (!hasDJ) {
     ephemeral: true
   });
 }
+```
+
+---
+
+## Patreon Integration
+
+The bot includes full Patreon integration for monetization via the **"Founder / Beta Tester"** tier system.
+
+### Overview
+
+- **Automatic Sync**: Patrons are automatically synced from Patreon to the database
+- **Real-time Updates**: Webhooks update patron status immediately when pledges change
+- **Discord Linking**: Patrons must link their Discord account on Patreon
+- **Premium Features**: Unlock exclusive features for patrons
+
+### Setting Up Patreon
+
+1. **Create a Patreon Creator Account**: Go to [patreon.com/create-on-patreon](https://www.patreon.com/create-on-patreon)
+
+2. **Create a Client Application**: Visit [Patreon Developer Portal](https://www.patreon.com/portal/registration/register-clients) and register a new client
+
+3. **Enable Discord Integration**: On your Patreon page, connect the Discord integration and add it as a benefit to your tiers
+
+4. **Add credentials to config.json**:
+```json
+{
+  "PATREON_CLIENT_ID": "your-client-id",
+  "PATREON_CLIENT_SECRET": "your-client-secret",
+  "PATREON_CREATOR_ACCESS_TOKEN": "your-creator-access-token",
+  "PATREON_CAMPAIGN_ID": "your-campaign-id",
+  "PATREON_WEBHOOK_SECRET": "your-webhook-secret",
+  "PATREON_FOUNDER_TIER_ID": "your-founder-tier-id"
+}
+```
+
+Or via environment variables:
+```bash
+PATREON_CLIENT_ID=your-client-id
+PATREON_CLIENT_SECRET=your-client-secret
+PATREON_CREATOR_ACCESS_TOKEN=your-creator-access-token
+PATREON_CAMPAIGN_ID=your-campaign-id
+PATREON_WEBHOOK_SECRET=your-webhook-secret
+PATREON_FOUNDER_TIER_ID=your-founder-tier-id
+```
+
+### Getting Your Patreon IDs
+
+1. **Campaign ID**: Make an API call with your creator token:
+   ```bash
+   curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+     "https://www.patreon.com/api/oauth2/v2/campaigns"
+   ```
+   The `id` field in the response is your campaign ID.
+
+2. **Tier IDs**: Make an API call to get your tiers:
+   ```bash
+   curl -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+     "https://www.patreon.com/api/oauth2/v2/campaigns/YOUR_CAMPAIGN_ID?include=tiers&fields[tier]=title,amount_cents"
+   ```
+
+### Founder / Beta Tester Tier
+
+The recommended tier structure for launch:
+
+| Tier | Price | Description |
+|------|-------|-------------|
+| Founder / Beta Tester | $1.50/month | All premium features, exclusive early access |
+
+**Founder Features:**
+- Audio Filters (bass boost, nightcore, etc.)
+- 24/7 Mode - Bot stays in voice channel
+- Maximum Audio Quality
+- Priority Queue
+- Unlimited Saved Playlists
+- No Song Duration Limit
+- Vote on New Features
+- Exclusive Founder Role
+- Direct Support Channel Access
+
+### Using Premium Checks in Commands
+
+```typescript
+import { requirePremiumFeature, hasPremiumFeature } from "../utils/premiumCheck";
+
+// Method 1: Block command if no premium (auto-replies with upgrade message)
+export async function execute(interaction: ChatInputCommandInteraction) {
+  if (!await requirePremiumFeature(interaction, "audio_filters")) {
+    return; // Already replied with premium upsell
+  }
+  // User has premium, continue with command
+}
+
+// Method 2: Check silently (for optional premium features)
+const isPremium = await hasPremiumFeature(interaction.user.id, "stay_24_7");
+if (isPremium) {
+  // Enable 24/7 mode
+}
+```
+
+### Available Premium Features
+
+| Feature Key | Description |
+|-------------|-------------|
+| `audio_filters` | Audio filters (bass boost, nightcore, etc.) |
+| `stay_24_7` | 24/7 mode - bot stays in channel |
+| `max_quality` | Maximum audio quality |
+| `priority_queue` | Priority in queue |
+| `unlimited_playlists` | Unlimited saved playlists |
+| `longer_songs` | No song duration limit |
+| `vote_features` | Vote on new features |
+| `founder_role` | Exclusive Founder role |
+| `direct_support` | Direct support channel access |
+
+### Setting Up Webhooks
+
+1. **Create a webhook endpoint** on your server (e.g., `https://your-domain.com/patreon/webhook`)
+
+2. **Register the webhook** on Patreon Developer Portal:
+   - Go to your client settings
+   - Add the webhook URL
+   - Select triggers: `members:create`, `members:update`, `members:delete`, `members:pledge:create`, `members:pledge:update`, `members:pledge:delete`
+
+3. **Handle webhooks** in your Express server:
+```typescript
+import express from "express";
+import { PatreonService } from "./services/patreon";
+
+const app = express();
+
+app.post("/patreon/webhook", express.raw({ type: "application/json" }), async (req, res) => {
+  const signature = req.headers["x-patreon-signature"] as string;
+  const event = req.headers["x-patreon-event"] as string;
+  const body = req.body.toString();
+
+  const patreonService = PatreonService.getInstance();
+
+  // Verify signature
+  if (!patreonService.verifyWebhookSignature(body, signature)) {
+    return res.status(401).send("Invalid signature");
+  }
+
+  // Process webhook
+  const result = await patreonService.handleWebhook(event, JSON.parse(body));
+  res.json(result);
+});
+```
+
+### PatreonUser Model
+
+The `PatreonUser` model (`models/PatreonUser.ts`) stores patron data:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `discordId` | string | Discord user ID (unique) |
+| `patreonId` | string | Patreon user ID |
+| `email` | string | Patron's email |
+| `fullName` | string | Patron's name |
+| `tierId` | string | Current tier ID |
+| `tierTitle` | string | Current tier name |
+| `patronStatus` | enum | `active_patron`, `declined_patron`, `former_patron`, `not_patron` |
+| `pledgeAmountCents` | number | Current pledge amount in cents |
+| `lifetimeSupportCents` | number | Total lifetime support |
+| `isPremium` | boolean | Has active premium access |
+| `isFounder` | boolean | Is Founder tier patron |
+
+### Manual Sync
+
+The bot automatically syncs patrons:
+- On startup
+- Every 30 minutes
+
+You can trigger a manual sync via the Patreon service:
+```typescript
+const patreonService = PatreonService.getInstance();
+const syncedCount = await patreonService.syncAllPatrons();
+console.log(`Synced ${syncedCount} patrons`);
 ```
 
 ---

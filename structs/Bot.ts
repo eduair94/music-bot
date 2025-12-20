@@ -1,14 +1,13 @@
 import {
-    ApplicationCommandDataResolvable,
-    ChatInputCommandInteraction,
-    Client,
-    Collection,
-    Events,
-    Interaction,
-    PermissionsBitField,
-    REST,
-    Routes,
-    Snowflake
+  ApplicationCommandDataResolvable,
+  ChatInputCommandInteraction,
+  Client,
+  Collection,
+  Events,
+  Interaction,
+  REST,
+  Routes,
+  Snowflake
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
@@ -16,6 +15,7 @@ import { Command } from "../interfaces/Command";
 import { DatabaseService } from "../services/database";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { PatreonService } from "../services/patreon";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
@@ -52,6 +52,28 @@ export class Bot {
         console.log("✅ Discord Player service initialized");
       } catch (error) {
         console.error("❌ Failed to initialize Discord Player service:", error);
+      }
+
+      // Initialize Patreon service and sync patrons
+      try {
+        const patreonService = PatreonService.getInstance();
+        if (patreonService.isConfigured()) {
+          const syncedCount = await patreonService.syncAllPatrons();
+          console.log(`✅ Patreon service initialized (${syncedCount} patrons synced)`);
+          
+          // Set up periodic sync (every 30 minutes)
+          setInterval(async () => {
+            try {
+              await patreonService.syncAllPatrons();
+            } catch (error) {
+              console.error("[Patreon] Periodic sync failed:", error);
+            }
+          }, 30 * 60 * 1000);
+        } else {
+          console.log("⚠️ Patreon integration not configured");
+        }
+      } catch (error) {
+        console.error("⚠️ Patreon initialization failed:", error);
       }
 
       // Generate and display bot invite link

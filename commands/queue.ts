@@ -1,13 +1,13 @@
 import { Track } from "discord-player";
 import {
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
-    ChatInputCommandInteraction,
-    CommandInteraction,
-    EmbedBuilder,
-    Interaction,
-    SlashCommandBuilder
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  CommandInteraction,
+  EmbedBuilder,
+  Interaction,
+  SlashCommandBuilder
 } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";

@@ -13,7 +13,14 @@ try {
     PRUNING: process.env.PRUNING === "true" ? true : false,
     STAY_TIME: parseInt(process.env.STAY_TIME!) || 30,
     DEFAULT_VOLUME: parseInt(process.env.DEFAULT_VOLUME!) || 100,
-    LOCALE: process.env.LOCALE || "en"
+    LOCALE: process.env.LOCALE || "en",
+    // Patreon integration
+    PATREON_CLIENT_ID: process.env.PATREON_CLIENT_ID || "",
+    PATREON_CLIENT_SECRET: process.env.PATREON_CLIENT_SECRET || "",
+    PATREON_CREATOR_ACCESS_TOKEN: process.env.PATREON_CREATOR_ACCESS_TOKEN || "",
+    PATREON_CAMPAIGN_ID: process.env.PATREON_CAMPAIGN_ID || "",
+    PATREON_WEBHOOK_SECRET: process.env.PATREON_WEBHOOK_SECRET || "",
+    PATREON_FOUNDER_TIER_ID: process.env.PATREON_FOUNDER_TIER_ID || "",
   };
 }
 
