@@ -1,5 +1,6 @@
 import { Client } from "discord.js";
 import express, { Express, Request, Response } from "express";
+import path from "path";
 import { config } from "../utils/config";
 import { PatreonService } from "./patreon";
 
@@ -66,19 +67,20 @@ export class WebhookServer {
         }
       }));
 
-      // Redirect to bot invite link
-      this.app.get("/", (req: Request, res: Response) => {
+      // Serve static website from website/out folder
+      // Note: __dirname will be in dist/services after compilation, so we go up to find website/out
+      const websitePath = path.join(__dirname, "..", "..", "website", "out");
+      this.app.use(express.static(websitePath));
+
+      // Redirect to bot invite link at /invite
+      this.app.get("/invite", (req: Request, res: Response) => {
         if (this.discordClient?.user?.id) {
           const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=${this.discordClient.user.id}&permissions=36700160&scope=bot%20applications.commands`;
           res.redirect(inviteUrl);
         } else {
-          // Fallback if client not set
-          res.json({ 
-            status: "ok", 
-            service: "Music Bot Webhook Server",
-            message: "Bot invite link not yet available - bot is starting up",
-            timestamp: new Date().toISOString()
-          });
+          // Fallback if client not set - use hardcoded client ID
+          const inviteUrl = `https://discord.com/api/oauth2/authorize?client_id=1315125264786653225&permissions=36700160&scope=bot%20applications.commands`;
+          res.redirect(inviteUrl);
         }
       });
 

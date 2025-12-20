@@ -71,7 +71,7 @@ fi
 # ============================================
 # 1. Update System Packages
 # ============================================
-echo -e "${BLUE}��� Step 1: Updating system packages...${NC}"
+echo -e "${BLUE} Step 1: Updating system packages...${NC}"
 
 case $PKG_MANAGER in
     apt)
@@ -95,7 +95,7 @@ echo ""
 # ============================================
 # 2. Install Build Essentials
 # ============================================
-echo -e "${BLUE}��� Step 2: Installing build tools...${NC}"
+echo -e "${BLUE} Step 2: Installing build tools...${NC}"
 
 case $PKG_MANAGER in
     apt)
@@ -189,7 +189,7 @@ echo ""
 # ============================================
 # 4. Install Opus Libraries (for voice)
 # ============================================
-echo -e "${BLUE}��� Step 4: Installing Opus audio libraries...${NC}"
+echo -e "${BLUE} Step 4: Installing Opus audio libraries...${NC}"
 
 case $PKG_MANAGER in
     apt)
@@ -209,7 +209,7 @@ echo ""
 # ============================================
 # 5. Install Sodium (for encryption)
 # ============================================
-echo -e "${BLUE}��� Step 5: Installing libsodium for encryption...${NC}"
+echo -e "${BLUE} Step 5: Installing libsodium for encryption...${NC}"
 
 case $PKG_MANAGER in
     apt)
@@ -229,7 +229,7 @@ echo ""
 # ============================================
 # 6. Check Node.js Installation
 # ============================================
-echo -e "${BLUE}��� Step 6: Checking Node.js...${NC}"
+echo -e "${BLUE} Step 6: Checking Node.js...${NC}"
 
 if command -v node &> /dev/null; then
     NODE_VERSION=$(node -v)
@@ -260,7 +260,7 @@ echo ""
 # ============================================
 # 7. Install PM2 (Process Manager)
 # ============================================
-echo -e "${BLUE}��� Step 7: Installing/Updating PM2...${NC}"
+echo -e "${BLUE} Step 7: Installing/Updating PM2...${NC}"
 
 npm install -g pm2@latest
 
@@ -290,19 +290,19 @@ echo "  • Libsodium (encryption)"
 echo "  • Node.js & npm"
 echo "  • PM2 (process manager)"
 echo ""
-echo -e "${YELLOW}��� Next steps:${NC}"
+echo -e "${YELLOW} Next steps:${NC}"
 echo "  1. Navigate to your bot directory"
 echo "  2. Run: npm install"
 echo "  3. Run: npm run build (if using TypeScript)"
 echo "  4. Start with: pm2 start ecosystem.config.js"
 echo ""
-echo -e "${GREEN}��� Your music bot should now be ready to play audio!${NC}"
+echo -e "${GREEN} Your music bot should now be ready to play audio!${NC}"
 echo ""
 
 # ============================================
 # 9. Version Check
 # ============================================
-echo -e "${BLUE}��� Installed Versions:${NC}"
+echo -e "${BLUE} Installed Versions:${NC}"
 echo "----------------------------------------"
 [ -x "$(command -v node)" ] && echo "Node.js:    $(node -v)"
 [ -x "$(command -v npm)" ] && echo "npm:        v$(npm -v)"
