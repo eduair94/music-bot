@@ -18,7 +18,8 @@
     "prod": "npm run build && node ./dist/index.js",
     "commit": "cz",
     "format": "npx prettier --write '**/*.ts' --config .prettierrc",
-    "test:search": "ts-node tests/testSearch.ts"
+    "test:search": "ts-node tests/testSearch.ts",
+    "patreon:campaign": "ts-node scripts/getCampaignId.ts"
   },
   "dependencies": {
     "@discord-player/extractor": "^7.1.0",

@@ -69,8 +69,22 @@ export class Bot {
               console.error("[Patreon] Periodic sync failed:", error);
             }
           }, 30 * 60 * 1000);
+
+          // Auto-start webhook server for Patreon
+          try {
+            const { useWebhookServer } = await import("../services/webhookServer");
+            const webhookServer = useWebhookServer();
+            const result = await webhookServer.start();
+            if (result.success) {
+              console.log(`✅ Webhook server started on port ${webhookServer.getPort()}`);
+            } else {
+              console.warn(`⚠️ Webhook server: ${result.message}`);
+            }
+          } catch (webhookError) {
+            console.error("⚠️ Webhook server failed to start:", webhookError);
+          }
         } else {
-          console.log("⚠️ Patreon integration not configured");
+          console.log("⚠️ Patreon integration not configured (missing CAMPAIGN_ID or ACCESS_TOKEN)");
         }
       } catch (error) {
         console.error("⚠️ Patreon initialization failed:", error);
