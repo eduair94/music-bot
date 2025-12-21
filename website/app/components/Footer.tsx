@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { Github } from "lucide-react";
+import Link from "next/link";
 import { FaDiscord, FaPatreon } from "react-icons/fa";
 
 export default function Footer() {

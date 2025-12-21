@@ -1,8 +1,8 @@
 "use client";
 
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
 import { FaDiscord, FaPatreon } from "react-icons/fa";
 
 export default function Header() {
