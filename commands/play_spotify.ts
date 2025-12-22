@@ -4,23 +4,22 @@ import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
 
 /**
- * /play command - Music playback using discord-player
+ * /play_spotify command - Search and play music from Spotify
  * 
  * Features:
- * - Fast playback via discord-player with yt-dlp streaming
- * - Built-in queue management
- * - Native Opus streaming for Discord
- * - Support for YouTube, SoundCloud, Spotify, and direct audio URLs
- * - Voice channel restrictions based on guild settings
+ * - Search directly on Spotify using query
+ * - Plays the best match from Spotify
+ * - Supports Spotify tracks, albums, and playlists
+ * - Uses discord-player's Spotify integration
  */
 export default {
   data: new SlashCommandBuilder()
-    .setName("play")
-    .setDescription(i18n.__("play.description"))
+    .setName("play_spotify")
+    .setDescription("Search and play a song from Spotify")
     .addStringOption((option) => 
       option
-        .setName("song")
-        .setDescription("Song name, YouTube URL, SoundCloud URL, or Spotify URL")
+        .setName("query")
+        .setDescription("Song name, artist, or Spotify URL to search for")
         .setRequired(true)
     ),
   cooldown: 1,
@@ -28,7 +27,7 @@ export default {
   
   async execute(interaction: ChatInputCommandInteraction, input?: string) {
     const startTime = Date.now();
-    const query = interaction.options.getString("song") || input;
+    const query = interaction.options.getString("query") || input;
     const guildMember = interaction.member as GuildMember;
     const voiceChannel = guildMember?.voice?.channel;
     const guildId = interaction.guild!.id;
@@ -94,12 +93,20 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      console.log(`[play] ⚡ Playing: "${query}"`);
-      const result = await playerService.play(voiceChannel, query, textChannel);
+      // Format query for Spotify search
+      // If it's already a Spotify URL, use it as-is
+      // Otherwise, prepend "spsearch:" to force Spotify search
+      let searchQuery = query;
+      if (!query.includes("spotify.com")) {
+        searchQuery = `spsearch:${query}`;
+      }
+
+      console.log(`[play_spotify] 🎵 Searching Spotify: "${query}"`);
+      const result = await playerService.play(voiceChannel, searchQuery, textChannel);
 
       if (!result) {
         return interaction.editReply({ 
-          content: i18n.__mf("play.errorNoResults", { url: `<${query}>` })
+          content: `❌ No results found on Spotify for: **${query}**\n\nTry:\n• Different keywords\n• Adding the artist name\n• Using a direct Spotify link`
         }).catch(console.error);
       }
 
@@ -109,8 +116,8 @@ export default {
       // Increment song played counter
       await settingsService.incrementSongPlayed(guildId);
 
-      // Get embed color from settings
-      const embedColor = parseInt(settings.embedColor.replace("#", ""), 16);
+      // Get embed color from settings (use Spotify green)
+      const embedColor = 0x1DB954; // Spotify green
 
       // Check if this is a playlist - only treat as playlist if it's actually a playlist link
       const isSpotifyPlaylist = query.includes("spotify.com") && query.includes("/playlist/");
@@ -129,11 +136,11 @@ export default {
 
         embed = new EmbedBuilder()
           .setColor(embedColor)
-          .setTitle("📋 Playlist Added to Queue")
+          .setTitle("📋 Spotify Playlist Added")
           .setDescription(`**[${playlistTitle}](${playlistUrl})**`)
           .addFields(
             { name: "Tracks", value: `${totalTracks} songs`, inline: true },
-            { name: "Source", value: track.source || "Unknown", inline: true },
+            { name: "Source", value: "🎵 Spotify", inline: true },
             { name: "Load Time", value: `${loadTime}ms`, inline: true }
           )
           .setThumbnail(playlistThumbnail)
@@ -150,7 +157,7 @@ export default {
         const isFirstTrack = queue.size === 0;
         embed = new EmbedBuilder()
           .setColor(embedColor)
-          .setTitle(isFirstTrack ? "▶️ Now Playing" : "➕ Added to Queue")
+          .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
           .setDescription(`**[${track.title}](${track.url})**`)
           .addFields(
             { name: "Artist", value: track.author || "Unknown", inline: true },
@@ -158,7 +165,7 @@ export default {
             { name: "Load Time", value: `${loadTime}ms`, inline: true }
           )
           .setThumbnail(track.thumbnail || null)
-          .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
+          .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
 
         if (!isFirstTrack) {
           embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
@@ -168,7 +175,7 @@ export default {
       return interaction.editReply({ embeds: [embed] }).catch(console.error);
 
     } catch (error: any) {
-      console.error("[play] ❌ Error:", error);
+      console.error("[play_spotify] ❌ Error:", error);
       const errorMessage = getErrorMessage(error, query);
 
       if (interaction.deferred || interaction.replied) {
@@ -188,18 +195,18 @@ function getErrorMessage(error: any, query: string): string {
   if (message.includes("no results")) {
     return i18n.__mf("play.errorNoResults", { url: `<${query}>` });
   }
-  if (message.includes("sign in")) {
-    return "❌ This video requires sign-in. Try a different video.";
+  if (message.includes("sign in") || message.includes("login")) {
+    return "❌ This Spotify track requires authentication. Try a different track.";
   }
-  if (message.includes("age")) {
-    return "❌ This video is age-restricted.";
+  if (message.includes("premium") || message.includes("subscription")) {
+    return "❌ This track requires Spotify Premium.";
   }
   if (message.includes("private")) {
-    return "❌ This video is private and cannot be played.";
+    return "❌ This Spotify track is private and cannot be played.";
   }
-  if (message.includes("unavailable")) {
-    return "❌ This video is unavailable in your region.";
+  if (message.includes("unavailable") || message.includes("not available")) {
+    return "❌ This track is unavailable in your region.";
   }
   
-  return error.message ? `❌ ${error.message}` : "❌ An error occurred while playing the track.";
+  return error.message ? `❌ ${error.message}` : "❌ An error occurred while playing the Spotify track.";
 }

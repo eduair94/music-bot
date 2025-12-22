@@ -11,6 +11,7 @@ interface Command {
 
 const commands: Command[] = [
   { name: "/play", description: "Play audio from YouTube", usage: "/play <URL or search>", category: "Music" },
+  { name: "/play_spotify", description: "Search and play music from Spotify", usage: "/play_spotify <song or URL>", category: "Music" },
   { name: "/playlist", description: "Play a YouTube playlist", usage: "/playlist <playlist URL>", category: "Music" },
   { name: "/search", description: "Search and select videos to play", usage: "/search <query>", category: "Music" },
   { name: "/nowplaying", description: "Show the currently playing song", usage: "/nowplaying", category: "Music" },
