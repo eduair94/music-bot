@@ -176,14 +176,18 @@ export default {
         }).catch(console.error);
       }
 
-      console.log(`[play_spotify] ✅ Found: "${trackResult.name}" by ${trackResult.artist} (${trackResult.uri})`);
+      console.log(`[play_spotify] ✅ Found: "${trackResult.name}" by ${trackResult.artist}`);
 
-      // Play using the Spotify URI
-      const result = await playerService.play(voiceChannel, trackResult.uri, textChannel);
+      // Build YouTube search query from Spotify track info
+      const youtubeSearchQuery = `${trackResult.name} ${trackResult.artist}`;
+      console.log(`[play_spotify] 🎬 Searching YouTube for: "${youtubeSearchQuery}"`);
+
+      // Play using YouTube search (discord-player will find the best match)
+      const result = await playerService.play(voiceChannel, youtubeSearchQuery, textChannel);
 
       if (!result) {
         return interaction.editReply({ 
-          content: `❌ Could not play: **${trackResult.name}** by ${trackResult.artist}`
+          content: `❌ Could not find on YouTube: **${trackResult.name}** by ${trackResult.artist}`
         }).catch(console.error);
       }
 
@@ -206,7 +210,7 @@ export default {
           { name: "Load Time", value: `${loadTime}ms`, inline: true }
         )
         .setThumbnail(trackResult.albumArt)
-        .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
+        .setFooter({ text: `Source: Spotify Search → YouTube • Requested by ${interaction.user.username}` });
 
       if (!isFirstTrack) {
         embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
