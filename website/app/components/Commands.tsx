@@ -33,10 +33,14 @@ const commands: Command[] = [
   { name: "/uptime", description: "Check bot uptime", usage: "/uptime", category: "Utility" },
   { name: "/invite", description: "Get bot invite link", usage: "/invite", category: "Utility" },
   { name: "/settings", description: "Configure server settings", usage: "/settings", category: "Utility" },
-  { name: "/premium", description: "Check premium status", usage: "/premium", category: "Utility" },
+  { name: "/premium link", description: "Link server to your Patreon account", usage: "/premium link", category: "Premium" },
+  { name: "/premium unlink", description: "Unlink server from your account", usage: "/premium unlink", category: "Premium" },
+  { name: "/premium status", description: "Check premium status for this server", usage: "/premium status", category: "Premium" },
+  { name: "/premium list", description: "List all your linked servers", usage: "/premium list", category: "Premium" },
+  { name: "/premium config", description: "Configure premium settings", usage: "/premium config [bitrate] [identity]", category: "Premium" },
 ];
 
-const categories = ["All", "Music", "Queue", "Controls", "Utility"];
+const categories = ["All", "Music", "Queue", "Controls", "Premium", "Utility"];
 
 export default function Commands() {
   const [activeCategory, setActiveCategory] = useState("All");
