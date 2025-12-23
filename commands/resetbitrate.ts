@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { PatreonUser } from "../models/PatreonUser";
 import { config } from "../utils/config";
 
@@ -16,7 +16,6 @@ export default {
         .setRequired(false)
     ),
   cooldown: 3,
-  permissions: [PermissionsBitField.Flags.Administrator],
 
   async execute(interaction: ChatInputCommandInteraction) {
     // Check if user is the bot owner
@@ -43,7 +42,7 @@ export default {
 
       return interaction.editReply({
         content: `âœ… **Audio settings reset for ${targetUser.username}**\n\n` +
-                 `**Quality:** í´‰ 128kbps (Free/Default)\n` +
+                 `**Quality:** ï¿½ï¿½ï¿½ 128kbps (Free/Default)\n` +
                  `**Identity:** Bypass (default)\n\n` +
                  `Settings will now be determined by Patreon tier if applicable.`
       }).catch(console.error);

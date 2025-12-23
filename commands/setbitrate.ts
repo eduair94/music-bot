@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { PatreonUser } from "../models/PatreonUser";
 import { config } from "../utils/config";
 
@@ -34,7 +34,6 @@ export default {
         .setRequired(false)
     ),
   cooldown: 3,
-  permissions: [PermissionsBitField.Flags.Administrator],
 
   async execute(interaction: ChatInputCommandInteraction) {
     // Check if user is the bot owner
@@ -74,14 +73,14 @@ export default {
 
       // Build response message
       const qualityLabel = 
-        bitrate >= 320 ? "í´Š HQ 320kbps (Premium)" :
-        bitrate >= 256 ? "í´Š 256kbps (High)" :
-        bitrate >= 192 ? "í´‰ 192kbps (Mid)" :
-        "í´‰ 128kbps (Free)";
+        bitrate >= 320 ? "ï¿½ï¿½ï¿½ HQ 320kbps (Premium)" :
+        bitrate >= 256 ? "ï¿½ï¿½ï¿½ 256kbps (High)" :
+        bitrate >= 192 ? "ï¿½ï¿½ï¿½ 192kbps (Mid)" :
+        "ï¿½ï¿½ï¿½ 128kbps (Free)";
 
       const identityLabel = customIdentity 
         ? customIdentity === "indie" 
-          ? "í¾¸ Indie Music Bot" 
+          ? "ï¿½ï¿½ï¿½ Indie Music Bot" 
           : customIdentity
         : "Bypass (default)";
 
