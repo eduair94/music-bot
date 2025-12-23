@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -93,83 +94,122 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      // Format query for Spotify search
-      // If it's already a Spotify URL, use it as-is
-      // Otherwise, prepend "spsearch:" to force Spotify search
-      let searchQuery = query;
-      if (!query.includes("spotify.com")) {
-        searchQuery = `spsearch:${query}`;
+      // If it's a direct Spotify URL, use it directly
+      if (query.includes("spotify.com")) {
+        console.log(`[play_spotify] 🔗 Using direct Spotify URL: "${query}"`);
+        const result = await playerService.play(voiceChannel, query, textChannel);
+
+        if (!result) {
+          return interaction.editReply({ 
+            content: `❌ Could not play the Spotify link: **${query}**`
+          }).catch(console.error);
+        }
+
+        const loadTime = Date.now() - startTime;
+        const { track, queue, playlist, searchResult } = result;
+
+        // Increment song played counter
+        await settingsService.incrementSongPlayed(guildId);
+
+        const embedColor = 0x1DB954; // Spotify green
+
+        // Check if this is a playlist
+        const isSpotifyPlaylist = query.includes("spotify.com") && query.includes("/playlist/");
+        const isPlaylist = playlist !== null && isSpotifyPlaylist;
+        const totalTracks = isPlaylist ? searchResult.tracks.length : 1;
+
+        let embed: EmbedBuilder;
+
+        if (isPlaylist) {
+          const playlistTitle = playlist?.title || "Spotify Playlist";
+          const playlistUrl = playlist?.url || query;
+          const playlistThumbnail = playlist?.thumbnail || track.thumbnail || null;
+
+          embed = new EmbedBuilder()
+            .setColor(embedColor)
+            .setTitle("📋 Spotify Playlist Added")
+            .setDescription(`**[${playlistTitle}](${playlistUrl})**`)
+            .addFields(
+              { name: "Tracks", value: `${totalTracks} songs`, inline: true },
+              { name: "Source", value: "🎵 Spotify", inline: true },
+              { name: "Load Time", value: `${loadTime}ms`, inline: true }
+            )
+            .setThumbnail(playlistThumbnail)
+            .setFooter({ text: `Requested by ${interaction.user.username}` });
+
+          embed.addFields({ 
+            name: "▶️ Now Playing", 
+            value: `**${track.title}** by ${track.author || "Unknown"}`, 
+            inline: false 
+          });
+        } else {
+          const isFirstTrack = queue.size === 0;
+          embed = new EmbedBuilder()
+            .setColor(embedColor)
+            .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
+            .setDescription(`**[${track.title}](${track.url})**`)
+            .addFields(
+              { name: "Artist", value: track.author || "Unknown", inline: true },
+              { name: "Duration", value: track.duration || "Unknown", inline: true },
+              { name: "Load Time", value: `${loadTime}ms`, inline: true }
+            )
+            .setThumbnail(track.thumbnail || null)
+            .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
+
+          if (!isFirstTrack) {
+            embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+          }
+        }
+
+        return interaction.editReply({ embeds: [embed] }).catch(console.error);
       }
 
-      console.log(`[play_spotify] 🎵 Searching Spotify: "${query}"`);
-      const result = await playerService.play(voiceChannel, searchQuery, textChannel);
-
-      if (!result) {
+      // Otherwise, search using custom Spotify API
+      console.log(`[play_spotify] 🔍 Searching Spotify for: "${query}"`);
+      
+      const spotifyService = SpotifyService.getInstance();
+      const trackResult = await spotifyService.searchTrack(query);
+      
+      if (!trackResult) {
         return interaction.editReply({ 
           content: `❌ No results found on Spotify for: **${query}**\n\nTry:\n• Different keywords\n• Adding the artist name\n• Using a direct Spotify link`
         }).catch(console.error);
       }
 
+      console.log(`[play_spotify] ✅ Found: "${trackResult.name}" by ${trackResult.artist} (${trackResult.uri})`);
+
+      // Play using the Spotify URI
+      const result = await playerService.play(voiceChannel, trackResult.uri, textChannel);
+
+      if (!result) {
+        return interaction.editReply({ 
+          content: `❌ Could not play: **${trackResult.name}** by ${trackResult.artist}`
+        }).catch(console.error);
+      }
+
       const loadTime = Date.now() - startTime;
-      const { track, queue, playlist, searchResult } = result;
+      const { track, queue } = result;
 
       // Increment song played counter
       await settingsService.incrementSongPlayed(guildId);
 
-      // Get embed color from settings (use Spotify green)
       const embedColor = 0x1DB954; // Spotify green
+      const isFirstTrack = queue.size === 0;
 
-      // Check if this is a playlist - only treat as playlist if it's actually a playlist link
-      const isSpotifyPlaylist = query.includes("spotify.com") && query.includes("/playlist/");
-      const isYouTubePlaylist = query.includes("youtube.com") && query.includes("list=");
-      const isSoundCloudPlaylist = query.includes("soundcloud.com") && query.includes("/sets/");
-      const isPlaylist = playlist !== null && (isSpotifyPlaylist || isYouTubePlaylist || isSoundCloudPlaylist);
-      const totalTracks = isPlaylist ? searchResult.tracks.length : 1;
+      const embed = new EmbedBuilder()
+        .setColor(embedColor)
+        .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
+        .setDescription(`**${trackResult.name}**`)
+        .addFields(
+          { name: "Artist", value: trackResult.artist, inline: true },
+          { name: "Duration", value: trackResult.durationFormatted, inline: true },
+          { name: "Load Time", value: `${loadTime}ms`, inline: true }
+        )
+        .setThumbnail(trackResult.albumArt)
+        .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
 
-      let embed: EmbedBuilder;
-
-      if (isPlaylist) {
-        // Playlist embed - show playlist info
-        const playlistTitle = playlist?.title || (isSpotifyPlaylist ? "Spotify Playlist" : isYouTubePlaylist ? "YouTube Playlist" : "Playlist");
-        const playlistUrl = playlist?.url || query;
-        const playlistThumbnail = playlist?.thumbnail || track.thumbnail || null;
-
-        embed = new EmbedBuilder()
-          .setColor(embedColor)
-          .setTitle("📋 Spotify Playlist Added")
-          .setDescription(`**[${playlistTitle}](${playlistUrl})**`)
-          .addFields(
-            { name: "Tracks", value: `${totalTracks} songs`, inline: true },
-            { name: "Source", value: "🎵 Spotify", inline: true },
-            { name: "Load Time", value: `${loadTime}ms`, inline: true }
-          )
-          .setThumbnail(playlistThumbnail)
-          .setFooter({ text: `Requested by ${interaction.user.username}` });
-
-        // Show first track that will play
-        embed.addFields({ 
-          name: "▶️ Now Playing", 
-          value: `**${track.title}** by ${track.author || "Unknown"}`, 
-          inline: false 
-        });
-      } else {
-        // Single track embed
-        const isFirstTrack = queue.size === 0;
-        embed = new EmbedBuilder()
-          .setColor(embedColor)
-          .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
-          .setDescription(`**[${track.title}](${track.url})**`)
-          .addFields(
-            { name: "Artist", value: track.author || "Unknown", inline: true },
-            { name: "Duration", value: track.duration || "Unknown", inline: true },
-            { name: "Load Time", value: `${loadTime}ms`, inline: true }
-          )
-          .setThumbnail(track.thumbnail || null)
-          .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
-
-        if (!isFirstTrack) {
-          embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
-        }
+      if (!isFirstTrack) {
+        embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
       }
 
       return interaction.editReply({ embeds: [embed] }).catch(console.error);
