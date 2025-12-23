@@ -73,14 +73,14 @@ export default {
 
       // Build response message
       const qualityLabel = 
-        bitrate >= 320 ? "��� HQ 320kbps (Premium)" :
-        bitrate >= 256 ? "��� 256kbps (High)" :
-        bitrate >= 192 ? "��� 192kbps (Mid)" :
-        "��� 128kbps (Free)";
+        bitrate >= 320 ? "🎵 HQ 320kbps (Premium)" :
+        bitrate >= 256 ? "🎵 256kbps (High)" :
+        bitrate >= 192 ? "🎵 192kbps (Mid)" :
+        "🎵 128kbps (Free)";
 
       const identityLabel = customIdentity 
         ? customIdentity === "indie" 
-          ? "��� Indie Music Bot" 
+          ? "🎸 Indie Music Bot" 
           : customIdentity
         : "Bypass (default)";
 

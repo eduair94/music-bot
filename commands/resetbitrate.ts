@@ -42,7 +42,7 @@ export default {
 
       return interaction.editReply({
         content: `✅ **Audio settings reset for ${targetUser.username}**\n\n` +
-                 `**Quality:** ��� 128kbps (Free/Default)\n` +
+                 `**Quality:** 🎵 128kbps (Free/Default)\n` +
                  `**Identity:** Bypass (default)\n\n` +
                  `Settings will now be determined by Patreon tier if applicable.`
       }).catch(console.error);

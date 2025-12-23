@@ -1,12 +1,16 @@
-# Ì∑™ Testing & Development Commands
+# ÔøΩÔ∏è Testing & Development Commands
 
 This document describes owner-only commands for testing and development purposes.
+
+> **Note:** These commands do NOT require Administrator permissions in Discord. They are restricted by the `OWNER_ID` config value only. The bot owner can use them regardless of their server permissions.
 
 ## Owner Commands
 
 ### `/setbitrate` - Set Custom Audio Quality
 
 **Description:** Allows the bot owner to set custom audio bitrate for testing different quality tiers.
+
+**Permissions:** Owner only (configured via `OWNER_ID` in config.json). Does not require Discord Administrator permission.
 
 **Usage:**
 ```
@@ -21,7 +25,7 @@ This document describes owner-only commands for testing and development purposes
   - `320 kbps` - Premium tier quality (HQ)
   
 - `identity` (optional): Custom bot identity/branding
-  - Use `"indie"` for the special Ìæ∏ Indie Music Bot branding
+  - Use `"indie"` for the special ÔøΩ Indie Music Bot branding
   - Or any custom name for testing
   
 - `user` (optional): Target user to set bitrate for
@@ -46,8 +50,8 @@ This document describes owner-only commands for testing and development purposes
 **Response:**
 The command will show:
 - ‚úÖ Confirmation message
-- Quality badge (e.g., "Ì¥ä HQ 320kbps (Premium)")
-- Bot identity (e.g., "Ìæ∏ Indie Music Bot" or "Bypass")
+- Quality badge (e.g., "ÔøΩ HQ 320kbps (Premium)")
+- Bot identity (e.g., "ÔøΩ Indie Music Bot" or "Bypass")
 - Notification that settings will apply to all music commands
 
 ---
@@ -55,6 +59,8 @@ The command will show:
 ### `/resetbitrate` - Reset to Default Settings
 
 **Description:** Resets audio bitrate to default (128kbps) or Patreon-determined settings.
+
+**Permissions:** Owner only (configured via `OWNER_ID` in config.json). Does not require Discord Administrator permission.
 
 **Usage:**
 ```
@@ -100,7 +106,7 @@ OWNER_ID=1066182746399055993
 ```
 
 **How to find your Discord User ID:**
-1. Enable Developer Mode in Discord (User Settings ‚Üí Advanced ‚Üí Developer Mode)
+1. Enable Developer Mode in Discord (User Settings -> Advanced -> Developer Mode)
 2. Right-click your username
 3. Click "Copy User ID"
 
@@ -118,17 +124,17 @@ OWNER_ID=1066182746399055993
 # Test Tier 1 - Indie ($5-9.99)
 /setbitrate bitrate:320 identity:indie
 /play some song
-# Should show: "Ì¥ä HQ 320kbps ‚Ä¢ Ìæ∏ Indie Music Bot"
+# Should show: "ÔøΩ HQ 320kbps - ÔøΩ Indie Music Bot"
 
 # Test Tier 2 - Premium ($10-14.99)
 /setbitrate bitrate:320 identity:premium
 /play some song
-# Should show: "Ì¥ä HQ 320kbps ‚Ä¢ premium"
+# Should show: "ÔøΩ HQ 320kbps - premium"
 
 # Test Tier 3 - Founder ($15+)
 /setbitrate bitrate:320 identity:founder
 /play some song
-# Should show: "Ì¥ä HQ 320kbps ‚Ä¢ founder"
+# Should show: "ÔøΩ HQ 320kbps - founder"
 
 # Reset to default
 /resetbitrate
@@ -138,13 +144,13 @@ OWNER_ID=1066182746399055993
 
 All music playback commands will show the quality badge:
 - `/play` - Regular YouTube playback
-- `/play_spotify` - Spotify search ‚Üí YouTube
+- `/play_spotify` - Spotify search -> YouTube
 - `/play_file` - File upload playback
 - `/playlist` - Playlist playback
 
 Each will display in the embed footer:
 ```
-Ì¥ä HQ 320kbps ‚Ä¢ Ìæ∏ Indie Music Bot ‚Ä¢ Requested by Username
+ÔøΩ HQ 320kbps - ÔøΩ Indie Music Bot - Requested by Username
 ```
 
 ---
@@ -153,17 +159,17 @@ Each will display in the embed footer:
 
 | Bitrate | Badge | Tier |
 |---------|-------|------|
-| 128 kbps | Ì¥â 128kbps | Free |
-| 192 kbps | Ì¥â 192kbps | Mid |
-| 256 kbps | Ì¥ä 256kbps (High) | High |
-| 320 kbps | Ì¥ä HQ 320kbps (Premium) | Premium |
+| 128 kbps | ÔøΩ 128kbps | Free |
+| 192 kbps | ÔøΩ 192kbps | Mid |
+| 256 kbps | ÔøΩ 256kbps (High) | High |
+| 320 kbps | ÔøΩ HQ 320kbps (Premium) | Premium |
 
 ## Bot Identity Reference
 
 | Identity | Display | Default Tier |
 |----------|---------|--------------|
 | (none) | Bypass | Free users |
-| `indie` | Ìæ∏ Indie Music Bot | Tier 1 ($5-9.99) |
+| `indie` | ÔøΩ Indie Music Bot | Tier 1 ($5-9.99) |
 | `premium` | premium | Tier 2 ($10-14.99) |
 | `founder` | founder | Tier 3 ($15+) |
 | (custom) | (custom text) | Testing |
@@ -199,7 +205,7 @@ Each will display in the embed footer:
 
 ---
 
-## Ìºü Premium Guild System
+## ÔøΩ Premium Guild System
 
 ### Overview
 The premium system is now **server-based** instead of user-based. Patreon supporters can link multiple servers based on their tier, and each server gets its own premium configuration.
@@ -209,7 +215,7 @@ The premium system is now **server-based** instead of user-based. Patreon suppor
 | Tier | Pledge Amount | Max Servers | Audio Quality | Default Identity |
 |------|---------------|-------------|---------------|------------------|
 | Free | $0 | 0 | 128 kbps | Bypass |
-| Tier 1 | $5-9.99/month | 1 server | 320 kbps | Ìæ∏ Indie Music Bot |
+| Tier 1 | $5-9.99/month | 1 server | 320 kbps | ÔøΩ Indie Music Bot |
 | Tier 2 | $10-14.99/month | 3 servers | 320 kbps | Premium |
 | Tier 3 | $15+/month | 10 servers | 320 kbps | Founder |
 
@@ -234,9 +240,9 @@ Link the current server to your Patreon account.
 ```
 ‚úÖ Server linked successfully!
 
-Ìæµ Audio Quality: 320kbps
-Ìæ∏ Bot Identity: Indie Music Bot  
-Ì≥ä Servers: 1/1
+ÔøΩ Audio Quality: 320kbps
+ÔøΩ Bot Identity: Indie Music Bot  
+ÔøΩ Servers: 1/1
 
 Premium features are now active in this server!
 ```
@@ -269,22 +275,6 @@ Show all servers linked to your Patreon account.
 /premium list
 ```
 
-**Response:**
-```
-Ì∑ÇÔ∏è Your Linked Servers
-
-1. My Gaming Server
-   Ìæµ 320kbps ‚Ä¢ Ìæ∏ Indie Music Bot
-   Ì≥Ö Linked: 2 days ago
-
-2. Music Community
-   Ìæµ 320kbps ‚Ä¢ Premium
-   Ì≥Ö Linked: 1 week ago
-
-Ì≥ä Server Slots: 2/3 used
-Ì≤é Patreon Tier: Supporter
-```
-
 ---
 
 ### `/premium status`
@@ -293,32 +283,6 @@ Show premium status for the current server.
 **Example:**
 ```
 /premium status
-```
-
-**Response (Premium Server):**
-```
-‚ú® Premium Server
-
-This server has premium features enabled!
-
-Ìæµ Audio Quality: Ì¥ä HQ 320kbps
-Ìæ∏ Bot Identity: Ìæ∏ Indie Music Bot
-Ì≥Ö Linked: 3 days ago
-‚è∞ Last Used: 5 minutes ago
-
-You own this premium link
-```
-
-**Response (Free Server):**
-```
-Ì∂ì Free Server
-
-This server is using free tier.
-
-Use `/premium link` to enable premium features.
-
-Ìæµ Audio Quality: ÔøΩÔøΩ 128kbps (Free)
-Ìæ∏ Bot Identity: Bypass
 ```
 
 ---
@@ -335,189 +299,25 @@ Configure premium settings for the current server (owner only).
 # Set maximum audio quality
 /premium config bitrate:320
 
-# Change bot identity
-/premium config identity:MyCustomBot
+# Set custom identity
+/premium config identity:indie
 
-# Change both
-/premium config bitrate:256 identity:indie
-```
-
-**Response:**
-```
-‚öôÔ∏è Settings Updated
-
-Ìæµ Audio Quality: 320kbps
-Ìæ∏ Bot Identity: Indie Music Bot
-```
-
----
-
-## Premium Features Per Server
-
-When a server is linked to a Patreon account, **all users** in that server get:
-
-- ‚úÖ High-quality audio (up to 320kbps)
-- ‚úÖ Custom bot identity branding
-- ‚úÖ Premium features (based on tier)
-- ‚úÖ Priority support access
-
-**Important:** Premium is tied to the **server**, not individual users.
-
----
-
-## Testing Premium System
-
-### As Bot Owner
-
-Use `/setbitrate` to simulate premium for testing:
-
-```bash
-# Test as if server is premium
-/setbitrate bitrate:320 identity:indie
-
-# Test as if server is free
-/setbitrate bitrate:128
-
-# Reset to use actual premium status
-/resetbitrate
-```
-
-### As Patreon Supporter
-
-1. Link your Discord account on Patreon
-2. Wait for sync (or use `/patreon sync`)
-3. Use `/premium link` in your server
-4. Verify with `/premium status`
-5. Test playback commands to see quality badge
-
----
-
-## Migration from User-Based to Server-Based
-
-### Old System (Deprecated)
-- Audio quality tied to individual users
-- Each user had their own bitrate setting
-- Inconsistent experience across servers
-
-### New System (Current)
-- Audio quality tied to servers
-- One Patreon supporter enables premium for entire server
-- Consistent experience for all server members
-- Multiple server support based on tier
-
-### Backward Compatibility
-- Old user-based settings are ignored
-- Use `/setbitrate` for owner testing only
-- Production uses server-based premium system
-
----
-
-## Technical Details
-
-### Database Models
-
-**PremiumGuild Model:**
-```typescript
-{
-  guildId: string           // Discord server ID
-  discordId: string         // Patreon supporter's Discord ID
-  patreonId: string         // Patreon user ID
-  audioBitrate: number      // 128, 192, 256, or 320
-  customBotName: string     // Custom identity
-  isActive: boolean         // Premium active status
-  linkedAt: Date            // When linked
-  lastUsed: Date            // Last premium use
-}
-```
-
-### Audio Quality Resolution
-1. Check if server has premium link (`PremiumGuild`)
-2. If yes: Use server's configured bitrate
-3. If no: Default to 128kbps (free tier)
-4. Display quality badge in playback embeds
-
-### Server Limit Enforcement
-- Tier 1: 1 server maximum
-- Tier 2: 3 servers maximum  
-- Tier 3: 10 servers maximum
-- Enforced when using `/premium link`
-- Can unlink servers to free up slots
-
----
-
-## Common Scenarios
-
-### Scenario 1: Server Owner is Patreon Supporter
-```bash
-# Owner links their server
-/premium link
-
-# All members get premium audio
-/play some song
-# Shows: "Ì¥ä HQ 320kbps ‚Ä¢ Ìæ∏ Indie Music Bot"
-```
-
-### Scenario 2: Regular User in Premium Server
-```bash
-# User checks premium status
-/premium status
-# Shows: "‚ú® Premium Server - Premium provided by another user"
-
-# User plays music
-/play some song
-# Gets 320kbps audio quality automatically
-```
-
-### Scenario 3: Supporter with Multiple Servers
-```bash
-# Check current usage
-/premium list
-# Shows: "Servers: 2/3 used"
-
-# Link another server
-/premium link
-# Success if under limit
-
-# Exceeded limit
-/premium link
-# Error: "You've reached your server limit"
-
-# Free up slot
-/premium unlink
-# In old server, then link new server
-```
-
-### Scenario 4: Server Changes Ownership
-```bash
-# New owner wants to link their Patreon
-# First, old link must be removed
-/premium unlink  # Old owner
-
-# Then new owner can link
-/premium link    # New owner
+# Set both
+/premium config bitrate:320 identity:"My Custom Bot"
 ```
 
 ---
 
 ## FAQ
 
-**Q: Can multiple Patreon supporters link the same server?**  
-A: No, only one Patreon account can have premium active per server at a time.
+**Q: Can multiple users link premium to the same server?**
+A: No, only one premium link per server. First come, first served.
 
-**Q: What happens if my Patreon membership expires?**  
-A: Linked servers will revert to free tier (128kbps) after the next sync.
+**Q: What happens if I downgrade my tier?**
+A: Excess servers will be automatically unlinked (oldest first).
 
-**Q: Can I transfer my server slots to another user?**  
-A: No, server slots are tied to your Patreon account.
+**Q: Can I transfer my premium to another server?**
+A: Yes! Use `/premium unlink` then `/premium link` in the new server.
 
-**Q: Do I need to relink servers every month?**  
-A: No, links persist as long as your Patreon membership is active.
-
-**Q: Can I have different quality settings for different servers?**  
-A: Yes! Use `/premium config` in each server to customize settings.
-
-**Q: What if I want to upgrade/downgrade my tier?**  
-A: Server limits adjust automatically. You may need to unlink servers if downgrading.
-
----
-
+**Q: Does premium apply to all channels?**
+A: Yes, premium applies server-wide to all voice channels.

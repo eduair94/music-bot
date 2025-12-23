@@ -79,7 +79,7 @@ export default {
           
           const embed = new EmbedBuilder()
             .setColor(result.success ? "#1DB954" : "#FF0000")
-            .setTitle(result.success ? "í´— Server Linked" : "âŒ Link Failed")
+            .setTitle(result.success ? "âœ… Server Linked" : "âŒ Link Failed")
             .setDescription(result.message)
             .setTimestamp();
 
@@ -89,14 +89,14 @@ export default {
             const currentServers = await premiumService.getUserServers(userId);
 
             embed.addFields(
-              { name: "í¾µ Audio Quality", value: `${result.guild.audioBitrate}kbps`, inline: true },
-              { name: "í¾¸ Bot Identity", value: result.guild.customBotName === "indie" ? "Indie Music Bot" : result.guild.customBotName || "Premium", inline: true },
-              { name: "í³Š Server Slots", value: `${currentServers.length}/${maxServers}`, inline: true }
+              { name: "ðŸŽµ Audio Quality", value: `${result.guild.audioBitrate}kbps`, inline: true },
+              { name: "ðŸŽ¸ Bot Identity", value: result.guild.customBotName === "indie" ? "Indie Music Bot" : result.guild.customBotName || "Premium", inline: true },
+              { name: "ðŸ“Š Server Slots", value: `${currentServers.length}/${maxServers}`, inline: true }
             );
 
             if (patron) {
               embed.addFields({ 
-                name: "í²Ž Patreon Tier", 
+                name: "ðŸ’Ž Patreon Tier", 
                 value: patron.tierTitle || "Supporter", 
                 inline: true 
               });
@@ -111,7 +111,7 @@ export default {
           
           const embed = new EmbedBuilder()
             .setColor(result.success ? "#1DB954" : "#FF0000")
-            .setTitle(result.success ? "í´“ Server Unlinked" : "âŒ Unlink Failed")
+            .setTitle(result.success ? "âœ… Server Unlinked" : "âŒ Unlink Failed")
             .setDescription(result.message)
             .setTimestamp();
 
@@ -125,20 +125,20 @@ export default {
 
           const embed = new EmbedBuilder()
             .setColor("#1DB954")
-            .setTitle("í·‚ï¸ Your Linked Servers")
+            .setTitle("ðŸ—‚ï¸ Your Linked Servers")
             .setDescription(
               servers.length === 0
                 ? "You haven't linked any servers yet.\n\nUse `/premium link` to link this server!"
                 : servers
                     .map((s, i) => 
                       `**${i + 1}.** ${s.guildName || s.guildId}\n` +
-                      `   í¾µ ${s.audioBitrate}kbps â€¢ í¾¸ ${s.customBotName === "indie" ? "Indie Music Bot" : s.customBotName || "Premium"}\n` +
-                      `   í³… Linked: <t:${Math.floor(s.linkedAt.getTime() / 1000)}:R>`
+                      `   ðŸŽµ ${s.audioBitrate}kbps â€¢ ðŸŽ¸ ${s.customBotName === "indie" ? "Indie Music Bot" : s.customBotName || "Premium"}\n` +
+                      `   ðŸ“… Linked: <t:${Math.floor(s.linkedAt.getTime() / 1000)}:R>`
                     )
                     .join("\n\n")
             )
             .addFields({ 
-              name: "í³Š Server Slots", 
+              name: "ðŸ“Š Server Slots", 
               value: `${servers.length}/${maxServers} used`, 
               inline: true 
             })
@@ -146,7 +146,7 @@ export default {
 
           if (patron) {
             embed.addFields({ 
-              name: "í²Ž Patreon Tier", 
+              name: "ðŸ’Ž Patreon Tier", 
               value: patron.tierTitle || "Supporter", 
               inline: true 
             });
@@ -169,7 +169,7 @@ export default {
 
           const embed = new EmbedBuilder()
             .setColor(isPremium ? "#1DB954" : "#808080")
-            .setTitle(isPremium ? "âœ¨ Premium Server" : "í¶“ Free Server")
+            .setTitle(isPremium ? "âœ¨ Premium Server" : "ðŸ“­ Free Server")
             .setDescription(
               isPremium
                 ? `This server has premium features enabled!`
@@ -179,19 +179,19 @@ export default {
 
           if (isPremium && guild) {
             const qualityBadge = 
-              guild.audioBitrate >= 320 ? "í´Š HQ 320kbps" :
-              guild.audioBitrate >= 256 ? "í´Š 256kbps" :
-              guild.audioBitrate >= 192 ? "í´‰ 192kbps" :
-              "í´‰ 128kbps";
+              guild.audioBitrate >= 320 ? "ðŸŽµ HQ 320kbps" :
+              guild.audioBitrate >= 256 ? "ðŸŽµ 256kbps" :
+              guild.audioBitrate >= 192 ? "ðŸŽµ 192kbps" :
+              "ðŸŽµ 128kbps";
 
             const identityLabel = 
-              guild.customBotName === "indie" ? "í¾¸ Indie Music Bot" :
+              guild.customBotName === "indie" ? "ðŸŽ¸ Indie Music Bot" :
               guild.customBotName || "Bypass";
 
             embed.addFields(
-              { name: "í¾µ Audio Quality", value: qualityBadge, inline: true },
-              { name: "í¾¸ Bot Identity", value: identityLabel, inline: true },
-              { name: "í³… Linked", value: `<t:${Math.floor(guild.linkedAt.getTime() / 1000)}:R>`, inline: true }
+              { name: "ðŸŽµ Audio Quality", value: qualityBadge, inline: true },
+              { name: "ðŸŽ¸ Bot Identity", value: identityLabel, inline: true },
+              { name: "ðŸ“… Linked", value: `<t:${Math.floor(guild.linkedAt.getTime() / 1000)}:R>`, inline: true }
             );
 
             if (guild.lastUsed) {
@@ -210,8 +210,8 @@ export default {
             }
           } else {
             embed.addFields(
-              { name: "í¾µ Audio Quality", value: "ï¿½ï¿½ 128kbps (Free)", inline: true },
-              { name: "í¾¸ Bot Identity", value: "Bypass", inline: true }
+              { name: "ðŸŽµ Audio Quality", value: "ðŸŽµ 128kbps (Free)", inline: true },
+              { name: "ðŸŽ¸ Bot Identity", value: "Bypass", inline: true }
             );
           }
 
@@ -244,8 +244,8 @@ export default {
             const guild = await premiumService.getGuildSettings(guildId);
             if (guild) {
               embed.addFields(
-                { name: "í¾µ Audio Quality", value: `${guild.audioBitrate}kbps`, inline: true },
-                { name: "í¾¸ Bot Identity", value: guild.customBotName === "indie" ? "Indie Music Bot" : guild.customBotName || "Premium", inline: true }
+                { name: "ðŸŽµ Audio Quality", value: `${guild.audioBitrate}kbps`, inline: true },
+                { name: "ðŸŽ¸ Bot Identity", value: guild.customBotName === "indie" ? "Indie Music Bot" : guild.customBotName || "Premium", inline: true }
               );
             }
           }
