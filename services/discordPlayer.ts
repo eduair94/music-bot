@@ -397,7 +397,8 @@ export class DiscordPlayerService {
   public async play(
     voiceChannel: GuildMember["voice"]["channel"],
     query: string,
-    textChannel: TextChannel
+    textChannel: TextChannel,
+    audioBitrate: number = 128 // Default 128kbps for free users
   ): Promise<{ track: Track; queue: GuildQueue; searchResult: SearchResult; playlist: Playlist | null } | null> {
     if (!this.player || !voiceChannel) {
       console.error("[DiscordPlayer] Player not initialized or no voice channel");
@@ -412,6 +413,9 @@ export class DiscordPlayerService {
       console.error("[DiscordPlayer] ❌ No extractors available! Cannot play.");
       throw new Error("No extractors registered. Please restart the bot.");
     }
+
+    // Log audio quality
+    console.log(`[DiscordPlayer] 🎵 Audio quality: ${audioBitrate}kbps`);
 
     try {
       console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
@@ -444,9 +448,9 @@ export class DiscordPlayerService {
       const playlist = result.searchResult.playlist;
       
       if (isPlaylist && playlist) {
-        console.log(`[DiscordPlayer] ⚡ Loaded playlist in ${loadTime}ms: ${playlist.title} (${result.searchResult.tracks.length} tracks)`);
+        console.log(`[DiscordPlayer] ⚡ Loaded playlist in ${loadTime}ms: ${playlist.title} (${result.searchResult.tracks.length} tracks) @ ${audioBitrate}kbps`);
       } else {
-        console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title}`);
+        console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title} @ ${audioBitrate}kbps`);
       }
 
       return {

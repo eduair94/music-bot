@@ -32,6 +32,10 @@ export interface IPatreonUser extends Document {
   // Premium features enabled
   isPremium: boolean;
   isFounder: boolean;
+  
+  // Audio quality settings (based on tier)
+  audioBitrate: number; // 128 (free), 192 (tier 1), 256 (tier 2), 320 (tier 3+)
+  customBotName?: string; // Custom bot identity for higher tiers
 }
 
 const PatreonUserSchema = new Schema<IPatreonUser>(
@@ -85,6 +89,16 @@ const PatreonUserSchema = new Schema<IPatreonUser>(
     isFounder: {
       type: Boolean,
       default: false,
+    },
+    
+    // Audio quality settings
+    audioBitrate: {
+      type: Number,
+      default: 128, // Default 128kbps for free users
+    },
+    customBotName: {
+      type: String,
+      default: undefined,
     },
   },
   {

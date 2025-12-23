@@ -14,6 +14,7 @@ try {
     STAY_TIME: parseInt(process.env.STAY_TIME!) || 30,
     DEFAULT_VOLUME: parseInt(process.env.DEFAULT_VOLUME!) || 100,
     LOCALE: process.env.LOCALE || "en",
+    OWNER_ID: process.env.OWNER_ID || "",
     // Patreon integration
     PATREON_CLIENT_ID: process.env.PATREON_CLIENT_ID || "",
     PATREON_CLIENT_SECRET: process.env.PATREON_CLIENT_SECRET || "",

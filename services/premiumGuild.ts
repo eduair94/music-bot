@@ -1,0 +1,314 @@
+import { IPremiumGuild, PremiumGuild } from "../models/PremiumGuild";
+import { PatreonService } from "./patreon";
+
+/**
+ * PremiumGuildService - Manages server-based premium features
+ * Links Discord servers to Patreon supporters based on their tier
+ */
+export class PremiumGuildService {
+  private static instance: PremiumGuildService;
+  
+  // Max servers per Patreon tier
+  private readonly MAX_SERVERS_BY_TIER = {
+    free: 0,
+    tier1: 1,      // $5-9.99: 1 server
+    tier2: 3,      // $10-14.99: 3 servers
+    tier3: 10,     // $15+: 10 servers
+  };
+
+  private constructor() {}
+
+  public static getInstance(): PremiumGuildService {
+    if (!this.instance) {
+      this.instance = new PremiumGuildService();
+    }
+    return this.instance;
+  }
+
+  /**
+   * Get maximum servers allowed for a user based on their Patreon tier
+   */
+  public async getMaxServersForUser(discordId: string): Promise<number> {
+    const patreonService = PatreonService.getInstance();
+    const patron = await patreonService.getPatronByDiscordId(discordId);
+
+    if (!patron || !patron.isPremium) {
+      return this.MAX_SERVERS_BY_TIER.free;
+    }
+
+    const pledgeDollars = patron.pledgeAmountCents / 100;
+
+    if (pledgeDollars >= 15) {
+      return this.MAX_SERVERS_BY_TIER.tier3;
+    } else if (pledgeDollars >= 10) {
+      return this.MAX_SERVERS_BY_TIER.tier2;
+    } else if (pledgeDollars >= 5) {
+      return this.MAX_SERVERS_BY_TIER.tier1;
+    }
+
+    return this.MAX_SERVERS_BY_TIER.free;
+  }
+
+  /**
+   * Get default bitrate for a Patreon tier
+   */
+  private getDefaultBitrateForTier(pledgeDollars: number): number {
+    if (pledgeDollars >= 5) {
+      return 320; // All tiers get 320kbps
+    }
+    return 128;
+  }
+
+  /**
+   * Get default bot identity for a Patreon tier
+   */
+  private getDefaultIdentityForTier(pledgeDollars: number, tierTitle?: string): string | undefined {
+    if (pledgeDollars >= 5 && pledgeDollars < 10) {
+      return "indie"; // Tier 1: Indie identity
+    } else if (pledgeDollars >= 10 && pledgeDollars < 15) {
+      return tierTitle || "premium"; // Tier 2
+    } else if (pledgeDollars >= 15) {
+      return tierTitle || "founder"; // Tier 3+
+    }
+    return undefined;
+  }
+
+  /**
+   * Link a server to a Patreon user
+   */
+  public async linkServer(
+    discordId: string,
+    guildId: string,
+    guildName?: string
+  ): Promise<{ success: boolean; message: string; guild?: IPremiumGuild }> {
+    try {
+      // Check if user has Patreon membership
+      const patreonService = PatreonService.getInstance();
+      const patron = await patreonService.getPatronByDiscordId(discordId);
+
+      if (!patron || !patron.isPremium) {
+        return {
+          success: false,
+          message: "‚ùå You need an active Patreon membership to link servers.\n\n" +
+                   "Support us on Patreon to unlock premium features!",
+        };
+      }
+
+      // Check max servers limit
+      const maxServers = await this.getMaxServersForUser(discordId);
+      const currentServers = await PremiumGuild.countDocuments({
+        discordId,
+        isActive: true,
+      });
+
+      if (currentServers >= maxServers) {
+        return {
+          success: false,
+          message: `‚ùå You've reached your server limit (${maxServers} servers).\n\n` +
+                   `Current tier: **${patron.tierTitle || "Patron"}**\n` +
+                   `Linked servers: **${currentServers}/${maxServers}**\n\n` +
+                   `Upgrade your tier to link more servers!`,
+        };
+      }
+
+      // Check if server is already linked by this user
+      const existing = await PremiumGuild.findOne({ guildId, discordId });
+      if (existing) {
+        return {
+          success: false,
+          message: `‚ÑπÔ∏è This server is already linked to your account.`,
+          guild: existing,
+        };
+      }
+
+      // Check if server is linked by another user
+      const otherLink = await PremiumGuild.findOne({ guildId, isActive: true });
+      if (otherLink) {
+        return {
+          success: false,
+          message: `‚ùå This server is already linked to another Patreon account.\n\n` +
+                   `Only one Patreon account can have premium features active per server.`,
+        };
+      }
+
+      // Get default settings based on tier
+      const pledgeDollars = patron.pledgeAmountCents / 100;
+      const defaultBitrate = this.getDefaultBitrateForTier(pledgeDollars);
+      const defaultIdentity = this.getDefaultIdentityForTier(pledgeDollars, patron.tierTitle);
+
+      // Create premium guild link
+      const guild = await PremiumGuild.create({
+        guildId,
+        discordId,
+        patreonId: patron.patreonId,
+        guildName,
+        audioBitrate: defaultBitrate,
+        customBotName: defaultIdentity,
+        isActive: true,
+        linkedAt: new Date(),
+      });
+
+      console.log(`[PremiumGuild] ‚úÖ Linked server ${guildId} to user ${discordId} (${defaultBitrate}kbps)`);
+
+      return {
+        success: true,
+        message: `‚úÖ **Server linked successfully!**\n\n` +
+                 `Ìæµ **Audio Quality:** ${defaultBitrate}kbps\n` +
+                 `Ìæ∏ **Bot Identity:** ${defaultIdentity === "indie" ? "Indie Music Bot" : defaultIdentity || "Premium"}\n` +
+                 `Ì≥ä **Servers:** ${currentServers + 1}/${maxServers}\n\n` +
+                 `Premium features are now active in this server!`,
+        guild,
+      };
+    } catch (error) {
+      console.error("[PremiumGuild] Error linking server:", error);
+      return {
+        success: false,
+        message: `‚ùå Error linking server: ${error instanceof Error ? error.message : "Unknown error"}`,
+      };
+    }
+  }
+
+  /**
+   * Unlink a server from a Patreon user
+   */
+  public async unlinkServer(
+    discordId: string,
+    guildId: string
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      const guild = await PremiumGuild.findOne({ guildId, discordId });
+
+      if (!guild) {
+        return {
+          success: false,
+          message: `‚ùå This server is not linked to your account.`,
+        };
+      }
+
+      await PremiumGuild.deleteOne({ _id: guild._id });
+
+      console.log(`[PremiumGuild] Ì¥ì Unlinked server ${guildId} from user ${discordId}`);
+
+      return {
+        success: true,
+        message: `‚úÖ **Server unlinked successfully!**\n\n` +
+                 `Premium features have been disabled for this server.\n` +
+                 `You can link another server with your available slots.`,
+      };
+    } catch (error) {
+      console.error("[PremiumGuild] Error unlinking server:", error);
+      return {
+        success: false,
+        message: `‚ùå Error unlinking server: ${error instanceof Error ? error.message : "Unknown error"}`,
+      };
+    }
+  }
+
+  /**
+   * Get all servers linked to a user
+   */
+  public async getUserServers(discordId: string): Promise<IPremiumGuild[]> {
+    try {
+      return await PremiumGuild.find({ discordId, isActive: true }).sort({ linkedAt: -1 });
+    } catch (error) {
+      console.error("[PremiumGuild] Error getting user servers:", error);
+      return [];
+    }
+  }
+
+  /**
+   * Get premium guild settings for a server
+   */
+  public async getGuildSettings(guildId: string): Promise<IPremiumGuild | null> {
+    try {
+      const guild = await PremiumGuild.findOne({ guildId, isActive: true });
+      
+      if (guild) {
+        // Update last used timestamp
+        guild.lastUsed = new Date();
+        await guild.save();
+      }
+      
+      return guild;
+    } catch (error) {
+      console.error("[PremiumGuild] Error getting guild settings:", error);
+      return null;
+    }
+  }
+
+  /**
+   * Get audio bitrate for a guild (returns 128 for non-premium)
+   */
+  public async getGuildBitrate(guildId: string): Promise<number> {
+    const guild = await this.getGuildSettings(guildId);
+    return guild?.audioBitrate || 128; // Default to 128kbps for free servers
+  }
+
+  /**
+   * Get custom bot name for a guild
+   */
+  public async getGuildBotName(guildId: string): Promise<string | undefined> {
+    const guild = await this.getGuildSettings(guildId);
+    return guild?.customBotName;
+  }
+
+  /**
+   * Update guild premium settings
+   */
+  public async updateGuildSettings(
+    guildId: string,
+    discordId: string,
+    settings: { audioBitrate?: number; customBotName?: string }
+  ): Promise<{ success: boolean; message: string }> {
+    try {
+      const guild = await PremiumGuild.findOne({ guildId, discordId, isActive: true });
+
+      if (!guild) {
+        return {
+          success: false,
+          message: `‚ùå This server is not linked to your account.`,
+        };
+      }
+
+      if (settings.audioBitrate !== undefined) {
+        if (![128, 192, 256, 320].includes(settings.audioBitrate)) {
+          return {
+            success: false,
+            message: `‚ùå Invalid bitrate. Choose: 128, 192, 256, or 320 kbps`,
+          };
+        }
+        guild.audioBitrate = settings.audioBitrate;
+      }
+
+      if (settings.customBotName !== undefined) {
+        guild.customBotName = settings.customBotName || undefined;
+      }
+
+      await guild.save();
+
+      return {
+        success: true,
+        message: `‚úÖ Server settings updated successfully!`,
+      };
+    } catch (error) {
+      console.error("[PremiumGuild] Error updating guild settings:", error);
+      return {
+        success: false,
+        message: `‚ùå Error updating settings: ${error instanceof Error ? error.message : "Unknown error"}`,
+      };
+    }
+  }
+
+  /**
+   * Check if a server has premium features
+   */
+  public async isPremiumGuild(guildId: string): Promise<boolean> {
+    const guild = await this.getGuildSettings(guildId);
+    return guild !== null && guild.isActive;
+  }
+}
+
+// Export singleton getter
+export function usePremiumGuild(): PremiumGuildService {
+  return PremiumGuildService.getInstance();
+}

@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitF
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { SpotifyService } from "../services/spotify";
+import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -94,10 +95,15 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
+      // Get audio bitrate based on server's premium status
+      const premiumService = PremiumGuildService.getInstance();
+      const audioBitrate = await premiumService.getGuildBitrate(guildId);
+      const customBotName = await premiumService.getGuildBotName(guildId);
+
       // If it's a direct Spotify URL, use it directly
       if (query.includes("spotify.com")) {
         console.log(`[play_spotify] 🔗 Using direct Spotify URL: "${query}"`);
-        const result = await playerService.play(voiceChannel, query, textChannel);
+        const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
 
         if (!result) {
           return interaction.editReply({ 
@@ -118,6 +124,13 @@ export default {
         const isPlaylist = playlist !== null && isSpotifyPlaylist;
         const totalTracks = isPlaylist ? searchResult.tracks.length : 1;
 
+        // Build quality badge and bot identity for footer
+        const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
+                            audioBitrate >= 192 ? "🔉 192kbps" : 
+                            "🔉 128kbps";
+        const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
+                           customBotName || "Bypass";
+
         let embed: EmbedBuilder;
 
         if (isPlaylist) {
@@ -135,7 +148,7 @@ export default {
               { name: "Load Time", value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(playlistThumbnail)
-            .setFooter({ text: `Requested by ${interaction.user.username}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
 
           embed.addFields({ 
             name: "▶️ Now Playing", 
@@ -154,7 +167,7 @@ export default {
               { name: "Load Time", value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(track.thumbnail || null)
-            .setFooter({ text: `Source: Spotify • Requested by ${interaction.user.username}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
 
           if (!isFirstTrack) {
             embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
@@ -183,7 +196,7 @@ export default {
       console.log(`[play_spotify] 🎬 Searching YouTube for: "${youtubeSearchQuery}"`);
 
       // Play using YouTube search (discord-player will find the best match)
-      const result = await playerService.play(voiceChannel, youtubeSearchQuery, textChannel);
+      const result = await playerService.play(voiceChannel, youtubeSearchQuery, textChannel, audioBitrate);
 
       if (!result) {
         return interaction.editReply({ 
@@ -200,6 +213,13 @@ export default {
       const embedColor = 0x1DB954; // Spotify green
       const isFirstTrack = queue.size === 0;
 
+      // Build quality badge and bot identity for footer
+      const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
+                          audioBitrate >= 192 ? "🔉 192kbps" : 
+                          "🔉 128kbps";
+      const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
+                         customBotName || "Bypass";
+
       const embed = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
@@ -210,7 +230,7 @@ export default {
           { name: "Load Time", value: `${loadTime}ms`, inline: true }
         )
         .setThumbnail(trackResult.albumArt)
-        .setFooter({ text: `Source: Spotify Search → YouTube • Requested by ${interaction.user.username}` });
+        .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
 
       if (!isFirstTrack) {
         embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });

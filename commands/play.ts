@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -94,8 +95,13 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      console.log(`[play] ⚡ Playing: "${query}"`);
-      const result = await playerService.play(voiceChannel, query, textChannel);
+      // Get audio bitrate based on server's premium status
+      const premiumService = PremiumGuildService.getInstance();
+      const audioBitrate = await premiumService.getGuildBitrate(guildId);
+      const customBotName = await premiumService.getGuildBotName(guildId);
+
+      console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (identity: ${customBotName || 'default'})`);
+      const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
 
       if (!result) {
         return interaction.editReply({ 
@@ -148,6 +154,20 @@ export default {
       } else {
         // Single track embed
         const isFirstTrack = queue.size === 0;
+        
+        // Build bot identity string
+        let botIdentity = "Bypass"; // Default bot name
+        if (customBotName) {
+          if (customBotName === "indie") {
+            botIdentity = "🎸 Indie Music Bot";
+          } else {
+            botIdentity = customBotName;
+          }
+        }
+        
+        // Build quality badge
+        const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : audioBitrate >= 192 ? "🔉 192kbps" : "";
+        
         embed = new EmbedBuilder()
           .setColor(embedColor)
           .setTitle(isFirstTrack ? "▶️ Now Playing" : "➕ Added to Queue")
@@ -158,7 +178,7 @@ export default {
             { name: "Load Time", value: `${loadTime}ms`, inline: true }
           )
           .setThumbnail(track.thumbnail || null)
-          .setFooter({ text: `Source: ${track.source} • Requested by ${interaction.user.username}` });
+          .setFooter({ text: `${qualityBadge ? qualityBadge + ' • ' : ''}Source: ${track.source} • ${botIdentity} • Requested by ${interaction.user.username}` });
 
         if (!isFirstTrack) {
           embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });

@@ -285,6 +285,35 @@ export class PatreonService {
       const isFounder = isActivePatron && data.tierId === config.PATREON_FOUNDER_TIER_ID;
       const isPremium = isActivePatron;
 
+      // Determine audio bitrate based on pledge amount
+      // Tier 1: $5+ = 320kbps (indie identity)
+      // Tier 2: $10+ = 320kbps
+      // Tier 3: $15+ = 320kbps
+      // Free: 128kbps
+      let audioBitrate = 128; // Default for free users
+      let customBotName: string | undefined = undefined;
+
+      if (isActivePatron) {
+        const pledgeDollars = data.pledgeAmountCents / 100;
+        
+        if (pledgeDollars >= 5) {
+          audioBitrate = 320; // High quality audio for all patrons
+          
+          // Tier 1 ($5-$9.99): "Indie" identity
+          if (pledgeDollars >= 5 && pledgeDollars < 10) {
+            customBotName = "indie"; // Special indie branding
+          }
+          // Tier 2 ($10-$14.99): Can set custom name
+          else if (pledgeDollars >= 10 && pledgeDollars < 15) {
+            customBotName = data.tierTitle || "premium";
+          }
+          // Tier 3+ ($15+): Full custom branding
+          else if (pledgeDollars >= 15) {
+            customBotName = data.tierTitle || "founder";
+          }
+        }
+      }
+
       const patron = await PatreonUser.findOneAndUpdate(
         { discordId: data.discordId },
         {
@@ -301,6 +330,8 @@ export class PatreonService {
             tierTitle: data.tierTitle,
             isPremium,
             isFounder,
+            audioBitrate,
+            customBotName,
           },
         },
         { upsert: true, new: true }
@@ -308,6 +339,8 @@ export class PatreonService {
 
       // Clear cache
       this.cache.delete(data.discordId);
+
+      console.log(`[Patreon] Updated patron ${data.discordId}: ${audioBitrate}kbps, identity: ${customBotName || 'default'}`);
 
       return patron;
     } catch (error) {
@@ -330,6 +363,22 @@ export class PatreonService {
   public async isFounderUser(discordId: string): Promise<boolean> {
     const patron = await this.getPatronByDiscordId(discordId);
     return patron?.isFounder || false;
+  }
+
+  /**
+   * Get audio bitrate for a Discord user based on their Patreon tier
+   */
+  public async getAudioBitrate(discordId: string): Promise<number> {
+    const patron = await this.getPatronByDiscordId(discordId);
+    return patron?.audioBitrate || 128; // Default 128kbps for free users
+  }
+
+  /**
+   * Get custom bot identity for a Discord user
+   */
+  public async getCustomBotName(discordId: string): Promise<string | undefined> {
+    const patron = await this.getPatronByDiscordId(discordId);
+    return patron?.customBotName;
   }
 
   /**

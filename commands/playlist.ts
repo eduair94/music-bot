@@ -8,6 +8,7 @@ import {
     TextChannel
 } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
 
 export default {
@@ -21,6 +22,7 @@ export default {
     const playlistUrl = interaction.options.getString("playlist");
     const guildMember = interaction.member as GuildMember;
     const voiceChannel = guildMember?.voice?.channel;
+    const guildId = interaction.guild!.id;
 
     if (!voiceChannel) {
       return interaction.reply({ content: i18n.__("playlist.errorNotChannel"), ephemeral: true }).catch(console.error);
@@ -43,7 +45,13 @@ export default {
 
     try {
       const textChannel = interaction.channel as TextChannel;
-      const result = await playerService.play(voiceChannel, playlistUrl, textChannel);
+      
+      // Get audio bitrate based on server's premium status
+      const premiumService = PremiumGuildService.getInstance();
+      const audioBitrate = await premiumService.getGuildBitrate(guildId);
+      const customBotName = await premiumService.getGuildBotName(guildId);
+
+      const result = await playerService.play(voiceChannel, playlistUrl, textChannel, audioBitrate);
 
       if (!result) {
         return interaction.editReply({ content: i18n.__("playlist.errorNotFoundPlaylist") }).catch(console.error);
@@ -51,6 +59,13 @@ export default {
 
       const { track, queue } = result;
       const tracks = queue.tracks.toArray();
+      
+      // Build quality badge and bot identity for footer
+      const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
+                          audioBitrate >= 192 ? "🔉 192kbps" : 
+                          "🔉 128kbps";
+      const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
+                         customBotName || "Bypass";
       
       const embed = new EmbedBuilder()
         .setTitle("📋 Playlist Added")
@@ -62,6 +77,7 @@ export default {
         )
         .setColor("#F8AA2A")
         .addFields({ name: "Total Tracks", value: `${tracks.length + 1}`, inline: true })
+        .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` })
         .setTimestamp();
 
       return interaction.editReply({

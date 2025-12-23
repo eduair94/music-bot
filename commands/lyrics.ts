@@ -7,20 +7,21 @@ import { DiscordPlayerService } from "../services/discordPlayer";
 export default {
   data: new SlashCommandBuilder().setName("lyrics").setDescription(i18n.__("lyrics.description")),
   async execute(interaction: ChatInputCommandInteraction) {
-    const queue = DiscordPlayerService.getInstance().getQueue(interaction.guild!.id);
-    const currentTrack = queue?.currentTrack;
+    const playerService = DiscordPlayerService.getInstance();
+    const queue = playerService.getQueue(interaction.guild!.id);
 
-    if (!queue || !currentTrack) {
+    if (!queue || !queue.currentTrack) {
       return interaction.reply(i18n.__("lyrics.errorNotQueue")).catch(console.error);
     }
 
     await interaction.reply("⏳ Loading...").catch(console.error);
 
     let lyrics = null;
-    const title = currentTrack.title;
+    const track = queue.currentTrack;
+    const title = track.title;
 
     try {
-      lyrics = await lyricsFinder(title, currentTrack.author || "");
+      lyrics = await lyricsFinder(title, track.author || "");
       if (!lyrics) lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
     } catch (error) {
       lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
