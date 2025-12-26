@@ -50,17 +50,6 @@ export default {
       }).catch(console.error);
     }
 
-    // Check guild settings for voice channel restriction
-    const settingsService = GuildSettingsService.getInstance();
-    const isVoiceChannelAllowed = await settingsService.isVoiceChannelAllowed(guildId, voiceChannel.id);
-    
-    if (!isVoiceChannelAllowed) {
-      return interaction.reply({
-        content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel.",
-        ephemeral: true
-      }).catch(console.error);
-    }
-
     const playerService = DiscordPlayerService.getInstance();
     
     if (!playerService.isInitialized()) {
@@ -70,32 +59,43 @@ export default {
       }).catch(console.error);
     }
 
-    // Get settings for queue size check and volume
-    const settings = await settingsService.getSettings(guildId);
-
-    // Check queue size limit
-    const existingQueue = playerService.getQueue(guildId);
-    if (existingQueue && existingQueue.size >= settings.maxQueueSize) {
-      return interaction.reply({
-        content: `❌ Queue is full! Maximum ${settings.maxQueueSize} songs allowed.`,
-        ephemeral: true
-      }).catch(console.error);
-    }
-
-    // Move bot to user's channel if in different channel
-    if (existingQueue?.channel && existingQueue.channel.id !== voiceChannel.id) {
-      try {
-        existingQueue.delete();
-        console.log(`[play] 🔄 Moving bot to ${voiceChannel.id}`);
-      } catch (error) {
-        console.error("[play] Error moving to new channel:", error);
-      }
-    }
-
+    // Defer reply EARLY to avoid interaction timeout
+    // All subsequent errors will use editReply instead of reply
     await interaction.deferReply();
     const textChannel = interaction.channel as TextChannel;
 
     try {
+      // Check guild settings for voice channel restriction
+      const settingsService = GuildSettingsService.getInstance();
+      const isVoiceChannelAllowed = await settingsService.isVoiceChannelAllowed(guildId, voiceChannel.id);
+      
+      if (!isVoiceChannelAllowed) {
+        return interaction.editReply({
+          content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel."
+        }).catch(console.error);
+      }
+
+      // Get settings for queue size check and volume
+      const settings = await settingsService.getSettings(guildId);
+
+      // Check queue size limit
+      const existingQueue = playerService.getQueue(guildId);
+      if (existingQueue && existingQueue.size >= settings.maxQueueSize) {
+        return interaction.editReply({
+          content: `❌ Queue is full! Maximum ${settings.maxQueueSize} songs allowed.`
+        }).catch(console.error);
+      }
+
+      // Move bot to user's channel if in different channel
+      if (existingQueue?.channel && existingQueue.channel.id !== voiceChannel.id) {
+        try {
+          existingQueue.delete();
+          console.log(`[play] 🔄 Moving bot to ${voiceChannel.id}`);
+        } catch (error) {
+          console.error("[play] Error moving to new channel:", error);
+        }
+      }
+
       // Get audio bitrate - check user's setting first, then guild setting
       const patreonService = PatreonService.getInstance();
       const premiumService = PremiumGuildService.getInstance();
