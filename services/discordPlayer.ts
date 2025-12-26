@@ -89,6 +89,13 @@ export class DiscordPlayerService {
     // Custom stream function that uses yt-dlp for reliable streaming
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
       console.log(`[DiscordPlayer] 🎧 Creating yt-dlp stream for: ${track.title}`);
+      console.log(`[DiscordPlayer] 🔗 Track URL: ${track.url}`);
+      
+      // Validate track URL
+      if (!track.url) {
+        console.error(`[DiscordPlayer] ❌ Track has no URL: ${track.title}`);
+        throw new Error(`Track has no URL: ${track.title}`);
+      }
       
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
@@ -105,11 +112,12 @@ export class DiscordPlayerService {
         '--socket-timeout', '30',
         '--retries', '3',
         '--fragment-retries', '3',
-        '--js-runtimes', 'nodejs,deno', // Use Node.js or Deno for JS extraction
         '--output', '-',
         ...cookieArgs,
         track.url
       ];
+      
+      console.log(`[DiscordPlayer] 🛠️ yt-dlp args: ${ytdlpArgs.join(' ')}`);
 
       return new Promise((resolve, reject) => {
         const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {

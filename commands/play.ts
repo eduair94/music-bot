@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService, getQualityBadge } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
 
@@ -95,12 +96,19 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      // Get audio bitrate based on server's premium status
+      // Get audio bitrate - check user's setting first, then guild setting
+      const patreonService = PatreonService.getInstance();
       const premiumService = PremiumGuildService.getInstance();
-      const audioBitrate = await premiumService.getGuildBitrate(guildId);
+      
+      // User bitrate takes priority (from /setbitrate or Patreon)
+      const userBitrate = await patreonService.getAudioBitrate(interaction.user.id);
+      const guildBitrate = await premiumService.getGuildBitrate(guildId);
+      
+      // Use the higher of user or guild bitrate
+      const audioBitrate = Math.max(userBitrate, guildBitrate);
       const customBotName = await premiumService.getGuildBotName(guildId);
 
-      console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (identity: ${customBotName || 'default'})`);
+      console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (user: ${userBitrate}, guild: ${guildBitrate}, identity: ${customBotName || 'default'})`);
       const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
 
       if (!result) {

@@ -143,9 +143,14 @@ export class Bot {
       const guildId = interaction.guild?.id;
       if (guildId) {
         const settingsService = GuildSettingsService.getInstance();
+        const channelId = interaction.channel?.id;
         
-        // Check if user is blacklisted
-        const isBlacklisted = await settingsService.isUserBlacklisted(guildId, interaction.user.id);
+        // Run both checks in parallel for faster response
+        const [isBlacklisted, isChannelAllowed] = await Promise.all([
+          settingsService.isUserBlacklisted(guildId, interaction.user.id),
+          channelId ? settingsService.isTextChannelAllowed(guildId, channelId) : Promise.resolve(true)
+        ]);
+
         if (isBlacklisted) {
           return interaction.reply({
             content: "❌ You are not allowed to use this bot.",
@@ -153,16 +158,11 @@ export class Bot {
           });
         }
 
-        // Check if text channel is allowed
-        const channelId = interaction.channel?.id;
-        if (channelId) {
-          const isChannelAllowed = await settingsService.isTextChannelAllowed(guildId, channelId);
-          if (!isChannelAllowed) {
-            return interaction.reply({
-              content: "❌ Bot commands are not allowed in this channel.",
-              ephemeral: true
-            });
-          }
+        if (!isChannelAllowed) {
+          return interaction.reply({
+            content: "❌ Bot commands are not allowed in this channel.",
+            ephemeral: true
+          });
         }
       }
 
