@@ -8,6 +8,17 @@ import { Readable } from "stream";
 import { GuildSettingsService } from "./guildSettings";
 
 /**
+ * Extended metadata interface for queue
+ * Used to store additional state that discord-player doesn't track properly
+ */
+export interface QueueMetadata {
+  /** The text channel where commands are sent */
+  channel?: TextChannel;
+  /** Current track workaround for when queue.currentTrack is not updated */
+  currentTrack?: Track;
+}
+
+/**
  * DiscordPlayerService - Manages the discord-player instance
  * 
  * This service provides ultra-fast music playback by using:
@@ -267,8 +278,15 @@ export class DiscordPlayerService {
 
     // Track start event
     this.player.events.on("playerStart", async (queue: GuildQueue, track: Track) => {
+      // Workaround: store current track in queue.metadata using QueueMetadata interface
+      const metadata = (queue.metadata || {}) as QueueMetadata;
+      metadata.currentTrack = track;
+      queue.metadata = metadata;
+      
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title}`);
       console.log(`[DiscordPlayer] 📋 Track info: source=${track.source}, duration=${track.duration}, url=${track.url}`);
+      console.log(`[DiscordPlayer] [DEBUG] queue.currentTrack:`, queue.currentTrack?.title || 'null');
+      console.log(`[DiscordPlayer] [DEBUG] queue.metadata.currentTrack:`, metadata.currentTrack?.title || 'null');
       
       const channel = await this.getLogChannel(queue);
       if (channel) {

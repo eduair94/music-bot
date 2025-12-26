@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { splitBar } from "string-progressbar";
-import { DiscordPlayerService } from "../services/discordPlayer";
+import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
 export default {
@@ -10,11 +10,15 @@ export default {
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
     
-    if (!queue || !queue.currentTrack) {
+    // Use queue.metadata.currentTrack as a fallback if queue.currentTrack is null
+    let track = queue?.currentTrack;
+    if (!track && queue?.metadata) {
+      const metadata = queue.metadata as QueueMetadata;
+      track = metadata.currentTrack;
+    }
+    if (!queue || !track) {
       return interaction.reply({ content: i18n.__("nowplaying.errorNotQueue"), ephemeral: true }).catch(console.error);
     }
-
-    const track = queue.currentTrack;
     const progress = queue.node.getTimestamp();
     
     const embed = new EmbedBuilder()

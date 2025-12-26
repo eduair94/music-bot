@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
-import { SpotifyService } from "../services/spotify";
 import { PremiumGuildService } from "../services/premiumGuild";
+import { SpotifyService } from "../services/spotify";
 import { i18n } from "../utils/i18n";
 
 /**

@@ -9,7 +9,7 @@ import {
   Interaction,
   SlashCommandBuilder
 } from "discord.js";
-import { DiscordPlayerService } from "../services/discordPlayer";
+import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
 interface TrackInfo {
@@ -30,8 +30,12 @@ export default {
 
     const tracks: TrackInfo[] = [];
     
-    // Get current track
-    const currentTrack = queue.currentTrack;
+    // Get current track (use queue.metadata.currentTrack as fallback)
+    let currentTrack: Track | null | undefined = queue.currentTrack;
+    if (!currentTrack && queue.metadata) {
+      const metadata = queue.metadata as QueueMetadata;
+      currentTrack = metadata.currentTrack;
+    }
     if (currentTrack) {
       tracks.push({ title: currentTrack.title, url: currentTrack.url });
     }
