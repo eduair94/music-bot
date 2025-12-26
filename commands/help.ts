@@ -1,13 +1,13 @@
-import { 
-  ActionRowBuilder, 
-  ButtonBuilder, 
-  ButtonStyle, 
-  CommandInteraction, 
-  EmbedBuilder, 
-  SlashCommandBuilder 
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  CommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder
 } from "discord.js";
-import { i18n } from "../utils/i18n";
 import { bot } from "../index";
+import { i18n } from "../utils/i18n";
 
 const COMMANDS_PER_PAGE = 24; // Max 25 fields per embed, leave room for header
 
