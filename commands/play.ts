@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
-import { DiscordPlayerService } from "../services/discordPlayer";
+import { DiscordPlayerService, getQualityBadge } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
@@ -140,10 +140,10 @@ export default {
           .addFields(
             { name: "Tracks", value: `${totalTracks} songs`, inline: true },
             { name: "Source", value: track.source || "Unknown", inline: true },
-            { name: "Load Time", value: `${loadTime}ms`, inline: true }
+            { name: "🔊 Quality", value: getQualityBadge(audioBitrate), inline: true }
           )
           .setThumbnail(playlistThumbnail)
-          .setFooter({ text: `Requested by ${interaction.user.username}` });
+          .setFooter({ text: `Load Time: ${loadTime}ms • Requested by ${interaction.user.username}` });
 
         // Show first track that will play
         embed.addFields({ 
@@ -165,23 +165,23 @@ export default {
           }
         }
         
-        // Build quality badge
-        const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : audioBitrate >= 192 ? "🔉 192kbps" : "";
+        // Build quality badge using the utility function
+        const qualityBadge = getQualityBadge(audioBitrate);
         
         embed = new EmbedBuilder()
           .setColor(embedColor)
           .setTitle(isFirstTrack ? "▶️ Now Playing" : "➕ Added to Queue")
           .setDescription(`**[${track.title}](${track.url})**`)
           .addFields(
-            { name: "Artist", value: track.author || "Unknown", inline: true },
-            { name: "Duration", value: track.duration || "Unknown", inline: true },
-            { name: "Load Time", value: `${loadTime}ms`, inline: true }
+            { name: "🎤 Artist", value: track.author || "Unknown", inline: true },
+            { name: "⏱️ Duration", value: track.duration || "Unknown", inline: true },
+            { name: "🔊 Quality", value: qualityBadge, inline: true }
           )
           .setThumbnail(track.thumbnail || null)
-          .setFooter({ text: `${qualityBadge ? qualityBadge + ' • ' : ''}Source: ${track.source} • ${botIdentity} • Requested by ${interaction.user.username}` });
+          .setFooter({ text: `Source: ${track.source} • ${botIdentity} • Load: ${loadTime}ms • ${interaction.user.username}` });
 
         if (!isFirstTrack) {
-          embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+          embed.addFields({ name: "📋 Position", value: `#${queue.size}`, inline: true });
         }
       }
 

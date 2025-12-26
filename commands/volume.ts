@@ -11,19 +11,21 @@ export default {
     .setDescription(i18n.__("volume.description"))
     .addIntegerOption((option) => option.setName("volume").setDescription(i18n.__("volume.description"))),
   async execute(interaction: ChatInputCommandInteraction) {
+    // Defer reply immediately to prevent interaction timeout
+    await interaction.deferReply().catch(console.error);
+    
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
     const volumeArg = interaction.options.getInteger("volume");
 
     if (!canModifyQueue(guildMember!)) {
-      return interaction.reply({ content: i18n.__("volume.errorNotChannel"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("volume.errorNotChannel") }).catch(console.error);
     }
 
     // Check DJ permission
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
-      return interaction.reply({ 
-        content: "❌ You need the DJ role to use this command.", 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: "❌ You need the DJ role to use this command."
       }).catch(console.error);
     }
 
@@ -31,15 +33,15 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
     
     if (!queue) {
-      return interaction.reply({ content: i18n.__("volume.errorNotQueue"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("volume.errorNotQueue") }).catch(console.error);
     }
 
     if (!volumeArg) {
-      return interaction.reply({ content: i18n.__mf("volume.currentVolume", { volume: queue.node.volume }) }).catch(console.error);
+      return interaction.editReply({ content: i18n.__mf("volume.currentVolume", { volume: queue.node.volume }) }).catch(console.error);
     }
 
     if (isNaN(volumeArg)) {
-      return interaction.reply({ content: i18n.__("volume.errorNotNumber"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("volume.errorNotNumber") }).catch(console.error);
     }
 
     // Get max volume from guild settings
@@ -47,13 +49,12 @@ export default {
     const maxVolume = settings.maxVolume;
 
     if (volumeArg > maxVolume || volumeArg < 0) {
-      return interaction.reply({ 
-        content: `❌ Volume must be between 0 and ${maxVolume}.`, 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: `❌ Volume must be between 0 and ${maxVolume}.`
       }).catch(console.error);
     }
 
     queue.node.setVolume(volumeArg);
-    return interaction.reply({ content: i18n.__mf("volume.result", { arg: volumeArg }) }).catch(console.error);
+    return interaction.editReply({ content: i18n.__mf("volume.result", { arg: volumeArg }) }).catch(console.error);
   }
 };

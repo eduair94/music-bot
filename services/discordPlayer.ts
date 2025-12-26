@@ -1,6 +1,6 @@
 import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
 import { spawn } from "child_process";
-import { GuildQueue, Player, Playlist, SearchResult, Track } from "discord-player";
+import { GuildQueue, Player, Playlist, SearchResult, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
@@ -16,6 +16,19 @@ export interface QueueMetadata {
   channel?: TextChannel;
   /** Current track workaround for when queue.currentTrack is not updated */
   currentTrack?: Track;
+  /** Audio bitrate in kbps (e.g., 128, 192, 320) */
+  audioBitrate?: number;
+}
+
+/**
+ * Get a quality badge string based on bitrate
+ */
+export function getQualityBadge(bitrate?: number): string {
+  if (!bitrate) return "🔉 128kbps";
+  if (bitrate >= 320) return "🔊 HQ 320kbps";
+  if (bitrate >= 256) return "🔊 256kbps";
+  if (bitrate >= 192) return "🔉 192kbps";
+  return `🔉 ${bitrate}kbps`;
 }
 
 /**
@@ -298,21 +311,42 @@ export class DiscordPlayerService {
     // Player finish - track finished playing
     this.player.events.on("playerFinish", (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ✅ Finished playing: ${track.title}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue size after finish: ${queue.tracks.size}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
+      console.log(`[DiscordPlayer] [DEBUG] Next track: ${queue.tracks.at(0)?.title || 'none'}`);
     });
 
     // Player skip - track was skipped
-    this.player.events.on("playerSkip", (queue: GuildQueue, track: Track) => {
+    this.player.events.on("playerSkip", (queue: GuildQueue, track: Track, reason: TrackSkipReason, description: string) => {
       console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title}`);
+      console.log(`[DiscordPlayer] [DEBUG] Skip reason: ${reason}`);
+      console.log(`[DiscordPlayer] [DEBUG] Skip description: ${description}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue size after skip: ${queue.tracks.size}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue is playing: ${queue.node.isPlaying()}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue is idle: ${queue.node.isIdle()}`);
+      console.log(`[DiscordPlayer] [DEBUG] Next track in queue: ${queue.tracks.at(0)?.title || 'none'}`);
+      
+      // If skip reason is NoStream (ERR_NO_STREAM), the stream extraction failed
+      if (reason === TrackSkipReason.NoStream) {
+        console.error(`[DiscordPlayer] ❌ Stream extraction failed for: ${track.title}`);
+        console.error(`[DiscordPlayer] ❌ Reason: ${description}`);
+      }
     });
 
     // Audio track add
     this.player.events.on("audioTrackAdd", (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ➕ Added to queue: ${track.title}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue size after add: ${queue.tracks.size}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue is playing: ${queue.node.isPlaying()}`);
+      console.log(`[DiscordPlayer] [DEBUG] Current track: ${queue.currentTrack?.title || 'none'}`);
     });
 
     // Queue ended
     this.player.events.on("emptyQueue", async (queue: GuildQueue) => {
       console.log("[DiscordPlayer] 🏁 Queue ended");
+      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
+      console.log(`[DiscordPlayer] [DEBUG] Current track: ${queue.currentTrack?.title || 'none'}`);
       const channel = await this.getLogChannel(queue);
       if (channel) {
         channel.send("🏁 Queue finished! Add more songs to keep the music going.").catch(console.error);
@@ -357,6 +391,13 @@ export class DiscordPlayerService {
     // Debug event - log ALL debug messages to catch issues
     this.player.events.on("debug", (queue: GuildQueue, message: string) => {
       console.log(`[DiscordPlayer] 🐛 Debug: ${message}`);
+    });
+
+    // Player trigger - fires when player is about to play a track
+    this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
+      console.log(`[DiscordPlayer] 🎯 Player triggered for: ${track.title}`);
+      console.log(`[DiscordPlayer] [DEBUG] Trigger reason: ${reason}`);
+      console.log(`[DiscordPlayer] [DEBUG] Queue tracks remaining: ${queue.tracks.size}`);
     });
   }
 
@@ -442,9 +483,15 @@ export class DiscordPlayerService {
       // Determine if query is a URL or search term
       const isUrl = query.startsWith('http://') || query.startsWith('https://');
       
+      // Create metadata object with audio quality info
+      const queueMetadata: QueueMetadata = {
+        channel: textChannel,
+        audioBitrate: audioBitrate,
+      };
+      
       const result = await this.player.play(voiceChannel, query, {
         nodeOptions: {
-          metadata: textChannel, // Store text channel for event messages
+          metadata: queueMetadata, // Store queue metadata with audio quality
           leaveOnEmpty: true,
           leaveOnEmptyCooldown: 300000, // 5 minutes
           leaveOnEnd: false,

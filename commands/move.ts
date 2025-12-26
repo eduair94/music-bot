@@ -15,20 +15,22 @@ export default {
       option.setName("moveto").setDescription(i18n.__("move.args.moveto")).setRequired(true)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
+    // Defer reply immediately to prevent interaction timeout
+    await interaction.deferReply().catch(console.error);
+    
     const moveFrom = interaction.options.getInteger("movefrom");
     const moveTo = interaction.options.getInteger("moveto");
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
 
     if (!canModifyQueue(guildMember!)) {
-      return interaction.reply({ content: i18n.__("common.errorNotChannel"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
     // Check DJ permission
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
-      return interaction.reply({ 
-        content: "❌ You need the DJ role to use this command.", 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: "❌ You need the DJ role to use this command."
       }).catch(console.error);
     }
 
@@ -36,17 +38,17 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
 
     if (!queue) {
-      return interaction.reply(i18n.__("move.errorNotQueue")).catch(console.error);
+      return interaction.editReply({ content: i18n.__("move.errorNotQueue") }).catch(console.error);
     }
 
     if (!moveFrom || !moveTo) {
-      return interaction.reply({ content: i18n.__mf("move.usagesReply", { prefix: "/" }), ephemeral: true });
+      return interaction.editReply({ content: i18n.__mf("move.usagesReply", { prefix: "/" }) }).catch(console.error);
     }
 
     const tracks = queue.tracks.toArray();
     
     if (isNaN(moveFrom) || moveFrom < 1 || moveFrom > tracks.length) {
-      return interaction.reply({ content: i18n.__mf("move.usagesReply", { prefix: "/" }), ephemeral: true });
+      return interaction.editReply({ content: i18n.__mf("move.usagesReply", { prefix: "/" }) }).catch(console.error);
     }
 
     const track = tracks[moveFrom - 1];
@@ -54,12 +56,12 @@ export default {
     // Move the track using discord-player's built-in method
     queue.moveTrack(moveFrom - 1, moveTo - 1);
 
-    interaction.reply({
+    return interaction.editReply({
       content: i18n.__mf("move.result", {
         author: interaction.user.id,
         title: track.title,
         index: moveTo
       })
-    });
+    }).catch(console.error);
   }
 };

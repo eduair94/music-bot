@@ -8,18 +8,20 @@ import { safeReply } from "../utils/safeReply";
 export default {
   data: new SlashCommandBuilder().setName("stop").setDescription(i18n.__("stop.description")),
   async execute(interaction: ChatInputCommandInteraction) {
+    // Defer reply immediately to prevent interaction timeout
+    await interaction.deferReply().catch(console.error);
+    
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
 
     if (!guildMember || !canModifyQueue(guildMember)) {
-      return interaction.reply({ content: i18n.__("common.errorNotChannel"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
     // Check DJ permission
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
-      return interaction.reply({ 
-        content: "❌ You need the DJ role to use this command.", 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: "❌ You need the DJ role to use this command."
       }).catch(console.error);
     }
 
@@ -27,10 +29,10 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
     
     if (!queue) {
-      return interaction.reply(i18n.__("stop.errorNotQueue")).catch(console.error);
+      return interaction.editReply({ content: i18n.__("stop.errorNotQueue") }).catch(console.error);
     }
 
     queue.delete();
-    return safeReply(interaction, i18n.__mf("stop.result", { author: interaction.user.id }));
+    return interaction.editReply({ content: i18n.__mf("stop.result", { author: interaction.user.id }) }).catch(console.error);
   }
 };

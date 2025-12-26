@@ -12,26 +12,27 @@ export default {
       option.setName("number").setDescription(i18n.__("skipto.args.number")).setRequired(true)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
+    // Defer reply immediately to prevent interaction timeout
+    await interaction.deferReply().catch(console.error);
+    
     const position = interaction.options.getInteger("number");
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
 
     if (!position || isNaN(position)) {
-      return interaction.reply({
-        content: i18n.__mf("skipto.usageReply", { prefix: "/", name: "skipto" }),
-        ephemeral: true
+      return interaction.editReply({
+        content: i18n.__mf("skipto.usageReply", { prefix: "/", name: "skipto" })
       }).catch(console.error);
     }
 
     if (!canModifyQueue(guildMember!)) {
-      return interaction.reply({ content: i18n.__("common.errorNotChannel"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
     // Check DJ permission
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
-      return interaction.reply({ 
-        content: "❌ You need the DJ role to use this command.", 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: "❌ You need the DJ role to use this command."
       }).catch(console.error);
     }
 
@@ -39,22 +40,21 @@ export default {
     const queue = playerService.getQueue(interaction.guild!.id);
 
     if (!queue) {
-      return interaction.reply({ content: i18n.__("skipto.errorNotQueue"), ephemeral: true }).catch(console.error);
+      return interaction.editReply({ content: i18n.__("skipto.errorNotQueue") }).catch(console.error);
     }
 
     const queueSize = queue.tracks.size + 1; // +1 for current track
     
     if (position < 1 || position > queueSize) {
-      return interaction.reply({ 
-        content: i18n.__mf("skipto.errorNotValid", { length: queueSize }), 
-        ephemeral: true 
+      return interaction.editReply({ 
+        content: i18n.__mf("skipto.errorNotValid", { length: queueSize })
       }).catch(console.error);
     }
 
     // Skip to position by removing tracks before it
     queue.node.skipTo(position - 1);
 
-    interaction.reply({ 
+    return interaction.editReply({ 
       content: i18n.__mf("skipto.result", { author: interaction.user.id, arg: position }) 
     }).catch(console.error);
   }

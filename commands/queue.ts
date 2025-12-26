@@ -9,7 +9,7 @@ import {
   Interaction,
   SlashCommandBuilder
 } from "discord.js";
-import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
+import { DiscordPlayerService, QueueMetadata, getQualityBadge } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
 interface TrackInfo {
@@ -28,12 +28,15 @@ export default {
       return interaction.reply({ content: i18n.__("queue.errorNotQueue") });
     }
 
+    // Get metadata for audio quality info
+    const metadata = (queue.metadata || {}) as QueueMetadata;
+    const qualityBadge = getQualityBadge(metadata.audioBitrate);
+
     const tracks: TrackInfo[] = [];
     
     // Get current track (use queue.metadata.currentTrack as fallback)
     let currentTrack: Track | null | undefined = queue.currentTrack;
     if (!currentTrack && queue.metadata) {
-      const metadata = queue.metadata as QueueMetadata;
       currentTrack = metadata.currentTrack;
     }
     if (currentTrack) {
@@ -50,7 +53,7 @@ export default {
     }
 
     let currentPage = 0;
-    const embeds = generateQueueEmbed(interaction, tracks);
+    const embeds = generateQueueEmbed(interaction, tracks, qualityBadge);
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder().setCustomId("previous").setLabel("⬅️").setStyle(ButtonStyle.Secondary),
@@ -97,7 +100,7 @@ export default {
   }
 };
 
-function generateQueueEmbed(interaction: CommandInteraction, songs: TrackInfo[]) {
+function generateQueueEmbed(interaction: CommandInteraction, songs: TrackInfo[], qualityBadge: string) {
   const embeds = [];
   let k = 10;
 
@@ -109,11 +112,12 @@ function generateQueueEmbed(interaction: CommandInteraction, songs: TrackInfo[])
     const info = current.map((track) => `${++j} - [${track.title}](${track.url})`).join("\n");
 
     const embed = new EmbedBuilder()
-      .setTitle(i18n.__("queue.embedTitle"))
+      .setTitle(`${i18n.__("queue.embedTitle")} • ${qualityBadge}`)
       .setThumbnail(interaction.guild?.iconURL()!)
       .setColor("#F8AA2A")
       .setDescription(i18n.__mf("queue.embedCurrentSong", { title: songs[0].title, url: songs[0].url, info: info }))
-      .setTimestamp();
+      .setTimestamp()
+      .setFooter({ text: `Total: ${songs.length} tracks • Audio Quality: ${qualityBadge}` });
     embeds.push(embed);
   }
 
