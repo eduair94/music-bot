@@ -1,9 +1,11 @@
 import { IPremiumGuild, PremiumGuild } from "../models/PremiumGuild";
 import { PatreonService } from "./patreon";
+import { config } from "../utils/config";
 
 /**
  * PremiumGuildService - Manages server-based premium features
  * Links Discord servers to Patreon supporters based on their tier
+ * Bot owner can bypass Patreon requirements for testing
  */
 export class PremiumGuildService {
   private static instance: PremiumGuildService;
@@ -26,9 +28,22 @@ export class PremiumGuildService {
   }
 
   /**
+   * Check if user is the bot owner
+   */
+  private isOwner(discordId: string): boolean {
+    return config.OWNER_ID === discordId;
+  }
+
+  /**
    * Get maximum servers allowed for a user based on their Patreon tier
+   * Bot owner gets unlimited servers
    */
   public async getMaxServersForUser(discordId: string): Promise<number> {
+    // Owner gets unlimited servers
+    if (this.isOwner(discordId)) {
+      return 999;
+    }
+
     const patreonService = PatreonService.getInstance();
     const patron = await patreonService.getPatronByDiscordId(discordId);
 
@@ -75,6 +90,7 @@ export class PremiumGuildService {
 
   /**
    * Link a server to a Patreon user
+   * Bot owner bypasses Patreon membership check
    */
   public async linkServer(
     discordId: string,
@@ -82,11 +98,12 @@ export class PremiumGuildService {
     guildName?: string
   ): Promise<{ success: boolean; message: string; guild?: IPremiumGuild }> {
     try {
-      // Check if user has Patreon membership
       const patreonService = PatreonService.getInstance();
       const patron = await patreonService.getPatronByDiscordId(discordId);
+      const isOwner = this.isOwner(discordId);
 
-      if (!patron || !patron.isPremium) {
+      // Check if user has Patreon membership (owner bypasses this check)
+      if (!isOwner && (!patron || !patron.isPremium)) {
         return {
           success: false,
           message: "‚ùå You need an active Patreon membership to link servers.\n\n" +
@@ -105,7 +122,7 @@ export class PremiumGuildService {
         return {
           success: false,
           message: `‚ùå You've reached your server limit (${maxServers} servers).\n\n` +
-                   `Current tier: **${patron.tierTitle || "Patron"}**\n` +
+                   `Current tier: **${patron?.tierTitle || "Patron"}**\n` +
                    `Linked servers: **${currentServers}/${maxServers}**\n\n` +
                    `Upgrade your tier to link more servers!`,
         };
@@ -120,10 +137,9 @@ export class PremiumGuildService {
           guild: existing,
         };
       }
-
-      // Check if server is linked by another user
+      // Check if server is linked by another user (owner can override)
       const otherLink = await PremiumGuild.findOne({ guildId, isActive: true });
-      if (otherLink) {
+      if (otherLink && !isOwner) {
         return {
           success: false,
           message: `‚ùå This server is already linked to another Patreon account.\n\n` +
@@ -131,16 +147,22 @@ export class PremiumGuildService {
         };
       }
 
-      // Get default settings based on tier
-      const pledgeDollars = patron.pledgeAmountCents / 100;
+      // If owner is overriding, remove the old link
+      if (otherLink && isOwner) {
+        await PremiumGuild.deleteOne({ _id: otherLink._id });
+        console.log(`[PremiumGuild] üîÑ Owner overriding existing link for guild ${guildId}`);
+      }
+
+      // Get default settings based on tier (owner gets max tier settings)
+      const pledgeDollars = isOwner ? 100 : (patron?.pledgeAmountCents || 0) / 100;
       const defaultBitrate = this.getDefaultBitrateForTier(pledgeDollars);
-      const defaultIdentity = this.getDefaultIdentityForTier(pledgeDollars, patron.tierTitle);
+      const defaultIdentity = isOwner ? "owner" : this.getDefaultIdentityForTier(pledgeDollars, patron?.tierTitle);
 
       // Create premium guild link
       const guild = await PremiumGuild.create({
         guildId,
         discordId,
-        patreonId: patron.patreonId,
+        patreonId: patron?.patreonId || "owner",
         guildName,
         audioBitrate: defaultBitrate,
         customBotName: defaultIdentity,
@@ -148,14 +170,14 @@ export class PremiumGuildService {
         linkedAt: new Date(),
       });
 
-      console.log(`[PremiumGuild] ‚úÖ Linked server ${guildId} to user ${discordId} (${defaultBitrate}kbps)`);
+      console.log(`[PremiumGuild] ‚úÖ Linked server ${guildId} to user ${discordId} (${defaultBitrate}kbps)${isOwner ? " [OWNER]" : ""}`);
 
       return {
         success: true,
         message: `‚úÖ **Server linked successfully!**\n\n` +
-                 `Ìæµ **Audio Quality:** ${defaultBitrate}kbps\n` +
-                 `Ìæ∏ **Bot Identity:** ${defaultIdentity === "indie" ? "Indie Music Bot" : defaultIdentity || "Premium"}\n` +
-                 `Ì≥ä **Servers:** ${currentServers + 1}/${maxServers}\n\n` +
+                 `üéµ **Audio Quality:** ${defaultBitrate}kbps\n` +
+                 `üé∏ **Bot Identity:** ${defaultIdentity === "indie" ? "Indie Music Bot" : defaultIdentity || "Premium"}\n` +
+                 `üìä **Servers:** ${currentServers + 1}/${isOwner ? "‚àû" : maxServers}\n\n` +
                  `Premium features are now active in this server!`,
         guild,
       };
@@ -187,7 +209,7 @@ export class PremiumGuildService {
 
       await PremiumGuild.deleteOne({ _id: guild._id });
 
-      console.log(`[PremiumGuild] Ì¥ì Unlinked server ${guildId} from user ${discordId}`);
+      console.log(`[PremiumGuild] ÔøΩÔøΩÔøΩ Unlinked server ${guildId} from user ${discordId}`);
 
       return {
         success: true,
