@@ -1,13 +1,13 @@
 import { Track } from "discord-player";
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ChatInputCommandInteraction,
-  CommandInteraction,
-  EmbedBuilder,
-  Interaction,
-  SlashCommandBuilder
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    CommandInteraction,
+    EmbedBuilder,
+    Interaction,
+    SlashCommandBuilder
 } from "discord.js";
 import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
 import { getQualityBadge } from "../utils/audioSettings";

@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitF
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { SpotifyService } from "../services/spotify";
-import { getPlaybackSettings, getQualityBadge } from "../utils/audioSettings";
+import { getPlaybackSettings } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 /**

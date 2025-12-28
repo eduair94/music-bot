@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { PatreonUser } from "../models/PatreonUser";
 import { PremiumGuild } from "../models/PremiumGuild";
-import { config } from "../utils/config";
 import { getQualityBadge } from "../utils/audioSettings";
+import { config } from "../utils/config";
 
 /**
  * /setbitrate command - Owner-only command to set custom audio bitrate for testing

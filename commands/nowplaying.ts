@@ -1,10 +1,10 @@
-import { 
-  ActionRowBuilder, 
-  ButtonBuilder, 
-  ButtonStyle, 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
-  SlashCommandBuilder 
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder
 } from "discord.js";
 import { splitBar } from "string-progressbar";
 import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";

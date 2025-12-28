@@ -4,7 +4,6 @@ import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
-import { safeReply } from "../utils/safeReply";
 
 export default {
   data: new SlashCommandBuilder().setName("skip").setDescription(i18n.__("skip.description")),

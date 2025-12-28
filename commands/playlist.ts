@@ -8,7 +8,7 @@ import {
     TextChannel
 } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { getPlaybackSettings, getQualityBadge } from "../utils/audioSettings";
+import { getPlaybackSettings } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 export default {
