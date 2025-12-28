@@ -9,7 +9,8 @@ import {
   Interaction,
   SlashCommandBuilder
 } from "discord.js";
-import { DiscordPlayerService, QueueMetadata, getQualityBadge } from "../services/discordPlayer";
+import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
+import { getQualityBadge } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 interface TrackInfo {

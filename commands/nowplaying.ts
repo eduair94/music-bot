@@ -7,7 +7,9 @@ import {
   SlashCommandBuilder 
 } from "discord.js";
 import { splitBar } from "string-progressbar";
-import { DiscordPlayerService, QueueMetadata, getQualityBadge } from "../services/discordPlayer";
+import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
+import { getQualityBadge } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -178,18 +180,25 @@ export default {
       }
 
       try {
+        const guild = interaction.guild!;
+        const user = buttonInteraction.user;
+        const trackTitle = currentQueue.currentTrack?.title || "Unknown";
+        
         switch (buttonInteraction.customId) {
           case "np_pause":
             currentQueue.node.pause();
+            await logAction(guild, user, "pause", trackTitle);
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_resume":
             currentQueue.node.resume();
+            await logAction(guild, user, "resume", trackTitle);
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_stop":
+            await logAction(guild, user, "stop", trackTitle);
             currentQueue.delete();
             await buttonInteraction.update({ 
               embeds: [new EmbedBuilder().setTitle("⏹️ Stopped").setColor("#FF0000")], 
@@ -199,37 +208,44 @@ export default {
             return;
             
           case "np_skip":
+            await logAction(guild, user, "skip", trackTitle);
             currentQueue.node.skip();
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_rewind_10":
             await seekRelative(currentQueue, -10);
+            await logAction(guild, user, "seek_backward", "10 seconds");
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_rewind_30":
             await seekRelative(currentQueue, -30);
+            await logAction(guild, user, "seek_backward", "30 seconds");
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_rewind_60":
             await seekRelative(currentQueue, -60);
+            await logAction(guild, user, "seek_backward", "1 minute");
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_forward_10":
             await seekRelative(currentQueue, 10);
+            await logAction(guild, user, "seek_forward", "10 seconds");
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_forward_30":
             await seekRelative(currentQueue, 30);
+            await logAction(guild, user, "seek_forward", "30 seconds");
             await buttonInteraction.deferUpdate();
             break;
             
           case "np_forward_60":
             await seekRelative(currentQueue, 60);
+            await logAction(guild, user, "seek_forward", "1 minute");
             await buttonInteraction.deferUpdate();
             break;
             

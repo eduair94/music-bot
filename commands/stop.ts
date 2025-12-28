@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -32,6 +33,11 @@ export default {
       return interaction.editReply({ content: i18n.__("stop.errorNotQueue") }).catch(console.error);
     }
 
+    const trackTitle = queue.currentTrack?.title || "Queue";
+    
+    // Log the action before deleting
+    await logAction(interaction.guild!, interaction.user, "stop", trackTitle);
+    
     queue.delete();
     return interaction.editReply({ content: i18n.__mf("stop.result", { author: interaction.user.id }) }).catch(console.error);
   }

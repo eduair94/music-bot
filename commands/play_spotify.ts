@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
-import { PremiumGuildService } from "../services/premiumGuild";
 import { SpotifyService } from "../services/spotify";
+import { getPlaybackSettings, getQualityBadge } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -95,14 +95,13 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
-      // Get audio bitrate based on server's premium status
-      const premiumService = PremiumGuildService.getInstance();
-      const audioBitrate = await premiumService.getGuildBitrate(guildId);
-      const customBotName = await premiumService.getGuildBotName(guildId);
+      // Get audio settings using centralized utility
+      const { quality, identity } = await getPlaybackSettings(interaction.user.id, guildId);
+      const audioBitrate = quality.bitrate;
 
       // If it's a direct Spotify URL, use it directly
       if (query.includes("spotify.com")) {
-        console.log(`[play_spotify] 🔗 Using direct Spotify URL: "${query}"`);
+        console.log(`[play_spotify] 🔗 Using direct Spotify URL: "${query}" @ ${audioBitrate}kbps`);
         const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
 
         if (!result) {
@@ -124,12 +123,9 @@ export default {
         const isPlaylist = playlist !== null && isSpotifyPlaylist;
         const totalTracks = isPlaylist ? searchResult.tracks.length : 1;
 
-        // Build quality badge and bot identity for footer
-        const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
-                            audioBitrate >= 192 ? "🔉 192kbps" : 
-                            "🔉 128kbps";
-        const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
-                           customBotName || "Bypass";
+        // Build quality badge from centralized utility
+        const qualityBadge = quality.qualityBadge;
+        const botIdentity = identity.displayName;
 
         let embed: EmbedBuilder;
 
@@ -213,12 +209,9 @@ export default {
       const embedColor = 0x1DB954; // Spotify green
       const isFirstTrack = queue.size === 0;
 
-      // Build quality badge and bot identity for footer
-      const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
-                          audioBitrate >= 192 ? "🔉 192kbps" : 
-                          "🔉 128kbps";
-      const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
-                         customBotName || "Bypass";
+      // Use centralized quality badge and bot identity
+      const qualityBadge = quality.qualityBadge;
+      const botIdentity = identity.displayName;
 
       const embed = new EmbedBuilder()
         .setColor(embedColor)

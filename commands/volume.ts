@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -54,7 +55,12 @@ export default {
       }).catch(console.error);
     }
 
+    const oldVolume = queue.node.volume;
     queue.node.setVolume(volumeArg);
+    
+    // Log the action
+    await logAction(interaction.guild!, interaction.user, "volume_change", `${oldVolume}% → ${volumeArg}%`);
+    
     return interaction.editReply({ content: i18n.__mf("volume.result", { arg: volumeArg }) }).catch(console.error);
   }
 };

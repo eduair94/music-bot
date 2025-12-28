@@ -21,17 +21,6 @@ export interface QueueMetadata {
 }
 
 /**
- * Get a quality badge string based on bitrate
- */
-export function getQualityBadge(bitrate?: number): string {
-  if (!bitrate) return "🔉 128kbps";
-  if (bitrate >= 320) return "🔊 HQ 320kbps";
-  if (bitrate >= 256) return "🔊 256kbps";
-  if (bitrate >= 192) return "🔉 192kbps";
-  return `🔉 ${bitrate}kbps`;
-}
-
-/**
  * DiscordPlayerService - Manages the discord-player instance
  * 
  * This service provides ultra-fast music playback by using:

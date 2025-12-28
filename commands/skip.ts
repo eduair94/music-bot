@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -53,6 +54,9 @@ export default {
     console.log(`[skip] Skip result: ${skipResult}`);
     console.log(`[skip] Queue is playing after skip: ${queue.node.isPlaying()}`);
     console.log(`[skip] Queue is idle after skip: ${queue.node.isIdle()}`);
+    
+    // Log the action
+    await logAction(interaction.guild!, interaction.user, "skip", trackTitle);
     
     return interaction.editReply({ content: i18n.__mf("skip.result", { author: interaction.user.id }) }).catch(console.error);
   }

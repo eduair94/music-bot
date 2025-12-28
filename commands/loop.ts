@@ -1,6 +1,7 @@
 import { QueueRepeatMode } from "discord-player";
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -39,6 +40,10 @@ export default {
     queue.setRepeatMode(newMode);
     
     const isLooping = newMode === QueueRepeatMode.TRACK;
+    
+    // Log the action
+    await logAction(interaction.guild!, interaction.user, "loop", isLooping ? "On" : "Off");
+    
     const content = i18n.__mf("loop.result", { loop: isLooping ? i18n.__("common.on") : i18n.__("common.off") });
     return interaction.editReply({ content }).catch(console.error);
   }

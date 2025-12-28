@@ -1,3 +1,4 @@
+import { logSettingChange } from "../../utils/actionLog";
 import { SettingsHandlerContext } from "./types";
 
 export async function handleVolume({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
@@ -17,10 +18,30 @@ export async function handleVolume({ interaction, guildId, settings, settingsSer
   if (defaultVol !== null) {
     updates.defaultVolume = defaultVol;
     messages.push("Default volume set to " + defaultVol + "%");
+    // Log the change
+    if (interaction.guild) {
+      await logSettingChange(
+        interaction.guild,
+        interaction.user,
+        "Default Volume",
+        settings.defaultVolume + "%",
+        defaultVol + "%"
+      );
+    }
   }
   if (maxVol !== null) {
     updates.maxVolume = maxVol;
     messages.push("Maximum volume set to " + maxVol + "%");
+    // Log the change
+    if (interaction.guild) {
+      await logSettingChange(
+        interaction.guild,
+        interaction.user,
+        "Maximum Volume",
+        settings.maxVolume + "%",
+        maxVol + "%"
+      );
+    }
   }
 
   await settingsService.updateSettings(guildId, updates);

@@ -1,8 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
-import { DiscordPlayerService, getQualityBadge } from "../services/discordPlayer";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
-import { PatreonService } from "../services/patreon";
-import { PremiumGuildService } from "../services/premiumGuild";
+import { getPlaybackSettings, getQualityBadge } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -96,19 +95,11 @@ export default {
         }
       }
 
-      // Get audio bitrate - check user's setting first, then guild setting
-      const patreonService = PatreonService.getInstance();
-      const premiumService = PremiumGuildService.getInstance();
-      
-      // User bitrate takes priority (from /setbitrate or Patreon)
-      const userBitrate = await patreonService.getAudioBitrate(interaction.user.id);
-      const guildBitrate = await premiumService.getGuildBitrate(guildId);
-      
-      // Use the higher of user or guild bitrate
-      const audioBitrate = Math.max(userBitrate, guildBitrate);
-      const customBotName = await premiumService.getGuildBotName(guildId);
+      // Get audio settings using centralized utility
+      const { quality, identity } = await getPlaybackSettings(interaction.user.id, guildId);
+      const audioBitrate = quality.bitrate;
 
-      console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (user: ${userBitrate}, guild: ${guildBitrate}, identity: ${customBotName || 'default'})`);
+      console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (source: ${quality.source}, identity: ${identity.displayName})`);
       const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
 
       if (!result) {
@@ -163,18 +154,8 @@ export default {
         // Single track embed
         const isFirstTrack = queue.size === 0;
         
-        // Build bot identity string
-        let botIdentity = "Bypass"; // Default bot name
-        if (customBotName) {
-          if (customBotName === "indie") {
-            botIdentity = "🎸 Indie Music Bot";
-          } else {
-            botIdentity = customBotName;
-          }
-        }
-        
         // Build quality badge using the utility function
-        const qualityBadge = getQualityBadge(audioBitrate);
+        const qualityBadge = quality.qualityBadge;
         
         embed = new EmbedBuilder()
           .setColor(embedColor)
@@ -186,7 +167,7 @@ export default {
             { name: "🔊 Quality", value: qualityBadge, inline: true }
           )
           .setThumbnail(track.thumbnail || null)
-          .setFooter({ text: `Source: ${track.source} • ${botIdentity} • Load: ${loadTime}ms • ${interaction.user.username}` });
+          .setFooter({ text: `Source: ${track.source} • ${identity.displayName} • Load: ${loadTime}ms • ${interaction.user.username}` });
 
         if (!isFirstTrack) {
           embed.addFields({ name: "📋 Position", value: `#${queue.size}`, inline: true });

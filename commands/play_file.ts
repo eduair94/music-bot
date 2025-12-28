@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
-import { PremiumGuildService } from "../services/premiumGuild";
+import { getPlaybackSettings, getQualityBadge } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
 
 /**
@@ -121,13 +121,11 @@ export default {
     try {
       console.log(`[play_file] 🎵 Playing file: "${attachment.name}" from ${attachment.url}`);
 
-      // Get audio bitrate based on server's premium status
-      const premiumService = PremiumGuildService.getInstance();
-      const audioBitrate = await premiumService.getGuildBitrate(guildId);
-      const customBotName = await premiumService.getGuildBotName(guildId);
+      // Get audio settings using centralized utility (owner > user patreon > guild premium > default)
+      const { quality, identity } = await getPlaybackSettings(interaction.user.id, guildId);
 
       // Play the attachment URL directly
-      const result = await playerService.play(voiceChannel, attachment.url, textChannel, audioBitrate);
+      const result = await playerService.play(voiceChannel, attachment.url, textChannel, quality.bitrate);
 
       if (!result) {
         return interaction.editReply({
@@ -150,13 +148,6 @@ export default {
       // Get file extension for icon
       const fileExt = fileName.substring(fileName.lastIndexOf('.')).toUpperCase();
 
-      // Build quality badge and bot identity for footer
-      const qualityBadge = audioBitrate >= 320 ? "🔊 HQ 320kbps" : 
-                          audioBitrate >= 192 ? "🔉 192kbps" : 
-                          "🔉 128kbps";
-      const botIdentity = customBotName === "indie" ? "🎸 Indie Music Bot" : 
-                         customBotName || "Bypass";
-
       const embed = new EmbedBuilder()
         .setColor(embedColor)
         .setTitle(isFirstTrack ? "🎵 Now Playing File" : "📎 File Added to Queue")
@@ -166,7 +157,7 @@ export default {
           { name: "Size", value: `${fileSizeMB} MB`, inline: true },
           { name: "Duration", value: track.duration || "Unknown", inline: true }
         )
-        .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
+        .setFooter({ text: `${quality.qualityBadge} • ${identity.displayName} • Requested by ${interaction.user.username}` });
 
       if (!isFirstTrack) {
         embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });

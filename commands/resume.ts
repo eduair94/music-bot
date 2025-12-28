@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -32,7 +33,12 @@ export default {
       return interaction.editReply({ content: i18n.__("resume.errorNotQueue") }).catch(console.error);
     }
 
+    const trackTitle = queue.currentTrack.title;
     queue.node.resume();
+    
+    // Log the action
+    await logAction(interaction.guild!, interaction.user, "resume", trackTitle);
+    
     return interaction.editReply({ content: i18n.__mf("resume.resultNotPlaying", { author: interaction.user.id }) }).catch(console.error);
   }
 };

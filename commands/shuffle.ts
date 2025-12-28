@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
@@ -33,6 +34,10 @@ export default {
     }
 
     queue.tracks.shuffle();
+    
+    // Log the action
+    await logAction(interaction.guild!, interaction.user, "shuffle", `${queue.tracks.size} tracks`);
+    
     return interaction.editReply({ content: i18n.__mf("shuffle.result", { author: interaction.user.id }) }).catch(console.error);
   }
 };
