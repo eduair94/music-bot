@@ -1,27 +1,27 @@
 "use client";
 
+import type { BotCommandParams, BotCommandType, Track } from "@/types/discord";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import {
+  Avatar,
   Box,
   Card,
   CardContent,
-  Typography,
+  Chip,
+  Divider,
+  IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Avatar,
-  IconButton,
-  Tooltip,
   Stack,
-  Chip,
-  Divider,
-  useTheme,
+  Tooltip,
+  Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import type { Track, BotCommandType, BotCommandParams } from "@/types/discord";
 
 interface QueueListProps {
   queue: Track[];

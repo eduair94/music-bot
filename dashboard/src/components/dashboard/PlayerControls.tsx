@@ -1,36 +1,36 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  IconButton,
-  Typography,
-  Slider,
-  Stack,
-  Avatar,
-  Chip,
-  Tooltip,
-  CircularProgress,
-  LinearProgress,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import type { BotCommandParams, BotCommandType, PlaybackState } from "@/types/discord";
+import MicIcon from "@mui/icons-material/Mic";
 import PauseIcon from "@mui/icons-material/Pause";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import RepeatOneIcon from "@mui/icons-material/RepeatOne";
+import ShuffleIcon from "@mui/icons-material/Shuffle";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import StopIcon from "@mui/icons-material/Stop";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
 import VolumeMuteIcon from "@mui/icons-material/VolumeMute";
-import ShuffleIcon from "@mui/icons-material/Shuffle";
-import RepeatIcon from "@mui/icons-material/Repeat";
-import RepeatOneIcon from "@mui/icons-material/RepeatOne";
-import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import MicIcon from "@mui/icons-material/Mic";
-import type { PlaybackState, BotCommandType, BotCommandParams } from "@/types/discord";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  IconButton,
+  LinearProgress,
+  Slider,
+  Stack,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 
 interface PlayerControlsProps {
   state: PlaybackState;
