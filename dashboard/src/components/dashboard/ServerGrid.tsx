@@ -23,9 +23,10 @@ interface ServerGridProps {
   guilds: GuildWithBot[];
   showSettings?: boolean;
   showInvite?: boolean;
+  botClientId: string;
 }
 
-export function ServerGrid({ guilds, showSettings, showInvite }: ServerGridProps) {
+export function ServerGrid({ guilds, showSettings, showInvite, botClientId }: ServerGridProps) {
   return (
     <Grid container spacing={3}>
       {guilds.map((guild) => (
@@ -113,7 +114,7 @@ export function ServerGrid({ guilds, showSettings, showInvite }: ServerGridProps
 
                 {showInvite && !guild.botInGuild && (
                   <Button
-                    href={getBotInviteUrl(guild.id)}
+                    href={getBotInviteUrl(botClientId, guild.id)}
                     target="_blank"
                     variant="outlined"
                     startIcon={<AddIcon />}

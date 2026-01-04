@@ -221,10 +221,10 @@ export async function isBotInGuild(guildId: string): Promise<boolean> {
 
 /**
  * Get bot invite URL
- * Note: Uses NEXT_PUBLIC_ prefix so it's available on client-side
+ * @param clientId - Bot client ID (pass from server or API)
+ * @param guildId - Optional guild ID to pre-select
  */
-export function getBotInviteUrl(guildId?: string): string {
-  const clientId = process.env.NEXT_PUBLIC_DISCORD_BOT_CLIENT_ID;
+export function getBotInviteUrl(clientId: string, guildId?: string): string {
   const permissions = "3147776"; // Required permissions for music bot
   const scopes = "bot%20applications.commands";
   
@@ -235,6 +235,15 @@ export function getBotInviteUrl(guildId?: string): string {
   }
   
   return url;
+}
+
+/**
+ * Get bot invite URL (server-side only)
+ * Uses environment variable directly - only call from server components/API routes
+ */
+export function getServerBotInviteUrl(guildId?: string): string {
+  const clientId = process.env.DISCORD_BOT_CLIENT_ID || "";
+  return getBotInviteUrl(clientId, guildId);
 }
 
 /**

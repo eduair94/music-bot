@@ -24,12 +24,15 @@ export default async function ServersPage() {
   let guilds: GuildWithBot[] = [];
   let error: string | null = null;
 
+  // Get bot client ID from server environment
+  const botClientId = process.env.DISCORD_BOT_CLIENT_ID || "";
+
   try {
     const allGuilds = await fetchUserGuilds(session.accessToken);
     const manageableGuilds = filterManageableGuilds(allGuilds);
     guilds = await enhanceGuildsWithBotInfo(manageableGuilds);
-  } catch (e: any) {
-    error = e.message;
+  } catch (e: unknown) {
+    error = e instanceof Error ? e.message : "Unknown error";
   }
 
   const guildsWithBot = guilds.filter((g) => g.botInGuild);
@@ -61,7 +64,7 @@ export default async function ServersPage() {
               <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
                 Configured Servers ({guildsWithBot.length})
               </Typography>
-              <ServerGrid guilds={guildsWithBot} showSettings />
+              <ServerGrid guilds={guildsWithBot} showSettings botClientId={botClientId} />
             </Box>
           )}
 
@@ -73,7 +76,7 @@ export default async function ServersPage() {
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 Add the bot to these servers to start using it.
               </Typography>
-              <ServerGrid guilds={guildsWithoutBot} showInvite />
+              <ServerGrid guilds={guildsWithoutBot} showInvite botClientId={botClientId} />
             </Box>
           )}
         </Box>
