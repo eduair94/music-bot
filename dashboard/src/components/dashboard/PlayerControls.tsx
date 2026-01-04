@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Card,
@@ -39,10 +39,11 @@ interface PlayerControlsProps {
   compact?: boolean;
 }
 
-function formatDuration(seconds: number): string {
-  if (!seconds || isNaN(seconds)) return "0:00";
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
+function formatDuration(ms: number): string {
+  if (!ms || isNaN(ms)) return "0:00";
+  const totalSeconds = Math.floor(ms / 1000);
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
@@ -55,6 +56,32 @@ export function PlayerControls({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [localVolume, setLocalVolume] = useState(state.volume);
+  const [displayPosition, setDisplayPosition] = useState(state.currentPosition);
+  const lastUpdateRef = useRef<number>(Date.now());
+
+  // Update display position in real-time when playing
+  useEffect(() => {
+    // Reset position when state changes from server
+    setDisplayPosition(state.currentPosition);
+    lastUpdateRef.current = Date.now();
+  }, [state.currentPosition, state.lastUpdated]);
+
+  useEffect(() => {
+    if (!state.isPlaying || state.isPaused || !state.currentTrack) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - lastUpdateRef.current;
+      const newPosition = state.currentPosition + elapsed;
+      const maxDuration = state.currentTrack?.duration || 0;
+      
+      // Don't exceed track duration
+      setDisplayPosition(Math.min(newPosition, maxDuration));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [state.isPlaying, state.isPaused, state.currentPosition, state.currentTrack]);
 
   const handlePlayPause = () => {
     if (state.isPaused) {
@@ -101,9 +128,9 @@ export function PlayerControls({
     return <VolumeUpIcon />;
   };
 
-  // Progress calculation
+  // Progress calculation using displayPosition for smooth updates
   const progress = state.currentTrack 
-    ? (state.currentPosition / state.currentTrack.duration) * 100 
+    ? (displayPosition / state.currentTrack.duration) * 100 
     : 0;
 
   if (!state.isConnected && !state.currentTrack) {
@@ -167,7 +194,7 @@ export function PlayerControls({
             {/* Progress Bar */}
             <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
               <Typography variant="caption" color="text.secondary" sx={{ minWidth: 35 }}>
-                {formatDuration(state.currentPosition)}
+                {formatDuration(displayPosition)}
               </Typography>
               <LinearProgress 
                 variant="determinate" 
@@ -207,7 +234,7 @@ export function PlayerControls({
                 />
               )}
               <Chip 
-                label={`${state.queueSize} in queue`}
+                label={`${state.queueSize} up next`}
                 size="small"
                 variant="outlined"
               />

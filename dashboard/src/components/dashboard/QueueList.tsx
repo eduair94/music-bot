@@ -20,9 +20,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import PersonIcon from "@mui/icons-material/Person";
 import type { Track, BotCommandType, BotCommandParams } from "@/types/discord";
 
 interface QueueListProps {
@@ -32,10 +30,11 @@ interface QueueListProps {
   sendingCommand: boolean;
 }
 
-function formatDuration(seconds: number): string {
-  if (!seconds || isNaN(seconds)) return "0:00";
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
+function formatDuration(ms: number): string {
+  if (!ms || isNaN(ms)) return "0:00";
+  const totalSeconds = Math.floor(ms / 1000);
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
@@ -109,12 +108,12 @@ export function QueueList({ queue, currentTrack, sendCommand, sendingCommand }: 
           </Typography>
           <Stack direction="row" spacing={1}>
             <Chip 
-              label={`${queue.length} songs`} 
+              label={`${queue.length + (currentTrack ? 1 : 0)} songs`} 
               size="small" 
               variant="outlined" 
             />
             <Chip 
-              label={formatDuration(totalDuration)} 
+              label={formatDuration(totalDuration + (currentTrack?.duration || 0))} 
               size="small" 
               variant="outlined" 
             />
@@ -152,14 +151,9 @@ export function QueueList({ queue, currentTrack, sendCommand, sendingCommand }: 
                   </Typography>
                 }
                 secondary={
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <Typography variant="caption" color="text.secondary" noWrap>
-                      {currentTrack.author}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      • {formatDuration(currentTrack.duration)}
-                    </Typography>
-                  </Stack>
+                  <Typography variant="caption" color="text.secondary" component="span">
+                    {currentTrack.author} • {formatDuration(currentTrack.duration)}
+                  </Typography>
                 }
               />
               <Chip
@@ -246,24 +240,12 @@ export function QueueList({ queue, currentTrack, sendCommand, sendingCommand }: 
                       </Typography>
                     }
                     secondary={
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography variant="caption" color="text.secondary" noWrap>
-                          {track.author}
-                        </Typography>
+                      <Typography variant="caption" color="text.secondary" component="span" noWrap>
+                        {track.author}
                         {!isMobile && (
-                          <>
-                            <Typography variant="caption" color="text.secondary">
-                              • {formatDuration(track.duration)}
-                            </Typography>
-                            <Stack direction="row" alignItems="center" spacing={0.5}>
-                              <PersonIcon sx={{ fontSize: 12, color: "text.secondary" }} />
-                              <Typography variant="caption" color="text.secondary">
-                                {track.requestedBy.username}
-                              </Typography>
-                            </Stack>
-                          </>
+                          <> • {formatDuration(track.duration)} • {track.requestedBy.username}</>
                         )}
-                      </Stack>
+                      </Typography>
                     }
                   />
                 </ListItem>

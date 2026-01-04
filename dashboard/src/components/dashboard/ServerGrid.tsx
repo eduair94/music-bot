@@ -7,15 +7,15 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
-    Avatar,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    Grid2 as Grid,
-    Stack,
-    Typography,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Grid2 as Grid,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Link from "next/link";
 
@@ -34,9 +34,8 @@ export function ServerGrid({ guilds, showSettings, showInvite }: ServerGridProps
             sx={{
               background: "rgba(22, 33, 62, 0.6)",
               border: "1px solid rgba(255, 255, 255, 0.1)",
-              transition: "transform 0.2s, box-shadow 0.2s",
+              transition: "box-shadow 0.2s",
               "&:hover": {
-                transform: "translateY(-4px)",
                 boxShadow: "0 8px 32px rgba(88, 101, 242, 0.2)",
               },
             }}

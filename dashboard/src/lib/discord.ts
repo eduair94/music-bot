@@ -1,12 +1,56 @@
-import { DiscordGuild, GuildWithBot, DiscordChannel, DiscordRole } from "@/types/discord";
+import { DiscordChannel, DiscordGuild, DiscordRole, GuildWithBot } from "@/types/discord";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 const MANAGE_GUILD_PERMISSION = 0x20; // MANAGE_GUILD permission bit
+
+// Use global cache to persist across hot reloads in development
+const globalForCache = globalThis as unknown as {
+  discordCache: Map<string, { data: unknown; expires: number; staleData?: unknown }> | undefined;
+};
+
+const cache = globalForCache.discordCache ?? new Map<string, { data: unknown; expires: number; staleData?: unknown }>();
+if (process.env.NODE_ENV !== "production") {
+  globalForCache.discordCache = cache;
+}
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache
+const STALE_TTL = 15 * 60 * 1000; // 15 minutes for stale data fallback
+
+function getCached<T>(key: string, allowStale = false): T | null {
+  const cached = cache.get(key);
+  if (!cached) return null;
+  
+  if (cached.expires > Date.now()) {
+    return cached.data as T;
+  }
+  
+  // Return stale data if allowed and within stale window
+  if (allowStale && cached.staleData) {
+    return cached.staleData as T;
+  }
+  
+  cache.delete(key);
+  return null;
+}
+
+function setCache(key: string, data: unknown, ttl = CACHE_TTL): void {
+  cache.set(key, { 
+    data, 
+    expires: Date.now() + ttl,
+    staleData: data // Keep as stale fallback
+  });
+}
 
 /**
  * Fetch user's guilds from Discord API
  */
 export async function fetchUserGuilds(accessToken: string): Promise<DiscordGuild[]> {
+  const cacheKey = `guilds:${accessToken.slice(-10)}`;
+  const cached = getCached<DiscordGuild[]>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
   const response = await fetch(`${DISCORD_API_BASE}/users/@me/guilds`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -15,10 +59,22 @@ export async function fetchUserGuilds(accessToken: string): Promise<DiscordGuild
   });
 
   if (!response.ok) {
+    if (response.status === 429) {
+      // Rate limited - try to return stale data if available
+      const staleData = getCached<DiscordGuild[]>(cacheKey, true);
+      if (staleData) {
+        console.warn("Rate limited by Discord, using stale cache");
+        return staleData;
+      }
+      const retryAfter = response.headers.get("Retry-After");
+      throw new Error(`Rate limited by Discord. Please try again in ${retryAfter || "a few"} seconds.`);
+    }
     throw new Error(`Failed to fetch guilds: ${response.statusText}`);
   }
 
-  return response.json();
+  const guilds = await response.json();
+  setCache(cacheKey, guilds); // Use default 5 minute cache
+  return guilds;
 }
 
 /**
@@ -61,6 +117,12 @@ export function getGuildInitials(name: string): string {
  * Fetch guild channels using bot token
  */
 export async function fetchGuildChannels(guildId: string): Promise<DiscordChannel[]> {
+  const cacheKey = `channels:${guildId}`;
+  const cached = getCached<DiscordChannel[]>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
   const botToken = process.env.DISCORD_BOT_TOKEN;
   if (!botToken) {
     throw new Error("Bot token not configured");
@@ -74,19 +136,36 @@ export async function fetchGuildChannels(guildId: string): Promise<DiscordChanne
   });
 
   if (!response.ok) {
+    if (response.status === 429) {
+      // Rate limited - try stale cache
+      const staleData = getCached<DiscordChannel[]>(cacheKey, true);
+      if (staleData) {
+        console.warn("Rate limited by Discord for channels, using stale cache");
+        return staleData;
+      }
+      throw new Error("Rate limited by Discord");
+    }
     if (response.status === 403) {
       throw new Error("Bot is not in this guild");
     }
     throw new Error(`Failed to fetch channels: ${response.statusText}`);
   }
 
-  return response.json();
+  const channels = await response.json();
+  setCache(cacheKey, channels);
+  return channels;
 }
 
 /**
  * Fetch guild roles using bot token
  */
 export async function fetchGuildRoles(guildId: string): Promise<DiscordRole[]> {
+  const cacheKey = `roles:${guildId}`;
+  const cached = getCached<DiscordRole[]>(cacheKey);
+  if (cached) {
+    return cached;
+  }
+
   const botToken = process.env.DISCORD_BOT_TOKEN;
   if (!botToken) {
     throw new Error("Bot token not configured");
@@ -100,32 +179,52 @@ export async function fetchGuildRoles(guildId: string): Promise<DiscordRole[]> {
   });
 
   if (!response.ok) {
+    if (response.status === 429) {
+      // Rate limited - try stale cache
+      const staleData = getCached<DiscordRole[]>(cacheKey, true);
+      if (staleData) {
+        console.warn("Rate limited by Discord for roles, using stale cache");
+        return staleData;
+      }
+      throw new Error("Rate limited by Discord");
+    }
     if (response.status === 403) {
       throw new Error("Bot is not in this guild");
     }
     throw new Error(`Failed to fetch roles: ${response.statusText}`);
   }
 
-  return response.json();
+  const roles = await response.json();
+  setCache(cacheKey, roles);
+  return roles;
 }
 
 /**
- * Check if bot is in a specific guild
+ * Check if bot is in a specific guild (with caching)
  */
 export async function isBotInGuild(guildId: string): Promise<boolean> {
+  const cacheKey = `botInGuild:${guildId}`;
+  const cached = getCached<boolean>(cacheKey);
+  if (cached !== null) {
+    return cached;
+  }
+
   try {
     await fetchGuildChannels(guildId);
+    setCache(cacheKey, true, CACHE_TTL * 5); // Cache for 5 minutes
     return true;
   } catch {
+    setCache(cacheKey, false, CACHE_TTL); // Cache failures for 1 minute
     return false;
   }
 }
 
 /**
  * Get bot invite URL
+ * Note: Uses NEXT_PUBLIC_ prefix so it's available on client-side
  */
 export function getBotInviteUrl(guildId?: string): string {
-  const clientId = process.env.DISCORD_BOT_CLIENT_ID;
+  const clientId = process.env.NEXT_PUBLIC_DISCORD_BOT_CLIENT_ID;
   const permissions = "3147776"; // Required permissions for music bot
   const scopes = "bot%20applications.commands";
   
@@ -139,19 +238,32 @@ export function getBotInviteUrl(guildId?: string): string {
 }
 
 /**
- * Enhance guilds with bot presence info
+ * Enhance guilds with bot presence info (with rate limit protection)
  */
 export async function enhanceGuildsWithBotInfo(guilds: DiscordGuild[]): Promise<GuildWithBot[]> {
-  const enhancedGuilds = await Promise.all(
-    guilds.map(async (guild) => {
-      const botInGuild = await isBotInGuild(guild.id);
-      return {
-        ...guild,
-        botInGuild,
-        hasManagePermission: hasManagePermission(guild.permissions),
-      };
-    })
-  );
+  // Process guilds in batches of 5 to avoid rate limiting
+  const BATCH_SIZE = 5;
+  const results: GuildWithBot[] = [];
   
-  return enhancedGuilds;
+  for (let i = 0; i < guilds.length; i += BATCH_SIZE) {
+    const batch = guilds.slice(i, i + BATCH_SIZE);
+    const batchResults = await Promise.all(
+      batch.map(async (guild) => {
+        const botInGuild = await isBotInGuild(guild.id);
+        return {
+          ...guild,
+          botInGuild,
+          hasManagePermission: hasManagePermission(guild.permissions),
+        };
+      })
+    );
+    results.push(...batchResults);
+    
+    // Small delay between batches to avoid rate limits
+    if (i + BATCH_SIZE < guilds.length) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+  
+  return results;
 }

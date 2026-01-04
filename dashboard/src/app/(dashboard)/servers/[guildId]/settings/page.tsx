@@ -20,7 +20,10 @@ async function getGuildSettings(guildId: string): Promise<GuildSettings | null> 
   try {
     await connectToDatabase();
     const settings = await GuildSettingsModel.findOne({ guildId }).lean();
-    return settings as GuildSettings | null;
+    if (!settings) return null;
+    
+    // Serialize MongoDB document to plain object for client components
+    return JSON.parse(JSON.stringify(settings)) as GuildSettings;
   } catch (error) {
     console.error("Error fetching guild settings:", error);
     return null;
@@ -102,9 +105,9 @@ export default async function ServerSettingsPage({ params }: Props) {
     embedColor: "#F8AA2A",
     totalSongsPlayed: 0,
     totalPlaytime: 0,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  } as unknown as GuildSettings;
 
   const currentSettings = settings || defaultSettings;
 

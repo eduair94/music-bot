@@ -1,8 +1,8 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { Box } from "@mui/material";
-import { DashboardSidebar } from "@/components/dashboard/Sidebar";
 import { DashboardHeader } from "@/components/dashboard/Header";
+import { DashboardSidebar } from "@/components/dashboard/Sidebar";
+import { Box } from "@mui/material";
+import { redirect } from "next/navigation";
 
 const DRAWER_WIDTH = 280;
 
