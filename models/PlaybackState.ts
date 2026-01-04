@@ -1,8 +1,8 @@
-import { Schema, model, Document, Model } from "mongoose";
-import type { ITrack as ITrackBase, IPlaybackState as IPlaybackStateBase, LoopMode, TrackSource } from "../shared/types";
+import { Document, Schema, model } from "mongoose";
+import type { IPlaybackState as IPlaybackStateBase, ITrack as ITrackBase } from "../shared/types";
 
 // Re-export shared types for backwards compatibility
-export type { ITrackBase as ITrack, IPlaybackStateBase as IPlaybackState };
+export type { IPlaybackStateBase as IPlaybackState, ITrackBase as ITrack };
 
 // Create local aliases for use in this file
 type ITrack = ITrackBase;

@@ -13,6 +13,7 @@
  */
 
 import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
+import { spawn } from "child_process";
 import { GuildQueue, Player, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import {
@@ -25,14 +26,12 @@ import {
     Interaction,
     REST,
     Routes,
-    Snowflake,
-    TextChannel
+    Snowflake
 } from "discord.js";
-import { spawn } from "child_process";
 import fs from "fs";
+import mongoose from "mongoose";
 import path from "path";
 import { Readable } from "stream";
-import mongoose from "mongoose";
 import { Command } from "../interfaces/Command";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { i18n } from "../utils/i18n";

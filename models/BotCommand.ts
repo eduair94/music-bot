@@ -1,9 +1,8 @@
-import { Schema, model, Document, Types } from "mongoose";
-import type { 
-  BotCommandType as BotCommandTypeBase, 
-  BotCommandParams as BotCommandParamsBase,
-  CommandStatus,
-  LoopMode 
+import { Document, Schema, Types, model } from "mongoose";
+import type {
+    BotCommandParams as BotCommandParamsBase,
+    BotCommandType as BotCommandTypeBase,
+    CommandStatus
 } from "../shared/types";
 
 // Re-export shared types for backwards compatibility

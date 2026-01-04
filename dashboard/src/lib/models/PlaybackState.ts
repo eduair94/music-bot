@@ -1,8 +1,8 @@
-import { Schema, model, models, Document } from "mongoose";
-import type { ITrack, IPlaybackState } from "../../../../shared/types";
+import { Document, Schema, model, models } from "mongoose";
+import type { IPlaybackState, ITrack } from "../../../../shared/types";
 
 // Re-export shared types for backwards compatibility
-export type { ITrack, IPlaybackState };
+export type { IPlaybackState, ITrack };
 
 export type PlaybackStateDocument = IPlaybackState & Document;
 

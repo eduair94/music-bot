@@ -1,9 +1,9 @@
 import { ChildProcess, fork } from "child_process";
 import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
 import path from "path";
-import { LinkedBot, ILinkedBot, BotStatus } from "../models/LinkedBot";
+import { BotStatus, ILinkedBot, LinkedBot } from "../models/LinkedBot";
+import { getMaxLinkedBots } from "../shared/types";
 import { config } from "../utils/config";
-import { PREMIUM_TIERS, getMaxLinkedBots, getTierFromPledge } from "../shared/types";
 
 /**
  * Active bot process info

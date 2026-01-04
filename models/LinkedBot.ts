@@ -1,5 +1,5 @@
-import { Schema, model, Document, Types } from "mongoose";
-import type { LinkedBotStatus, ILinkedBot as ILinkedBotBase } from "../shared/types";
+import { Document, Schema, Types, model } from "mongoose";
+import type { ILinkedBot as ILinkedBotBase, LinkedBotStatus } from "../shared/types";
 
 // Re-export shared types for backwards compatibility
 export type BotStatus = LinkedBotStatus;

@@ -6,54 +6,26 @@
 
 // Re-export all shared types
 export {
-  // Premium types
-  type PremiumTier,
-  type PremiumTierConfig,
-  PREMIUM_TIERS,
-  
-  // Guild settings
-  type IGuildSettings,
-  type GuildPremiumSettings,
-  
-  // Playback
-  type ITrack,
-  type IPlaybackState,
-  type TrackSource,
-  type LoopMode,
-  
-  // Bot commands
-  type IBotCommand,
-  type BotCommandType,
-  type PlayerCommandType,
-  type LinkedBotCommandType,
-  type CommandStatus,
-  type BotCommandParams,
-  
-  // Linked bots
-  type ILinkedBot,
-  type LinkedBotStatus,
-  
-  // Patreon
-  type IPatreonUser,
-  type PatronStatus,
-  
-  // Discord API
-  type DiscordGuild,
-  type GuildWithBot,
-  type DiscordChannel,
-  type DiscordRole,
-  
-  // Utility types
-  type ApiResponse,
-  type PaginationParams,
-  type PaginatedResponse,
-  
-  // Helper functions
-  getTierFromPledge,
-  getMaxLinkedBots,
-  getAudioBitrate,
-  formatDuration,
-  isValidSnowflake,
+    PREMIUM_TIERS, formatDuration, getAudioBitrate, getMaxLinkedBots,
+    // Helper functions
+    getTierFromPledge, isValidSnowflake,
+    // Utility types
+    type ApiResponse, type BotCommandParams, type BotCommandType, type CommandStatus, type DiscordChannel,
+    // Discord API
+    type DiscordGuild, type DiscordRole, type GuildPremiumSettings, type GuildWithBot,
+    // Bot commands
+    type IBotCommand,
+    // Guild settings
+    type IGuildSettings,
+    // Linked bots
+    type ILinkedBot,
+    // Patreon
+    type IPatreonUser, type IPlaybackState,
+    // Playback
+    type ITrack, type LinkedBotCommandType, type LinkedBotStatus, type LoopMode, type PaginatedResponse, type PaginationParams, type PatronStatus, type PlayerCommandType,
+    // Premium types
+    type PremiumTier,
+    type PremiumTierConfig, type TrackSource
 } from "../../../shared/types";
 
 // Aliases for backwards compatibility with existing dashboard code

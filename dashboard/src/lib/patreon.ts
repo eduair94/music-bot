@@ -6,8 +6,8 @@
  */
 
 import crypto from "crypto";
-import { connectToDatabase } from "./mongodb";
 import { PatreonUserModel } from "./models/PatreonUser";
+import { connectToDatabase } from "./mongodb";
 
 // Environment variables
 const PATREON_WEBHOOK_SECRET = process.env.PATREON_WEBHOOK_SECRET;

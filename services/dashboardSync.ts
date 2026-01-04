@@ -1,7 +1,7 @@
 import { GuildQueue, Player, Track } from "discord-player";
-import { Client, VoiceChannel, ChannelType } from "discord.js";
-import { PlaybackState, ITrack } from "../models/PlaybackState";
+import { ChannelType, Client, VoiceChannel } from "discord.js";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
+import { ITrack, PlaybackState } from "../models/PlaybackState";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
 
 /**
