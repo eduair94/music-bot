@@ -10,6 +10,7 @@ import Discord from "next-auth/providers/discord";
  * - email: User's email address
  */
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true, // Trust the host (required for production behind proxies)
   providers: [
     Discord({
       clientId: process.env.AUTH_DISCORD_ID,
