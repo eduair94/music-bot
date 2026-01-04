@@ -136,23 +136,24 @@ Currently available locales are:
 6. Push to the branch: `git push origin my-new-feature`
 7. Submit a pull request
 
-## 🌐 Promotional Website
+## 🌐 Web Dashboard & Landing Page
 
-The bot includes a modern, responsive promotional website built with Next.js:
+The bot includes a comprehensive web dashboard with a marketing landing page:
 
-- **Features**: Hero section, feature cards, command list, pricing tiers, FAQ
-- **Served by**: Express webhook server at port 4123
-- **Routes**: `/` (website), `/invite` (Discord OAuth redirect)
+- **Landing Page**: Modern, responsive promotional page with features, pricing, and FAQ
+- **Dashboard**: Server management, bot configuration, and premium features
+- **Tech Stack**: Next.js 15, Tailwind CSS (landing), Material UI (dashboard)
+- **Unified Deployment**: Single Next.js application on port 3001
 
 ### Quick Setup
 
 ```bash
-cd website
+cd dashboard
 npm install
-npm run build
+npm run dev
 ```
 
-For detailed customization instructions, see [docs/WEBSITE_SETUP.md](docs/WEBSITE_SETUP.md).
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed structure and [dashboard/README.md](dashboard/README.md) for configuration.
 
 ## 💰 Patreon Integration
 

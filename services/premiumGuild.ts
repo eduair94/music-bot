@@ -1,6 +1,6 @@
 import { IPremiumGuild, PremiumGuild } from "../models/PremiumGuild";
-import { PatreonService } from "./patreon";
 import { config } from "../utils/config";
+import { PatreonService } from "./patreon";
 
 /**
  * PremiumGuildService - Manages server-based premium features

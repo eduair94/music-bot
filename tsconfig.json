@@ -16,6 +16,6 @@
     "sourceMap": true,
     "strictPropertyInitialization": false
   },
-  "include": ["./", "./config.json", "./locales/*.json", "./sounds/*.mp3"],
-  "exclude": ["/.github", "./dist", "./node_modules", "./website"]
+  "include": ["./", "./config.json", "./locales/*.json", "./sounds/*.mp3", "./shared/**/*"],
+  "exclude": ["/.github", "./dist", "./node_modules", "./website", "./dashboard"]
 }

@@ -7,6 +7,8 @@ export interface Config {
   DEFAULT_VOLUME: number;
   LOCALE: string;
   OWNER_ID?: string;
+  // Dashboard URL for webhooks
+  DASHBOARD_URL?: string;
   // Patreon integration
   PATREON_CLIENT_ID?: string;
   PATREON_CLIENT_SECRET?: string;
@@ -14,4 +16,6 @@ export interface Config {
   PATREON_CAMPAIGN_ID?: string;
   PATREON_WEBHOOK_SECRET?: string;
   PATREON_FOUNDER_TIER_ID?: string;
+  // Bot encryption key for linked bots
+  BOT_ENCRYPTION_KEY?: string;
 }

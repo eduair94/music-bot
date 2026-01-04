@@ -1,41 +1,14 @@
 import mongoose, { Document, Schema } from "mongoose";
+import type { IPatreonUser as IPatreonUserBase, PatronStatus } from "../shared/types";
 
 /**
- * PatreonUser interface - Links Discord users to their Patreon membership
+ * PatreonUser interface - Extends shared interface with bot-specific fields
  */
-export interface IPatreonUser extends Document {
-  discordId: string;
-  patreonId: string;
-  email?: string;
-  fullName?: string;
-  
-  // Membership details
-  tierId?: string;
-  tierTitle?: string;
-  patronStatus: "active_patron" | "declined_patron" | "former_patron" | "not_patron";
-  
-  // Pledge info
-  pledgeAmountCents: number;
-  lifetimeSupportCents: number;
-  lastChargeDate?: Date;
-  lastChargeStatus?: string;
-  
-  // OAuth tokens (for user-initiated linking)
+export interface IPatreonUser extends Document, IPatreonUserBase {
+  // OAuth tokens (bot-specific, not in dashboard)
   accessToken?: string;
   refreshToken?: string;
   tokenExpiresAt?: Date;
-  
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-  
-  // Premium features enabled
-  isPremium: boolean;
-  isFounder: boolean;
-  
-  // Audio quality settings (based on tier)
-  audioBitrate: number; // 128 (free), 192 (tier 1), 256 (tier 2), 320 (tier 3+)
-  customBotName?: string; // Custom bot identity for higher tiers
 }
 
 const PatreonUserSchema = new Schema<IPatreonUser>(

@@ -6,11 +6,7 @@ import {
 } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { PatreonService } from "../services/patreon";
-import { useWebhookServer } from "../services/webhookServer";
 import { config } from "../utils/config";
-
-const WEBHOOK_BASE_URL = "https://music-bot.checkleaked.com";
-const DEFAULT_PORT = 4123;
 
 const command: Command = {
   data: new SlashCommandBuilder()
@@ -26,30 +22,6 @@ const command: Command = {
       subcommand
         .setName("verify")
         .setDescription("Verify Patreon API credentials are working")
-    )
-    .addSubcommand((subcommand) =>
-      subcommand
-        .setName("webhook")
-        .setDescription("Manage the webhook server")
-        .addStringOption((option) =>
-          option
-            .setName("action")
-            .setDescription("Webhook server action")
-            .setRequired(true)
-            .addChoices(
-              { name: "Start", value: "start" },
-              { name: "Stop", value: "stop" },
-              { name: "Status", value: "status" }
-            )
-        )
-        .addIntegerOption((option) =>
-          option
-            .setName("port")
-            .setDescription("Port for the webhook server (default: 4123)")
-            .setRequired(false)
-            .setMinValue(1024)
-            .setMaxValue(65535)
-        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -102,9 +74,6 @@ const command: Command = {
         break;
       case "verify":
         await handleVerify(interaction);
-        break;
-      case "webhook":
-        await handleWebhook(interaction);
         break;
       case "sync":
         await handleSync(interaction);
@@ -289,15 +258,11 @@ async function handleVerify(interaction: ChatInputCommandInteraction) {
     message: hasWebhookSecret ? "Secret is configured" : "Optional - needed for webhooks",
   });
 
-  // Check 6: Webhook server
-  const webhookServer = useWebhookServer();
-  const serverStatus = webhookServer.getStatus();
+  // Check 6: Dashboard webhook endpoint
   checks.push({
-    name: "Webhook Server",
-    status: serverStatus.running,
-    message: serverStatus.running 
-      ? `Running on port ${serverStatus.port}` 
-      : "Not running - use /patreonadmin webhook action:start",
+    name: "Webhook Endpoint",
+    status: true,
+    message: "Dashboard handles webhooks at /api/webhooks/patreon",
   });
 
   // Build embed
@@ -322,78 +287,6 @@ async function handleVerify(interaction: ChatInputCommandInteraction) {
   }
 
   await interaction.editReply({ embeds: [embed] });
-}
-
-async function handleWebhook(interaction: ChatInputCommandInteraction) {
-  const action = interaction.options.getString("action", true);
-  const port = interaction.options.getInteger("port") || DEFAULT_PORT;
-  
-  const webhookServer = useWebhookServer();
-
-  switch (action) {
-    case "start": {
-      await interaction.deferReply({ ephemeral: true });
-      const result = await webhookServer.start(port);
-      
-      const embed = new EmbedBuilder()
-        .setTitle(result.success ? " Webhook Server Started" : " Failed to Start")
-        .setColor(result.success ? 0x00FF00 : 0xFF0000)
-        .setDescription(result.message)
-        .setTimestamp();
-
-      if (result.success) {
-        embed.addFields(
-          { name: "Local URL", value: `\`http://localhost:${port}/webhooks/patreon\``, inline: false },
-          { name: "Public URL (Cloudflare)", value: `\`${WEBHOOK_BASE_URL}/webhooks/patreon\``, inline: false },
-          { name: "Health Check", value: `\`${WEBHOOK_BASE_URL}/health\``, inline: false },
-          { name: " Next Steps", value: `1. Make sure your Cloudflare tunnel is pointing to port ${port}\n2. Register the webhook URL in your Patreon dashboard:\n   \`${WEBHOOK_BASE_URL}/webhooks/patreon\`\n3. Copy the webhook secret to your config.json`, inline: false }
-        );
-      }
-
-      await interaction.editReply({ embeds: [embed] });
-      break;
-    }
-
-    case "stop": {
-      await interaction.deferReply({ ephemeral: true });
-      const result = await webhookServer.stop();
-      
-      const embed = new EmbedBuilder()
-        .setTitle(result.success ? " Webhook Server Stopped" : "⚠️ Server Not Running")
-        .setColor(result.success ? 0xFFAA00 : 0xFFFF00)
-        .setDescription(result.message)
-        .setTimestamp();
-
-      await interaction.editReply({ embeds: [embed] });
-      break;
-    }
-
-    case "status": {
-      const status = webhookServer.getStatus();
-      
-      const embed = new EmbedBuilder()
-        .setTitle(" Webhook Server Status")
-        .setColor(status.running ? 0x00FF00 : 0x808080)
-        .addFields(
-          { name: "Status", value: status.running ? " Running" : "⚫ Stopped", inline: true },
-          { name: "Port", value: status.port.toString(), inline: true },
-          { name: "Local URL", value: `\`http://localhost:${status.port}/webhooks/patreon\``, inline: false },
-          { name: "Public URL", value: `\`${WEBHOOK_BASE_URL}/webhooks/patreon\``, inline: false }
-        )
-        .setTimestamp();
-
-      if (status.running) {
-        embed.addFields({
-          name: "Configuration",
-          value: `Webhook Secret: ${config.PATREON_WEBHOOK_SECRET ? "✅ Configured" : "❌ Not set"}`,
-          inline: false,
-        });
-      }
-
-      await interaction.reply({ embeds: [embed], ephemeral: true });
-      break;
-    }
-  }
 }
 
 async function handleSync(interaction: ChatInputCommandInteraction) {
@@ -458,12 +351,10 @@ async function handleStatus(interaction: ChatInputCommandInteraction) {
     embed.addFields({ name: item.name, value: displayValue, inline: true });
   }
 
-  // Webhook server status
-  const webhookServer = useWebhookServer();
-  const serverStatus = webhookServer.getStatus();
+  // Webhook endpoint info
   embed.addFields({
-    name: "Webhook Server",
-    value: serverStatus.running ? ` Running on port ${serverStatus.port}` : "⚫ Not running",
+    name: "Webhook Endpoint",
+    value: "✅ Dashboard handles webhooks at /api/webhooks/patreon",
     inline: true,
   });
 
@@ -488,7 +379,9 @@ async function handleCreateWebhook(interaction: ChatInputCommandInteraction) {
     return;
   }
 
-  const webhookUrl = `${WEBHOOK_BASE_URL}/webhooks/patreon`;
+  // Use the dashboard URL for webhooks (configure DASHBOARD_URL in config.json)
+  const dashboardUrl = config.DASHBOARD_URL || "https://your-dashboard-url.com";
+  const webhookUrl = `${dashboardUrl}/api/webhooks/patreon`;
   
   try {
     // Create webhook via Patreon API

@@ -13,6 +13,7 @@ import { readdirSync } from "fs";
 import { join } from "path";
 import { Command } from "../interfaces/Command";
 import { DatabaseService } from "../services/database";
+import { DashboardSyncService } from "../services/dashboardSync";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { PatreonService } from "../services/patreon";
@@ -54,6 +55,25 @@ export class Bot {
         console.error("❌ Failed to initialize Discord Player service:", error);
       }
 
+      // Initialize Dashboard Sync service (for web dashboard communication)
+      try {
+        const dashboardSync = DashboardSyncService.getInstance();
+        await dashboardSync.initialize(this.client);
+        console.log("✅ Dashboard Sync service initialized");
+      } catch (error) {
+        console.error("⚠️ Dashboard Sync initialization skipped:", error);
+      }
+
+      // Initialize Bot Manager service (for linked user bots)
+      try {
+        const { BotManagerService } = await import("../services/botManager");
+        const botManager = BotManagerService.getInstance();
+        await botManager.initialize();
+        console.log("✅ Bot Manager service initialized");
+      } catch (error) {
+        console.error("⚠️ Bot Manager initialization skipped:", error);
+      }
+
       // Initialize Patreon service and sync patrons
       try {
         const patreonService = PatreonService.getInstance();
@@ -70,20 +90,9 @@ export class Bot {
             }
           }, 30 * 60 * 1000);
 
-          // Auto-start webhook server for Patreon
-          try {
-            const { useWebhookServer } = await import("../services/webhookServer");
-            const webhookServer = useWebhookServer();
-            webhookServer.setClient(this.client);
-            const result = await webhookServer.start();
-            if (result.success) {
-              console.log(`✅ Webhook server started on port ${webhookServer.getPort()}`);
-            } else {
-              console.warn(`⚠️ Webhook server: ${result.message}`);
-            }
-          } catch (webhookError) {
-            console.error("⚠️ Webhook server failed to start:", webhookError);
-          }
+          // Note: Patreon webhooks are now handled by the Next.js dashboard
+          // Configure your Patreon webhooks to point to: {DASHBOARD_URL}/api/webhooks/patreon
+          console.log("✅ Patreon webhooks are handled by the dashboard at /api/webhooks/patreon");
         } else {
           console.log("⚠️ Patreon integration not configured (missing CAMPAIGN_ID or ACCESS_TOKEN)");
         }

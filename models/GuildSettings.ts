@@ -1,63 +1,12 @@
 import { Document, Schema, model } from "mongoose";
+import type { IGuildSettings as IGuildSettingsBase, GuildPremiumSettings, PremiumTier } from "../shared/types";
 
 /**
  * Guild Settings Interface
  * 
- * Defines all customizable settings per Discord server.
- * These settings allow server admins to customize the bot behavior.
+ * Extends the shared interface with Mongoose Document type.
  */
-export interface IGuildSettings {
-  guildId: string;
-  
-  // Channel Restrictions
-  allowedVoiceChannels: string[];      // Voice channels where bot can play
-  allowedTextChannels: string[];       // Text channels where commands work
-  logChannelId: string | null;         // Channel for bot logs (now playing, etc.)
-  
-  // Role Permissions
-  djRoleId: string | null;             // DJ role that can use restricted commands
-  adminRoleId: string | null;          // Admin role that can change settings
-  
-  // Playback Settings
-  defaultVolume: number;               // Default volume (0-100)
-  maxVolume: number;                   // Maximum allowed volume (0-100)
-  maxQueueSize: number;                // Maximum songs in queue
-  maxSongDuration: number;             // Maximum song duration in seconds (0 = unlimited)
-  
-  // Behavior Settings
-  announceNowPlaying: boolean;         // Announce songs in text channel
-  autoLeaveEmpty: boolean;             // Leave when channel is empty
-  autoLeaveTimeout: number;            // Seconds before leaving empty channel
-  preventDuplicates: boolean;          // Prevent duplicate songs in queue
-  
-  // Premium Features
-  premium: {
-    enabled: boolean;                  // Is premium enabled for this guild
-    tier: "free" | "basic" | "pro" | "enterprise";
-    expiresAt: Date | null;            // When premium expires (null = never)
-    maxConcurrentListeners: number;    // Max listeners before queue (0 = unlimited)
-    customBranding: boolean;           // Allow custom bot name/avatar
-    prioritySupport: boolean;          // Priority support access
-    analytics: boolean;                // Access to usage analytics
-  };
-  
-  // Blacklist
-  blacklistedUsers: string[];          // User IDs that can't use the bot
-  blacklistedSongs: string[];          // Keywords/URLs that are blocked
-  
-  // Customization
-  language: string;                    // Locale override for this guild
-  embedColor: string;                  // Custom embed color (hex)
-  
-  // Analytics
-  totalSongsPlayed: number;            // Total songs played in this guild
-  totalPlaytime: number;               // Total playback time in seconds
-  
-  // Timestamps
-  createdAt: Date;
-  updatedAt: Date;
-}
-
+export interface IGuildSettings extends IGuildSettingsBase {}
 export interface IGuildSettingsDocument extends IGuildSettings, Document {}
 
 const guildSettingsSchema = new Schema<IGuildSettings>(

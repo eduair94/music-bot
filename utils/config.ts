@@ -22,6 +22,8 @@ try {
     PATREON_CAMPAIGN_ID: process.env.PATREON_CAMPAIGN_ID || "",
     PATREON_WEBHOOK_SECRET: process.env.PATREON_WEBHOOK_SECRET || "",
     PATREON_FOUNDER_TIER_ID: process.env.PATREON_FOUNDER_TIER_ID || "",
+    // Bot encryption key for linked bots
+    BOT_ENCRYPTION_KEY: process.env.BOT_ENCRYPTION_KEY || "",
   };
 }
 
