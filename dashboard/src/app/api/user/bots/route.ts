@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { connectToDatabase } from "@/lib/mongodb";
 import { LinkedBotModel } from "@/lib/models/LinkedBot";
-import { PatreonUserModel, IPatreonUser, getLinkedBotLimit, getUserTier, TIER_LIMITS } from "@/lib/models/PatreonUser";
+import { getLinkedBotLimit, getUserTier, IPatreonUser, PatreonUserModel, TIER_LIMITS } from "@/lib/models/PatreonUser";
+import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';

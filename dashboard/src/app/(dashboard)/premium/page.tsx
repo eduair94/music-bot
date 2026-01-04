@@ -1,21 +1,21 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Grid2 as Grid,
-  Stack,
-  Chip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DiamondIcon from "@mui/icons-material/Diamond";
 import StarIcon from "@mui/icons-material/Star";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
-import DiamondIcon from "@mui/icons-material/Diamond";
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    Grid2 as Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    Typography,
+} from "@mui/material";
 
 const plans = [
   {

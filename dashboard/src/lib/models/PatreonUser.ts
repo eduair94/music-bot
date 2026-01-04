@@ -1,11 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { 
-  type IPatreonUser as IPatreonUserBase, 
-  type PatronStatus,
-  type PremiumTier,
+import {
+  type IPatreonUser as IPatreonUserBase,
   PREMIUM_TIERS,
-  getTierFromPledge,
-  getMaxLinkedBots
+  getMaxLinkedBots,
+  getTierFromPledge
 } from "../../../../shared/types";
 
 /**
@@ -83,7 +81,7 @@ PatreonUserSchema.index({ isPremium: 1 });
 export const PatreonUserModel = mongoose.models.PatreonUser || mongoose.model<IPatreonUser>("PatreonUser", PatreonUserSchema);
 
 // Re-export shared tier functions for backwards compatibility
-export { getTierFromPledge as getUserTier, getMaxLinkedBots as getLinkedBotLimit };
+export { getMaxLinkedBots as getLinkedBotLimit, getTierFromPledge as getUserTier };
 
 // Legacy TIER_LIMITS format for backwards compatibility
 export const TIER_LIMITS = {

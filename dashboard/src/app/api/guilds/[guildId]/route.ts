@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
-import { connectToDatabase } from "@/lib/mongodb";
 import { GuildSettingsModel } from "@/lib/models/GuildSettings";
+import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';

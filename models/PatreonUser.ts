@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-import type { IPatreonUser as IPatreonUserBase, PatronStatus } from "../shared/types";
+import type { IPatreonUser as IPatreonUserBase } from "../shared/types";
 
 /**
  * PatreonUser interface - Extends shared interface with bot-specific fields

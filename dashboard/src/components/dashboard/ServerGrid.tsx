@@ -1,23 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid2 as Grid,
-  Typography,
-  Avatar,
-  Button,
-  Stack,
-  Chip,
-} from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
+import { getBotInviteUrl, getGuildIconUrl, getGuildInitials } from "@/lib/discord";
+import { GuildWithBot } from "@/types/discord";
 import AddIcon from "@mui/icons-material/Add";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
-import { GuildWithBot } from "@/types/discord";
-import { getGuildIconUrl, getGuildInitials, getBotInviteUrl } from "@/lib/discord";
+import SettingsIcon from "@mui/icons-material/Settings";
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    Grid2 as Grid,
+    Stack,
+    Typography,
+} from "@mui/material";
+import Link from "next/link";
 
 interface ServerGridProps {
   guilds: GuildWithBot[];

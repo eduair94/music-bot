@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
-import { connectToDatabase } from "@/lib/mongodb";
 import { BotCommand, IBotCommand } from "@/lib/models/BotCommand";
+import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 

@@ -1,14 +1,12 @@
 import { auth } from "@/auth";
-import { fetchUserGuilds, filterManageableGuilds, enhanceGuildsWithBotInfo } from "@/lib/discord";
-import {
-  Box,
-  Typography,
-  Alert,
-  Tabs,
-  Tab,
-} from "@mui/material";
 import { ServerGrid } from "@/components/dashboard/ServerGrid";
+import { enhanceGuildsWithBotInfo, fetchUserGuilds, filterManageableGuilds } from "@/lib/discord";
 import { GuildWithBot } from "@/types/discord";
+import {
+    Alert,
+    Box,
+    Typography
+} from "@mui/material";
 
 export default async function ServersPage() {
   const session = await auth();

@@ -1,24 +1,24 @@
 import { auth } from "@/auth";
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Avatar,
-  Stack,
-  Grid2 as Grid,
-  Chip,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email";
 import BadgeIcon from "@mui/icons-material/Badge";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import EmailIcon from "@mui/icons-material/Email";
 import StarIcon from "@mui/icons-material/Star";
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    Divider,
+    Grid2 as Grid,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    Typography,
+} from "@mui/material";
 import Link from "next/link";
 
 export default async function ProfilePage() {

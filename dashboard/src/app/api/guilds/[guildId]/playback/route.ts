@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
+import { IPlaybackState, PlaybackState } from "@/lib/models/PlaybackState";
 import { connectToDatabase } from "@/lib/mongodb";
-import { PlaybackState, IPlaybackState } from "@/lib/models/PlaybackState";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 

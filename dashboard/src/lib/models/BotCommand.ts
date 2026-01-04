@@ -1,13 +1,12 @@
-import { Schema, model, models, Document, Types } from "mongoose";
-import type { 
-  BotCommandType, 
-  BotCommandParams, 
-  CommandStatus,
-  LoopMode 
+import { Document, Schema, Types, model, models } from "mongoose";
+import type {
+    BotCommandParams,
+    BotCommandType,
+    CommandStatus
 } from "../../../../shared/types";
 
 // Re-export shared types for backwards compatibility
-export type { BotCommandType, BotCommandParams };
+export type { BotCommandParams, BotCommandType };
 
 export interface IBotCommand {
   _id?: Types.ObjectId;

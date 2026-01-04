@@ -1,37 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid2 as Grid,
-  Typography,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Switch,
-  FormControlLabel,
-  Button,
-  Slider,
-  Chip,
-  Stack,
-  Alert,
-  Snackbar,
-  Divider,
-  Autocomplete,
-  alpha,
-} from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import type { DiscordChannel, DiscordRole, GuildSettings } from "@/types/discord";
 import MicIcon from "@mui/icons-material/Mic";
-import ChatIcon from "@mui/icons-material/Chat";
+import PaletteIcon from "@mui/icons-material/Palette";
+import SaveIcon from "@mui/icons-material/Save";
 import SecurityIcon from "@mui/icons-material/Security";
 import SettingsIcon from "@mui/icons-material/Settings";
-import PaletteIcon from "@mui/icons-material/Palette";
-import type { GuildSettings, DiscordChannel, DiscordRole } from "@/types/discord";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    FormControl,
+    FormControlLabel,
+    Grid2 as Grid,
+    InputLabel,
+    MenuItem,
+    Select,
+    Slider,
+    Snackbar,
+    Stack,
+    Switch,
+    TextField,
+    Typography
+} from "@mui/material";
+import { useState } from "react";
 
 interface Props {
   guildId: string;

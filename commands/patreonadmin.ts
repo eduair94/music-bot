@@ -1,8 +1,8 @@
 import {
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    PermissionFlagsBits,
+    SlashCommandBuilder,
 } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { PatreonService } from "../services/patreon";

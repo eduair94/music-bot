@@ -1,24 +1,24 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-  Avatar,
-  Divider,
-  ListItemIcon,
-  Chip,
-} from "@mui/material";
-import { useState } from "react";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
+import {
+    AppBar,
+    Avatar,
+    Box,
+    Chip,
+    Divider,
+    IconButton,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    Toolbar,
+    Typography,
+} from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 import { MobileDrawer } from "./MobileDrawer";
 
 export function DashboardHeader() {

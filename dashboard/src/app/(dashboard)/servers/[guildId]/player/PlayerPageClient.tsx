@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, Grid2 as Grid, Stack, Skeleton, Alert } from "@mui/material";
-import { usePlayback } from "@/hooks/usePlayback";
+import { AddSong } from "@/components/dashboard/AddSong";
 import { PlayerControls } from "@/components/dashboard/PlayerControls";
 import { QueueList } from "@/components/dashboard/QueueList";
-import { AddSong } from "@/components/dashboard/AddSong";
+import { usePlayback } from "@/hooks/usePlayback";
 import type { DiscordChannel, PlaybackState } from "@/types/discord";
+import { Alert, Box, Grid2 as Grid, Skeleton, Stack } from "@mui/material";
 
 interface PlayerPageClientProps {
   guildId: string;

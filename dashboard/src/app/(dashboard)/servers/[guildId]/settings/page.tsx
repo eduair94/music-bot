@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
-import { notFound, redirect } from "next/navigation";
-import { fetchUserGuilds, hasManagePermission, isBotInGuild, fetchGuildChannels, fetchGuildRoles } from "@/lib/discord";
-import { connectToDatabase } from "@/lib/mongodb";
-import { GuildSettingsModel } from "@/lib/models/GuildSettings";
-import { Box, Typography, Breadcrumbs, Link as MuiLink } from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import Link from "next/link";
 import { ServerSettingsForm } from "@/components/dashboard/ServerSettingsForm";
-import type { GuildSettings, DiscordChannel, DiscordRole } from "@/types/discord";
+import { fetchGuildChannels, fetchGuildRoles, fetchUserGuilds, hasManagePermission, isBotInGuild } from "@/lib/discord";
+import { GuildSettingsModel } from "@/lib/models/GuildSettings";
+import { connectToDatabase } from "@/lib/mongodb";
+import type { DiscordChannel, DiscordRole, GuildSettings } from "@/types/discord";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { Box, Breadcrumbs, Link as MuiLink, Typography } from "@mui/material";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 
 // Force dynamic rendering - this page needs runtime data
 export const dynamic = 'force-dynamic';

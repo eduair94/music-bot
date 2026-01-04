@@ -1,5 +1,5 @@
 import { Document, Schema, model } from "mongoose";
-import type { IGuildSettings as IGuildSettingsBase, GuildPremiumSettings, PremiumTier } from "../shared/types";
+import type { IGuildSettings as IGuildSettingsBase } from "../shared/types";
 
 /**
  * Guild Settings Interface
