@@ -17,6 +17,14 @@
   --font-sans: var(--font-inter);
 }
 
+/* Reset for dashboard - prevent Tailwind defaults from affecting MUI */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -36,11 +44,6 @@
 }
 
 /* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
 @keyframes pulse-glow {
   0%, 100% { 
     box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
@@ -54,10 +57,6 @@
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
 }
 
 .animate-pulse-glow {

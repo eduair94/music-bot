@@ -24,9 +24,9 @@ export default async function DashboardLayout({
         component="main"
         sx={{
           flexGrow: 1,
-          ml: { xs: 0, md: `${DRAWER_WIDTH}px` },
           minHeight: "100vh",
           background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+          overflow: "auto",
         }}
       >
         <DashboardHeader />
