@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'music-bot-dashboard',
     script: 'node_modules/next/dist/bin/next',
-    args: 'start -p 3001',
+    args: 'start -p 4123',
     instances: 1,
     autorestart: true,
     watch: false,
@@ -11,7 +11,7 @@ module.exports = {
     // Environment variables
     env: {
       NODE_ENV: 'production',
-      PORT: 3001
+      PORT: 4123
     },
     
     // Logging

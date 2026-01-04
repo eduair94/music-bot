@@ -143,7 +143,7 @@ The bot includes a comprehensive web dashboard with a marketing landing page:
 - **Landing Page**: Modern, responsive promotional page with features, pricing, and FAQ
 - **Dashboard**: Server management, bot configuration, and premium features
 - **Tech Stack**: Next.js 15, Tailwind CSS (landing), Material UI (dashboard)
-- **Unified Deployment**: Single Next.js application on port 3001
+- **Unified Deployment**: Single Next.js application on port 4123
 
 ### Quick Setup
 
