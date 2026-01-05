@@ -1,5 +1,5 @@
-import "server-only";
 import Redis from "ioredis";
+import "server-only";
 
 // Redis key prefixes - must match the bot's shared/services/redis.ts
 export const REDIS_KEYS = {

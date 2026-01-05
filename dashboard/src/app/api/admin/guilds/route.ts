@@ -1,10 +1,10 @@
 import { auth } from "@/auth";
 import { GuildSettingsModel } from "@/lib/models/GuildSettings";
-import { PlaybackState, IPlaybackState } from "@/lib/models/PlaybackState";
+import { IPlaybackState, PlaybackState } from "@/lib/models/PlaybackState";
 import { connectToDatabase } from "@/lib/mongodb";
 import { getAllBotGuildsData, getBotStatus, GuildData } from "@/lib/redis";
-import { IGuildSettings } from "../../../../../../shared/types";
 import { NextResponse } from "next/server";
+import { IGuildSettings } from "../../../../../../shared/types";
 
 export const dynamic = 'force-dynamic';
 
