@@ -1,14 +1,21 @@
 import "dotenv/config";
+import path from "path";
 import { Config } from "../interfaces/Config";
 
 let config: Config;
 
 try {
-  config = require("../config.json");
+  // Load from project root config.json
+  // Use process.cwd() which is the project root when running with pm2/npm
+  const configPath = path.join(process.cwd(), "config.json");
+  config = require(configPath);
+  console.log("[Config] ✅ Loaded config from config.json");
 } catch (error) {
+  console.log("[Config] ⚠️ config.json not found, using environment variables");
   config = {
     TOKEN: process.env.TOKEN || "",
     MONGODB_URI: process.env.MONGODB_URI || "",
+    REDIS_URL: process.env.REDIS_URL || "",
     MAX_PLAYLIST_SIZE: parseInt(process.env.MAX_PLAYLIST_SIZE!) || 10,
     PRUNING: process.env.PRUNING === "true" ? true : false,
     STAY_TIME: parseInt(process.env.STAY_TIME!) || 30,
@@ -27,9 +34,9 @@ try {
   };
 }
 
-if(!config.MONGODB_URI) {
-  console.log("[Config] ⚠️ MONGODB_URI is not set. The bot will run with a default MongoDB URI.");
-  config.MONGODB_URI = 'mongodb+srv://airaudoeduardo_db_user:sDo8A57pnJWO5qNb@cluster0.5sgzf9k.mongodb.net/?appName=Cluster0';
+if (!config.MONGODB_URI) {
+  console.log("[Config] ⚠️ MONGODB_URI is not set. Using default local MongoDB.");
+  config.MONGODB_URI = "mongodb://localhost:27017/music-bot";
 }
 
 export { config };

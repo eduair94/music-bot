@@ -1,4 +1,19 @@
 import Redis from "ioredis";
+import path from "path";
+
+// Try to load REDIS_URL from config.json if not in environment
+let configRedisUrl: string | undefined;
+try {
+  // When compiled, we're in dist/shared/services/, so we need to go up to project root
+  // When running with ts-node, we're in shared/services/
+  // Use process.cwd() which should be the project root when running with pm2/npm
+  const configPath = path.join(process.cwd(), "config.json");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const config = require(configPath);
+  configRedisUrl = config.REDIS_URL;
+} catch {
+  // config.json not found, will use env vars
+}
 
 // Redis key prefixes for organization
 export const REDIS_KEYS = {
@@ -40,7 +55,7 @@ let subscriberInstance: Redis | null = null;
  */
 export function getRedis(): Redis {
   if (!redisInstance) {
-    const redisUrl = process.env.REDIS_URL || process.env.REDIS_URI || "redis://localhost:6379";
+    const redisUrl = configRedisUrl || process.env.REDIS_URL || process.env.REDIS_URI || "redis://localhost:6379";
     redisInstance = new Redis(redisUrl, {
       maxRetriesPerRequest: 3,
       lazyConnect: true,

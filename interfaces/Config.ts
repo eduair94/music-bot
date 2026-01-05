@@ -1,6 +1,7 @@
 export interface Config {
   TOKEN: string;
   MONGODB_URI?: string;
+  REDIS_URL?: string;
   MAX_PLAYLIST_SIZE: number;
   PRUNING: boolean;
   STAY_TIME: number;
