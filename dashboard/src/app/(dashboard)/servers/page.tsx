@@ -4,9 +4,9 @@ import { fetchUserGuilds, filterManageableGuilds } from "@/lib/discord";
 import { enhanceGuildsWithBotInfo } from "@/lib/discord-server";
 import { GuildWithBot } from "@/types/discord";
 import {
-  Alert,
-  Box,
-  Typography
+    Alert,
+    Box,
+    Typography
 } from "@mui/material";
 
 export default async function ServersPage() {

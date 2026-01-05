@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
-import { notFound, redirect } from "next/navigation";
-import { fetchUserGuilds, hasManagePermission, fetchGuildChannels } from "@/lib/discord";
+import { fetchGuildChannels, fetchUserGuilds, hasManagePermission } from "@/lib/discord";
 import { isBotInGuild } from "@/lib/discord-server";
-import { Box, Typography, Breadcrumbs, Link as MuiLink, Button } from "@mui/material";
+import type { DiscordChannel } from "@/types/discord";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Box, Breadcrumbs, Button, Link as MuiLink, Typography } from "@mui/material";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { PlayerPageClient } from "./PlayerPageClient";
-import type { DiscordChannel } from "@/types/discord";
 
 export const dynamic = 'force-dynamic';
 
