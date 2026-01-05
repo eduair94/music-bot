@@ -1,6 +1,7 @@
 {
   "TOKEN": "",
   "MONGODB_URI": "",
+  "REDIS_URL": "redis://localhost:6379",
   "MAX_PLAYLIST_SIZE": 10,
   "PRUNING": false,
   "LOCALE": "en",

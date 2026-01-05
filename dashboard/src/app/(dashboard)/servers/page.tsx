@@ -3,9 +3,9 @@ import { ServerGrid } from "@/components/dashboard/ServerGrid";
 import { enhanceGuildsWithBotInfo, fetchUserGuilds, filterManageableGuilds } from "@/lib/discord";
 import { GuildWithBot } from "@/types/discord";
 import {
-    Alert,
-    Box,
-    Typography
+  Alert,
+  Box,
+  Typography
 } from "@mui/material";
 
 export default async function ServersPage() {

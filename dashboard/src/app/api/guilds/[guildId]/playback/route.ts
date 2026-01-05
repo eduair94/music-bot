@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
 import { IPlaybackState, PlaybackState } from "@/lib/models/PlaybackState";
 import { connectToDatabase } from "@/lib/mongodb";
+import { getPlaybackState as getRedisPlaybackState } from "@/lib/redis";
 import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
@@ -29,6 +30,13 @@ export async function GET(request: Request, { params }: RouteContext) {
   }
 
   try {
+    // Try Redis first (faster, more real-time)
+    const redisState = await getRedisPlaybackState(guildId);
+    if (redisState) {
+      return NextResponse.json(redisState);
+    }
+
+    // Fall back to MongoDB
     await connectToDatabase();
     const state = await PlaybackState.findOne({ guildId }).lean();
     

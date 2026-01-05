@@ -2,6 +2,11 @@ import { GuildQueue, Player, Track } from "discord-player";
 import { ChannelType, Client, VoiceChannel } from "discord.js";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
 import { ITrack, PlaybackState } from "../models/PlaybackState";
+import { 
+  setPlaybackState as setRedisPlaybackState, 
+  clearPlaybackState as clearRedisPlaybackState,
+  isRedisAvailable 
+} from "../shared/services/redis";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
 
 /**
@@ -166,28 +171,47 @@ export class DashboardSyncService {
         lastUpdated: new Date(),
       };
 
-      // Upsert the state
+      // Write to Redis first (faster, real-time)
+      try {
+        if (await isRedisAvailable()) {
+          await setRedisPlaybackState(guildId, state);
+        }
+      } catch (redisError) {
+        console.warn("[DashboardSync] Redis write failed, falling back to MongoDB only:", redisError);
+      }
+
+      // Upsert the state to MongoDB (backup/persistence)
       await PlaybackState.findOneAndUpdate(
         { guildId },
         state,
         { upsert: true, new: true }
       );
 
-      console.log(`[DashboardSync] ��� Updated playback state for guild ${guildId}`);
+      console.log(`[DashboardSync] 📤 Updated playback state for guild ${guildId}`);
     } catch (error) {
       console.error("[DashboardSync] ❌ Failed to update playback state:", error);
     }
   }
 
   /**
-   * Clear playback state from MongoDB
+   * Clear playback state from MongoDB and Redis
    */
   private async clearPlaybackState(guildId?: string): Promise<void> {
     if (!guildId) return;
 
     try {
+      // Clear from Redis first
+      try {
+        if (await isRedisAvailable()) {
+          await clearRedisPlaybackState(guildId);
+        }
+      } catch (redisError) {
+        console.warn("[DashboardSync] Redis clear failed:", redisError);
+      }
+
+      // Clear from MongoDB
       await PlaybackState.deleteOne({ guildId });
-      console.log(`[DashboardSync] ���️ Cleared playback state for guild ${guildId}`);
+      console.log(`[DashboardSync] 🗑️ Cleared playback state for guild ${guildId}`);
     } catch (error) {
       console.error("[DashboardSync] ❌ Failed to clear playback state:", error);
     }

@@ -17,6 +17,13 @@ import { DatabaseService } from "../services/database";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { PatreonService } from "../services/patreon";
+import { 
+  isRedisAvailable, 
+  syncBotGuilds, 
+  setBotInGuild, 
+  removeBotFromGuild,
+  setBotStatus
+} from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
@@ -34,6 +41,37 @@ export class Bot {
 
     this.client.on("ready", async () => {
       console.log(`${this.client.user!.username} ready!`);
+
+      // Initialize Redis and sync guilds
+      try {
+        if (await isRedisAvailable()) {
+          const guildIds = this.client.guilds.cache.map(g => g.id);
+          await syncBotGuilds(guildIds);
+          await setBotStatus({
+            online: true,
+            username: this.client.user!.username,
+            discriminator: this.client.user!.discriminator,
+            avatar: this.client.user!.avatar,
+            guildCount: guildIds.length,
+            startedAt: new Date().toISOString(),
+          });
+          console.log("✅ Redis sync completed");
+          
+          // Set up periodic guild refresh (every 3 minutes to prevent key expiration)
+          setInterval(async () => {
+            try {
+              const currentGuildIds = this.client.guilds.cache.map(g => g.id);
+              await syncBotGuilds(currentGuildIds);
+            } catch (error) {
+              console.error("[Redis] Periodic guild sync failed:", error);
+            }
+          }, 3 * 60 * 1000);
+        } else {
+          console.log("⚠️ Redis not available, skipping guild sync");
+        }
+      } catch (error) {
+        console.error("⚠️ Redis initialization skipped:", error);
+      }
 
       // Initialize database connection
       try {
@@ -113,6 +151,30 @@ export class Bot {
 
     this.client.on("warn", (info) => console.log(info));
     this.client.on("error", console.error);
+
+    // Guild join/leave events for Redis sync
+    this.client.on("guildCreate", async (guild) => {
+      console.log(`[Bot] Joined guild: ${guild.name} (${guild.id})`);
+      try {
+        await setBotInGuild(guild.id, {
+          name: guild.name,
+          icon: guild.icon,
+          memberCount: guild.memberCount,
+          joined: Date.now(),
+        });
+      } catch (error) {
+        console.error("[Redis] Failed to add guild:", error);
+      }
+    });
+
+    this.client.on("guildDelete", async (guild) => {
+      console.log(`[Bot] Left guild: ${guild.name} (${guild.id})`);
+      try {
+        await removeBotFromGuild(guild.id);
+      } catch (error) {
+        console.error("[Redis] Failed to remove guild:", error);
+      }
+    });
 
     this.onInteractionCreate();
   }
