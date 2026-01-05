@@ -175,6 +175,81 @@
     "cooldownMessage": "please wait {time} more second(s) before reusing the `{name}` command.",
     "errorCommand": "There was an error executing that command."
   },
+  "seek": {
+    "description": "Seek to a specific time in the track",
+    "errorNotQueue": "There is nothing playing.",
+    "errorInvalidTime": "Invalid time format. Use formats like: 1:30, 90, 1m30s",
+    "errorOutOfRange": "Time must be between 0:00 and {duration}",
+    "result": "<@{author}> ⏩ seeked to **{time}**"
+  },
+  "forward": {
+    "description": "Fast forward the track by specified seconds",
+    "errorNotQueue": "There is nothing playing.",
+    "errorNearEnd": "Cannot forward, too close to the end of the track.",
+    "result": "<@{author}> ⏩ forwarded **{seconds}s** (now at {position})"
+  },
+  "rewind": {
+    "description": "Rewind the track by specified seconds",
+    "errorNotQueue": "There is nothing playing.",
+    "result": "<@{author}> ⏪ rewound **{seconds}s** (now at {position})"
+  },
+  "replay": {
+    "description": "Restart the current track from the beginning",
+    "errorNotQueue": "There is nothing playing.",
+    "result": "<@{author}> 🔄 restarted **{title}**"
+  },
+  "clear": {
+    "description": "Clear the entire queue",
+    "errorNotQueue": "The queue is already empty.",
+    "result": "<@{author}> 🗑️ cleared **{count}** tracks from the queue"
+  },
+  "loopqueue": {
+    "description": "Toggle queue loop mode",
+    "errorNotQueue": "There is nothing playing.",
+    "result": "🔁 Queue loop is now {loop}"
+  },
+  "join": {
+    "description": "Make the bot join your voice channel",
+    "errorDifferentChannel": "I'm already in a different voice channel.",
+    "errorCantJoin": "I couldn't join your voice channel.",
+    "result": "✅ Joined **{channel}**"
+  },
+  "leave": {
+    "description": "Make the bot leave the voice channel",
+    "errorNotInChannel": "I'm not in a voice channel.",
+    "result": "👋 Left **{channel}**"
+  },
+  "save": {
+    "description": "Save the current song to your DMs",
+    "errorNotQueue": "There is nothing playing.",
+    "errorDMClosed": "I couldn't send you a DM. Please enable DMs from server members.",
+    "result": "💾 Sent **{title}** to your DMs!"
+  },
+  "autoplay": {
+    "description": "Toggle autoplay mode (play similar songs when queue ends)",
+    "errorNotQueue": "There is no active queue.",
+    "result": "🔄 Autoplay is now {status}"
+  },
+  "history": {
+    "description": "Show recently played tracks",
+    "errorNotQueue": "There is no active queue.",
+    "errorEmpty": "No tracks in history yet.",
+    "embedTitle": "Recently Played",
+    "footer": "Showing last {count} tracks"
+  },
+  "previous": {
+    "description": "Play the previous track",
+    "errorNotQueue": "There is no active queue.",
+    "errorNoHistory": "No previous tracks in history.",
+    "result": "<@{author}> ⏮️ playing previous track"
+  },
+  "jump": {
+    "description": "Jump to a specific position in the queue",
+    "errorNotQueue": "There is no queue.",
+    "errorInvalidPosition": "Invalid position. Queue only has {max} tracks.",
+    "errorNotFound": "Track not found at that position.",
+    "result": "<@{author}> ⏭️ jumped to **{title}**"
+  },
   "Invite me to your server!": "Invite me to your server!",
   "Invite": "Invite"
 }

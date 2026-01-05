@@ -143,6 +143,8 @@ export interface IGuildSettings {
   autoLeaveTimeout: number;
   /** Prevent duplicate songs in queue */
   preventDuplicates: boolean;
+  /** Vote skip percentage (0-100) */
+  voteSkipPercentage: number;
 
   // Premium Features
   /** Premium configuration */

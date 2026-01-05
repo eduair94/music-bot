@@ -7,62 +7,82 @@ interface Feature {
   title: string;
   description: string;
   command?: string;
+  isNew?: boolean;
 }
 
 const features: Feature[] = [
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-    title: "Play from YouTube",
-    description: "Play any song or video from YouTube using URLs or search queries. Crystal clear audio quality.",
-    command: "/play <song name or URL>",
+    title: "Multi-Source Playback",
+    description: "Play music from YouTube, Spotify, SoundCloud, and more. Just paste a link or search by name.",
+    command: "/play <song or URL>",
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>,
     title: "Playlist Support",
-    description: "Add entire YouTube playlists to your queue. Perfect for long gaming sessions or study time.",
-    command: "/playlist <playlist URL>",
+    description: "Add entire playlists from YouTube or Spotify. Perfect for parties, gaming sessions, or background music.",
+    command: "/playlist <URL>",
   },
   {
-    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>,
-    title: "Smart Search",
-    description: "Search and select from multiple results. Choose exactly the song you want to play.",
-    command: "/search <query>",
+    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>,
+    title: "Audio Filters",
+    description: "Apply bassboost, nightcore, 8D audio, echo, tremolo, and more effects for unique listening experiences.",
+    command: "/bassboost | /8d | /nightcore",
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>,
-    title: "Loop and Shuffle",
-    description: "Loop your favorite songs or shuffle the queue for a fresh listening experience.",
-    command: "/loop | /shuffle",
+    title: "Queue Management",
+    description: "Full queue control - shuffle, sort, move, swap, reverse, remove duplicates, and more.",
+    command: "/queue | /shuffle | /move",
+  },
+  {
+    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+    title: "Insert & Play Next",
+    description: "Insert tracks right after the current song without disrupting your queue order.",
+    command: "/insert <song>",
+    isNew: true,
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 0112.728 0" /></svg>,
     title: "Volume Control",
-    description: "Adjust the volume to your liking. Perfect control over your audio experience.",
+    description: "Fine-tune the volume from 0 to 100. Perfect control over your audio experience.",
     command: "/volume <0-100>",
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>,
     title: "Now Playing",
-    description: "See whats currently playing with beautiful embeds showing duration and progress.",
+    description: "Beautiful embeds showing track info, duration, progress bar, and interactive controls.",
     command: "/nowplaying",
-  },
-  {
-    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg>,
-    title: "Queue Management",
-    description: "View, reorder, and manage your music queue with ease. Skip, remove, or move songs.",
-    command: "/queue | /skip | /remove",
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>,
     title: "Lyrics Display",
     description: "Get song lyrics displayed right in Discord. Sing along to your favorite tracks.",
-    command: "/lyrics",
+    command: "/lyrics [song]",
   },
   {
     icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>,
     title: "27+ Languages",
-    description: "Fully localized in 27+ languages including English, Spanish, Japanese, and more.",
+    description: "Fully localized in 27+ languages including English, Spanish, Japanese, French, and more.",
     command: "/settings language",
+  },
+  {
+    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2h2m3-4H9a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-1m-1 4l-3 3m0 0l-3-3m3 3V3" /></svg>,
+    title: "Save to DMs",
+    description: "Love a song? Save track info directly to your DMs to listen later or share with friends.",
+    command: "/save | /grab",
+  },
+  {
+    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>,
+    title: "Vote Skip",
+    description: "Democratic skip voting - let your server decide which songs to skip together.",
+    command: "/voteskip",
+  },
+  {
+    icon: <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>,
+    title: "Premium Features",
+    description: "Unlock higher bitrate, custom identity, and exclusive features with Patreon support.",
+    command: "/premium",
   },
 ];
 
@@ -108,9 +128,14 @@ export default function Features() {
               key={index}
               ref={(el) => { cardsRef.current[index] = el; }}
               data-index={index}
-              className={`glass-card rounded-2xl p-6 transition-all duration-500 hover:border-[#5865f2]/50 hover:shadow-lg hover:shadow-[#5865f2]/10 group ${visibleCards.has(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+              className={`glass-card rounded-2xl p-6 transition-all duration-500 hover:border-[#5865f2]/50 hover:shadow-lg hover:shadow-[#5865f2]/10 group relative ${visibleCards.has(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
               style={{ transitionDelay: `${index * 50}ms` }}
             >
+              {feature.isNew && (
+                <span className="absolute top-4 right-4 px-2 py-0.5 text-xs rounded-full bg-green-500/20 text-green-400 font-medium animate-pulse">
+                  NEW
+                </span>
+              )}
               <div className="w-14 h-14 rounded-xl bg-[#5865f2]/20 flex items-center justify-center text-[#5865f2] mb-4 group-hover:bg-[#5865f2] group-hover:text-white transition-all duration-300">
                 {feature.icon}
               </div>

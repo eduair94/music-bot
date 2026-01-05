@@ -1,0 +1,48 @@
+import { QueueRepeatMode } from "discord-player";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { DiscordPlayerService } from "../services/discordPlayer";
+import { logAction } from "../utils/actionLog";
+import { hasDJPermission } from "../utils/djPermission";
+import { i18n } from "../utils/i18n";
+import { canModifyQueue } from "../utils/queue";
+
+export default {
+  data: new SlashCommandBuilder()
+    .setName("loopqueue")
+    .setDescription(i18n.__("loopqueue.description")),
+  async execute(interaction: ChatInputCommandInteraction) {
+    await interaction.deferReply().catch(console.error);
+    
+    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
+
+    if (!guildMember || !canModifyQueue(guildMember)) {
+      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
+    }
+
+    const hasDJ = await hasDJPermission(guildMember as GuildMember);
+    if (!hasDJ) {
+      return interaction.editReply({ 
+        content: "❌ You need the DJ role to use this command."
+      }).catch(console.error);
+    }
+
+    const playerService = DiscordPlayerService.getInstance();
+    const queue = playerService.getQueue(interaction.guild!.id);
+    
+    if (!queue || !queue.currentTrack) {
+      return interaction.editReply({ content: i18n.__("loopqueue.errorNotQueue") }).catch(console.error);
+    }
+
+    // Toggle between no repeat and queue repeat
+    const currentMode = queue.repeatMode;
+    const newMode = currentMode === QueueRepeatMode.QUEUE ? QueueRepeatMode.OFF : QueueRepeatMode.QUEUE;
+    queue.setRepeatMode(newMode);
+    
+    const isLooping = newMode === QueueRepeatMode.QUEUE;
+    
+    await logAction(interaction.guild!, interaction.user, "loopqueue", isLooping ? "On" : "Off");
+    
+    const content = i18n.__mf("loopqueue.result", { loop: isLooping ? i18n.__("common.on") : i18n.__("common.off") });
+    return interaction.editReply({ content }).catch(console.error);
+  }
+};

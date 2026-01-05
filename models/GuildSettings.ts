@@ -86,6 +86,12 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
       type: Boolean, 
       default: false 
     },
+    voteSkipPercentage: { 
+      type: Number, 
+      default: 50, 
+      min: 0, 
+      max: 100 
+    },
     
     // Premium Features
     premium: {

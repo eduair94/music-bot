@@ -43,6 +43,7 @@ export class GuildSettingsService {
       autoLeaveEmpty: true,
       autoLeaveTimeout: 300,
       preventDuplicates: false,
+      voteSkipPercentage: 50,
       premium: {
         enabled: false,
         tier: "free",

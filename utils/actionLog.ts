@@ -6,9 +6,12 @@ import { GuildSettingsService } from "../services/guildSettings";
  */
 export type ActionType = 
   | "play" | "pause" | "resume" | "stop" | "skip"
-  | "seek_forward" | "seek_backward" 
-  | "volume_change" | "shuffle" | "loop"
-  | "setting_change" | "queue_clear";
+  | "seek" | "seek_forward" | "seek_backward" | "forward" | "rewind" | "replay" | "backward"
+  | "volume_change" | "shuffle" | "loop" | "loopqueue"
+  | "setting_change" | "queue_clear" | "clear"
+  | "join" | "leave" | "autoplay" | "previous" | "jump"
+  | "swap" | "reverse" | "sort" | "removerange" | "removeduplicates" | "removelast"
+  | "voteskip" | "grab" | "restart" | "insert" | "removecurrent";
 
 /**
  * Get the log channel for a guild
@@ -51,15 +54,38 @@ function getActionEmoji(action: ActionType): string {
     resume: "▶️",
     stop: "⏹️",
     skip: "⏭️",
+    seek: "⏩",
     seek_forward: "⏩",
     seek_backward: "⏪",
-    volume_change: "���",
-    shuffle: "���",
-    loop: "���",
+    forward: "⏩",
+    rewind: "⏪",
+    backward: "⏪",
+    replay: "🔄",
+    restart: "🔄",
+    volume_change: "🔊",
+    shuffle: "🔀",
+    loop: "🔁",
+    loopqueue: "🔁",
     setting_change: "⚙️",
-    queue_clear: "���️",
+    queue_clear: "🗑️",
+    clear: "🗑️",
+    join: "📥",
+    leave: "👋",
+    autoplay: "🔄",
+    previous: "⏮️",
+    jump: "⏭️",
+    swap: "🔀",
+    reverse: "🔄",
+    sort: "📊",
+    removerange: "❌",
+    removeduplicates: "🧹",
+    removelast: "↩️",
+    voteskip: "🗳️",
+    grab: "💾",
+    insert: "⏭️",
+    removecurrent: "🗑️",
   };
-  return emojis[action] || "���";
+  return emojis[action] || "🎵";
 }
 
 /**
@@ -72,13 +98,36 @@ function getActionDescription(action: ActionType, details?: string): string {
     resume: "Resumed playback",
     stop: "Stopped playback",
     skip: "Skipped track",
+    seek: "Seeked to position",
     seek_forward: "Seeked forward",
     seek_backward: "Seeked backward",
+    forward: "Fast forwarded",
+    rewind: "Rewound",
+    backward: "Rewound",
+    replay: "Restarted track",
+    restart: "Restarted queue",
     volume_change: "Changed volume",
     shuffle: "Shuffled queue",
     loop: "Changed loop mode",
+    loopqueue: "Changed queue loop mode",
     setting_change: "Updated settings",
     queue_clear: "Cleared queue",
+    clear: "Cleared queue",
+    join: "Joined channel",
+    leave: "Left channel",
+    autoplay: "Toggled autoplay",
+    previous: "Played previous track",
+    jump: "Jumped to track",
+    swap: "Swapped tracks",
+    reverse: "Reversed queue",
+    sort: "Sorted queue",
+    removerange: "Removed range",
+    removeduplicates: "Removed duplicates",
+    removelast: "Removed last track",
+    voteskip: "Vote skipped",
+    grab: "Grabbed track",
+    insert: "Inserted track",
+    removecurrent: "Removed current track",
   };
   
   let desc = descriptions[action] || action;
