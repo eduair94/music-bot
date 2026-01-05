@@ -141,7 +141,47 @@ export async function getBotGuildIds(): Promise<string[]> {
 }
 
 /**
- * Sync all bot guilds to Redis (call on bot startup)
+ * Guild data interface for admin analytics
+ */
+export interface GuildData {
+  id: string;
+  name: string;
+  icon: string | null;
+  memberCount: number;
+  ownerId: string;
+  joinedAt: number;
+  isPlaying?: boolean;
+}
+
+/**
+ * Sync all bot guilds to Redis with detailed data (call on bot startup)
+ */
+export async function syncBotGuildsWithData(guilds: GuildData[]): Promise<void> {
+  const redis = getRedis();
+  const pipeline = redis.pipeline();
+  
+  // Clear existing and add all current guilds
+  pipeline.del(REDIS_KEYS.BOT_GUILDS);
+  if (guilds.length > 0) {
+    pipeline.sadd(REDIS_KEYS.BOT_GUILDS, ...guilds.map(g => g.id));
+  }
+  
+  // Set individual guild keys with detailed data
+  for (const guild of guilds) {
+    pipeline.set(
+      REDIS_KEYS.BOT_GUILD(guild.id), 
+      JSON.stringify(guild), 
+      "EX", 
+      REDIS_TTL.BOT_GUILDS
+    );
+  }
+  
+  await pipeline.exec();
+  console.log(`[Redis] Synced ${guilds.length} guilds with detailed data`);
+}
+
+/**
+ * Sync all bot guilds to Redis (call on bot startup) - simple version
  */
 export async function syncBotGuilds(guildIds: string[]): Promise<void> {
   const redis = getRedis();
@@ -165,6 +205,47 @@ export async function syncBotGuilds(guildIds: string[]): Promise<void> {
   
   await pipeline.exec();
   console.log(`[Redis] Synced ${guildIds.length} guilds`);
+}
+
+/**
+ * Get detailed data for a guild
+ */
+export async function getBotGuildData(guildId: string): Promise<GuildData | null> {
+  const redis = getRedis();
+  const data = await redis.get(REDIS_KEYS.BOT_GUILD(guildId));
+  return data ? JSON.parse(data) : null;
+}
+
+/**
+ * Get all guilds with their detailed data
+ */
+export async function getAllBotGuildsData(): Promise<GuildData[]> {
+  const redis = getRedis();
+  const guildIds = await redis.smembers(REDIS_KEYS.BOT_GUILDS);
+  
+  if (guildIds.length === 0) return [];
+  
+  const pipeline = redis.pipeline();
+  for (const guildId of guildIds) {
+    pipeline.get(REDIS_KEYS.BOT_GUILD(guildId));
+  }
+  
+  const results = await pipeline.exec();
+  const guilds: GuildData[] = [];
+  
+  if (results) {
+    for (const [err, data] of results) {
+      if (!err && data) {
+        try {
+          guilds.push(JSON.parse(data as string));
+        } catch {
+          // Skip invalid JSON
+        }
+      }
+    }
+  }
+  
+  return guilds;
 }
 
 // ============ Playback State ============

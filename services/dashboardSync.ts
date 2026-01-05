@@ -2,10 +2,10 @@ import { GuildQueue, Player, Track } from "discord-player";
 import { ChannelType, Client, VoiceChannel } from "discord.js";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
 import { ITrack, PlaybackState } from "../models/PlaybackState";
-import { 
-  setPlaybackState as setRedisPlaybackState, 
-  clearPlaybackState as clearRedisPlaybackState,
-  isRedisAvailable 
+import {
+    clearPlaybackState as clearRedisPlaybackState,
+    isRedisAvailable,
+    setPlaybackState as setRedisPlaybackState
 } from "../shared/services/redis";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
 

@@ -17,12 +17,13 @@ import { DatabaseService } from "../services/database";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { PatreonService } from "../services/patreon";
-import { 
-  isRedisAvailable, 
-  syncBotGuilds, 
-  setBotInGuild, 
-  removeBotFromGuild,
-  setBotStatus
+import {
+    GuildData,
+    isRedisAvailable,
+    removeBotFromGuild,
+    setBotInGuild,
+    setBotStatus,
+    syncBotGuildsWithData
 } from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
@@ -42,17 +43,24 @@ export class Bot {
     this.client.on("ready", async () => {
       console.log(`${this.client.user!.username} ready!`);
 
-      // Initialize Redis and sync guilds
+      // Initialize Redis and sync guilds with detailed data
       try {
         if (await isRedisAvailable()) {
-          const guildIds = this.client.guilds.cache.map(g => g.id);
-          await syncBotGuilds(guildIds);
+          const guildsData: GuildData[] = this.client.guilds.cache.map(g => ({
+            id: g.id,
+            name: g.name,
+            icon: g.icon,
+            memberCount: g.memberCount,
+            ownerId: g.ownerId,
+            joinedAt: g.joinedTimestamp || Date.now(),
+          }));
+          await syncBotGuildsWithData(guildsData);
           await setBotStatus({
             online: true,
             username: this.client.user!.username,
             discriminator: this.client.user!.discriminator,
             avatar: this.client.user!.avatar,
-            guildCount: guildIds.length,
+            guildCount: guildsData.length,
             startedAt: new Date().toISOString(),
           });
           console.log("✅ Redis sync completed");
@@ -60,8 +68,15 @@ export class Bot {
           // Set up periodic guild refresh (every 3 minutes to prevent key expiration)
           setInterval(async () => {
             try {
-              const currentGuildIds = this.client.guilds.cache.map(g => g.id);
-              await syncBotGuilds(currentGuildIds);
+              const currentGuildsData: GuildData[] = this.client.guilds.cache.map(g => ({
+                id: g.id,
+                name: g.name,
+                icon: g.icon,
+                memberCount: g.memberCount,
+                ownerId: g.ownerId,
+                joinedAt: g.joinedTimestamp || Date.now(),
+              }));
+              await syncBotGuildsWithData(currentGuildsData);
             } catch (error) {
               console.error("[Redis] Periodic guild sync failed:", error);
             }

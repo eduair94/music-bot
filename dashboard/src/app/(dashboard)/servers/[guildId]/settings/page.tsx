@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { ServerSettingsForm } from "@/components/dashboard/ServerSettingsForm";
-import { fetchGuildChannels, fetchGuildRoles, fetchUserGuilds, hasManagePermission, isBotInGuild } from "@/lib/discord";
+import { fetchGuildChannels, fetchGuildRoles, fetchUserGuilds, hasManagePermission } from "@/lib/discord";
+import { isBotInGuild } from "@/lib/discord-server";
 import { GuildSettingsModel } from "@/lib/models/GuildSettings";
 import { connectToDatabase } from "@/lib/mongodb";
 import type { DiscordChannel, DiscordRole, GuildSettings } from "@/types/discord";

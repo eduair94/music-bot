@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { ServerGrid } from "@/components/dashboard/ServerGrid";
-import { enhanceGuildsWithBotInfo, fetchUserGuilds, filterManageableGuilds } from "@/lib/discord";
+import { fetchUserGuilds, filterManageableGuilds } from "@/lib/discord";
+import { enhanceGuildsWithBotInfo } from "@/lib/discord-server";
 import { GuildWithBot } from "@/types/discord";
 import {
   Alert,

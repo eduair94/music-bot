@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import { redirect } from "next/navigation";
 
 const DRAWER_WIDTH = 280;
+const OWNER_ID = process.env.OWNER_ID || process.env.DISCORD_OWNER_ID;
 
 export default async function DashboardLayout({
   children,
@@ -17,9 +18,12 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  // Check if user is the bot owner
+  const isOwner = session.user?.discordId === OWNER_ID;
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      <DashboardSidebar width={DRAWER_WIDTH} />
+      <DashboardSidebar width={DRAWER_WIDTH} isOwner={isOwner} />
       <Box
         component="main"
         sx={{

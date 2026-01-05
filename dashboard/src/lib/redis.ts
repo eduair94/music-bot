@@ -1,3 +1,4 @@
+import "server-only";
 import Redis from "ioredis";
 
 // Redis key prefixes - must match the bot's shared/services/redis.ts
@@ -116,5 +117,73 @@ export async function getBotStatus(): Promise<Record<string, unknown> | null> {
   } catch (error) {
     console.error("[Redis] Error getting bot status:", error);
     return null;
+  }
+}
+
+/**
+ * Guild data interface for admin analytics
+ */
+export interface GuildData {
+  id: string;
+  name: string;
+  icon: string | null;
+  memberCount: number;
+  ownerId: string;
+  joinedAt: number;
+  isPlaying?: boolean;
+}
+
+/**
+ * Get detailed data for a specific guild
+ */
+export async function getBotGuildData(guildId: string): Promise<GuildData | null> {
+  try {
+    const redis = getRedis();
+    if (!redis) return null;
+    
+    const data = await redis.get(REDIS_KEYS.BOT_GUILD(guildId));
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.error("[Redis] Error getting guild data:", error);
+    return null;
+  }
+}
+
+/**
+ * Get all guilds with their detailed data (for admin page)
+ */
+export async function getAllBotGuildsData(): Promise<GuildData[]> {
+  try {
+    const redis = getRedis();
+    if (!redis) return [];
+    
+    const guildIds = await redis.smembers(REDIS_KEYS.BOT_GUILDS);
+    
+    if (guildIds.length === 0) return [];
+    
+    const pipeline = redis.pipeline();
+    for (const guildId of guildIds) {
+      pipeline.get(REDIS_KEYS.BOT_GUILD(guildId));
+    }
+    
+    const results = await pipeline.exec();
+    const guilds: GuildData[] = [];
+    
+    if (results) {
+      for (const [err, data] of results) {
+        if (!err && data) {
+          try {
+            guilds.push(JSON.parse(data as string));
+          } catch {
+            // Skip invalid JSON
+          }
+        }
+      }
+    }
+    
+    return guilds;
+  } catch (error) {
+    console.error("[Redis] Error getting all guilds data:", error);
+    return [];
   }
 }

@@ -1,5 +1,4 @@
 import { DiscordChannel, DiscordGuild, DiscordRole, GuildWithBot } from "@/types/discord";
-import { isBotInGuildRedis, getBotGuildIds } from "./redis";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 const MANAGE_GUILD_PERMISSION = 0x20; // MANAGE_GUILD permission bit
@@ -201,17 +200,11 @@ export async function fetchGuildRoles(guildId: string): Promise<DiscordRole[]> {
 }
 
 /**
- * Check if bot is in a specific guild
- * First checks Redis (fast), then falls back to Discord API (slow)
+ * Check if bot is in a specific guild (client-safe version)
+ * Uses Discord API with caching - for server-side Redis version use discord-server.ts
  */
 export async function isBotInGuild(guildId: string): Promise<boolean> {
-  // Try Redis first (much faster, no rate limits)
-  const redisResult = await isBotInGuildRedis(guildId);
-  if (redisResult !== null) {
-    return redisResult;
-  }
-
-  // Fall back to Discord API with caching
+  // Use Discord API with caching
   const cacheKey = `botInGuild:${guildId}`;
   const cached = getCached<boolean>(cacheKey);
   if (cached !== null) {
@@ -257,23 +250,10 @@ export function getServerBotInviteUrl(guildId?: string): string {
 
 /**
  * Enhance guilds with bot presence info (with rate limit protection)
- * Uses Redis for fast bulk lookup when available
+ * Client-safe version - for Redis-enhanced version use discord-server.ts
  */
 export async function enhanceGuildsWithBotInfo(guilds: DiscordGuild[]): Promise<GuildWithBot[]> {
-  // Try to get all bot guild IDs from Redis first (fastest)
-  const botGuildIds = await getBotGuildIds();
-  
-  if (botGuildIds !== null) {
-    // Fast path: use Redis data
-    const botGuildSet = new Set(botGuildIds);
-    return guilds.map((guild) => ({
-      ...guild,
-      botInGuild: botGuildSet.has(guild.id),
-      hasManagePermission: hasManagePermission(guild.permissions),
-    }));
-  }
-  
-  // Fallback: Process guilds in batches of 5 to avoid rate limiting
+  // Process guilds in batches of 5 to avoid rate limiting
   const BATCH_SIZE = 5;
   const results: GuildWithBot[] = [];
   

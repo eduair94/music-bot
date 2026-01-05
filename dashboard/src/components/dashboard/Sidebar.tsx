@@ -1,5 +1,6 @@
 "use client";
 
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HelpIcon from "@mui/icons-material/Help";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
@@ -26,6 +27,7 @@ import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   width: number;
+  isOwner?: boolean;
 }
 
 const menuItems = [
@@ -64,7 +66,13 @@ const bottomMenuItems = [
   },
 ];
 
-export function DashboardSidebar({ width }: SidebarProps) {
+const adminMenuItem = {
+  title: "Admin",
+  path: "/admin",
+  icon: <AdminPanelSettingsIcon />,
+};
+
+export function DashboardSidebar({ width, isOwner }: SidebarProps) {
   const pathname = usePathname();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -138,6 +146,42 @@ export function DashboardSidebar({ width }: SidebarProps) {
               </ListItemButton>
             </ListItem>
           ))}
+          
+          {/* Admin Menu Item - Only for bot owner */}
+          {isOwner && (
+            <ListItem disablePadding sx={{ mb: 0.5 }}>
+              <ListItemButton
+                component={Link}
+                href={adminMenuItem.path}
+                selected={pathname === adminMenuItem.path}
+                sx={{
+                  borderRadius: 2,
+                  background: pathname === adminMenuItem.path
+                    ? alpha("#EB459E", 0.15)
+                    : "transparent",
+                  "&:hover": {
+                    background: alpha("#EB459E", 0.1),
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: pathname === adminMenuItem.path ? "#EB459E" : "text.secondary",
+                    minWidth: 40,
+                  }}
+                >
+                  {adminMenuItem.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={adminMenuItem.title}
+                  primaryTypographyProps={{
+                    fontWeight: pathname === adminMenuItem.path ? 600 : 400,
+                    color: pathname === adminMenuItem.path ? "#EB459E" : undefined,
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )}
         </List>
       </Box>
 

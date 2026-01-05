@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { notFound, redirect } from "next/navigation";
-import { fetchUserGuilds, hasManagePermission, isBotInGuild, fetchGuildChannels } from "@/lib/discord";
+import { fetchUserGuilds, hasManagePermission, fetchGuildChannels } from "@/lib/discord";
+import { isBotInGuild } from "@/lib/discord-server";
 import { Box, Typography, Breadcrumbs, Link as MuiLink, Button } from "@mui/material";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import SettingsIcon from "@mui/icons-material/Settings";
