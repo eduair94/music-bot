@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()

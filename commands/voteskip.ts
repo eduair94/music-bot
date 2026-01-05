@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { logAction } from "../utils/actionLog";

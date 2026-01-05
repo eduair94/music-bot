@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { GuildSettingsService } from "../services/guildSettings";
 import { logAction } from "../utils/actionLog";
 import { getPlaybackSettings } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";

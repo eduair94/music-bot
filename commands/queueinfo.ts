@@ -1,6 +1,5 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { i18n } from "../utils/i18n";
 
 function formatDuration(ms: number): string {
   const seconds = Math.floor(ms / 1000);
