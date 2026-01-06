@@ -8,20 +8,25 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Chip,
 } from '@mui/material';
 import {
   MusicNote,
-  Group,
-  Storage,
-  TrendingUp,
+  QueueMusic,
+  WorkspacePremium,
+  LibraryMusic,
+  Headphones,
 } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 
 interface Stats {
-  totalServers: number;
-  c: number;
-  premiumServers: number;
-  playlistsCreated: number;
+  collectionsCount: number;
+  totalTracks: number;
+  premiumGuildsCount: number;
+  isPremium: boolean;
+  isFounder: boolean;
+  tierTitle: string | null;
+  audioBitrate: number;
 }
 
 export default function DashboardPage() {
@@ -61,36 +66,48 @@ export default function DashboardPage() {
 
   const statCards = [
     {
-      title: 'Your Servers',
-      value: stats?.totalServers ?? '-',
-      icon: <Group sx={{ fontSize: 40 }} />,
+      title: 'Saved Playlists',
+      value: stats?.collectionsCount ?? '-',
+      icon: <LibraryMusic sx={{ fontSize: 40 }} />,
+      color: '#EB459E',
+    },
+    {
+      title: 'Total Tracks',
+      value: stats?.totalTracks ?? '-',
+      icon: <QueueMusic sx={{ fontSize: 40 }} />,
       color: '#5865F2',
     },
     {
-      title: 'Servers with Bot',
-      value: stats?.serversWithBot ?? '-',
-      icon: <MusicNote sx={{ fontSize: 40 }} />,
-      color: '#57F287',
-    },
-    {
       title: 'Premium Servers',
-      value: stats?.premiumServers ?? '-',
-      icon: <TrendingUp sx={{ fontSize: 40 }} />,
+      value: stats?.premiumGuildsCount ?? '-',
+      icon: <WorkspacePremium sx={{ fontSize: 40 }} />,
       color: '#FEE75C',
     },
     {
-      title: 'Saved Playlists',
-      value: stats?.playlistsCreated ?? '-',
-      icon: <Storage sx={{ fontSize: 40 }} />,
-      color: '#EB459E',
+      title: 'Audio Quality',
+      value: stats ? `${stats.audioBitrate}kbps` : '-',
+      icon: <Headphones sx={{ fontSize: 40 }} />,
+      color: '#57F287',
     },
   ];
 
   return (
     <Box>
-      <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Welcome back, {session?.user?.name}!
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+        <Typography variant="h4" fontWeight="bold">
+          Welcome back, {session?.user?.name}!
+        </Typography>
+        {stats?.isPremium && (
+          <Chip 
+            label={stats.isFounder ? "🌟 Founder" : stats.tierTitle || "Premium"}
+            sx={{ 
+              bgcolor: stats.isFounder ? '#F96854' : '#5865F2',
+              color: 'white',
+              fontWeight: 600,
+            }}
+          />
+        )}
+      </Box>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
         Manage your music bot settings and view statistics
       </Typography>
