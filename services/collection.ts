@@ -1,6 +1,6 @@
-import { Collection, ICollection, ICollectionTrack } from "../models/Collection";
 import { Track } from "discord-player";
 import { nanoid } from "nanoid";
+import { Collection, ICollection, ICollectionTrack } from "../models/Collection";
 
 /**
  * CollectionService - Manages user collections/playlists

@@ -1,10 +1,10 @@
-import { 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
-  SlashCommandBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle
+import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder
 } from "discord.js";
 import { i18n } from "../utils/i18n";
 // @ts-ignore
