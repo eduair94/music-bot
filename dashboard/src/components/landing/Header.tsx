@@ -31,9 +31,9 @@ export default function Header() {
 
   const navLinks = [
     { href: "#features", label: "Features" },
-    { href: "#commands", label: "Commands" },
-    { href: "#pricing", label: "Premium" },
-    { href: "#faq", label: "FAQ" },
+    { href: "/commands", label: "Commands", isRoute: true },
+    { href: "/install", label: "Install", isRoute: true },
+    { href: "/support", label: "Support", isRoute: true },
     { href: "/dashboard", label: "Dashboard", isRoute: true },
   ];
 
@@ -64,7 +64,7 @@ export default function Header() {
             </div>
 
             <div className="hidden md:flex items-center gap-4">
-              <a href="https://www.patreon.com/cw/BypassDiscordBot" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 text-[#f96854] hover:bg-[#f96854]/10 rounded-lg transition-colors font-medium">
+              <a href="https://patreon.com/u36360623" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 text-[#f96854] hover:bg-[#f96854]/10 rounded-lg transition-colors font-medium">
                 <FaPatreon className="w-5 h-5" />
                 Patreon
               </a>
@@ -143,7 +143,7 @@ export default function Header() {
           {/* Sidebar Footer */}
           <div className="p-6 border-t border-white/10 space-y-3">
             <a
-              href="https://www.patreon.com/cw/BypassDiscordBot"
+              href="https://patreon.com/u36360623"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-4 py-3 text-[#f96854] border border-[#f96854]/30 hover:bg-[#f96854]/10 rounded-xl transition-colors font-medium"

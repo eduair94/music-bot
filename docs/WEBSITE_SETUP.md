@@ -144,7 +144,7 @@ Update the Patreon URL in:
 - `Footer.tsx` - Footer Patreon link
 - `Pricing.tsx` - Pricing tier CTAs
 
-Current Patreon: `https://www.patreon.com/cw/BypassDiscordBot`
+Current Patreon: `https://patreon.com/u36360623`
 
 ### Discord Links
 

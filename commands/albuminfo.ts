@@ -1,7 +1,6 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { useQueue } from "discord-player";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { i18n } from "../utils/i18n";
 
 const SPOTIFY_API_BASE = "https://trustpilot.digitalshopuy.com/spotify-data";
 

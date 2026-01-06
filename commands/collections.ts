@@ -1,8 +1,8 @@
 import { useQueue } from "discord-player";
 import {
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  SlashCommandBuilder
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder
 } from "discord.js";
 import { collectionService } from "../services/collection";
 import { i18n } from "../utils/i18n";

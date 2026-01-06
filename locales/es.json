@@ -163,5 +163,10 @@
     "errorNotChannel": "¡Primero debes unirte a un canal de voz!",
     "cooldownMessage": "Por favor espera {time} segundos antes de volver a usar el comando `{name}`.",
     "errorCommand": "Se produjo un error con ese comando."
+  },
+  "nightcore": {
+    "description": "Activa o desactiva el efecto nightcore en la música",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "result": "<@{author}> 🎵 El efecto nightcore ahora está {status}"
   }
 }

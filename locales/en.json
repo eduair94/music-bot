@@ -895,7 +895,7 @@
     "title": "⭐ Premium Perks",
     "description": "Upgrade to premium to unlock these amazing features!",
     "how_to_get": "How to Get Premium",
-    "patreon_link": "Support us on Patreon: https://patreon.com/yourbot",
+    "patreon_link": "Support us on Patreon: https://patreon.com/u36360623",
     "user_title": "Your Premium Status",
     "user_premium": "You have **{tier}** premium! 🎉",
     "your_perks": "Your Active Perks",
@@ -938,5 +938,10 @@
     "cleared_success": "All server aliases have been cleared.",
     "not_found": "That alias doesn't exist.",
     "no_spaces": "Alias names cannot contain spaces."
+  },
+  "nightcore": {
+    "description": "Toggle nightcore effect on the music",
+    "errorNotQueue": "There is nothing playing.",
+    "result": "<@{author}> 🎵 Nightcore effect is now {status}"
   }
 }
