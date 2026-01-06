@@ -7,10 +7,10 @@ export default {
     .setDescription(i18n.__("support.description")),
   cooldown: 5,
   async execute(interaction: CommandInteraction) {
-    const supportUrl = process.env.SUPPORT_SERVER || "https://discord.gg/your-server";
+    const supportUrl = process.env.SUPPORT_SERVER || "https://music-bot.checkleaked.com/support";
     
     const embed = new EmbedBuilder()
-      .setTitle("í²¬ Support Server")
+      .setTitle("Support Server")
       .setDescription(i18n.__mf("support.embedDescription", { url: supportUrl }))
       .setColor("#F8AA2A")
       .addFields({

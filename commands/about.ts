@@ -51,7 +51,7 @@ export default {
           name: "🔗 Links",
           value: [
             `[Dashboard](${process.env.DASHBOARD_URL || 'https://your-dashboard.com'})`,
-            `[Support Server](${process.env.SUPPORT_SERVER || 'https://discord.gg/your-server'})`,
+            `[Support Server](${process.env.SUPPORT_SERVER || 'https://discord.gg/5w6PErKpyK'})`,
             `[Invite Bot](https://discord.com/api/oauth2/authorize?client_id=${client.user?.id}&permissions=8&scope=bot%20applications.commands)`
           ].join(" • "),
           inline: false

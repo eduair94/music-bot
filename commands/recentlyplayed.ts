@@ -34,7 +34,7 @@ const recentlyplayed: Command = {
         if (tracks.length === 0) {
             await interaction.reply({ 
                 embeds: [new EmbedBuilder()
-                    .setTitle("�� Recently Played")
+                    .setTitle("🕐 Recently Played")
                     .setColor(0x95a5a6)
                     .setDescription("No tracks in history.")],
                 ephemeral: true 

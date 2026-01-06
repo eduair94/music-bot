@@ -116,7 +116,7 @@ export default function HelpPage() {
         action={
           <Button
             component={Link}
-            href="https://discord.gg/support"
+            href="https://discord.gg/5w6PErKpyK"
             target="_blank"
             color="inherit"
             size="small"
@@ -271,7 +271,7 @@ export default function HelpPage() {
             <Button
               variant="contained"
               component={Link}
-              href="https://discord.gg/support"
+              href="https://discord.gg/5w6PErKpyK"
               target="_blank"
             >
               Join Support Server

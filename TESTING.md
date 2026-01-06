@@ -1,4 +1,4 @@
-# �️ Testing & Development Commands
+# 🛠️ Testing & Development Commands
 
 This document describes owner-only commands for testing and development purposes.
 
@@ -25,7 +25,7 @@ This document describes owner-only commands for testing and development purposes
   - `320 kbps` - Premium tier quality (HQ)
   
 - `identity` (optional): Custom bot identity/branding
-  - Use `"indie"` for the special � Indie Music Bot branding
+  - Use `"indie"` for the special 🎵 Indie Music Bot branding
   - Or any custom name for testing
   
 - `user` (optional): Target user to set bitrate for
@@ -50,8 +50,8 @@ This document describes owner-only commands for testing and development purposes
 **Response:**
 The command will show:
 - ✅ Confirmation message
-- Quality badge (e.g., "� HQ 320kbps (Premium)")
-- Bot identity (e.g., "� Indie Music Bot" or "Bypass")
+- Quality badge (e.g., "🎧 HQ 320kbps (Premium)")
+- Bot identity (e.g., "🎵 Indie Music Bot" or "Bypass")
 - Notification that settings will apply to all music commands
 
 ---
@@ -124,17 +124,17 @@ OWNER_ID=1066182746399055993
 # Test Tier 1 - Indie ($5-9.99)
 /setbitrate bitrate:320 identity:indie
 /play some song
-# Should show: "� HQ 320kbps - � Indie Music Bot"
+# Should show: "🎧 HQ 320kbps - 🎵 Indie Music Bot"
 
 # Test Tier 2 - Premium ($10-14.99)
 /setbitrate bitrate:320 identity:premium
 /play some song
-# Should show: "� HQ 320kbps - premium"
+# Should show: "🎧 HQ 320kbps - premium"
 
 # Test Tier 3 - Founder ($15+)
 /setbitrate bitrate:320 identity:founder
 /play some song
-# Should show: "� HQ 320kbps - founder"
+# Should show: "🎧 HQ 320kbps - founder"
 
 # Reset to default
 /resetbitrate
@@ -150,7 +150,7 @@ All music playback commands will show the quality badge:
 
 Each will display in the embed footer:
 ```
-� HQ 320kbps - � Indie Music Bot - Requested by Username
+🎧 HQ 320kbps - 🎵 Indie Music Bot - Requested by Username
 ```
 
 ---
@@ -159,17 +159,17 @@ Each will display in the embed footer:
 
 | Bitrate | Badge | Tier |
 |---------|-------|------|
-| 128 kbps | � 128kbps | Free |
-| 192 kbps | � 192kbps | Mid |
-| 256 kbps | � 256kbps (High) | High |
-| 320 kbps | � HQ 320kbps (Premium) | Premium |
+| 128 kbps | 🎧 128kbps | Free |
+| 192 kbps | 🎧 192kbps | Mid |
+| 256 kbps | 🎧 256kbps (High) | High |
+| 320 kbps | 🎧 HQ 320kbps (Premium) | Premium |
 
 ## Bot Identity Reference
 
 | Identity | Display | Default Tier |
 |----------|---------|--------------|
 | (none) | Bypass | Free users |
-| `indie` | � Indie Music Bot | Tier 1 ($5-9.99) |
+| `indie` | 🎵 Indie Music Bot | Tier 1 ($5-9.99) |
 | `premium` | premium | Tier 2 ($10-14.99) |
 | `founder` | founder | Tier 3 ($15+) |
 | (custom) | (custom text) | Testing |
@@ -205,7 +205,7 @@ Each will display in the embed footer:
 
 ---
 
-## � Premium Guild System
+## ⭐ Premium Guild System
 
 ### Overview
 The premium system is now **server-based** instead of user-based. Patreon supporters can link multiple servers based on their tier, and each server gets its own premium configuration.
@@ -215,7 +215,7 @@ The premium system is now **server-based** instead of user-based. Patreon suppor
 | Tier | Pledge Amount | Max Servers | Audio Quality | Default Identity |
 |------|---------------|-------------|---------------|------------------|
 | Free | $0 | 0 | 128 kbps | Bypass |
-| Tier 1 | $5-9.99/month | 1 server | 320 kbps | � Indie Music Bot |
+| Tier 1 | $5-9.99/month | 1 server | 320 kbps | 🎵 Indie Music Bot |
 | Tier 2 | $10-14.99/month | 3 servers | 320 kbps | Premium |
 | Tier 3 | $15+/month | 10 servers | 320 kbps | Founder |
 
@@ -240,9 +240,9 @@ Link the current server to your Patreon account.
 ```
 ✅ Server linked successfully!
 
-� Audio Quality: 320kbps
-� Bot Identity: Indie Music Bot  
-� Servers: 1/1
+🎧 Audio Quality: 320kbps
+🎵 Bot Identity: Indie Music Bot  
+📊 Servers: 1/1
 
 Premium features are now active in this server!
 ```

@@ -32,7 +32,7 @@ export default {
           .setLabel("Vote on Top.gg")
           .setStyle(ButtonStyle.Link)
           .setURL("https://top.gg/bot/YOUR_BOT_ID/vote")
-          .setEmoji("Ì∑≥Ô∏è"),
+          .setEmoji("üó≥Ô∏è"),
         new ButtonBuilder()
           .setLabel("Vote on Discord Bot List")
           .setStyle(ButtonStyle.Link)

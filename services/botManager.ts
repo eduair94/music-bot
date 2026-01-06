@@ -478,7 +478,7 @@ export class BotManagerService {
    * Graceful shutdown - stop all bots
    */
   public async shutdown(): Promise<void> {
-    console.log("[BotManager] �� Shutting down all linked bots...");
+    console.log("[BotManager] 🛑 Shutting down all linked bots...");
     
     const stopPromises = Array.from(this.activeProcesses.keys()).map(botId => 
       this.stopBot(botId)

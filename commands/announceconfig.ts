@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits, ChannelType } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
@@ -44,7 +44,7 @@ const announceconfig: Command = {
 
         if (sub === "view") {
             const embed = new EmbedBuilder()
-                .setTitle("í³¢ Announcement Settings")
+                .setTitle("ğŸ“¢ Announcement Settings")
                 .setColor(0x3498db)
                 .addFields(
                     { name: "Text Announcements", value: [
@@ -77,7 +77,7 @@ const announceconfig: Command = {
             } as any);
 
             await interaction.reply({ embeds: [new EmbedBuilder()
-                .setTitle("í³¢ Announcement Settings Reset")
+                .setTitle("ğŸ”„ Announcement Settings Reset")
                 .setColor(0x2ecc71)
                 .setDescription("All announcement settings reset to defaults.")] });
         } else if (group === "text") {
@@ -86,7 +86,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { textAnnounce: enabled } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle(enabled ? "í³¢ Text Announcements Enabled" : "í³¢ Text Announcements Disabled")
+                    .setTitle(enabled ? "ğŸ“¢ Text Announcements Enabled" : "ğŸ”‡ Text Announcements Disabled")
                     .setColor(enabled ? 0x2ecc71 : 0xe74c3c)
                     .setDescription(enabled 
                         ? "Now playing messages will be sent to the text channel."
@@ -96,7 +96,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { textAnnounceAutoDelete: enabled } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle(enabled ? "í·‘ï¸ Auto-Delete Enabled" : "í·‘ï¸ Auto-Delete Disabled")
+                    .setTitle(enabled ? "ğŸ—‘ï¸ Auto-Delete Enabled" : "ğŸ—‘ï¸ Auto-Delete Disabled")
                     .setColor(0x2ecc71)
                     .setDescription(enabled 
                         ? "Now playing messages will be auto-deleted when track changes."
@@ -106,7 +106,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { textAnnounceExtended: enabled } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle(enabled ? "í³‹ Extended Announcements Enabled" : "í³‹ Extended Announcements Disabled")
+                    .setTitle(enabled ? "ğŸ“‹ Extended Announcements Enabled" : "ğŸ“‹ Extended Announcements Disabled")
                     .setColor(0x2ecc71)
                     .setDescription(enabled 
                         ? "Announcements will include extended track information."
@@ -118,7 +118,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { stageAnnounce: enabled } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle(enabled ? "í¾­ Stage Announcements Enabled" : "í¾­ Stage Announcements Disabled")
+                    .setTitle(enabled ? "ğŸ­ Stage Announcements Enabled" : "ğŸ­ Stage Announcements Disabled")
                     .setColor(enabled ? 0x2ecc71 : 0xe74c3c)
                     .setDescription(enabled 
                         ? "Track info will be displayed in stage channel topics."
@@ -128,7 +128,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { stageTemplate: template } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle("í¾­ Stage Template Updated")
+                    .setTitle("âœï¸ Stage Template Updated")
                     .setColor(0x2ecc71)
                     .setDescription(`Template set to: \`${template}\`\n\nVariables: {title}, {author}, {duration}, {requester}`)] });
             }
@@ -138,7 +138,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { voiceStatusAnnounce: enabled } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle(enabled ? "í´Š Voice Status Enabled" : "ï¿½ï¿½ Voice Status Disabled")
+                    .setTitle(enabled ? "Voice Status Enabled" : "Voice Status Disabled")
                     .setColor(enabled ? 0x2ecc71 : 0xe74c3c)
                     .setDescription(enabled 
                         ? "Voice channel status will show current track info."
@@ -148,7 +148,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { voiceStatusTemplate: template } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle("í´Š Voice Status Template Updated")
+                    .setTitle("Voice Status Template Updated")
                     .setColor(0x2ecc71)
                     .setDescription(`Template set to: \`${template}\`\n\nVariables: {title}, {author}, {duration}`)] });
             } else if (sub === "default") {
@@ -156,7 +156,7 @@ const announceconfig: Command = {
                 await svc.updateSettings(interaction.guildId, { voiceStatusDefault: status } as any);
 
                 await interaction.reply({ embeds: [new EmbedBuilder()
-                    .setTitle("í´Š Default Voice Status Set")
+                    .setTitle("Default Voice Status Set")
                     .setColor(0x2ecc71)
                     .setDescription(`Default status: \`${status}\`\n\nThis will be shown when nothing is playing.`)] });
             }

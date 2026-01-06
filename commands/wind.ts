@@ -75,7 +75,7 @@ const wind: Command = {
             const currentMs = queue.node.streamTime;
             const durationMs = queue.currentTrack.durationMS;
             const embed = new EmbedBuilder()
-                .setTitle("�� Current Position")
+                .setTitle("⏱️ Current Position")
                 .setColor(0x3498db)
                 .setDescription(`**${formatTime(currentMs)}** / **${formatTime(durationMs)}**`)
                 .addFields(
