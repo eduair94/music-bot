@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { hasDJPermission } from "../utils/djPermission";
