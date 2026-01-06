@@ -155,6 +155,21 @@ export interface IGuildSettings {
   blacklistedUsers: string[];
   /** Keywords/URLs that are blocked */
   blacklistedSongs: string[];
+  /** Artist names that are blacklisted */
+  blacklistedAuthors?: string[];
+  /** Title keywords that are blacklisted */
+  blacklistedTitles?: string[];
+  /** Commands that are disabled */
+  disabledCommands?: string[];
+
+  /** Command permissions for roles */
+  permissions?: Record<string, { allowed: string[]; denied: string[] }>;
+
+  /** Custom command prefixes */
+  prefixes?: string[];
+  
+  /** Custom play mappings/shortcuts */
+  mappings?: Record<string, string>;
 
   // Customization
   /** Locale override for this guild */
@@ -257,6 +272,7 @@ export interface IPlaybackState {
  * Player command types
  */
 export type PlayerCommandType =
+  // Basic playback
   | "play"
   | "pause"
   | "resume"
@@ -265,11 +281,47 @@ export type PlayerCommandType =
   | "volume"
   | "shuffle"
   | "loop"
-  | "remove"
-  | "skipto"
-  | "move"
+  | "loopqueue"
+  | "seek"
+  // Queue management
+  | "queue"
   | "clear"
-  | "seek";
+  | "remove"
+  | "move"
+  | "skipto"
+  | "jump"
+  // Audio settings
+  | "bassboost"
+  | "nightcore"
+  | "speed"
+  | "setbitrate"
+  | "resetbitrate"
+  // Navigation
+  | "forward"
+  | "rewind"
+  | "replay"
+  | "previous"
+  | "wind"
+  // Session
+  | "join"
+  | "leave"
+  | "autoplay"
+  // Info
+  | "nowplaying"
+  | "lyrics"
+  | "history"
+  | "recentlyplayed"
+  // Playlist/Save
+  | "save"
+  | "playlist"
+  // Premium/Boost
+  | "premium"
+  | "claim"
+  | "transfer"
+  // Repeat
+  | "repeat"
+  // Search
+  | "search";
 
 /**
  * Linked bot control command types

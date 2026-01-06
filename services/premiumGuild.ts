@@ -209,7 +209,7 @@ export class PremiumGuildService {
 
       await PremiumGuild.deleteOne({ _id: guild._id });
 
-      console.log(`[PremiumGuild] ��� Unlinked server ${guildId} from user ${discordId}`);
+      console.log(`[PremiumGuild] ✅ Unlinked server ${guildId} from user ${discordId}`);
 
       return {
         success: true,

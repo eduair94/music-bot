@@ -251,5 +251,692 @@
     "result": "<@{author}> ⏭️ jumped to **{title}**"
   },
   "Invite me to your server!": "Invite me to your server!",
-  "Invite": "Invite"
+  "Invite": "Invite",
+  "about": {
+    "description": "Show information about the bot",
+    "embedDescription": "A powerful Discord music bot with high-quality audio playback",
+    "footer": "Thanks for using the bot!"
+  },
+  "support": {
+    "description": "Get the support server link",
+    "embedDescription": "Need help? Join our support server for assistance!",
+    "footer": "We're here to help!"
+  },
+  "dashboard": {
+    "description": "Get the dashboard link",
+    "embedDescription": "Access the web dashboard to manage your server settings, view queue, and more!",
+    "footer": "Manage your music experience"
+  },
+  "clean": {
+    "description": "Delete bot messages from the channel",
+    "noMessages": "No bot messages found to delete.",
+    "success": "🗑️ Deleted {count} bot message(s).",
+    "error": "An error occurred while cleaning messages."
+  },
+  "upcoming": {
+    "description": "Show upcoming tracks in the queue",
+    "noQueue": "There is no active queue.",
+    "noUpcoming": "No upcoming tracks in the queue."
+  },
+  "massremove": {
+    "description": "Remove multiple tracks from the queue",
+    "noQueue": "There is no active queue.",
+    "notInVoice": "You need to be in a voice channel.",
+    "noTracks": "The queue is empty.",
+    "invalidIndexes": "Invalid indexes. Queue has {max} tracks. Use format: '1 3 5' or '1-5 8'",
+    "success": "🗑️ Removed {count} tracks: {tracks}"
+  },
+  "removeuser": {
+    "description": "Remove all tracks requested by a user",
+    "noQueue": "There is no active queue.",
+    "notInVoice": "You need to be in a voice channel.",
+    "noTracks": "The queue is empty.",
+    "noUserTracks": "No tracks found from {user} in the queue.",
+    "success": "🗑️ Removed {count} tracks requested by {user}."
+  },
+  "pulsator": {
+    "description": "Apply pulsator audio effect (alternates between channels)",
+    "noQueue": "There is no active queue.",
+    "notInVoice": "You need to be in a voice channel.",
+    "disabled": "🔇 Pulsator effect disabled.",
+    "enabled": "🔊 Pulsator effect enabled at {frequency} Hz.",
+    "error": "An error occurred while applying the pulsator effect."
+  },
+  "rate": {
+    "description": "Change the playback rate (speed + pitch)",
+    "noQueue": "There is no active queue.",
+    "notInVoice": "You need to be in a voice channel.",
+    "disabled": "🔇 Rate effect disabled.",
+    "enabled": "⚡ Rate set to {percentage}%.",
+    "info": "Use `/rate percentage:150` to change the rate.\n\n**Note:** This changes both speed and pitch.",
+    "error": "An error occurred while applying the rate effect."
+  },
+  "starttime": {
+    "description": "Set the start position of the current track",
+    "noQueue": "There is no active queue.",
+    "notInVoice": "You need to be in a voice channel.",
+    "noTrack": "No track is currently playing.",
+    "reset": "⏱️ Start time reset to beginning.",
+    "invalidTime": "Invalid time format. Use: '30s', '1:30', '1m 30s'",
+    "tooLong": "Time exceeds track duration ({duration}).",
+    "success": "⏱️ Seeked to {time}.",
+    "error": "An error occurred while setting start time."
+  },
+  "searchlyrics": {
+    "description": "Search for a song by its lyrics",
+    "noResults": "No songs found matching lyrics: \"{query}\"",
+    "noLyricsFound": "Lyrics not available for this song.",
+    "error": "An error occurred while searching for lyrics."
+  },
+  "requested": {
+    "description": "Show all tracks requested by a user",
+    "noQueue": "There is no active queue.",
+    "noTracks": "No tracks found from {user} in the queue.",
+    "empty": "No tracks to display."
+  },
+  "collections": {
+    "description": "Manage your personal music collections",
+    "tracks": "tracks",
+    "notFound": "Collection **{name}** not found.",
+    "list": {
+      "description": "View all your collections",
+      "title": "📁 Your Collections",
+      "empty": "You don't have any collections yet. Create one with `/collections create`!",
+      "footer": "Total: {count} collections"
+    },
+    "create": {
+      "description": "Create a new collection",
+      "nameOption": "Name for the collection",
+      "descriptionOption": "Description for the collection",
+      "limitReached": "You've reached the maximum number of collections (50).",
+      "exists": "A collection named **{name}** already exists.",
+      "success": "✅ Created collection **{name}**!"
+    },
+    "delete": {
+      "description": "Delete a collection",
+      "nameOption": "Name of the collection to delete",
+      "success": "🗑️ Deleted collection **{name}**."
+    },
+    "view": {
+      "description": "View a collection's tracks",
+      "nameOption": "Name of the collection to view",
+      "empty": "This collection is empty.",
+      "tracksField": "Tracks",
+      "durationField": "Duration",
+      "shareCodeField": "Share Code",
+      "andMore": "...and {count} more tracks"
+    },
+    "save": {
+      "description": "Save current queue as a collection",
+      "nameOption": "Name for the collection",
+      "noQueue": "There's nothing in the queue to save.",
+      "success": "💾 Saved **{count}** tracks to collection **{name}**!"
+    },
+    "load": {
+      "description": "Load a collection into the queue",
+      "nameOption": "Name of the collection to load",
+      "empty": "This collection is empty.",
+      "success": "📂 Loaded **{count}** tracks from collection **{name}**!"
+    },
+    "rename": {
+      "description": "Rename a collection",
+      "oldNameOption": "Current name of the collection",
+      "newNameOption": "New name for the collection",
+      "exists": "A collection named **{name}** already exists.",
+      "success": "✏️ Renamed **{oldName}** to **{newName}**."
+    },
+    "share": {
+      "description": "Create a share code for a collection",
+      "nameOption": "Name of the collection to share",
+      "success": "🔗 Share code for **{name}**: `{code}`\nOthers can use `/collections clone` with this code!"
+    },
+    "unshare": {
+      "description": "Remove share code from a collection",
+      "nameOption": "Name of the collection to unshare",
+      "success": "🔒 Removed share code from **{name}**."
+    },
+    "clone": {
+      "description": "Clone a collection from a share code",
+      "shareCodeOption": "The share code to clone from",
+      "nameOption": "Name for your new collection",
+      "invalidCode": "Invalid or expired share code.",
+      "success": "📋 Cloned **{count}** tracks to new collection **{name}**!"
+    },
+    "merge": {
+      "description": "Merge one collection into another",
+      "sourceOption": "Collection to merge from",
+      "targetOption": "Collection to merge into",
+      "sameCollection": "Cannot merge a collection into itself.",
+      "notFound": "One or both collections not found.",
+      "success": "🔀 Merged **{source}** into **{target}** ({count} total tracks)."
+    },
+    "addcurrent": {
+      "description": "Add the current playing track to a collection",
+      "nameOption": "Name of the collection to add to",
+      "noTrack": "No track is currently playing.",
+      "success": "➕ Added **{track}** to collection **{name}**!"
+    },
+    "removetrack": {
+      "description": "Remove a track from a collection",
+      "nameOption": "Name of the collection",
+      "positionOption": "Position of the track to remove (1-based)",
+      "invalidPosition": "Invalid position. Collection has {max} tracks.",
+      "success": "🗑️ Removed **{track}** from collection **{name}**."
+    }
+  },
+  "endtime": {
+    "description": "Set the end position of the current track",
+    "timeOption": "Time to end track (e.g., 3:00, 180, 3m)",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "noTrack": "No track is currently playing.",
+    "info": "Track duration: **{duration}**\nUse `/endtime time:3:00` to set an early end time.",
+    "invalidTime": "Invalid time format. Use: '1:30', '90', '1m30s'",
+    "tooLong": "Time exceeds track duration ({duration}).",
+    "tooEarly": "End time must be after current position ({position}).",
+    "success": "⏱️ Track will end at **{time}** (in {remaining})."
+  },
+  "massmove": {
+    "description": "Move multiple tracks to a new position",
+    "indexesOption": "Track numbers to move (e.g., 1 3 5 or 1-5)",
+    "positionOption": "New position for the tracks",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "invalidIndexes": "No valid track numbers found. Use numbers like: 1 3 5 or 1-5",
+    "invalidPosition": "Position must be between 1 and {max}.",
+    "success": "📦 Moved **{count}** tracks to position **{position}**: {tracks}"
+  },
+  "faq": {
+    "description": "View frequently asked questions",
+    "title": "❓ Frequently Asked Questions",
+    "q1": {
+      "question": "How do I play music?",
+      "answer": "Use `/play <song name or URL>` to play music. The bot will join your voice channel and start playing."
+    },
+    "q2": {
+      "question": "Why is the music laggy or cutting out?",
+      "answer": "This is usually due to network issues. Try using `/resetbitrate` or check your server region."
+    },
+    "q3": {
+      "question": "How do I create a playlist?",
+      "answer": "Use `/collections create <name>` to create a collection. Then use `/collections save <name>` to save the current queue."
+    },
+    "q4": {
+      "question": "What music sources are supported?",
+      "answer": "YouTube, Spotify, SoundCloud, and direct URLs are supported."
+    },
+    "q5": {
+      "question": "How do I skip a song?",
+      "answer": "Use `/skip` to skip the current track, or `/skipto <number>` to jump to a specific track."
+    },
+    "q6": {
+      "question": "How do I enable 24/7 mode?",
+      "answer": "24/7 mode is a premium feature. Use `/premium` for more information."
+    },
+    "footer": "Need more help? Join our support server with /support"
+  },
+  "next": {
+    "description": "Skip to the next track in queue",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no queue to skip.",
+    "success": "⏭️ Skipped to the next track."
+  },
+  "radio": {
+    "description": "Start a radio based on the current track",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no track playing to base the radio on.",
+    "success": "📻 Started radio based on **{title}**",
+    "error": "Failed to start radio. Please try again."
+  },
+  "playrecent": {
+    "description": "Play recently played tracks",
+    "notInVoice": "You need to be in a voice channel.",
+    "noHistory": "No recently played tracks found.",
+    "success": "📜 Added **{count}** recently played tracks to queue.",
+    "error": "Failed to play recent tracks."
+  },
+  "removeabsent": {
+    "description": "Remove tracks from users not in voice channel",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "🧹 Removed Absent Users' Tracks",
+    "noTracks": "No tracks found from absent users.",
+    "success": "Removed **{count}** tracks from users not in the voice channel."
+  },
+  "removekeyword": {
+    "description": "Remove tracks matching a keyword",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "🔍 Removed by Keyword",
+    "noMatches": "No tracks found matching keyword: **{keyword}**",
+    "success": "Removed **{count}** tracks matching **{keyword}**.",
+    "removedField": "Removed Tracks"
+  },
+  "removedupes": {
+    "description": "Remove duplicate tracks from the queue",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "🧹 Removed Duplicates",
+    "noDupes": "No duplicate tracks found in the queue.",
+    "success": "Removed **{count}** duplicate tracks.",
+    "removedField": "Removed Duplicates"
+  },
+  "grab": {
+    "description": "DM yourself the current track info",
+    "noQueue": "There is no track playing.",
+    "author": "Artist",
+    "duration": "Duration",
+    "url": "Link",
+    "requestedBy": "Requested by {user}",
+    "success": "✉️ Check your DMs for the track info!",
+    "dmFailed": "I couldn't send you a DM. Please check your privacy settings."
+  },
+  "length": {
+    "description": "Show the total queue duration",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "📊 Queue Length",
+    "totalTracks": "Total Tracks",
+    "totalDuration": "Total Duration"
+  },
+  "playnow": {
+    "description": "Play a track immediately, skipping the current one",
+    "notInVoice": "You need to be in a voice channel.",
+    "noResults": "No results found for your query.",
+    "title": "⏯️ Playing Now",
+    "success": "Now playing **{title}** by **{author}**",
+    "playing": "Started playing **{title}** by **{author}**",
+    "error": "Failed to play track. Please try again."
+  },
+  "playnext": {
+    "description": "Add a track as next in the queue",
+    "notInVoice": "You need to be in a voice channel.",
+    "noResults": "No results found for your query.",
+    "title": "⏭️ Added Next",
+    "success": "**{title}** by **{author}** will play next!",
+    "playing": "Started playing **{title}** by **{author}**",
+    "error": "Failed to add track. Please try again."
+  },
+  "reverse": {
+    "description": "Reverse the order of the queue",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "Not enough tracks in queue to reverse.",
+    "title": "🔄 Queue Reversed",
+    "success": "Reversed **{count}** tracks in the queue."
+  },
+  "sort": {
+    "description": "Sort the queue by various criteria",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "Not enough tracks in queue to sort.",
+    "title": "📋 Queue Sorted",
+    "success": "Sorted **{count}** tracks by **{criteria}**."
+  },
+  "swap": {
+    "description": "Swap two tracks in the queue",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "Not enough tracks in queue to swap.",
+    "samePosition": "Cannot swap a track with itself.",
+    "outOfRange": "Position out of range. Queue has {max} tracks.",
+    "title": "🔀 Tracks Swapped",
+    "success": "Swapped **#{pos1}** ({title1}) with **#{pos2}** ({title2})."
+  },
+  "voteskip": {
+    "description": "Vote to skip the current track",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no track playing.",
+    "alreadyVoted": "You have already voted to skip this track.",
+    "title": "🗳️ Vote Skip",
+    "voted": "**{user}** voted to skip! ({current}/{required} votes)",
+    "skippedTitle": "⏭️ Skip Successful",
+    "skipped": "Skipped **{title}** by vote."
+  },
+  "tip": {
+    "description": "Get a random tip",
+    "title": "💡 Tip",
+    "footer": "Use /help for more commands"
+  },
+  "vote": {
+    "description": "Vote for the bot on bot lists",
+    "title": "🗳️ Vote for Us!",
+    "message": "Your votes help us grow and improve! Vote on the platforms below:",
+    "rewards": "Voting Rewards",
+    "rewardsList": "• Premium features for 12 hours\n• Exclusive voter badge\n• Higher audio quality",
+    "footer": "Thank you for your support!"
+  },
+  "leaderboard": {
+    "description": "View the session track leaderboard",
+    "noQueue": "There is no active queue.",
+    "noData": "No track data available.",
+    "title": "🏆 Session Leaderboard",
+    "footer": "Total tracks in queue: {total}"
+  },
+  "categories": {
+    "description": "List all command categories",
+    "title": "📚 Command Categories",
+    "footer": "Use /help for detailed command info"
+  },
+  "changelogs": {
+    "description": "View recent changelogs and updates",
+    "title": "📋 Changelogs",
+    "footer": "Thank you for using our bot!"
+  },
+  "shards": {
+    "description": "View shard information",
+    "title": "🌐 Shard Information",
+    "currentShard": "Current Shard",
+    "totalShards": "Total Shards",
+    "ping": "Ping",
+    "guilds": "Servers",
+    "users": "Users",
+    "status": "Status",
+    "footer": "You are connected to shard #{shardId}"
+  },
+  "setup": {
+    "description": "Setup guide for the bot",
+    "title": "🔧 Bot Setup Guide",
+    "welcome": "Welcome! Follow these steps to set up the bot:",
+    "step1": {
+      "title": "Join a Voice Channel",
+      "desc": "Join a voice channel, then use `/play <song>` to start playing music."
+    },
+    "step2": {
+      "title": "Configure Settings",
+      "desc": "Use `/settings` to view and customize the bot for your server."
+    },
+    "step3": {
+      "title": "Set Permissions",
+      "desc": "Admins can restrict commands to specific roles using Discord's built-in permissions."
+    },
+    "step4": {
+      "title": "Explore Features",
+      "desc": "Use `/help` to see all commands, or `/categories` to browse by category."
+    },
+    "commands": {
+      "title": "Essential Commands",
+      "desc": "`/play` - Play music\n`/skip` - Skip track\n`/queue` - View queue\n`/help` - Get help"
+    },
+    "footer": "Need help? Use /support to join our support server."
+  },
+  "playleave": {
+    "description": "Play a track and leave after it ends",
+    "notInVoice": "You need to be in a voice channel.",
+    "title": "🎵 Playing (Leave After)",
+    "success": "Playing **{title}** by **{author}**. Will leave after this track.",
+    "footer": "Bot will disconnect after playback",
+    "error": "Failed to play track."
+  },
+  "lock": {
+    "description": "Lock or unlock the music session",
+    "enable": {
+      "description": "Lock the session to yourself"
+    },
+    "disable": {
+      "description": "Unlock the session"
+    },
+    "status": {
+      "description": "Check lock status"
+    },
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "alreadyLocked": "Session is already locked by <@{userId}>.",
+    "lockedTitle": "🔒 Session Locked",
+    "locked": "**{user}** has locked this session. Only they can control playback.",
+    "notLocked": "This session is not locked.",
+    "notOwner": "Only the lock owner or an admin can unlock.",
+    "unlockedTitle": "🔓 Session Unlocked",
+    "unlocked": "Session has been unlocked. Anyone can control playback now.",
+    "statusTitle": "🔐 Lock Status",
+    "statusLocked": "Session is locked by <@{userId}>.",
+    "statusUnlocked": "Session is unlocked."
+  },
+  "rebind": {
+    "description": "Rebind bot announcements to a different channel",
+    "noQueue": "There is no active queue.",
+    "invalidChannel": "Invalid channel. Please select a text channel.",
+    "title": "📢 Channel Rebound",
+    "success": "Now sending announcements to {channel}."
+  },
+  "247": {
+    "description": "Toggle 24/7 mode (bot stays in voice channel)",
+    "premiumRequired": "⭐ 24/7 mode is a premium feature. Use `/premium` for more info.",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "🌙 24/7 Mode",
+    "enabled": "24/7 mode **enabled**. Bot will stay in the voice channel indefinitely.",
+    "disabled": "24/7 mode **disabled**. Bot will leave when idle.",
+    "footer": "Premium feature"
+  },
+  "disabledcommands": {
+    "description": "View all disabled commands in this server",
+    "none": "No commands are currently disabled.",
+    "title": "🚫 Disabled Commands",
+    "footer": "{count} commands disabled"
+  },
+  "commandtoggle": {
+    "description": "Enable or disable a command",
+    "protected": "This command cannot be disabled.",
+    "enabledTitle": "✅ Command Enabled",
+    "enabled": "Command `/{command}` has been **enabled**.",
+    "disabledTitle": "🚫 Command Disabled",
+    "disabled": "Command `/{command}` has been **disabled**."
+  },
+  "songinfo": {
+    "description": "Get detailed information about a track",
+    "noQueue": "There is no queue.",
+    "invalidPosition": "Invalid position. Queue has {max} tracks.",
+    "noTrack": "No track found.",
+    "author": "Artist",
+    "duration": "Duration",
+    "source": "Source",
+    "views": "Views",
+    "live": "Live",
+    "requestedBy": "Requested By"
+  },
+  "artistinfo": {
+    "description": "Get information about an artist",
+    "noArtist": "No artist specified and no track is playing.",
+    "title": "🎤 {artist}",
+    "tracksInQueue": "Tracks in Queue",
+    "footer": "Click links to find more from this artist"
+  },
+  "blacklist": {
+    "description": "Manage blacklisted authors and titles",
+    "author": {
+      "description": "Blacklist an author/artist",
+      "title": "🚫 Author Blacklisted",
+      "exists": "Author **{name}** is already blacklisted.",
+      "added": "Author **{name}** has been blacklisted. Songs by this artist will not be played."
+    },
+    "title": {
+      "description": "Blacklist a title keyword",
+      "addedTitle": "🚫 Title Blacklisted",
+      "exists": "Keyword **{keyword}** is already blacklisted.",
+      "added": "Keyword **{keyword}** has been blacklisted. Songs with this in the title will not be played."
+    },
+    "list": {
+      "description": "View all blacklisted items",
+      "title": "📋 Blacklist",
+      "empty": "No items are blacklisted.",
+      "authors": "Blacklisted Authors",
+      "titles": "Blacklisted Title Keywords"
+    },
+    "removeauthor": {
+      "description": "Remove an author from blacklist",
+      "title": "✅ Author Unblacklisted",
+      "notfound": "Author **{name}** is not in the blacklist.",
+      "removed": "Author **{name}** has been removed from the blacklist."
+    },
+    "removetitle": {
+      "description": "Remove a title keyword from blacklist",
+      "title": "✅ Title Unblacklisted",
+      "notfound": "Keyword **{keyword}** is not in the blacklist.",
+      "removed": "Keyword **{keyword}** has been removed from the blacklist."
+    }
+  },
+  "profile": {
+    "description": "View your profile or another user's profile",
+    "title": "👤 {user}'s Profile",
+    "username": "Username",
+    "id": "User ID",
+    "created": "Account Created",
+    "premium": "Premium Status",
+    "features": "Premium Features"
+  },
+  "games": {
+    "description": "View available games",
+    "title": "🎮 Available Games",
+    "info": "Play fun music-related games with your friends!",
+    "guessTheSong": {
+      "title": "Guess The Song",
+      "description": "Try to guess songs from your listening history!"
+    },
+    "footer": "Use the command shown to start a game"
+  },
+  "guesssong": {
+    "description": "Play the Guess The Song game",
+    "start": {
+      "description": "Start a new game"
+    },
+    "guess": {
+      "description": "Make a guess"
+    },
+    "stop": {
+      "description": "Stop the current game"
+    },
+    "notInVoice": "You need to be in a voice channel to start a game.",
+    "alreadyActive": "A game is already active! Use `/guesssong stop` to end it.",
+    "noHistory": "Not enough songs in history to start a game. Play some songs first!",
+    "startedTitle": "🎵 Guess The Song!",
+    "started": "A game has started! Try to guess the song title or artist.",
+    "hint": "Hint",
+    "howToGuess": "Use /guesssong guess <answer> to make a guess",
+    "noGame": "There's no game active. Use `/guesssong start` to start one.",
+    "wrong": "❌ Wrong guess! Try again.",
+    "winnerTitle": "🎉 Correct!",
+    "winner": "**{user}** guessed correctly in **{time}** seconds!",
+    "answer": "The Answer Was",
+    "notHost": "Only the game host can stop the game.",
+    "stoppedTitle": "🛑 Game Stopped",
+    "stopped": "The game has been stopped."
+  },
+  "permissions": {
+    "title": "⚙️ Permission Settings",
+    "view_description": "Current permission configuration for this server:",
+    "no_custom": "No Custom Permissions",
+    "default_message": "All commands use default permissions. Use `/permissions allow` or `/permissions deny` to configure.",
+    "allowed": "Allowed",
+    "denied": "Denied",
+    "updated": "✅ Permissions Updated",
+    "allow_success": "**{permission}** is now allowed for {role}",
+    "deny_success": "**{permission}** is now denied for {role}",
+    "everyone": "everyone",
+    "reset_title": "🔄 Permissions Reset",
+    "reset_success": "All custom permissions have been reset to default.",
+    "allowall_success": "All permissions are now allowed for {role}",
+    "denyall_success": "All permissions are now denied for {role}"
+  },
+  "setsettings": {
+    "updated": "✅ Settings Updated",
+    "maxtracklen_unlimited": "Maximum track length is now **unlimited**.",
+    "maxtracklen_set": "Maximum track length is now **{seconds}** seconds.",
+    "maxqueue_set": "Maximum queue size is now **{size}** tracks.",
+    "maxvolume_set": "Maximum volume is now **{volume}%**.",
+    "defaultvolume_set": "Default volume is now **{volume}%**.",
+    "voteskip_enabled": "Vote skip is now **enabled** at **{percentage}%**.",
+    "voteskip_disabled": "Vote skip is now **disabled**.",
+    "announce_enabled": "Now playing announcements are now **enabled**.",
+    "announce_disabled": "Now playing announcements are now **disabled**.",
+    "autoleave_enabled": "Auto-leave is now **enabled** with a **{timeout}** second timeout.",
+    "autoleave_disabled": "Auto-leave is now **disabled**.",
+    "duplicates_prevented": "Duplicate tracks will now be **prevented**.",
+    "duplicates_allowed": "Duplicate tracks are now **allowed**.",
+    "language_set": "Language is now set to **{lang}**.",
+    "embedcolor_set": "Embed color is now set to **{color}**.",
+    "invalid_color": "Invalid hex color. Please use format like #F8AA2A.",
+    "reset_title": "🔄 Settings Reset",
+    "reset_success": "All settings have been reset to default values."
+  },
+  "ownership": {
+    "claimed_title": "👑 Ownership Claimed",
+    "claimed_success": "{user} is now the session owner.",
+    "claimed_footer": "As owner, you have control over the playback session.",
+    "already_claimed": "The session is already owned by {owner}.",
+    "not_owner": "You are not the session owner.",
+    "user_not_in_vc": "That user is not in the voice channel.",
+    "transferred_title": "🔄 Ownership Transferred",
+    "transferred_success": "{from} transferred ownership to {to}.",
+    "view_title": "👑 Session Owner",
+    "current_owner": "Current session owner: {owner}",
+    "no_owner": "This session has no owner. Use `/ownership claim` to claim it."
+  },
+  "channels": {
+    "log_title": "📝 Log Channel",
+    "log_set": "Log channel has been set to {channel}.",
+    "log_disabled": "Log channel has been disabled.",
+    "text_updated": "📝 Text Channel Settings Updated",
+    "text_enabled": "{channel} is now enabled for bot commands.",
+    "text_disabled": "{channel} is now disabled for bot commands.",
+    "text_enableall": "All text channels are now enabled.",
+    "text_disableall": "All text channels are now disabled except {channel}.",
+    "text_view_title": "📝 Allowed Text Channels",
+    "all_text_enabled": "All text channels are currently enabled.",
+    "allowed_text_list": "Allowed text channels:",
+    "voice_updated": "🔊 Voice Channel Settings Updated",
+    "voice_enabled": "{channel} is now enabled for music playback.",
+    "voice_disabled": "{channel} is now disabled for music playback.",
+    "voice_enableall": "All voice channels are now enabled.",
+    "voice_disableall_hint": "Use `/channels voice enable` to enable specific voice channels first.",
+    "voice_view_title": "🔊 Allowed Voice Channels",
+    "all_voice_enabled": "All voice channels are currently enabled.",
+    "allowed_voice_list": "Allowed voice channels:",
+    "use_disableall_first": "Use 'disableall' first to restrict channels, then enable specific ones."
+  },
+  "perks": {
+    "title": "⭐ Premium Perks",
+    "description": "Upgrade to premium to unlock these amazing features!",
+    "how_to_get": "How to Get Premium",
+    "patreon_link": "Support us on Patreon: https://patreon.com/yourbot",
+    "user_title": "Your Premium Status",
+    "user_premium": "You have **{tier}** premium! 🎉",
+    "your_perks": "Your Active Perks",
+    "user_free": "You are on the **Free** tier.",
+    "upgrade": "Upgrade to Premium",
+    "upgrade_message": "Get premium features by supporting us on Patreon!"
+  },
+  "boost": {
+    "no_premium_title": "❌ No Premium",
+    "no_premium": "You need premium to boost servers. Get premium on Patreon!",
+    "already_boosted_title": "⚠️ Already Boosted",
+    "already_boosted_self": "You've already boosted this server!",
+    "already_boosted_other": "This server is already boosted by another user.",
+    "activated_title": "🚀 Server Boosted!",
+    "activated_success": "This server is now boosted with **{tier}** premium!",
+    "not_your_boost_title": "❌ Not Your Boost",
+    "not_your_boost": "You didn't boost this server.",
+    "deactivated_title": "📤 Boost Removed",
+    "deactivated_success": "Your boost has been removed from this server.",
+    "list_title": "📋 Your Active Boosts",
+    "no_boosts": "You haven't boosted any servers yet.",
+    "active_boosts": "Your active server boosts:",
+    "info_title": "ℹ️ Server Boost Info",
+    "guild_boosted": "This server is boosted! 🎉",
+    "tier": "Tier",
+    "boosted_by": "Boosted By",
+    "since": "Since",
+    "guild_not_boosted": "This server is not boosted.",
+    "how_to_boost": "How to Boost",
+    "boost_instructions": "Use `/boost activate` to boost this server with your premium."
+  },
+  "alias": {
+    "added_title": "✅ Alias Added",
+    "added_success": "Alias `{alias}` now runs `{command}`.",
+    "removed_title": "🗑️ Alias Removed",
+    "removed_success": "Alias `{alias}` has been removed.",
+    "list_title": "📋 Server Aliases",
+    "no_aliases": "No aliases configured for this server.",
+    "cleared_title": "🧹 Aliases Cleared",
+    "cleared_success": "All server aliases have been cleared.",
+    "not_found": "That alias doesn't exist.",
+    "no_spaces": "Alias names cannot contain spaces."
+  }
 }

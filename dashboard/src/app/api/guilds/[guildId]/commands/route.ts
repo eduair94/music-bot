@@ -33,7 +33,28 @@ export async function POST(request: Request, { params }: RouteContext) {
     const { command, params: cmdParams } = body;
 
     // Validate command
-    const validCommands = ["play", "pause", "resume", "skip", "stop", "volume", "shuffle", "loop", "remove", "skipto", "move", "clear", "seek"];
+    const validCommands = [
+      // Basic playback
+      "play", "pause", "resume", "skip", "stop", "volume", "shuffle", "loop", "loopqueue", "seek",
+      // Queue management
+      "queue", "clear", "remove", "move", "skipto", "jump",
+      // Audio settings
+      "bassboost", "nightcore", "speed", "setbitrate", "resetbitrate",
+      // Navigation
+      "forward", "rewind", "replay", "previous", "wind",
+      // Session
+      "join", "leave", "autoplay",
+      // Info
+      "nowplaying", "lyrics", "history", "recentlyplayed",
+      // Playlist/Save
+      "save", "playlist",
+      // Premium/Boost
+      "premium", "claim", "transfer",
+      // Repeat
+      "repeat",
+      // Search
+      "search",
+    ];
     if (!validCommands.includes(command)) {
       return NextResponse.json({ error: "Invalid command" }, { status: 400 });
     }

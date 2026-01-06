@@ -1,8 +1,14 @@
-import { SlashCommandBuilder } from "discord.js";
+import { 
+  SlashCommandBuilder, 
+  SlashCommandOptionsOnlyBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+  AutocompleteInteraction
+} from "discord.js";
 
 export interface Command {
   permissions?: string[];
   cooldown?: number;
-  data: SlashCommandBuilder;
+  data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
   execute(...args: any): any;
+  autocomplete?(interaction: AutocompleteInteraction): Promise<void>;
 }

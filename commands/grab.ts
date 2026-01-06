@@ -1,50 +1,69 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { DiscordPlayerService } from "../services/discordPlayer";
-import { logAction } from "../utils/actionLog";
+import { 
+  ChatInputCommandInteraction, 
+  EmbedBuilder, 
+  SlashCommandBuilder 
+} from "discord.js";
+import { useQueue } from "discord-player";
 import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("grab")
-    .setDescription("Save the current song to your DMs"),
+    .setDescription(i18n.__("grab.description")),
+  
   async execute(interaction: ChatInputCommandInteraction) {
-    await interaction.deferReply({ ephemeral: true }).catch(console.error);
-
-    const playerService = DiscordPlayerService.getInstance();
-    const queue = playerService.getQueue(interaction.guild!.id);
-
+    const queue = useQueue(interaction.guildId!);
+    
     if (!queue || !queue.currentTrack) {
-      return interaction.editReply({ content: i18n.__("save.errorNotQueue") }).catch(console.error);
+      return interaction.reply({
+        content: i18n.__("grab.noQueue"),
+        ephemeral: true
+      });
     }
 
     const track = queue.currentTrack;
 
     const embed = new EmbedBuilder()
-      .setTitle("💾 Saved Track")
-      .setDescription(`**[${track.title}](${track.url})**`)
+      .setTitle(track.title)
+      .setURL(track.url)
+      .setDescription(i18n.__mf("grab.description", {
+        guild: interaction.guild?.name || "Unknown"
+      }))
+      .setThumbnail(track.thumbnail)
+      .setColor("#F8AA2A")
       .addFields(
-        { name: "Artist", value: track.author || "Unknown", inline: true },
-        { name: "Duration", value: track.duration || "Unknown", inline: true },
-        { name: "Source", value: track.source || "Unknown", inline: true }
+        { 
+          name: i18n.__("grab.author"), 
+          value: track.author, 
+          inline: true 
+        },
+        { 
+          name: i18n.__("grab.duration"), 
+          value: track.duration, 
+          inline: true 
+        },
+        { 
+          name: i18n.__("grab.url"), 
+          value: track.url 
+        }
       )
-      .setColor("#2ecc71")
-      .setFooter({ text: `Saved from ${interaction.guild!.name}` })
-      .setTimestamp();
-
-    if (track.thumbnail) {
-      embed.setThumbnail(track.thumbnail);
-    }
+      .setFooter({ 
+        text: i18n.__mf("grab.requestedBy", { 
+          user: track.requestedBy?.username || "Unknown" 
+        }) 
+      });
 
     try {
       await interaction.user.send({ embeds: [embed] });
-      await logAction(interaction.guild!, interaction.user, "grab", track.title);
-      return interaction.editReply({ 
-        content: i18n.__mf("save.result", { title: track.title })
-      }).catch(console.error);
+      return interaction.reply({
+        content: i18n.__("grab.success"),
+        ephemeral: true
+      });
     } catch {
-      return interaction.editReply({ 
-        content: i18n.__("save.errorDMClosed") 
-      }).catch(console.error);
+      return interaction.reply({
+        content: i18n.__("grab.dmFailed"),
+        ephemeral: true
+      });
     }
   }
 };

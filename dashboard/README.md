@@ -19,6 +19,21 @@ A modern, clean web dashboard for managing your Discord music bot. Built with Ne
 - **Premium Tiers**: Subscribe to premium features via Patreon
 - **Help Center**: Complete command documentation and FAQ
 - **Patreon Webhooks**: Handles Patreon membership updates via API routes
+- **Music Player Controls**: Full player interface with:
+  - Play, pause, skip, stop, volume controls
+  - Queue management (view, remove, move, clear)
+  - Seek, shuffle, loop controls
+- **Collections System**: Save and manage track collections
+  - Create, edit, delete collections
+  - Add/remove tracks from collections
+  - Load collections into the queue
+  - Save current queue to a collection
+  - Public/private collections with share codes
+- **Advanced Commands Panel**: Execute all bot commands from the dashboard
+  - Audio settings (bass boost, nightcore, speed, bitrate)
+  - Playback controls (forward, rewind, wind, replay, previous, loop, repeat)
+  - Session controls (join, leave, autoplay)
+  - Info commands (now playing, lyrics, history, recently played)
 
 ## Tech Stack
 

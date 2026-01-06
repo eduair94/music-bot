@@ -42,7 +42,7 @@ export class DashboardSyncService {
       return;
     }
 
-    console.log("[DashboardSync] ��� Initializing dashboard sync service...");
+    console.log("[DashboardSync] 🚀 Initializing dashboard sync service...");
 
     this.client = client;
     this.playerService = DiscordPlayerService.getInstance();
@@ -267,7 +267,7 @@ export class DashboardSyncService {
       await this.processCommands();
     }, 500);
 
-    console.log("[DashboardSync] ��� Started command polling");
+    console.log("[DashboardSync] ✅ Started command polling");
   }
 
   /**
@@ -609,7 +609,7 @@ export class DashboardSyncService {
       clearInterval(this.pollInterval);
       this.pollInterval = null;
     }
-    console.log("[DashboardSync] ��� Dashboard sync service stopped");
+    console.log("[DashboardSync] 🛑 Dashboard sync service stopped");
   }
 }
 

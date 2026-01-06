@@ -58,7 +58,7 @@ export class BotManagerService {
       return;
     }
 
-    console.log("[BotManager] ��� Initializing Bot Manager Service...");
+    console.log("[BotManager] 🚀 Initializing Bot Manager Service...");
 
     try {
       // Find all bots that should be running

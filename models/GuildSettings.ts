@@ -135,6 +135,30 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
       type: [String], 
       default: [] 
     },
+    blacklistedAuthors: {
+      type: [String],
+      default: []
+    },
+    blacklistedTitles: {
+      type: [String],
+      default: []
+    },
+    disabledCommands: {
+      type: [String],
+      default: []
+    },
+    permissions: {
+      type: Object,
+      default: {}
+    },
+    prefixes: {
+      type: [String],
+      default: ["!"]
+    },
+    mappings: {
+      type: Object,
+      default: {}
+    },
     
     // Customization
     language: { 

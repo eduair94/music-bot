@@ -87,7 +87,7 @@ function sendToParent(message: StatusMessage): void {
 async function initializePlayer(): Promise<void> {
     if (!client) return;
 
-    console.log("[LinkedBot] ��� Initializing discord-player...");
+    console.log("[LinkedBot] 🎵 Initializing discord-player...");
 
     player = new Player(client, {
         skipFFmpeg: false,
@@ -97,7 +97,7 @@ async function initializePlayer(): Promise<void> {
 
     // Custom stream function using yt-dlp
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
-        console.log(`[LinkedBot] ��� Creating stream for: ${track.title}`);
+        console.log(`[LinkedBot] 🎵 Creating stream for: ${track.title}`);
 
         if (!track.url) {
             throw new Error(`Track has no URL: ${track.title}`);

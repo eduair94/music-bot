@@ -38,6 +38,7 @@
     "lyrics-finder": "^21.0.5",
     "mediaplex": "^1.0.0",
     "mongoose": "^9.0.2",
+    "nanoid": "^5.1.6",
     "play-dl": "^1.9.7",
     "soundcloud-downloader": "^0.2.3",
     "string-progressbar": "^1.0.4",

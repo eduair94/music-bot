@@ -1,6 +1,8 @@
 "use client";
 
 import { AddSong } from "@/components/dashboard/AddSong";
+import { CollectionPanel } from "@/components/dashboard/CollectionPanel";
+import { CommandPanel } from "@/components/dashboard/CommandPanel";
 import { PlayerControls } from "@/components/dashboard/PlayerControls";
 import { QueueList } from "@/components/dashboard/QueueList";
 import { usePlayback } from "@/hooks/usePlayback";
@@ -93,6 +95,20 @@ export function PlayerPageClient({ guildId, voiceChannels }: PlayerPageClientPro
           <AddSong
             voiceChannels={voiceChannels}
             currentVoiceChannelId={currentState.voiceChannelId}
+            sendCommand={sendCommand}
+            sendingCommand={sendingCommand}
+          />
+          
+          {/* Collections */}
+          <CollectionPanel
+            queue={currentState.queue}
+            currentTrack={currentState.currentTrack}
+            sendCommand={sendCommand}
+            sendingCommand={sendingCommand}
+          />
+          
+          {/* Advanced Commands */}
+          <CommandPanel
             sendCommand={sendCommand}
             sendingCommand={sendingCommand}
           />

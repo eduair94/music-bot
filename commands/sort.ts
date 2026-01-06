@@ -1,96 +1,96 @@
-import { Track } from "discord-player";
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
-import { DiscordPlayerService } from "../services/discordPlayer";
-import { logAction } from "../utils/actionLog";
-import { hasDJPermission } from "../utils/djPermission";
+import { 
+  ChatInputCommandInteraction, 
+  EmbedBuilder, 
+  GuildMember, 
+  SlashCommandBuilder 
+} from "discord.js";
+import { useQueue } from "discord-player";
 import { i18n } from "../utils/i18n";
-import { canModifyQueue } from "../utils/queue";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("sort")
-    .setDescription("Sort the queue by title, author, or length")
-    .addStringOption((option) =>
+    .setDescription(i18n.__("sort.description"))
+    .addStringOption(option =>
       option
-        .setName("type")
-        .setDescription("Sort type")
+        .setName("by")
+        .setDescription("Sort criteria")
         .setRequired(true)
         .addChoices(
-          { name: "Title (A-Z)", value: "title" },
-          { name: "Author (A-Z)", value: "author" },
-          { name: "Length (Shortest first)", value: "length" },
-          { name: "Length (Longest first)", value: "length_desc" }
+          { name: "Title (A-Z)", value: "title_asc" },
+          { name: "Title (Z-A)", value: "title_desc" },
+          { name: "Author (A-Z)", value: "author_asc" },
+          { name: "Author (Z-A)", value: "author_desc" },
+          { name: "Duration (Shortest)", value: "duration_asc" },
+          { name: "Duration (Longest)", value: "duration_desc" }
         )
     ),
+  
   async execute(interaction: ChatInputCommandInteraction) {
-    await interaction.deferReply().catch(console.error);
-
-    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
-
-    if (!canModifyQueue(guildMember!)) {
-      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
+    const member = interaction.member as GuildMember;
+    
+    if (!member.voice.channel) {
+      return interaction.reply({
+        content: i18n.__("sort.notInVoice"),
+        ephemeral: true
+      });
     }
 
-    const hasDJ = await hasDJPermission(guildMember as GuildMember);
-    if (!hasDJ) {
-      return interaction.editReply({
-        content: "❌ You need the DJ role to use this command."
-      }).catch(console.error);
-    }
-
-    const playerService = DiscordPlayerService.getInstance();
-    const queue = playerService.getQueue(interaction.guild!.id);
-
+    const queue = useQueue(interaction.guildId!);
+    
     if (!queue || queue.tracks.size < 2) {
-      return interaction.editReply({ 
-        content: "❌ Need at least 2 tracks in queue to sort." 
-      }).catch(console.error);
+      return interaction.reply({
+        content: i18n.__("sort.noQueue"),
+        ephemeral: true
+      });
     }
 
-    const sortType = interaction.options.getString("type", true);
-    
-    // Get all tracks as array
+    const sortBy = interaction.options.getString("by", true);
     const tracks = queue.tracks.toArray();
-    
-    // Sort based on type
-    let sortedTracks: Track[];
-    let sortDescription: string;
-    
-    switch (sortType) {
-      case "title":
-        sortedTracks = tracks.sort((a, b) => 
-          a.title.toLowerCase().localeCompare(b.title.toLowerCase())
-        );
-        sortDescription = "title (A-Z)";
-        break;
-      case "author":
-        sortedTracks = tracks.sort((a, b) => 
-          (a.author || "").toLowerCase().localeCompare((b.author || "").toLowerCase())
-        );
-        sortDescription = "author (A-Z)";
-        break;
-      case "length":
-        sortedTracks = tracks.sort((a, b) => a.durationMS - b.durationMS);
-        sortDescription = "length (shortest first)";
-        break;
-      case "length_desc":
-        sortedTracks = tracks.sort((a, b) => b.durationMS - a.durationMS);
-        sortDescription = "length (longest first)";
-        break;
-      default:
-        return interaction.editReply({ content: "❌ Invalid sort type." }).catch(console.error);
-    }
-    
-    // Clear and re-add in sorted order
+
+    // Sort tracks based on criteria
+    tracks.sort((a, b) => {
+      switch (sortBy) {
+        case "title_asc":
+          return a.title.localeCompare(b.title);
+        case "title_desc":
+          return b.title.localeCompare(a.title);
+        case "author_asc":
+          return a.author.localeCompare(b.author);
+        case "author_desc":
+          return b.author.localeCompare(a.author);
+        case "duration_asc":
+          return (a.durationMS || 0) - (b.durationMS || 0);
+        case "duration_desc":
+          return (b.durationMS || 0) - (a.durationMS || 0);
+        default:
+          return 0;
+      }
+    });
+
+    // Clear and re-add sorted tracks
     queue.tracks.clear();
-    for (const track of sortedTracks) {
+    for (const track of tracks) {
       queue.tracks.add(track);
     }
 
-    await logAction(interaction.guild!, interaction.user, "sort", sortDescription);
+    const sortLabels: Record<string, string> = {
+      "title_asc": "Title (A-Z)",
+      "title_desc": "Title (Z-A)",
+      "author_asc": "Author (A-Z)",
+      "author_desc": "Author (Z-A)",
+      "duration_asc": "Duration (Shortest first)",
+      "duration_desc": "Duration (Longest first)"
+    };
 
-    return interaction.editReply({
-      content: `<@${interaction.user.id}> 📊 sorted the queue by ${sortDescription} (${tracks.length} tracks)`
-    }).catch(console.error);
+    const embed = new EmbedBuilder()
+      .setTitle(i18n.__("sort.title"))
+      .setDescription(i18n.__mf("sort.success", { 
+        count: tracks.length,
+        criteria: sortLabels[sortBy] || sortBy
+      }))
+      .setColor("#F8AA2A");
+
+    return interaction.reply({ embeds: [embed] });
   }
 };

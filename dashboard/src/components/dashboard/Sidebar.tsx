@@ -5,6 +5,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import HelpIcon from "@mui/icons-material/Help";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import PersonIcon from "@mui/icons-material/Person";
+import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
 import StarIcon from "@mui/icons-material/Star";
 import StorageIcon from "@mui/icons-material/Storage";
@@ -40,6 +41,11 @@ const menuItems = [
     title: "My Servers",
     path: "/servers",
     icon: <StorageIcon />,
+  },
+  {
+    title: "Collections",
+    path: "/collections",
+    icon: <QueueMusicIcon />,
   },
   {
     title: "My Bots",
