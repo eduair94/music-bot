@@ -1,13 +1,13 @@
-import { 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
-  GuildMember, 
-  SlashCommandBuilder,
-  TextChannel
-} from "discord.js";
 import { useQueue } from "discord-player";
-import { i18n } from "../utils/i18n";
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    GuildMember,
+    SlashCommandBuilder,
+    TextChannel
+} from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()

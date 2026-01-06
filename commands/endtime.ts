@@ -1,9 +1,9 @@
-import {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  GuildMember,
-} from "discord.js";
 import { useQueue } from "discord-player";
+import {
+    ChatInputCommandInteraction,
+    GuildMember,
+    SlashCommandBuilder,
+} from "discord.js";
 import { i18n } from "../utils/i18n";
 import { safeReply } from "../utils/safeReply";
 

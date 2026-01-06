@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";

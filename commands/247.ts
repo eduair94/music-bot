@@ -1,11 +1,11 @@
-import { 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
-  GuildMember, 
-  SlashCommandBuilder,
-  PermissionFlagsBits
-} from "discord.js";
 import { useQueue } from "discord-player";
+import {
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    GuildMember,
+    PermissionFlagsBits,
+    SlashCommandBuilder
+} from "discord.js";
 import { i18n } from "../utils/i18n";
 import { hasPremiumFeature } from "../utils/premiumCheck";
 

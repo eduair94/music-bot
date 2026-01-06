@@ -1,8 +1,8 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, EmbedBuilder, TextChannel } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder, TextChannel } from "discord.js";
 import youtube from "youtube-sr";
 import { Command } from "../interfaces/Command";
-import { i18n } from "../utils/i18n";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { i18n } from "../utils/i18n";
 
 const playsingle: Command = {
     data: new SlashCommandBuilder()

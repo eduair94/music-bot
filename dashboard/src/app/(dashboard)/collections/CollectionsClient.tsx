@@ -1,47 +1,47 @@
 "use client";
 
-import { useCollections, Collection, CollectionTrack } from "@/hooks/useCollections";
+import { Collection, CollectionTrack, useCollections } from "@/hooks/useCollections";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import LockIcon from "@mui/icons-material/Lock";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import PublicIcon from "@mui/icons-material/Public";
 import ShareIcon from "@mui/icons-material/Share";
-import LockIcon from "@mui/icons-material/Lock";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid2 as Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemSecondaryAction,
-  ListItemText,
-  Skeleton,
-  Stack,
-  Switch,
-  TextField,
-  Tooltip,
-  Typography,
-  FormControlLabel,
-  Snackbar,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Alert,
+    Avatar,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Chip,
+    CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    FormControlLabel,
+    Grid2 as Grid,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemSecondaryAction,
+    ListItemText,
+    Skeleton,
+    Snackbar,
+    Stack,
+    Switch,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 import { useState } from "react";
 

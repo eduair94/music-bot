@@ -1,6 +1,6 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from "discord.js";
-import { Command } from "../interfaces/Command";
 import { useHistory } from "discord-player";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { Command } from "../interfaces/Command";
 import { i18n } from "../utils/i18n";
 
 const recentlyplayed: Command = {

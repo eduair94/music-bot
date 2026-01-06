@@ -1,7 +1,7 @@
 import {
-  SlashCommandBuilder,
-  ChatInputCommandInteraction,
-  EmbedBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder,
 } from "discord.js";
 import { i18n } from "../utils/i18n";
 import { safeReply } from "../utils/safeReply";

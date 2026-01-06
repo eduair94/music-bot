@@ -1,11 +1,10 @@
-import { 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
-  SlashCommandBuilder,
-  User
+import {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder
 } from "discord.js";
-import { i18n } from "../utils/i18n";
 import { PatreonService } from "../services/patreon";
+import { i18n } from "../utils/i18n";
 
 export default {
   data: new SlashCommandBuilder()
