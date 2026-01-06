@@ -31,12 +31,12 @@ export default {
         new ButtonBuilder()
           .setLabel("Vote on Top.gg")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://top.gg/bot/YOUR_BOT_ID/vote")
+          .setURL("https://top.gg/bot/1315125264786653225/vote")
           .setEmoji("🗳️"),
         new ButtonBuilder()
           .setLabel("Vote on Discord Bot List")
           .setStyle(ButtonStyle.Link)
-          .setURL("https://discordbotlist.com/bots/YOUR_BOT_ID/upvote")
+          .setURL("https://discordbotlist.com/bots/1315125264786653225/upvote")
           .setEmoji("⬆️")
       );
 

@@ -1,0 +1,1156 @@
+[
+  {
+    "id": "1315153583599128618",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896692",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "help",
+    "description": "Display all commands and descriptions",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128619",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896693",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "invite",
+    "description": "Send bot invite link",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128620",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896694",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "loop",
+    "description": "Toggle music loop",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128621",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896695",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "lyrics",
+    "description": "Get lyrics for the currently playing song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128623",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896697",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "nowplaying",
+    "description": "Show now playing song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128624",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896698",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "pause",
+    "description": "Pause the currently playing music",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583599128625",
+    "application_id": "1315125264786653225",
+    "version": "1315153583766896699",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "ping",
+    "description": "Show the bot's average ping",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685194",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678073",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "queue",
+    "description": "Show the music queue and now playing.",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685196",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678075",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "resume",
+    "description": "Resume currently playing music",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685198",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678077",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "shuffle",
+    "description": "Shuffle queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685199",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678078",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "skip",
+    "description": "Skip the currently playing song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685201",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678080",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "stop",
+    "description": "Stops the music",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1315153583678685202",
+    "application_id": "1315125264786653225",
+    "version": "1315153583783678081",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "uptime",
+    "description": "Check the uptime",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617599",
+    "application_id": "1315125264786653225",
+    "version": "1423181486743617607",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "move",
+    "description": "Move songs around in the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "movefrom", "description": "Slot to move from", "required": true },
+      { "type": 4, "name": "moveto", "description": "Slot to move to", "required": true }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617600",
+    "application_id": "1315125264786653225",
+    "version": "1451678020325871810",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "play",
+    "description": "Plays audio from YouTube",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 3,
+        "name": "song",
+        "description": "Song name, YouTube URL, SoundCloud URL, or Spotify URL",
+        "required": true
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617601",
+    "application_id": "1315125264786653225",
+    "version": "1451754035546689650",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "playlist",
+    "description": "Play a playlist from youtube",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 3, "name": "playlist", "description": "Playlist URL", "required": true }],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617602",
+    "application_id": "1315125264786653225",
+    "version": "1423181486974042233",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "remove",
+    "description": "Remove song from the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 3, "name": "slot", "description": "Remove song from the queue", "required": true }],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617603",
+    "application_id": "1315125264786653225",
+    "version": "1423181486974042234",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "search",
+    "description": "Search and select videos to play",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 3, "name": "query", "description": "Search query", "required": true }],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617605",
+    "application_id": "1315125264786653225",
+    "version": "1423181486974042235",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "skipto",
+    "description": "Skip to the selected queue number",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 4, "name": "number", "description": "The queue number to skip to", "required": true }],
+    "nsfw": false
+  },
+  {
+    "id": "1423181486743617606",
+    "application_id": "1315125264786653225",
+    "version": "1423181486974042236",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "volume",
+    "description": "Change volume of currently playing music",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 4, "name": "volume", "description": "Change volume of currently playing music" }],
+    "nsfw": false
+  },
+  {
+    "id": "1451754035546689648",
+    "application_id": "1315125264786653225",
+    "version": "1452828859975336056",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "premium",
+    "description": "Manage premium features and server links",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 1, "name": "link", "description": "Link this server to your Patreon account" },
+      { "type": 1, "name": "unlink", "description": "Unlink this server from your Patreon account" },
+      { "type": 1, "name": "list", "description": "List all servers linked to your Patreon account" },
+      { "type": 1, "name": "status", "description": "Show premium status for this server" },
+      {
+        "type": 1,
+        "name": "config",
+        "description": "Configure premium settings for this server",
+        "options": [
+          {
+            "type": 4,
+            "name": "bitrate",
+            "description": "Audio bitrate in kbps",
+            "choices": [
+              { "name": "128 kbps", "value": 128 },
+              { "name": "192 kbps", "value": 192 },
+              { "name": "256 kbps", "value": 256 },
+              { "name": "320 kbps (HQ)", "value": 320 }
+            ]
+          },
+          { "type": 3, "name": "identity", "description": "Custom bot identity for this server" }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1451754035546689649",
+    "application_id": "1315125264786653225",
+    "version": "1451754035546689652",
+    "default_member_permissions": "32",
+    "type": 1,
+    "name": "settings",
+    "description": "Configure bot settings for this server (Admin only)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 1, "name": "view", "description": "View current settings" },
+      { "type": 1, "name": "djrole", "description": "Set the DJ role for music control" },
+      { "type": 1, "name": "adminrole", "description": "Set the admin role for settings management" },
+      {
+        "type": 1,
+        "name": "volume",
+        "description": "Set default and maximum volume",
+        "options": [
+          { "type": 4, "name": "default", "description": "Default volume (0-100)", "min_value": 0, "max_value": 100 },
+          {
+            "type": 4,
+            "name": "max",
+            "description": "Maximum allowed volume (0-100)",
+            "min_value": 0,
+            "max_value": 100
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "queue",
+        "description": "Configure queue settings",
+        "options": [
+          {
+            "type": 4,
+            "name": "maxsize",
+            "description": "Maximum queue size (1-1000)",
+            "min_value": 1,
+            "max_value": 1000
+          },
+          { "type": 5, "name": "preventduplicates", "description": "Prevent duplicate songs in queue" }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "behavior",
+        "description": "Configure bot behavior",
+        "options": [
+          { "type": 5, "name": "announcements", "description": "Announce now playing in text channel" },
+          { "type": 5, "name": "autoleave", "description": "Leave voice channel when empty" },
+          {
+            "type": 4,
+            "name": "leavetimeout",
+            "description": "Seconds before leaving empty channel (30-3600)",
+            "min_value": 30,
+            "max_value": 3600
+          }
+        ]
+      },
+      { "type": 1, "name": "voicechannels", "description": "Set allowed voice channels" },
+      { "type": 1, "name": "textchannels", "description": "Set allowed text channels for commands" },
+      { "type": 1, "name": "logchannel", "description": "Set the channel for bot logs (now playing, etc.)" },
+      {
+        "type": 1,
+        "name": "blacklist",
+        "description": "Manage user blacklist",
+        "options": [
+          { "type": 6, "name": "add", "description": "Add user to blacklist" },
+          { "type": 6, "name": "remove", "description": "Remove user from blacklist" }
+        ]
+      },
+      { "type": 1, "name": "language", "description": "Set bot language for this server" },
+      {
+        "type": 1,
+        "name": "embedcolor",
+        "description": "Set custom embed color",
+        "options": [{ "type": 3, "name": "color", "description": "Hex color code (e.g., #FF5500)", "required": true }]
+      },
+      { "type": 1, "name": "reset", "description": "Reset all settings to default" },
+      { "type": 1, "name": "stats", "description": "View server music statistics" }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1451764594979897525",
+    "application_id": "1315125264786653225",
+    "version": "1457508697067491429",
+    "default_member_permissions": "8",
+    "type": 1,
+    "name": "patreonadmin",
+    "description": "Patreon administration commands (Bot owner only)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 1, "name": "getcampaign", "description": "Get your Patreon campaign ID" },
+      { "type": 1, "name": "verify", "description": "Verify Patreon API credentials are working" },
+      { "type": 1, "name": "sync", "description": "Manually sync all patrons from Patreon" },
+      { "type": 1, "name": "status", "description": "Check Patreon configuration status" },
+      { "type": 1, "name": "createwebhook", "description": "Create/register a Patreon webhook via API" },
+      { "type": 1, "name": "listwebhooks", "description": "List all webhooks registered for your campaign" },
+      {
+        "type": 1,
+        "name": "deletewebhook",
+        "description": "Delete a webhook by ID",
+        "options": [{ "type": 3, "name": "id", "description": "The webhook ID to delete", "required": true }]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1451769133321420861",
+    "application_id": "1315125264786653225",
+    "version": "1451769133321420862",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "patreon",
+    "description": "Check your Patreon status and sync benefits",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 1, "name": "status", "description": "Check your current Patreon status and benefits" },
+      { "type": 1, "name": "sync", "description": "Sync your Patreon data to update your benefits" },
+      { "type": 1, "name": "info", "description": "Learn about Patreon benefits and how to link your account" }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1452812290960134399",
+    "application_id": "1315125264786653225",
+    "version": "1452812290960134400",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "play_spotify",
+    "description": "Search and play a song from Spotify",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 3, "name": "query", "description": "Song name, artist, or Spotify URL to search for", "required": true }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1452828859975336052",
+    "application_id": "1315125264786653225",
+    "version": "1452828859975336055",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "play_file",
+    "description": "Play an audio file from attachment",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 11,
+        "name": "file",
+        "description": "Audio file to play (MP3, WAV, FLAC, M4A, OGG, etc.)",
+        "required": true
+      },
+      { "type": 3, "name": "title", "description": "Optional custom title for the track" }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1452828859975336053",
+    "application_id": "1315125264786653225",
+    "version": "1454699879304794314",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "resetbitrate",
+    "description": "(Owner Only) Reset audio bitrate to default/Patreon settings",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 3,
+        "name": "target",
+        "description": "Reset for 'user' or 'guild'",
+        "choices": [
+          { "name": "User", "value": "user" },
+          { "name": "Guild (Server)", "value": "guild" }
+        ]
+      },
+      { "type": 6, "name": "user", "description": "User to reset (when target is 'user')" },
+      {
+        "type": 3,
+        "name": "guild_id",
+        "description": "Guild ID to reset (when target is 'guild', defaults to current)"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1452828859975336054",
+    "application_id": "1315125264786653225",
+    "version": "1454699879304794315",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "setbitrate",
+    "description": "(Owner Only) Set custom audio bitrate for testing",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 4,
+        "name": "bitrate",
+        "description": "Audio bitrate in kbps (128, 192, 256, 320)",
+        "required": true,
+        "choices": [
+          { "name": "128 kbps (Free)", "value": 128 },
+          { "name": "192 kbps (Mid)", "value": 192 },
+          { "name": "256 kbps (High)", "value": 256 },
+          { "name": "320 kbps (Premium)", "value": 320 }
+        ]
+      },
+      {
+        "type": 3,
+        "name": "target",
+        "description": "Set for 'user' or 'guild'",
+        "choices": [
+          { "name": "User", "value": "user" },
+          { "name": "Guild (Server)", "value": "guild" }
+        ]
+      },
+      { "type": 3, "name": "identity", "description": "Custom bot identity (optional)" },
+      { "type": 6, "name": "user", "description": "User to set bitrate for (when target is 'user')" },
+      {
+        "type": 3,
+        "name": "guild_id",
+        "description": "Guild ID to set bitrate for (when target is 'guild', defaults to current)"
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559815",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480842",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "8d",
+    "description": "Apply 8D audio effect (rotates sound around you)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable 8D effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559816",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480843",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "autoplay",
+    "description": "Toggle autoplay mode (play similar songs when queue ends)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559817",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480844",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "backward",
+    "description": "Wind the track backwards",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "seconds", "description": "Number of seconds to rewind", "min_value": 1, "max_value": 300 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559818",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480845",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "bassboost",
+    "description": "bassboost.description",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 3,
+        "name": "level",
+        "description": "Bass boost level",
+        "choices": [
+          { "name": "Off", "value": "off" },
+          { "name": "Low", "value": "low" },
+          { "name": "Medium", "value": "medium" },
+          { "name": "High", "value": "high" }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559819",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480846",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "clear",
+    "description": "Clear the entire queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559820",
+    "application_id": "1315125264786653225",
+    "version": "1457801227688480847",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "clearfilters",
+    "description": "Clear all active audio filters",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559821",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631230",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "distortion",
+    "description": "Apply distortion audio effect",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable distortion effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559822",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631231",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "echo",
+    "description": "Toggle echo audio effect",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227231559823",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631232",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "filters",
+    "description": "View all active audio filters",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290573",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631233",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "forward",
+    "description": "Fast forward the track by specified seconds",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 4,
+        "name": "seconds",
+        "description": "Number of seconds to skip forward",
+        "min_value": 1,
+        "max_value": 300
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290574",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631234",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "grab",
+    "description": "Save the current song to your DMs",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290575",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631235",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "history",
+    "description": "Show recently played tracks",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290576",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631236",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "insert",
+    "description": "Insert a track right after the currently playing song",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 3, "name": "song", "description": "Song name or URL to insert", "required": true }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290577",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631237",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "join",
+    "description": "Make the bot join your voice channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290578",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631238",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "jump",
+    "description": "Jump to a specific position in the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "position", "description": "Queue position to jump to", "required": true, "min_value": 1 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290579",
+    "application_id": "1315125264786653225",
+    "version": "1457801227818631239",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "karaoke",
+    "description": "Apply karaoke effect (reduces vocals)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable karaoke effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290580",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860244",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "leave",
+    "description": "Make the bot leave the voice channel",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290581",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860245",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "loopqueue",
+    "description": "Toggle queue loop mode",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227336290582",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860246",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "nextup",
+    "description": "Get information about the next track in queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755502",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860247",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "nightcore",
+    "description": "nightcore.description",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable nightcore effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755503",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860248",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "pitch",
+    "description": "Change the pitch of the current track",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 3,
+        "name": "level",
+        "description": "Pitch level",
+        "choices": [
+          { "name": "Off", "value": "off" },
+          { "name": "Lower (vaporwave)", "value": "lower" },
+          { "name": "Higher (nightcore)", "value": "higher" }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755504",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860249",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "previous",
+    "description": "Play the previous track",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755505",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860250",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "queueinfo",
+    "description": "Get detailed information about the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755506",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860251",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "removecurrent",
+    "description": "Remove the currently playing track and skip to the next one",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755507",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860252",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "removeduplicates",
+    "description": "Remove all duplicate tracks from the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755508",
+    "application_id": "1315125264786653225",
+    "version": "1457801227847860253",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "removelast",
+    "description": "Remove the last track from the queue (undo)",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755509",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772639",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "removerange",
+    "description": "Remove a range of tracks from the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "start", "description": "Start position", "required": true, "min_value": 1 },
+      { "type": 4, "name": "end", "description": "End position", "required": true, "min_value": 1 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755510",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772640",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "replay",
+    "description": "Restart the current track from the beginning",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227432755511",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772641",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "restart",
+    "description": "Restart the current track from the beginning",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521108",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772642",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "reverse",
+    "description": "Reverse the order of the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521109",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772643",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "rewind",
+    "description": "Rewind the track by specified seconds",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "seconds", "description": "Number of seconds to rewind", "min_value": 1, "max_value": 300 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521110",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772644",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "save",
+    "description": "Save the current song to your DMs",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521111",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772645",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "seek",
+    "description": "Seek to a specific time in the track",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 3, "name": "time", "description": "Time to seek to (e.g., 1:30, 90, 1m30s)", "required": true }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521112",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772646",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "sort",
+    "description": "Sort the queue by title, author, or length",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      {
+        "type": 3,
+        "name": "type",
+        "description": "Sort type",
+        "required": true,
+        "choices": [
+          { "name": "Title (A-Z)", "value": "title" },
+          { "name": "Author (A-Z)", "value": "author" },
+          { "name": "Length (Shortest first)", "value": "length" },
+          { "name": "Length (Longest first)", "value": "length_desc" }
+        ]
+      }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521113",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772647",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "speed",
+    "description": "speed.description",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 10, "name": "rate", "description": "Playback speed (0.5 to 2.0)", "min_value": 0.5, "max_value": 2.0 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521115",
+    "application_id": "1315125264786653225",
+    "version": "1457801227864772648",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "stats",
+    "description": "Get bot statistics",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521116",
+    "application_id": "1315125264786653225",
+    "version": "1457801227881545912",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "swap",
+    "description": "Swap the position of two tracks in the queue",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [
+      { "type": 4, "name": "position1", "description": "First track position", "required": true, "min_value": 1 },
+      { "type": 4, "name": "position2", "description": "Second track position", "required": true, "min_value": 1 }
+    ],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227554521117",
+    "application_id": "1315125264786653225",
+    "version": "1457801227881545913",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "tremolo",
+    "description": "Apply tremolo audio effect",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable tremolo effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227688480838",
+    "application_id": "1315125264786653225",
+    "version": "1457801227881545914",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "vibrato",
+    "description": "Apply vibrato audio effect",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "options": [{ "type": 5, "name": "enabled", "description": "Enable or disable vibrato effect" }],
+    "nsfw": false
+  },
+  {
+    "id": "1457801227688480841",
+    "application_id": "1315125264786653225",
+    "version": "1457801227881545915",
+    "default_member_permissions": null,
+    "type": 1,
+    "name": "voteskip",
+    "description": "Vote to skip the current track",
+    "dm_permission": true,
+    "contexts": null,
+    "integration_types": [0, 1],
+    "nsfw": false
+  }
+]

@@ -26,6 +26,12 @@ https://github.com/eduair94/music-bot
 
 ---
 
+# Long Description (Plain Text)
+
+Music Bot is a powerful, feature-rich Discord music bot designed to deliver the ultimate audio experience for your server. With over 150 commands at your fingertips, you can play music from YouTube, Spotify, SoundCloud, and many other platforms with crystal-clear audio quality. The bot offers advanced queue management including shuffle, loop, move, swap, and reorder functionality, giving you complete control over your listening session. Transform your audio with a variety of filters like bass boost, nightcore, 8D spatial audio, karaoke mode, distortion, echo, and pulsator effects. Create personal playlists, import existing ones from popular platforms, and share your music collections with unique codes. Engage your community with interactive music games like Guess the Song, compete on leaderboards, and track your listening statistics through customizable user profiles. Server administrators can configure permissions, set channel restrictions, customize announcements, and establish track length limits. Premium features include 24/7 mode to keep the music playing around the clock, custom profile backgrounds, extended playlist limits, and priority support. The bot supports multiple languages including English, Spanish, French, German, and more, making it accessible to communities worldwide. Whether you want casual background music or an interactive music experience, Music Bot has everything you need to bring your Discord server to life.
+
+---
+
 # Description
 
 🎵 **Music Bot** - The Ultimate Discord Music Experience
