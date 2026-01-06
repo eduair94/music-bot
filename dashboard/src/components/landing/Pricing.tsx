@@ -48,7 +48,7 @@ const tiers: PricingTier[] = [
     highlighted: true,
     badge: "LIMITED TIME",
     cta: "Become a Founder",
-    ctaLink: "https://patreon.com/u36360623",
+    ctaLink: "https://www.patreon.com/c/u36360623",
   },
   {
     name: "Coming Soon",
@@ -61,7 +61,7 @@ const tiers: PricingTier[] = [
       "More features coming...",
     ],
     cta: "Join Waitlist",
-    ctaLink: "https://patreon.com/u36360623",
+    ctaLink: "https://www.patreon.com/c/u36360623",
   },
 ];
 

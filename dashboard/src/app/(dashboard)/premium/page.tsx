@@ -22,51 +22,55 @@ const plans = [
     name: "Free",
     price: "$0",
     period: "forever",
-    description: "Perfect for small servers",
+    description: "Perfect for getting started",
     features: [
-      "128kbps audio quality",
-      "100 songs max queue",
-      "Basic commands",
-      "Community support",
+      "Play music from YouTube",
+      "Queue management",
+      "Basic playback controls",
+      "Volume control",
+      "Lyrics display",
+      "27+ languages support",
     ],
     current: true,
     icon: <StarIcon />,
     color: "#72767d",
   },
   {
-    name: "Basic",
-    price: "$3",
+    name: "Founder / Beta Tester",
+    price: "$1.50",
     period: "per month",
-    description: "Great for growing communities",
+    description: "Limited to 50 spots - Locked forever",
     features: [
-      "256kbps audio quality",
-      "500 songs max queue",
-      "All basic features",
-      "Priority queue",
-      "Custom embed colors",
-      "Email support",
+      "All Free features",
+      "Audio Filters (bass boost, nightcore)",
+      "24/7 Mode - Bot stays in channel",
+      "Maximum Audio Quality",
+      "Priority Queue",
+      "Unlimited Saved Playlists",
+      "No Song Duration Limit",
+      "Vote on New Features",
+      "Exclusive Founder Role",
+      "Direct Support Channel",
     ],
     popular: true,
     icon: <WorkspacePremiumIcon />,
-    color: "#F8AA2A",
+    color: "#F96854",
+    ctaLink: "https://www.patreon.com/c/u36360623",
   },
   {
-    name: "Pro",
-    price: "$7",
+    name: "Coming Soon",
+    price: "$3.50+",
     period: "per month",
-    description: "For serious music lovers",
+    description: "Future premium tiers",
     features: [
-      "320kbps audio quality",
-      "Unlimited queue size",
-      "All basic features",
-      "24/7 playback mode",
-      "Audio effects & filters",
-      "Lyrics display",
+      "Multi-server support",
+      "Custom bot instance",
       "Priority support",
-      "Custom bot nickname",
+      "More features coming...",
     ],
     icon: <DiamondIcon />,
     color: "#5865F2",
+    ctaLink: "https://www.patreon.com/c/u36360623",
   },
 ];
 
@@ -74,11 +78,21 @@ export default function PremiumPage() {
   return (
     <Box>
       <Box sx={{ mb: 4, textAlign: "center" }}>
+        <Chip
+          label="Support on Patreon"
+          size="small"
+          sx={{
+            mb: 2,
+            bgcolor: "#F96854",
+            color: "white",
+            fontWeight: 600,
+          }}
+        />
         <Typography variant="h4" fontWeight={700} gutterBottom>
-          Upgrade to Premium
+          Unlock Premium Features
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: "auto" }}>
-          Unlock the full potential of your music bot with premium features, higher quality audio, and priority support.
+          Support the development and get exclusive features.
         </Typography>
       </Box>
 
@@ -100,7 +114,7 @@ export default function PremiumPage() {
             >
               {plan.popular && (
                 <Chip
-                  label="MOST POPULAR"
+                  label="LIMITED TIME"
                   size="small"
                   sx={{
                     position: "absolute",
@@ -177,6 +191,10 @@ export default function PremiumPage() {
                     variant={plan.current ? "outlined" : "contained"}
                     fullWidth
                     disabled={plan.current}
+                    component={plan.ctaLink ? "a" : "button"}
+                    href={plan.ctaLink}
+                    target={plan.ctaLink ? "_blank" : undefined}
+                    rel={plan.ctaLink ? "noopener noreferrer" : undefined}
                     sx={{
                       py: 1.5,
                       ...(plan.popular && !plan.current && {
@@ -188,7 +206,7 @@ export default function PremiumPage() {
                       }),
                     }}
                   >
-                    {plan.current ? "Current Plan" : "Get Started"}
+                    {plan.current ? "Current Plan" : plan.popular ? "Become a Founder" : "Join Waitlist"}
                   </Button>
                 </Stack>
               </CardContent>

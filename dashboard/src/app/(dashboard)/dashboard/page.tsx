@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
 
 interface Stats {
   totalServers: number;
-  serversWithBot: number;
+  c: number;
   premiumServers: number;
   playlistsCreated: number;
 }
