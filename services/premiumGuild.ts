@@ -1,5 +1,6 @@
 import { IPremiumGuild, PremiumGuild } from "../models/PremiumGuild";
 import { config } from "../utils/config";
+import { DatabaseService } from "./database";
 import { PatreonService } from "./patreon";
 
 /**
@@ -25,6 +26,25 @@ export class PremiumGuildService {
       this.instance = new PremiumGuildService();
     }
     return this.instance;
+  }
+
+  /**
+   * Ensure database connection is available before operations
+   * @throws Error if database is not connected and cannot reconnect
+   */
+  private async ensureDbConnection(): Promise<void> {
+    const db = DatabaseService.getInstance();
+    
+    // Check if already connected
+    if (db.isReady()) {
+      return;
+    }
+
+    // Try to establish/re-establish connection
+    const connected = await db.ensureConnection();
+    if (!connected) {
+      throw new Error("Database connection is not available. Please try again later.");
+    }
   }
 
   /**
@@ -98,6 +118,9 @@ export class PremiumGuildService {
     guildName?: string
   ): Promise<{ success: boolean; message: string; guild?: IPremiumGuild }> {
     try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+
       const patreonService = PatreonService.getInstance();
       const patron = await patreonService.getPatronByDiscordId(discordId);
       const isOwner = this.isOwner(discordId);
@@ -198,6 +221,9 @@ export class PremiumGuildService {
     guildId: string
   ): Promise<{ success: boolean; message: string }> {
     try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+
       const guild = await PremiumGuild.findOne({ guildId, discordId });
 
       if (!guild) {
@@ -231,6 +257,9 @@ export class PremiumGuildService {
    */
   public async getUserServers(discordId: string): Promise<IPremiumGuild[]> {
     try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+
       return await PremiumGuild.find({ discordId, isActive: true }).sort({ linkedAt: -1 });
     } catch (error) {
       console.error("[PremiumGuild] Error getting user servers:", error);
@@ -243,6 +272,9 @@ export class PremiumGuildService {
    */
   public async getGuildSettings(guildId: string): Promise<IPremiumGuild | null> {
     try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+
       const guild = await PremiumGuild.findOne({ guildId, isActive: true });
       
       if (guild) {
@@ -283,6 +315,9 @@ export class PremiumGuildService {
     settings: { audioBitrate?: number; customBotName?: string }
   ): Promise<{ success: boolean; message: string }> {
     try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+
       const guild = await PremiumGuild.findOne({ guildId, discordId, isActive: true });
 
       if (!guild) {
@@ -325,8 +360,16 @@ export class PremiumGuildService {
    * Check if a server has premium features
    */
   public async isPremiumGuild(guildId: string): Promise<boolean> {
-    const guild = await this.getGuildSettings(guildId);
-    return guild !== null && guild.isActive;
+    try {
+      // Ensure database connection is ready
+      await this.ensureDbConnection();
+      
+      const guild = await this.getGuildSettings(guildId);
+      return guild !== null && guild.isActive;
+    } catch (error) {
+      console.error("[PremiumGuild] Error checking premium status:", error);
+      return false;
+    }
   }
 }
 

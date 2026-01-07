@@ -1,22 +1,21 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
+import {
+  Headphones,
+  LibraryMusic,
+  QueueMusic,
+  WorkspacePremium
+} from '@mui/icons-material';
 import {
   Box,
-  Typography,
-  Grid2 as Grid,
   Card,
   CardContent,
-  CircularProgress,
   Chip,
+  CircularProgress,
+  Grid2 as Grid,
+  Typography,
 } from '@mui/material';
-import {
-  MusicNote,
-  QueueMusic,
-  WorkspacePremium,
-  LibraryMusic,
-  Headphones,
-} from '@mui/icons-material';
+import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 interface Stats {

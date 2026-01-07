@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, models, model } from "mongoose";
+import { Document, Schema, model, models } from "mongoose";
 
 /**
  * PremiumGuild interface - Links Discord servers to Patreon users

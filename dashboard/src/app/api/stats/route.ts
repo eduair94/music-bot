@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { connectToDatabase } from "@/lib/mongodb";
 import { Collection } from "@/lib/models/Collection";
+import { PatreonUserModel } from "@/lib/models/PatreonUser";
 import { PremiumGuild } from "@/lib/models/PremiumGuild";
-import { PatreonUserModel, IPatreonUser } from "@/lib/models/PatreonUser";
+import { connectToDatabase } from "@/lib/mongodb";
+import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 

@@ -258,8 +258,26 @@ export default {
       }
     } catch (error: any) {
       console.error("[premium] Error:", error);
+      
+      // Check for database connection errors and provide user-friendly message
+      const errorMessage = error.message || "Unknown error";
+      const isDbError = errorMessage.includes("buffering timed out") || 
+                        errorMessage.includes("Database connection") ||
+                        errorMessage.includes("ECONNREFUSED") ||
+                        errorMessage.includes("MongoServerSelectionError") ||
+                        errorMessage.includes("not available");
+      
+      if (isDbError) {
+        return interaction.editReply({
+          content: "❌ **Database Temporarily Unavailable**\n\n" +
+                   "The bot is having trouble connecting to the database. " +
+                   "Please try again in a few moments.\n\n" +
+                   "If this issue persists, the bot administrator has been notified."
+        });
+      }
+      
       return interaction.editReply({
-        content: `❌ An error occurred: ${error.message || "Unknown error"}`
+        content: `❌ An error occurred: ${errorMessage}`
       });
     }
   }

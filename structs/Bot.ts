@@ -92,8 +92,10 @@ export class Bot {
       try {
         const dbService = DatabaseService.getInstance();
         await dbService.connect(config.MONGODB_URI || "");
-        if (dbService.isConnected()) {
+        if (dbService.isReady()) {
           console.log("✅ Database service initialized");
+        } else {
+          console.log("⚠️ Database service initialized but not ready - commands may fail initially");
         }
       } catch (error) {
         console.error("⚠️ Database initialization skipped:", error);
