@@ -17,5 +17,5 @@
     "strictPropertyInitialization": false
   },
   "include": ["./", "./config.json", "./locales/*.json", "./sounds/*.mp3", "./shared/**/*"],
-  "exclude": ["/.github", "./dist", "./node_modules", "./website", "./dashboard"]
+  "exclude": ["/.github", "./dist", "./node_modules", "./website", "./dashboard", "./commands_disabled"]
 }

@@ -1,0 +1,4190 @@
+[
+  {
+    "options": [],
+    "name": "247",
+    "description": "Toggle 24/7 mode (bot stays in voice channel)",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable 8D effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "8d",
+    "description": "Apply 8D audio effect (rotates sound around you)"
+  },
+  {
+    "options": [],
+    "name": "about",
+    "description": "Show information about the bot"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Track URL or search query",
+        "required": true
+      }
+    ],
+    "name": "addunique",
+    "description": "Add only unique tracks (skip duplicates)"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Album name to search",
+        "required": false
+      }
+    ],
+    "name": "albuminfo",
+    "description": "Get album information for the current track or search"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Album name to search",
+        "required": true
+      }
+    ],
+    "name": "albumsearch",
+    "description": "Search for an album and queue all tracks"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "server",
+        "description": "Server aliases",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "Add alias",
+            "options": [
+              {
+                "type": 3,
+                "name": "alias",
+                "description": "Alias name",
+                "required": true
+              },
+              {
+                "type": 3,
+                "name": "command",
+                "description": "Command to run",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "Remove alias",
+            "options": [
+              {
+                "type": 3,
+                "name": "alias",
+                "description": "Alias to remove",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "list",
+            "description": "List aliases",
+            "options": []
+          },
+          {
+            "type": 1,
+            "name": "clear",
+            "description": "Clear all aliases",
+            "options": []
+          }
+        ]
+      }
+    ],
+    "name": "alias",
+    "description": "Manage command aliases",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "text",
+        "description": "Text channel announcements",
+        "options": [
+          {
+            "type": 1,
+            "name": "toggle",
+            "description": "Toggle text announcements",
+            "options": [
+              {
+                "name": "enabled",
+                "description": "Enable announcements",
+                "required": true,
+                "type": 5
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "autodelete",
+            "description": "Toggle auto-delete announcements",
+            "options": [
+              {
+                "name": "enabled",
+                "description": "Auto-delete announcements",
+                "required": true,
+                "type": 5
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "extended",
+            "description": "Toggle extended announcements",
+            "options": [
+              {
+                "name": "enabled",
+                "description": "Show extended track info",
+                "required": true,
+                "type": 5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "stage",
+        "description": "Stage announcements",
+        "options": [
+          {
+            "type": 1,
+            "name": "toggle",
+            "description": "Toggle stage announcements",
+            "options": [
+              {
+                "name": "enabled",
+                "description": "Enable stage announcements",
+                "required": true,
+                "type": 5
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "template",
+            "description": "Set stage announcement template",
+            "options": [
+              {
+                "type": 3,
+                "name": "template",
+                "description": "Template ({title}, {author}, {duration})",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "voice",
+        "description": "Voice status announcements",
+        "options": [
+          {
+            "type": 1,
+            "name": "toggle",
+            "description": "Toggle voice status",
+            "options": [
+              {
+                "name": "enabled",
+                "description": "Enable voice status",
+                "required": true,
+                "type": 5
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "template",
+            "description": "Set voice status template",
+            "options": [
+              {
+                "type": 3,
+                "name": "template",
+                "description": "Template ({title}, {author})",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "default",
+            "description": "Set default voice status",
+            "options": [
+              {
+                "type": 3,
+                "name": "status",
+                "description": "Default status when not playing",
+                "required": true,
+                "max_length": 500
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View all announce settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset announce settings to defaults",
+        "options": []
+      }
+    ],
+    "name": "announceconfig",
+    "description": "Configure announcement settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "channel",
+        "description": "Set announcement channel",
+        "options": [
+          {
+            "channel_types": [
+              0
+            ],
+            "name": "channel",
+            "description": "Channel for announcements",
+            "required": false,
+            "type": 7
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset announcement channel",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle announcements",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable/disable",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View announcement settings",
+        "options": []
+      }
+    ],
+    "name": "announcer",
+    "description": "Configure announcement settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "artist",
+        "description": "Artist name (leave empty for current track's artist)",
+        "required": false
+      }
+    ],
+    "name": "artistinfo",
+    "description": "Get information about an artist"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle auto-delete",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable auto-delete",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "delay",
+        "description": "Set delete delay",
+        "options": [
+          {
+            "max_value": 60,
+            "min_value": 5,
+            "type": 4,
+            "name": "seconds",
+            "description": "Seconds before deleting (5-60)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View auto-delete settings",
+        "options": []
+      }
+    ],
+    "name": "autodelete",
+    "description": "Configure auto-delete for bot messages",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "autoplay",
+    "description": "Toggle autoplay mode (play similar songs when queue ends)"
+  },
+  {
+    "options": [
+      {
+        "max_value": 300,
+        "min_value": 1,
+        "type": 4,
+        "name": "seconds",
+        "description": "Number of seconds to rewind",
+        "required": false
+      }
+    ],
+    "name": "backward",
+    "description": "Wind the track backwards"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "Off",
+            "value": "off"
+          },
+          {
+            "name": "Low",
+            "value": "low"
+          },
+          {
+            "name": "Medium",
+            "value": "medium"
+          },
+          {
+            "name": "High",
+            "value": "high"
+          }
+        ],
+        "name": "level",
+        "description": "Bass boost level",
+        "required": false
+      }
+    ],
+    "name": "bassboost",
+    "description": "bassboost.description"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "author",
+        "description": "Blacklist an author/artist",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Author/artist name",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "title",
+        "description": "Blacklist a title keyword",
+        "options": [
+          {
+            "type": 3,
+            "name": "keyword",
+            "description": "Title keyword",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "View all blacklisted items",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "removeauthor",
+        "description": "Remove an author from blacklist",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Author/artist name to remove",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "removetitle",
+        "description": "Remove a title keyword from blacklist",
+        "options": [
+          {
+            "type": 3,
+            "name": "keyword",
+            "description": "Title keyword to remove",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "name": "blacklist",
+    "description": "Manage blacklisted authors and titles",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "activate",
+        "description": "Boost this server",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "deactivate",
+        "description": "Remove your boost",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "View your boosts",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "info",
+        "description": "View server boost status",
+        "options": []
+      }
+    ],
+    "name": "boost",
+    "description": "Manage server boost"
+  },
+  {
+    "options": [
+      {
+        "name": "server",
+        "description": "Show server boost status instead of your boosts",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "boosts",
+    "description": "View your or the server's boosts"
+  },
+  {
+    "options": [],
+    "name": "categories",
+    "description": "List all command categories"
+  },
+  {
+    "options": [
+      {
+        "max_value": 10,
+        "min_value": 1,
+        "type": 4,
+        "name": "count",
+        "description": "Number of versions to show",
+        "required": false
+      }
+    ],
+    "name": "changelogs",
+    "description": "View recent changelogs and updates"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "text",
+        "description": "Text channels",
+        "options": [
+          {
+            "type": 1,
+            "name": "enable",
+            "description": "Enable a text channel",
+            "options": [
+              {
+                "channel_types": [
+                  0
+                ],
+                "name": "channel",
+                "description": "Channel",
+                "required": true,
+                "type": 7
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "disable",
+            "description": "Disable a text channel",
+            "options": [
+              {
+                "channel_types": [
+                  0
+                ],
+                "name": "channel",
+                "description": "Channel",
+                "required": true,
+                "type": 7
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "enableall",
+            "description": "Enable all text channels",
+            "options": []
+          },
+          {
+            "type": 1,
+            "name": "view",
+            "description": "View allowed text channels",
+            "options": []
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "voice",
+        "description": "Voice channels",
+        "options": [
+          {
+            "type": 1,
+            "name": "enable",
+            "description": "Enable a voice channel",
+            "options": [
+              {
+                "channel_types": [
+                  2,
+                  13
+                ],
+                "name": "channel",
+                "description": "Channel",
+                "required": true,
+                "type": 7
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "disable",
+            "description": "Disable a voice channel",
+            "options": [
+              {
+                "channel_types": [
+                  2,
+                  13
+                ],
+                "name": "channel",
+                "description": "Channel",
+                "required": true,
+                "type": 7
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "enableall",
+            "description": "Enable all voice channels",
+            "options": []
+          },
+          {
+            "type": 1,
+            "name": "view",
+            "description": "View allowed voice channels",
+            "options": []
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "log",
+        "description": "Set log channel",
+        "options": [
+          {
+            "channel_types": [
+              0
+            ],
+            "name": "channel",
+            "description": "Channel (empty to disable)",
+            "required": false,
+            "type": 7
+          }
+        ]
+      }
+    ],
+    "name": "channels",
+    "description": "Manage allowed channels",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "claim",
+    "description": "Claim ownership of the current session"
+  },
+  {
+    "options": [
+      {
+        "max_value": 100,
+        "min_value": 1,
+        "type": 4,
+        "name": "amount",
+        "description": "Number of bot messages to delete (1-100)",
+        "required": false
+      }
+    ],
+    "name": "clean",
+    "description": "Delete bot messages from the channel",
+    "default_member_permissions": "8192"
+  },
+  {
+    "options": [],
+    "name": "clear",
+    "description": "Clear the entire queue"
+  },
+  {
+    "options": [],
+    "name": "clearfilters",
+    "description": "Clear all active audio filters"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "list",
+        "description": "View all your collections",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "create",
+        "description": "Create a new collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name for the collection",
+            "required": true,
+            "max_length": 100
+          },
+          {
+            "type": 3,
+            "name": "description",
+            "description": "Description for the collection",
+            "required": false,
+            "max_length": 500
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "delete",
+        "description": "Delete a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to delete",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View a collection's tracks",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to view",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "save",
+        "description": "Save current queue as a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name for the collection",
+            "required": true,
+            "max_length": 100
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "load",
+        "description": "Load a collection into the queue",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to load",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "rename",
+        "description": "Rename a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "old_name",
+            "description": "Current name of the collection",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "new_name",
+            "description": "New name for the collection",
+            "required": true,
+            "max_length": 100
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "share",
+        "description": "Create a share code for a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to share",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "unshare",
+        "description": "Remove share code from a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to unshare",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "clone",
+        "description": "Clone a collection from a share code",
+        "options": [
+          {
+            "type": 3,
+            "name": "share_code",
+            "description": "The share code to clone from",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name for your new collection",
+            "required": true,
+            "max_length": 100
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "merge",
+        "description": "Merge one collection into another",
+        "options": [
+          {
+            "type": 3,
+            "name": "source",
+            "description": "Collection to merge from",
+            "required": true
+          },
+          {
+            "type": 3,
+            "name": "target",
+            "description": "Collection to merge into",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "addcurrent",
+        "description": "Add the current playing track to a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection to add to",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "removetrack",
+        "description": "Remove a track from a collection",
+        "options": [
+          {
+            "type": 3,
+            "name": "name",
+            "description": "Name of the collection",
+            "required": true
+          },
+          {
+            "min_value": 1,
+            "type": 4,
+            "name": "position",
+            "description": "Position of the track to remove (1-based)",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "name": "collections",
+    "description": "Manage your personal music collections"
+  },
+  {
+    "options": [
+      {
+        "autocomplete": true,
+        "type": 3,
+        "name": "command",
+        "description": "Command to disable",
+        "required": true
+      }
+    ],
+    "name": "commanddisable",
+    "description": "Disable commands in this server",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "commanddisableall",
+    "description": "Disable all commands except essential ones",
+    "default_member_permissions": "8"
+  },
+  {
+    "options": [
+      {
+        "autocomplete": true,
+        "type": 3,
+        "name": "command",
+        "description": "Command to enable",
+        "required": true
+      }
+    ],
+    "name": "commandenable",
+    "description": "Enable a disabled command",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "commandenableall",
+    "description": "Enable all disabled commands",
+    "default_member_permissions": "8"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "command",
+        "description": "Command to toggle (without /)",
+        "required": true
+      }
+    ],
+    "name": "commandtoggle",
+    "description": "Enable or disable a command",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "dashboard",
+    "description": "Get the dashboard link"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "volume",
+        "description": "Set default volume",
+        "options": [
+          {
+            "max_value": 100,
+            "min_value": 1,
+            "type": 4,
+            "name": "level",
+            "description": "Volume level (1-100)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "autoplay",
+        "description": "Set default autoplay",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable autoplay by default",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "repeatqueue",
+        "description": "Set default repeat mode",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable queue repeat by default",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "shuffle",
+        "description": "Set default shuffle",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable shuffle by default",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "selectrandom",
+        "description": "Set default select random",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable random selection by default",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "removeafterplayed",
+        "description": "Set default remove after played",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Remove tracks after played by default",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View default settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all defaults",
+        "options": []
+      }
+    ],
+    "name": "defaults",
+    "description": "Configure default playback settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "disabledcommands",
+    "description": "View all disabled commands in this server",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable distortion effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "distortion",
+    "description": "Apply distortion audio effect"
+  },
+  {
+    "options": [],
+    "name": "echo",
+    "description": "Toggle echo audio effect"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "time",
+        "description": "Time to end track (e.g., 3:00, 180, 3m)",
+        "required": false
+      }
+    ],
+    "name": "endtime",
+    "description": "Set the end position of the current track"
+  },
+  {
+    "options": [],
+    "name": "faq",
+    "description": "View frequently asked questions"
+  },
+  {
+    "options": [],
+    "name": "filters",
+    "description": "View all active audio filters"
+  },
+  {
+    "options": [
+      {
+        "max_value": 300,
+        "min_value": 1,
+        "type": 4,
+        "name": "seconds",
+        "description": "Number of seconds to skip forward",
+        "required": false
+      }
+    ],
+    "name": "forward",
+    "description": "Fast forward the track by specified seconds"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "server",
+        "description": "View server leaderboard",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "global",
+        "description": "View global leaderboard",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "me",
+        "description": "View your game stats",
+        "options": []
+      }
+    ],
+    "name": "gameleaderboard",
+    "description": "View game leaderboards"
+  },
+  {
+    "options": [],
+    "name": "games",
+    "description": "View available games"
+  },
+  {
+    "options": [],
+    "name": "grab",
+    "description": "DM yourself the current track info"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "start",
+        "description": "Start a new game",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "guess",
+        "description": "Make a guess",
+        "options": [
+          {
+            "type": 3,
+            "name": "answer",
+            "description": "Your guess",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "stop",
+        "description": "Stop the current game",
+        "options": []
+      }
+    ],
+    "name": "guesssong",
+    "description": "Play the Guess The Song game"
+  },
+  {
+    "options": [],
+    "name": "help",
+    "description": "Display all commands and descriptions"
+  },
+  {
+    "options": [],
+    "name": "history",
+    "description": "Show recently played tracks"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "url",
+        "description": "Playlist URL (YouTube, Spotify)",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "name",
+        "description": "Name for the collection",
+        "required": true
+      }
+    ],
+    "name": "importplaylist",
+    "description": "Import a playlist to your collections (Premium)"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "song",
+        "description": "Song name or URL to insert",
+        "required": true
+      }
+    ],
+    "name": "insert",
+    "description": "Insert a track right after the currently playing song"
+  },
+  {
+    "options": [],
+    "name": "invite",
+    "description": "Send bot invite link"
+  },
+  {
+    "options": [],
+    "name": "join",
+    "description": "Make the bot join your voice channel"
+  },
+  {
+    "options": [
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position",
+        "description": "Queue position to jump to",
+        "required": true
+      }
+    ],
+    "name": "jump",
+    "description": "Jump to a specific position in the queue"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable karaoke effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "karaoke",
+    "description": "Apply karaoke effect (reduces vocals)"
+  },
+  {
+    "options": [],
+    "name": "leaderboard",
+    "description": "View the session track leaderboard"
+  },
+  {
+    "options": [],
+    "name": "leave",
+    "description": "Make the bot leave the voice channel"
+  },
+  {
+    "options": [],
+    "name": "length",
+    "description": "Show the total queue duration"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "track",
+        "description": "Track length limits",
+        "options": [
+          {
+            "type": 1,
+            "name": "max",
+            "description": "Set maximum track length",
+            "options": [
+              {
+                "max_value": 1440,
+                "min_value": 0,
+                "type": 4,
+                "name": "minutes",
+                "description": "Max length in minutes (0=unlimited)",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "min",
+            "description": "Set minimum track length",
+            "options": [
+              {
+                "max_value": 600,
+                "min_value": 0,
+                "type": 4,
+                "name": "seconds",
+                "description": "Min length in seconds (0=none)",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "playlist",
+        "description": "Playlist limits",
+        "options": [
+          {
+            "type": 1,
+            "name": "maxlength",
+            "description": "Set maximum playlist length",
+            "options": [
+              {
+                "max_value": 1440,
+                "min_value": 0,
+                "type": 4,
+                "name": "minutes",
+                "description": "Max total length in minutes (0=unlimited)",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "maxtracks",
+            "description": "Set maximum playlist tracks",
+            "options": [
+              {
+                "max_value": 500,
+                "min_value": 0,
+                "type": 4,
+                "name": "count",
+                "description": "Max tracks per playlist (0=unlimited)",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "name": "user",
+        "description": "User limits",
+        "options": [
+          {
+            "type": 1,
+            "name": "maxtracks",
+            "description": "Set max tracks per user",
+            "options": [
+              {
+                "max_value": 100,
+                "min_value": 0,
+                "type": 4,
+                "name": "count",
+                "description": "Max tracks per user (0=unlimited)",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "maxlength",
+            "description": "Set max total length per user",
+            "options": [
+              {
+                "max_value": 600,
+                "min_value": 0,
+                "type": 4,
+                "name": "minutes",
+                "description": "Max total length per user (0=unlimited)",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View all limit settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all limits to defaults",
+        "options": []
+      }
+    ],
+    "name": "limits",
+    "description": "Configure track and playlist limits",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "enable",
+        "description": "Lock the session to yourself",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "disable",
+        "description": "Unlock the session",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "status",
+        "description": "Check lock status",
+        "options": []
+      }
+    ],
+    "name": "lock",
+    "description": "Lock or unlock the music session"
+  },
+  {
+    "options": [],
+    "name": "loop",
+    "description": "Toggle music loop"
+  },
+  {
+    "options": [],
+    "name": "loopqueue",
+    "description": "Toggle queue loop mode"
+  },
+  {
+    "options": [],
+    "name": "lyrics",
+    "description": "Get lyrics for the currently playing song"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "server",
+        "description": "Server mappings",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "Add a server mapping",
+            "options": [
+              {
+                "type": 3,
+                "name": "name",
+                "description": "Mapping name",
+                "required": true,
+                "max_length": 50
+              },
+              {
+                "type": 3,
+                "name": "url",
+                "description": "URL or query to map to",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "Remove a server mapping",
+            "options": [
+              {
+                "type": 3,
+                "name": "name",
+                "description": "Mapping name to remove",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "clear",
+            "description": "Clear all server mappings",
+            "options": []
+          },
+          {
+            "type": 1,
+            "name": "list",
+            "description": "List server mappings",
+            "options": []
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "View all mappings",
+        "options": []
+      }
+    ],
+    "name": "mappings",
+    "description": "Manage custom play mappings (shortcuts)",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "indexes",
+        "description": "Track numbers to move (e.g., 1 3 5 or 1-5)",
+        "required": true
+      },
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position",
+        "description": "New position for the tracks",
+        "required": true
+      }
+    ],
+    "name": "massmove",
+    "description": "Move multiple tracks to a new position"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "indexes",
+        "description": "Track indexes to remove (e.g., '1 3 5' or '1-5 8')",
+        "required": true
+      }
+    ],
+    "name": "massremove",
+    "description": "Remove multiple tracks from the queue"
+  },
+  {
+    "options": [
+      {
+        "type": 4,
+        "name": "movefrom",
+        "description": "Slot to move from",
+        "required": true
+      },
+      {
+        "type": 4,
+        "name": "moveto",
+        "description": "Slot to move to",
+        "required": true
+      }
+    ],
+    "name": "move",
+    "description": "Move songs around in the queue"
+  },
+  {
+    "options": [],
+    "name": "next",
+    "description": "Skip to the next track in queue"
+  },
+  {
+    "options": [],
+    "name": "nextup",
+    "description": "Get information about the next track in queue"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable nightcore effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "nightcore",
+    "description": "Toggle nightcore effect on the music"
+  },
+  {
+    "options": [],
+    "name": "nowplaying",
+    "description": "Show now playing song"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "claim",
+        "description": "Claim ownership of the session",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "transfer",
+        "description": "Transfer ownership",
+        "options": [
+          {
+            "name": "user",
+            "description": "User to transfer to",
+            "required": true,
+            "type": 6
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View session owner",
+        "options": []
+      }
+    ],
+    "name": "ownership",
+    "description": "Manage session ownership"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "status",
+        "description": "Check your current Patreon status and benefits",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "sync",
+        "description": "Sync your Patreon data to update your benefits",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "info",
+        "description": "Learn about Patreon benefits and how to link your account",
+        "options": []
+      }
+    ],
+    "name": "patreon",
+    "description": "Check your Patreon status and sync benefits"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "getcampaign",
+        "description": "Get your Patreon campaign ID",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "verify",
+        "description": "Verify Patreon API credentials are working",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "sync",
+        "description": "Manually sync all patrons from Patreon",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "status",
+        "description": "Check Patreon configuration status",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "createwebhook",
+        "description": "Create/register a Patreon webhook via API",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "listwebhooks",
+        "description": "List all webhooks registered for your campaign",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "deletewebhook",
+        "description": "Delete a webhook by ID",
+        "options": [
+          {
+            "type": 3,
+            "name": "id",
+            "description": "The webhook ID to delete",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "name": "patreonadmin",
+    "description": "Patreon administration commands (Bot owner only)",
+    "default_member_permissions": "8"
+  },
+  {
+    "options": [],
+    "name": "pause",
+    "description": "Pause the currently playing music"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View available perks",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "user",
+        "description": "View your current perks",
+        "options": []
+      }
+    ],
+    "name": "perks",
+    "description": "View premium perks"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current permission settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "allow",
+        "description": "Allow a permission for a role",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "play",
+                "value": "play"
+              },
+              {
+                "name": "pause",
+                "value": "pause"
+              },
+              {
+                "name": "resume",
+                "value": "resume"
+              },
+              {
+                "name": "skip",
+                "value": "skip"
+              },
+              {
+                "name": "stop",
+                "value": "stop"
+              },
+              {
+                "name": "volume",
+                "value": "volume"
+              },
+              {
+                "name": "seek",
+                "value": "seek"
+              },
+              {
+                "name": "queue",
+                "value": "queue"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              },
+              {
+                "name": "clear",
+                "value": "clear"
+              },
+              {
+                "name": "shuffle",
+                "value": "shuffle"
+              },
+              {
+                "name": "loop",
+                "value": "loop"
+              },
+              {
+                "name": "filter",
+                "value": "filter"
+              },
+              {
+                "name": "move",
+                "value": "move"
+              },
+              {
+                "name": "jump",
+                "value": "jump"
+              }
+            ],
+            "name": "permission",
+            "description": "The permission",
+            "required": true
+          },
+          {
+            "name": "role",
+            "description": "The role",
+            "required": false,
+            "type": 8
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "deny",
+        "description": "Deny a permission for a role",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "play",
+                "value": "play"
+              },
+              {
+                "name": "pause",
+                "value": "pause"
+              },
+              {
+                "name": "resume",
+                "value": "resume"
+              },
+              {
+                "name": "skip",
+                "value": "skip"
+              },
+              {
+                "name": "stop",
+                "value": "stop"
+              },
+              {
+                "name": "volume",
+                "value": "volume"
+              },
+              {
+                "name": "seek",
+                "value": "seek"
+              },
+              {
+                "name": "queue",
+                "value": "queue"
+              },
+              {
+                "name": "remove",
+                "value": "remove"
+              },
+              {
+                "name": "clear",
+                "value": "clear"
+              },
+              {
+                "name": "shuffle",
+                "value": "shuffle"
+              },
+              {
+                "name": "loop",
+                "value": "loop"
+              },
+              {
+                "name": "filter",
+                "value": "filter"
+              },
+              {
+                "name": "move",
+                "value": "move"
+              },
+              {
+                "name": "jump",
+                "value": "jump"
+              }
+            ],
+            "name": "permission",
+            "description": "The permission",
+            "required": true
+          },
+          {
+            "name": "role",
+            "description": "The role",
+            "required": false,
+            "type": 8
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all permissions",
+        "options": []
+      }
+    ],
+    "name": "permissions",
+    "description": "Manage command permissions for roles",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "ping",
+    "description": "Show the bot's average ping"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "Off",
+            "value": "off"
+          },
+          {
+            "name": "Lower (vaporwave)",
+            "value": "lower"
+          },
+          {
+            "name": "Higher (nightcore)",
+            "value": "higher"
+          }
+        ],
+        "name": "level",
+        "description": "Pitch level",
+        "required": false
+      }
+    ],
+    "name": "pitch",
+    "description": "Change the pitch of the current track"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "song",
+        "description": "Song name, YouTube URL, SoundCloud URL, or Spotify URL",
+        "required": true
+      }
+    ],
+    "name": "play",
+    "description": "Plays audio from YouTube"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Song name or URL",
+        "required": true
+      }
+    ],
+    "name": "playleave",
+    "description": "Play a track and leave after it ends"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "playlist",
+        "description": "Playlist URL",
+        "required": true
+      }
+    ],
+    "name": "playlist",
+    "description": "Play a playlist from youtube"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Playlist name to search",
+        "required": true
+      }
+    ],
+    "name": "playlistsearch",
+    "description": "Search for a playlist and queue all tracks"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Song name or URL",
+        "required": true
+      }
+    ],
+    "name": "playnext",
+    "description": "Add a track as next in the queue"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Song name or URL",
+        "required": true
+      }
+    ],
+    "name": "playnow",
+    "description": "Play a track immediately, skipping the current one"
+  },
+  {
+    "options": [
+      {
+        "max_value": 25,
+        "min_value": 1,
+        "type": 4,
+        "name": "count",
+        "description": "Number of recent tracks to queue (1-25)",
+        "required": false
+      }
+    ],
+    "name": "playrecent",
+    "description": "Play recently played tracks"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "url",
+        "description": "Playlist URL",
+        "required": true
+      }
+    ],
+    "name": "playselect",
+    "description": "Select specific tracks from a playlist to queue"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "url",
+        "description": "Playlist URL",
+        "required": true
+      },
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position",
+        "description": "Track position (1-based)",
+        "required": true
+      }
+    ],
+    "name": "playsingle",
+    "description": "Queue a single track from a playlist by position"
+  },
+  {
+    "options": [
+      {
+        "name": "file",
+        "description": "Audio file to play (MP3, WAV, FLAC, M4A, OGG, etc.)",
+        "required": true,
+        "type": 11
+      },
+      {
+        "type": 3,
+        "name": "title",
+        "description": "Optional custom title for the track",
+        "required": false
+      }
+    ],
+    "name": "play_file",
+    "description": "Play an audio file from attachment"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Song name, artist, or Spotify URL to search for",
+        "required": true
+      }
+    ],
+    "name": "play_spotify",
+    "description": "Search and play a song from Spotify"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "server",
+        "description": "Server prefixes",
+        "options": [
+          {
+            "type": 1,
+            "name": "add",
+            "description": "Add a server prefix",
+            "options": [
+              {
+                "type": 3,
+                "name": "prefix",
+                "description": "Prefix to add",
+                "required": true,
+                "max_length": 10
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "remove",
+            "description": "Remove a server prefix",
+            "options": [
+              {
+                "type": 3,
+                "name": "prefix",
+                "description": "Prefix to remove",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "set",
+            "description": "Set the only server prefix",
+            "options": [
+              {
+                "type": 3,
+                "name": "prefix",
+                "description": "Prefix to set",
+                "required": true,
+                "max_length": 10
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "reset",
+            "description": "Reset server prefixes to default",
+            "options": []
+          },
+          {
+            "type": 1,
+            "name": "list",
+            "description": "List server prefixes",
+            "options": []
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "View all prefixes",
+        "options": []
+      }
+    ],
+    "name": "prefix",
+    "description": "Manage command prefixes",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "link",
+        "description": "Link this server to your Patreon account",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "unlink",
+        "description": "Unlink this server from your Patreon account",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "List all servers linked to your Patreon account",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "status",
+        "description": "Show premium status for this server",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "config",
+        "description": "Configure premium settings for this server",
+        "options": [
+          {
+            "type": 4,
+            "choices": [
+              {
+                "name": "128 kbps",
+                "value": 128
+              },
+              {
+                "name": "192 kbps",
+                "value": 192
+              },
+              {
+                "name": "256 kbps",
+                "value": 256
+              },
+              {
+                "name": "320 kbps (HQ)",
+                "value": 320
+              }
+            ],
+            "name": "bitrate",
+            "description": "Audio bitrate in kbps",
+            "required": false
+          },
+          {
+            "type": 3,
+            "name": "identity",
+            "description": "Custom bot identity for this server",
+            "required": false
+          }
+        ]
+      }
+    ],
+    "name": "premium",
+    "description": "Manage premium features and server links"
+  },
+  {
+    "options": [],
+    "name": "previous",
+    "description": "Play the previous track"
+  },
+  {
+    "options": [
+      {
+        "name": "user",
+        "description": "User to view profile for (defaults to yourself)",
+        "required": false,
+        "type": 6
+      }
+    ],
+    "name": "profile",
+    "description": "View your profile or another user's profile"
+  },
+  {
+    "options": [
+      {
+        "type": 2,
+        "name": "avatar",
+        "description": "Avatar settings",
+        "options": [
+          {
+            "type": 1,
+            "name": "shape",
+            "description": "Set avatar shape",
+            "options": [
+              {
+                "type": 3,
+                "choices": [
+                  {
+                    "name": "Circle",
+                    "value": "circle"
+                  },
+                  {
+                    "name": "Square",
+                    "value": "square"
+                  },
+                  {
+                    "name": "Rounded",
+                    "value": "rounded"
+                  }
+                ],
+                "name": "shape",
+                "description": "Avatar shape",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "border",
+            "description": "Set avatar border color",
+            "options": [
+              {
+                "type": 3,
+                "name": "color",
+                "description": "Border color (hex code)",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": 1,
+            "name": "background",
+            "description": "Set avatar background color",
+            "options": [
+              {
+                "type": 3,
+                "name": "color",
+                "description": "Background color (hex code)",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "background",
+        "description": "Set profile background (Premium)",
+        "options": [
+          {
+            "type": 3,
+            "name": "url",
+            "description": "Background image URL",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "color",
+        "description": "Set profile accent color (Premium)",
+        "options": [
+          {
+            "type": 3,
+            "name": "color",
+            "description": "Accent color (hex code)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "visibility",
+        "description": "Set profile visibility",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Public",
+                "value": "public"
+              },
+              {
+                "name": "Private",
+                "value": "private"
+              },
+              {
+                "name": "Friends Only",
+                "value": "friends"
+              }
+            ],
+            "name": "level",
+            "description": "Visibility level",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "servervisibility",
+        "description": "Show on server leaderboards",
+        "options": [
+          {
+            "name": "visible",
+            "description": "Show on leaderboards",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current profile settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset profile to defaults",
+        "options": []
+      }
+    ],
+    "name": "profilesettings",
+    "description": "Customize your profile"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "On",
+            "value": "on"
+          },
+          {
+            "name": "Off",
+            "value": "off"
+          }
+        ],
+        "name": "toggle",
+        "description": "Turn pulsator on or off",
+        "required": false
+      },
+      {
+        "max_value": 10,
+        "min_value": 0.1,
+        "type": 10,
+        "name": "frequency",
+        "description": "Frequency of the pulsator (0.1-10)",
+        "required": false
+      }
+    ],
+    "name": "pulsator",
+    "description": "Apply pulsator audio effect (alternates between channels)"
+  },
+  {
+    "options": [],
+    "name": "queue",
+    "description": "Show the music queue and now playing."
+  },
+  {
+    "options": [],
+    "name": "queueinfo",
+    "description": "Get detailed information about the queue"
+  },
+  {
+    "options": [],
+    "name": "radio",
+    "description": "Start a radio based on the current track"
+  },
+  {
+    "options": [
+      {
+        "max_value": 200,
+        "min_value": 50,
+        "type": 10,
+        "name": "percentage",
+        "description": "Rate percentage (50-200) or 'off' to disable",
+        "required": false
+      },
+      {
+        "name": "off",
+        "description": "Turn rate filter off",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "rate",
+    "description": "Change the playback rate (speed + pitch)"
+  },
+  {
+    "options": [
+      {
+        "name": "channel",
+        "description": "Channel to rebind to (defaults to current)",
+        "required": false,
+        "type": 7
+      }
+    ],
+    "name": "rebind",
+    "description": "Rebind bot announcements to a different channel",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "max_value": 25,
+        "min_value": 1,
+        "type": 4,
+        "name": "limit",
+        "description": "Number of tracks to show (default: 10)",
+        "required": false
+      }
+    ],
+    "name": "recentlyplayed",
+    "description": "View your recently played tracks"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "slot",
+        "description": "Remove song from the queue",
+        "required": true
+      }
+    ],
+    "name": "remove",
+    "description": "Remove song from the queue"
+  },
+  {
+    "options": [],
+    "name": "removeabsent",
+    "description": "Remove tracks from users not in voice channel"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle remove after played",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable removal after played",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current setting",
+        "options": []
+      }
+    ],
+    "name": "removeafterplayed",
+    "description": "Configure automatic removal of played tracks",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "removecurrent",
+    "description": "Remove the currently playing track and skip to the next one"
+  },
+  {
+    "options": [],
+    "name": "removedupes",
+    "description": "Remove duplicate tracks from the queue"
+  },
+  {
+    "options": [],
+    "name": "removeduplicates",
+    "description": "Remove all duplicate tracks from the queue"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "keyword",
+        "description": "Keyword to search for in track titles",
+        "required": true
+      }
+    ],
+    "name": "removekeyword",
+    "description": "Remove tracks matching a keyword"
+  },
+  {
+    "options": [],
+    "name": "removelast",
+    "description": "Remove the last track from the queue (undo)"
+  },
+  {
+    "options": [
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "start",
+        "description": "Start position",
+        "required": true
+      },
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "end",
+        "description": "End position",
+        "required": true
+      }
+    ],
+    "name": "removerange",
+    "description": "Remove a range of tracks from the queue"
+  },
+  {
+    "options": [
+      {
+        "name": "user",
+        "description": "The user whose tracks to remove",
+        "required": true,
+        "type": 6
+      }
+    ],
+    "name": "removeuser",
+    "description": "Remove all tracks requested by a user"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "Duration (shortest first)",
+            "value": "duration_asc"
+          },
+          {
+            "name": "Duration (longest first)",
+            "value": "duration_desc"
+          },
+          {
+            "name": "Title (A-Z)",
+            "value": "title_asc"
+          },
+          {
+            "name": "Title (Z-A)",
+            "value": "title_desc"
+          },
+          {
+            "name": "Author/Artist (A-Z)",
+            "value": "author_asc"
+          },
+          {
+            "name": "Author/Artist (Z-A)",
+            "value": "author_desc"
+          },
+          {
+            "name": "Added (oldest first)",
+            "value": "added_asc"
+          },
+          {
+            "name": "Added (newest first)",
+            "value": "added_desc"
+          }
+        ],
+        "name": "by",
+        "description": "Order by",
+        "required": true
+      }
+    ],
+    "name": "reorder",
+    "description": "Reorder the queue by different options"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "current",
+        "description": "Repeat the current track",
+        "options": [
+          {
+            "min_value": 0,
+            "type": 4,
+            "name": "count",
+            "description": "Number of times to repeat (0 = infinite)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "queue",
+        "description": "Repeat the entire queue",
+        "options": [
+          {
+            "min_value": 0,
+            "type": 4,
+            "name": "count",
+            "description": "Number of times to repeat (0 = infinite)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "disable",
+        "description": "Disable any active repeat mode",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "status",
+        "description": "View current repeat status",
+        "options": []
+      }
+    ],
+    "name": "repeat",
+    "description": "Control repeat modes for the queue"
+  },
+  {
+    "options": [],
+    "name": "repeatdisable",
+    "description": "Disable all repeat modes"
+  },
+  {
+    "options": [],
+    "name": "replay",
+    "description": "Restart the current track from the beginning"
+  },
+  {
+    "options": [
+      {
+        "name": "user",
+        "description": "User to show requested tracks for (defaults to you)",
+        "required": false,
+        "type": 6
+      }
+    ],
+    "name": "requested",
+    "description": "Show all tracks requested by a user"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "User",
+            "value": "user"
+          },
+          {
+            "name": "Guild (Server)",
+            "value": "guild"
+          }
+        ],
+        "name": "target",
+        "description": "Reset for 'user' or 'guild'",
+        "required": false
+      },
+      {
+        "name": "user",
+        "description": "User to reset (when target is 'user')",
+        "required": false,
+        "type": 6
+      },
+      {
+        "type": 3,
+        "name": "guild_id",
+        "description": "Guild ID to reset (when target is 'guild', defaults to current)",
+        "required": false
+      }
+    ],
+    "name": "resetbitrate",
+    "description": "(Owner Only) Reset audio bitrate to default/Patreon settings"
+  },
+  {
+    "options": [],
+    "name": "restart",
+    "description": "Restart the current track from the beginning"
+  },
+  {
+    "options": [],
+    "name": "resume",
+    "description": "Resume currently playing music"
+  },
+  {
+    "options": [],
+    "name": "reverse",
+    "description": "Reverse the order of the queue"
+  },
+  {
+    "options": [
+      {
+        "max_value": 300,
+        "min_value": 1,
+        "type": 4,
+        "name": "seconds",
+        "description": "Number of seconds to rewind",
+        "required": false
+      }
+    ],
+    "name": "rewind",
+    "description": "Rewind the track by specified seconds"
+  },
+  {
+    "options": [],
+    "name": "save",
+    "description": "Save the current song to your DMs"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "query",
+        "description": "Search query",
+        "required": true
+      }
+    ],
+    "name": "search",
+    "description": "Search and select videos to play"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "song",
+        "description": "Song name to search for",
+        "required": true
+      },
+      {
+        "type": 3,
+        "name": "artist",
+        "description": "Artist name (optional)",
+        "required": false
+      }
+    ],
+    "name": "searchlyrics",
+    "description": "Search for a song by its lyrics"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "set",
+        "description": "Set default search type",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "YouTube",
+                "value": "youtube"
+              },
+              {
+                "name": "SoundCloud",
+                "value": "soundcloud"
+              },
+              {
+                "name": "Spotify",
+                "value": "spotify"
+              },
+              {
+                "name": "Auto (detect URL)",
+                "value": "auto"
+              }
+            ],
+            "name": "type",
+            "description": "Default search type",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current search type",
+        "options": []
+      }
+    ],
+    "name": "searchtype",
+    "description": "Configure default search type",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "time",
+        "description": "Time to seek to (e.g., 1:30, 90, 1m30s)",
+        "required": true
+      }
+    ],
+    "name": "seek",
+    "description": "Seek to a specific time in the track"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle random selection",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable random selection",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current setting",
+        "options": []
+      }
+    ],
+    "name": "selectrandom",
+    "description": "Configure random track selection mode",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "add",
+        "description": "Add a personal prefix",
+        "options": [
+          {
+            "type": 3,
+            "name": "prefix",
+            "description": "Prefix to add",
+            "required": true,
+            "max_length": 10
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "remove",
+        "description": "Remove a personal prefix",
+        "options": [
+          {
+            "type": 3,
+            "name": "prefix",
+            "description": "Prefix to remove",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "set",
+        "description": "Set your only personal prefix",
+        "options": [
+          {
+            "type": 3,
+            "name": "prefix",
+            "description": "Prefix to set",
+            "required": true,
+            "max_length": 10
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "list",
+        "description": "List your personal prefixes",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset your personal prefixes",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "combine",
+        "description": "Combine with server prefixes",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Combine with server prefixes",
+            "required": true,
+            "type": 5
+          }
+        ]
+      }
+    ],
+    "name": "selfprefix",
+    "description": "Manage your personal prefixes"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "multibotownership",
+        "description": "Toggle multi-bot ownership",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Allow multi-bot control",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "preferredbots",
+        "description": "Set preferred bots for the server",
+        "options": [
+          {
+            "type": 3,
+            "name": "bots",
+            "description": "Bot names (comma separated)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "dashboardaccess",
+        "description": "Configure dashboard statistics access",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "All Members - Everyone can view",
+                "value": "all"
+              },
+              {
+                "name": "Staff Only - Manage Server required",
+                "value": "staff"
+              },
+              {
+                "name": "Admin Only - Administrator required",
+                "value": "admin"
+              },
+              {
+                "name": "Disabled - No one can view",
+                "value": "disabled"
+              }
+            ],
+            "name": "access",
+            "description": "Access level",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "pagereplacedelete",
+        "description": "Toggle deleting old paginated messages",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Delete old pages when new one is sent",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "pagedelete",
+        "description": "Toggle auto-deleting paginated messages",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Auto-delete paginated messages",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View server configuration",
+        "options": []
+      }
+    ],
+    "name": "serverconfig",
+    "description": "Configure server-wide settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "sessioninfo",
+    "description": "View current music session information"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current session mode",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "set",
+        "description": "Set session mode",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Default - Standard permissions",
+                "value": "default"
+              },
+              {
+                "name": "DJ - Only DJs can control",
+                "value": "dj"
+              },
+              {
+                "name": "Owner - Only session owner controls",
+                "value": "owner"
+              },
+              {
+                "name": "Free - Anyone can control",
+                "value": "free"
+              }
+            ],
+            "name": "mode",
+            "description": "Session mode",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "permission",
+        "description": "Set permission mode",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Default - Normal permissions",
+                "value": "default"
+              },
+              {
+                "name": "Strict - Restricted access",
+                "value": "strict"
+              },
+              {
+                "name": "Lenient - Relaxed access",
+                "value": "lenient"
+              }
+            ],
+            "name": "mode",
+            "description": "Permission mode",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "properties",
+        "description": "Set properties mode",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Individual - Each user has their own settings",
+                "value": "individual"
+              },
+              {
+                "name": "Shared - Settings apply to entire session",
+                "value": "shared"
+              }
+            ],
+            "name": "mode",
+            "description": "Properties mode",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "combine",
+        "description": "Set properties combine mode",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Override - Latest setting wins",
+                "value": "override"
+              },
+              {
+                "name": "Merge - Combine settings",
+                "value": "merge"
+              }
+            ],
+            "name": "mode",
+            "description": "Combine mode",
+            "required": true
+          }
+        ]
+      }
+    ],
+    "name": "sessionmode",
+    "description": "Configure session and permission modes",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "sessionstats",
+    "description": "View statistics for the current session"
+  },
+  {
+    "options": [
+      {
+        "type": 4,
+        "choices": [
+          {
+            "name": "128 kbps (Free)",
+            "value": 128
+          },
+          {
+            "name": "192 kbps (Mid)",
+            "value": 192
+          },
+          {
+            "name": "256 kbps (High)",
+            "value": 256
+          },
+          {
+            "name": "320 kbps (Premium)",
+            "value": 320
+          }
+        ],
+        "name": "bitrate",
+        "description": "Audio bitrate in kbps (128, 192, 256, 320)",
+        "required": true
+      },
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "User",
+            "value": "user"
+          },
+          {
+            "name": "Guild (Server)",
+            "value": "guild"
+          }
+        ],
+        "name": "target",
+        "description": "Set for 'user' or 'guild'",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "identity",
+        "description": "Custom bot identity (optional)",
+        "required": false
+      },
+      {
+        "name": "user",
+        "description": "User to set bitrate for (when target is 'user')",
+        "required": false,
+        "type": 6
+      },
+      {
+        "type": 3,
+        "name": "guild_id",
+        "description": "Guild ID to set bitrate for (when target is 'guild', defaults to current)",
+        "required": false
+      }
+    ],
+    "name": "setbitrate",
+    "description": "(Owner Only) Set custom audio bitrate for testing"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "maxtracklen",
+        "description": "Set max track length in seconds",
+        "options": [
+          {
+            "max_value": 86400,
+            "min_value": 0,
+            "type": 4,
+            "name": "seconds",
+            "description": "Max length (0=unlimited)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "maxqueue",
+        "description": "Set max queue size",
+        "options": [
+          {
+            "max_value": 10000,
+            "min_value": 1,
+            "type": 4,
+            "name": "size",
+            "description": "Max tracks in queue",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "maxvolume",
+        "description": "Set max volume",
+        "options": [
+          {
+            "max_value": 200,
+            "min_value": 1,
+            "type": 4,
+            "name": "volume",
+            "description": "Max volume %",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "defaultvolume",
+        "description": "Set default volume",
+        "options": [
+          {
+            "max_value": 100,
+            "min_value": 1,
+            "type": 4,
+            "name": "volume",
+            "description": "Default volume %",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "voteskip",
+        "description": "Configure vote skip",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable vote skip",
+            "required": true,
+            "type": 5
+          },
+          {
+            "max_value": 100,
+            "min_value": 10,
+            "type": 4,
+            "name": "percentage",
+            "description": "Percentage needed (10-100)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "announce",
+        "description": "Configure announcements",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable announcements",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "autoleave",
+        "description": "Configure auto-leave",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable auto-leave",
+            "required": true,
+            "type": 5
+          },
+          {
+            "max_value": 3600,
+            "min_value": 30,
+            "type": 4,
+            "name": "timeout",
+            "description": "Seconds before leaving",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "duplicates",
+        "description": "Prevent duplicates",
+        "options": [
+          {
+            "name": "prevent",
+            "description": "Prevent duplicates",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "language",
+        "description": "Set language",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "English",
+                "value": "en"
+              },
+              {
+                "name": "Spanish",
+                "value": "es"
+              },
+              {
+                "name": "Portuguese",
+                "value": "pt_br"
+              },
+              {
+                "name": "French",
+                "value": "fr"
+              },
+              {
+                "name": "German",
+                "value": "de"
+              }
+            ],
+            "name": "lang",
+            "description": "Language",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all settings",
+        "options": []
+      }
+    ],
+    "name": "setsettings",
+    "description": "Configure bot settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "djrole",
+        "description": "Set the DJ role for music control",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "adminrole",
+        "description": "Set the admin role for settings management",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "volume",
+        "description": "Set default and maximum volume",
+        "options": [
+          {
+            "max_value": 100,
+            "min_value": 0,
+            "type": 4,
+            "name": "default",
+            "description": "Default volume (0-100)",
+            "required": false
+          },
+          {
+            "max_value": 100,
+            "min_value": 0,
+            "type": 4,
+            "name": "max",
+            "description": "Maximum allowed volume (0-100)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "queue",
+        "description": "Configure queue settings",
+        "options": [
+          {
+            "max_value": 1000,
+            "min_value": 1,
+            "type": 4,
+            "name": "maxsize",
+            "description": "Maximum queue size (1-1000)",
+            "required": false
+          },
+          {
+            "name": "preventduplicates",
+            "description": "Prevent duplicate songs in queue",
+            "required": false,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "behavior",
+        "description": "Configure bot behavior",
+        "options": [
+          {
+            "name": "announcements",
+            "description": "Announce now playing in text channel",
+            "required": false,
+            "type": 5
+          },
+          {
+            "name": "autoleave",
+            "description": "Leave voice channel when empty",
+            "required": false,
+            "type": 5
+          },
+          {
+            "max_value": 3600,
+            "min_value": 30,
+            "type": 4,
+            "name": "leavetimeout",
+            "description": "Seconds before leaving empty channel (30-3600)",
+            "required": false
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "voicechannels",
+        "description": "Set allowed voice channels",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "textchannels",
+        "description": "Set allowed text channels for commands",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "logchannel",
+        "description": "Set the channel for bot logs (now playing, etc.)",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "blacklist",
+        "description": "Manage user blacklist",
+        "options": [
+          {
+            "name": "add",
+            "description": "Add user to blacklist",
+            "required": false,
+            "type": 6
+          },
+          {
+            "name": "remove",
+            "description": "Remove user from blacklist",
+            "required": false,
+            "type": 6
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "language",
+        "description": "Set bot language for this server",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "embedcolor",
+        "description": "Set custom embed color",
+        "options": [
+          {
+            "type": 3,
+            "name": "color",
+            "description": "Hex color code (e.g., #FF5500)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all settings to default",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "stats",
+        "description": "View server music statistics",
+        "options": []
+      }
+    ],
+    "name": "settings",
+    "description": "Configure bot settings for this server (Admin only)",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "setup",
+    "description": "Setup guide for the bot",
+    "default_member_permissions": "8"
+  },
+  {
+    "options": [],
+    "name": "shards",
+    "description": "View shard information"
+  },
+  {
+    "options": [],
+    "name": "sharecodes",
+    "description": "List all your collection share codes"
+  },
+  {
+    "options": [],
+    "name": "shuffle",
+    "description": "Shuffle queue"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle shuffle on repeat",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable shuffle on repeat",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current setting",
+        "options": []
+      }
+    ],
+    "name": "shufflerepeat",
+    "description": "Configure shuffle on repeat mode",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "skip",
+    "description": "Skip the currently playing song"
+  },
+  {
+    "options": [
+      {
+        "type": 4,
+        "name": "number",
+        "description": "The queue number to skip to",
+        "required": true
+      }
+    ],
+    "name": "skipto",
+    "description": "Skip to the selected queue number"
+  },
+  {
+    "options": [
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position",
+        "description": "Position in queue (leave empty for current)",
+        "required": false
+      }
+    ],
+    "name": "songinfo",
+    "description": "Get detailed information about a track"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "choices": [
+          {
+            "name": "Title (A-Z)",
+            "value": "title_asc"
+          },
+          {
+            "name": "Title (Z-A)",
+            "value": "title_desc"
+          },
+          {
+            "name": "Author (A-Z)",
+            "value": "author_asc"
+          },
+          {
+            "name": "Author (Z-A)",
+            "value": "author_desc"
+          },
+          {
+            "name": "Duration (Shortest)",
+            "value": "duration_asc"
+          },
+          {
+            "name": "Duration (Longest)",
+            "value": "duration_desc"
+          }
+        ],
+        "name": "by",
+        "description": "Sort criteria",
+        "required": true
+      }
+    ],
+    "name": "sort",
+    "description": "Sort the queue by various criteria"
+  },
+  {
+    "options": [
+      {
+        "max_value": 2,
+        "min_value": 0.5,
+        "type": 10,
+        "name": "rate",
+        "description": "Playback speed (0.5 to 2.0)",
+        "required": false
+      }
+    ],
+    "name": "speed",
+    "description": "speed.description"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "time",
+        "description": "Start time (e.g., '30s', '1:30', '1m 30s') or 'reset'",
+        "required": true
+      }
+    ],
+    "name": "starttime",
+    "description": "Set the start position of the current track"
+  },
+  {
+    "options": [],
+    "name": "stats",
+    "description": "Get bot statistics"
+  },
+  {
+    "options": [],
+    "name": "stop",
+    "description": "Stops the music"
+  },
+  {
+    "options": [],
+    "name": "support",
+    "description": "Get the support server link"
+  },
+  {
+    "options": [
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position1",
+        "description": "First track position",
+        "required": true
+      },
+      {
+        "min_value": 1,
+        "type": 4,
+        "name": "position2",
+        "description": "Second track position",
+        "required": true
+      }
+    ],
+    "name": "swap",
+    "description": "Swap two tracks in the queue"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "deleteoriginal",
+        "description": "Toggle deleting original command messages",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Delete original messages",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "message",
+        "description": "Set message for disabled channels",
+        "options": [
+          {
+            "type": 3,
+            "name": "message",
+            "description": "Message to show (empty to disable)",
+            "required": false,
+            "max_length": 500
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "notifytype",
+        "description": "Set notify type for disabled channels",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Reply - Reply to user",
+                "value": "reply"
+              },
+              {
+                "name": "React - React to message",
+                "value": "react"
+              },
+              {
+                "name": "DM - Send DM to user",
+                "value": "dm"
+              },
+              {
+                "name": "None - No notification",
+                "value": "none"
+              }
+            ],
+            "name": "type",
+            "description": "Notification type",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "threadpolicy",
+        "description": "Set thread usage policy",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "Allow - Commands work in threads",
+                "value": "allow"
+              },
+              {
+                "name": "Parent Only - Only parent channel settings",
+                "value": "parent"
+              },
+              {
+                "name": "Deny - Disable commands in threads",
+                "value": "deny"
+              }
+            ],
+            "name": "policy",
+            "description": "Thread policy",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View text channel settings",
+        "options": []
+      }
+    ],
+    "name": "textchannelconfig",
+    "description": "Configure text channel settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "set",
+        "description": "Set auto-leave timeout",
+        "options": [
+          {
+            "max_value": 3600,
+            "min_value": 30,
+            "type": 4,
+            "name": "seconds",
+            "description": "Seconds before leaving (30-3600)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View current timeout settings",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "disable",
+        "description": "Disable auto-leave timeout",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "enable",
+        "description": "Enable auto-leave timeout",
+        "options": []
+      }
+    ],
+    "name": "timeout",
+    "description": "Manage bot timeout settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [],
+    "name": "tip",
+    "description": "Get a random tip"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "artist",
+        "description": "Artist name to search",
+        "required": false
+      }
+    ],
+    "name": "topsongs",
+    "description": "Get top songs for an artist"
+  },
+  {
+    "options": [
+      {
+        "name": "user",
+        "description": "User to transfer ownership to",
+        "required": true,
+        "type": 6
+      }
+    ],
+    "name": "transfer",
+    "description": "Transfer session ownership to another member"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable tremolo effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "tremolo",
+    "description": "Apply tremolo audio effect"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "server",
+        "description": "Server ID to unboost (defaults to current)",
+        "required": false
+      },
+      {
+        "name": "current",
+        "description": "Unboost the current server",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "unboost",
+    "description": "Remove your boost from a server"
+  },
+  {
+    "options": [],
+    "name": "upcoming",
+    "description": "Show upcoming tracks in the queue"
+  },
+  {
+    "options": [],
+    "name": "uptime",
+    "description": "Check the uptime"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "autocorrect",
+        "description": "Toggle auto-correct for searches",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable auto-correct",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "volumeautomatic",
+        "description": "Toggle automatic volume adjustment",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable automatic volume",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "defaultvolume",
+        "description": "Set your default volume",
+        "options": [
+          {
+            "max_value": 100,
+            "min_value": 1,
+            "type": 4,
+            "name": "volume",
+            "description": "Default volume (1-100)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "preferredbots",
+        "description": "Set your preferred bots",
+        "options": [
+          {
+            "type": 3,
+            "name": "bots",
+            "description": "Bot names (comma separated)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View your preferences",
+        "options": []
+      },
+      {
+        "type": 1,
+        "name": "reset",
+        "description": "Reset all preferences",
+        "options": []
+      }
+    ],
+    "name": "userprefs",
+    "description": "Configure your personal preferences"
+  },
+  {
+    "options": [
+      {
+        "name": "enabled",
+        "description": "Enable or disable vibrato effect",
+        "required": false,
+        "type": 5
+      }
+    ],
+    "name": "vibrato",
+    "description": "Apply vibrato audio effect"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "toggle",
+        "description": "Toggle voice announcements",
+        "options": [
+          {
+            "name": "enabled",
+            "description": "Enable voice announcements",
+            "required": true,
+            "type": 5
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "volume",
+        "description": "Set voice announcement volume",
+        "options": [
+          {
+            "max_value": 100,
+            "min_value": 1,
+            "type": 4,
+            "name": "level",
+            "description": "Volume level (1-100)",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "language",
+        "description": "Set announcement language",
+        "options": [
+          {
+            "type": 3,
+            "choices": [
+              {
+                "name": "English",
+                "value": "en"
+              },
+              {
+                "name": "Spanish",
+                "value": "es"
+              },
+              {
+                "name": "French",
+                "value": "fr"
+              },
+              {
+                "name": "German",
+                "value": "de"
+              },
+              {
+                "name": "Japanese",
+                "value": "ja"
+              },
+              {
+                "name": "Korean",
+                "value": "ko"
+              },
+              {
+                "name": "Portuguese",
+                "value": "pt"
+              },
+              {
+                "name": "Russian",
+                "value": "ru"
+              }
+            ],
+            "name": "lang",
+            "description": "Language code",
+            "required": true
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View voice announcement settings",
+        "options": []
+      }
+    ],
+    "name": "voiceannounce",
+    "description": "Configure voice announcements (TTS)",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 1,
+        "name": "message",
+        "description": "Set message for disabled voice channels",
+        "options": [
+          {
+            "type": 3,
+            "name": "message",
+            "description": "Message to show (empty to disable)",
+            "required": false,
+            "max_length": 500
+          }
+        ]
+      },
+      {
+        "type": 1,
+        "name": "view",
+        "description": "View voice channel settings",
+        "options": []
+      }
+    ],
+    "name": "voicechannelconfig",
+    "description": "Configure voice channel settings",
+    "default_member_permissions": "32"
+  },
+  {
+    "options": [
+      {
+        "type": 4,
+        "name": "volume",
+        "description": "Change volume of currently playing music",
+        "required": false
+      }
+    ],
+    "name": "volume",
+    "description": "Change volume of currently playing music"
+  },
+  {
+    "options": [],
+    "name": "vote",
+    "description": "Vote for the bot on bot lists"
+  },
+  {
+    "options": [],
+    "name": "voteskip",
+    "description": "Vote to skip the current track"
+  },
+  {
+    "options": [
+      {
+        "type": 3,
+        "name": "to",
+        "description": "Position to wind to (e.g., 1:30, 90s)",
+        "required": false
+      },
+      {
+        "type": 3,
+        "name": "time",
+        "description": "Time format (e.g., 2:45, 165)",
+        "required": false
+      }
+    ],
+    "name": "wind",
+    "description": "Wind to the desired position in the track"
+  }
+]
