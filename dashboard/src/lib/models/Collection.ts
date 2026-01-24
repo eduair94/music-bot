@@ -80,7 +80,6 @@ const collectionSchema = new Schema(
 );
 
 collectionSchema.index({ userId: 1, name: 1 }, { unique: true });
-collectionSchema.index({ shareCode: 1 });
 
 // Prevent model overwrite during hot reloads
 export const Collection: Model<ICollection> = 

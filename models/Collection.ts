@@ -81,7 +81,4 @@ const collectionSchema = new Schema(
 // Compound index for user + name uniqueness
 collectionSchema.index({ userId: 1, name: 1 }, { unique: true });
 
-// Index for share code lookups
-collectionSchema.index({ shareCode: 1 });
-
 export const Collection = model<ICollection>("Collection", collectionSchema);
