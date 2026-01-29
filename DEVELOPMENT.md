@@ -60,7 +60,8 @@ User Command → Discord.js → Bot.ts → Command Handler → DiscordPlayerServ
 music-bot/
 ├── index.ts              # Entry point - creates Bot instance
 ├── config.json           # Configuration file (TOKEN, settings)
-├── cookies.txt           # (Optional) YouTube cookies for age-restricted content
+├── youtube_cookies.txt   # (Optional) YouTube cookies for age-restricted content
+├── cookies.txt           # (Optional) Legacy cookie file (youtube_cookies.txt takes priority)
 │
 ├── structs/
 │   └── Bot.ts            # Main bot class - handles client, commands, events
@@ -318,9 +319,20 @@ STAY_TIME=30
 DEFAULT_VOLUME=100
 ```
 
-### Optional: cookies.txt
+### Optional: YouTube Cookies
 
-For age-restricted YouTube content, place a `cookies.txt` file (Netscape format) in the root directory. The bot will automatically use it if present.
+For age-restricted or region-locked YouTube content, you can provide YouTube cookies in Netscape format. The bot will automatically use them if present.
+
+**Recommended approach:**
+Place a `youtube_cookies.txt` file in the root directory of the project. If both `youtube_cookies.txt` and `cookies.txt` exist, `youtube_cookies.txt` will take priority.
+
+**How to obtain YouTube cookies:**
+1. Install a browser extension like "Get cookies.txt" (available for Chrome/Firefox)
+2. Log in to YouTube in your browser
+3. Export cookies in Netscape format
+4. Save as `youtube_cookies.txt` in the bot's root directory
+
+**Note:** Keep your cookies file secure and never commit it to version control (it's already in `.gitignore`).
 
 ---
 
