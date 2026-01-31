@@ -481,6 +481,12 @@
     "noQueue": "There is no queue to skip.",
     "success": "⏭️ Skipped to the next track."
   },
+  "say": {
+    "description": "Convert text to speech and play it in voice channel",
+    "errorNotAvailable": "❌ TTS service is not available. Please contact the bot administrator.",
+    "errorGenerate": "❌ Failed to generate speech. Please try again.",
+    "success": "🎤 Playing: \"{text}\" ({language}, {voice})"
+  },
   "radio": {
     "description": "Start a radio based on the current track",
     "notInVoice": "You need to be in a voice channel.",

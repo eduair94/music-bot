@@ -17,6 +17,7 @@ import { DatabaseService } from "../services/database";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { PatreonService } from "../services/patreon";
+import { ttsService } from "../services/tts";
 import {
     GuildData,
     isRedisAvailable,
@@ -153,6 +154,13 @@ export class Bot {
         }
       } catch (error) {
         console.error("⚠️ Patreon initialization failed:", error);
+      }
+
+      // Initialize TTS service (for /say command)
+      try {
+        ttsService.initialize();
+      } catch (error) {
+        console.error("⚠️ TTS service initialization failed:", error);
       }
 
       // Generate and display bot invite link

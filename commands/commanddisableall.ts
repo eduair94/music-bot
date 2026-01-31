@@ -1,8 +1,8 @@
-import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, PermissionFlagsBits } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { bot } from "../index";
 import { Command } from "../interfaces/Command";
 import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
-import { bot } from "../index";
 
 const commanddisableall: Command = {
     data: new SlashCommandBuilder()
@@ -24,7 +24,7 @@ const commanddisableall: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: toDisable });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("íº« All Commands Disabled")
+            .setTitle("ï¿½ï¿½ï¿½ All Commands Disabled")
             .setColor(0xe74c3c)
             .setDescription(`Disabled **${toDisable.length}** commands.\n\nProtected commands still available:\n${protectedCommands.map(c => `\`/${c}\``).join(", ")}\n\nUse \`/commandenableall\` to restore all commands.`)] });
     }
