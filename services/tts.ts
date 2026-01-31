@@ -1,7 +1,4 @@
-import http from "http";
-import https from "https";
 import Replicate from "replicate";
-import { Readable } from "stream";
 
 /**
  * Text-to-Speech Service using Replicate's Qwen3-TTS model
@@ -9,7 +6,7 @@ import { Readable } from "stream";
  * Features:
  * - Multi-language support (Spanish by default)
  * - Multiple voice options
- * - Returns audio as a readable stream for Discord playback
+ * - Returns audio URL for Discord playback
  */
 
 export type TTSLanguage = "Spanish" | "English" | "French" | "German" | "Italian" | "Portuguese" | "Chinese" | "Japanese" | "Korean";
@@ -23,7 +20,6 @@ export interface TTSOptions {
 
 export interface TTSResult {
   url: string;
-  stream: Readable;
 }
 
 class TTSService {
@@ -83,45 +79,35 @@ class TTSService {
       language,
     };
 
-    const output = await this.replicate.run("qwen/qwen3-tts", { input }) as { url: () => string };
+    const output = await this.replicate.run("qwen/qwen3-tts", { input });
 
-    const audioUrl = output.url();
+    // Handle different response formats from Replicate
+    let audioUrl: string;
+    if (typeof output === "string") {
+      audioUrl = output;
+    } else if (output && typeof output === "object") {
+      // Could be a FileOutput object with url() method or a direct URL property
+      if ("url" in output && typeof (output as any).url === "function") {
+        audioUrl = (output as any).url();
+      } else if ("url" in output && typeof (output as any).url === "string") {
+        audioUrl = (output as any).url;
+      } else if (Array.isArray(output) && output.length > 0) {
+        // Sometimes returns an array of URLs
+        audioUrl = typeof output[0] === "string" ? output[0] : (output[0] as any).url?.() || (output[0] as any).url;
+      } else {
+        // Try to extract href or toString
+        audioUrl = (output as any).href || String(output);
+      }
+    } else {
+      throw new Error("Unexpected output format from Replicate TTS");
+    }
+
     console.log(`[TTS] ✅ Audio generated: ${audioUrl}`);
 
-    // Fetch the audio as a stream
-    const stream = await this.fetchAudioStream(audioUrl);
-
+    // Return only the URL - let the player service handle streaming
     return {
       url: audioUrl,
-      stream,
     };
-  }
-
-  /**
-   * Fetch audio from URL as a readable stream
-   */
-  private fetchAudioStream(url: string): Promise<Readable> {
-    return new Promise((resolve, reject) => {
-      const protocol = url.startsWith("https") ? https : http;
-      
-      protocol.get(url, (response) => {
-        if (response.statusCode === 301 || response.statusCode === 302) {
-          // Handle redirects
-          const redirectUrl = response.headers.location;
-          if (redirectUrl) {
-            this.fetchAudioStream(redirectUrl).then(resolve).catch(reject);
-            return;
-          }
-        }
-
-        if (response.statusCode !== 200) {
-          reject(new Error(`Failed to fetch audio: HTTP ${response.statusCode}`));
-          return;
-        }
-
-        resolve(response);
-      }).on("error", reject);
-    });
   }
 }
 
