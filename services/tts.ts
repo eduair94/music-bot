@@ -1,7 +1,7 @@
+import http from "http";
+import https from "https";
 import Replicate from "replicate";
 import { Readable } from "stream";
-import https from "https";
-import http from "http";
 
 /**
  * Text-to-Speech Service using Replicate's Qwen3-TTS model

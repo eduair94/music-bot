@@ -1,13 +1,13 @@
 import {
-    ApplicationCommandDataResolvable,
-    ChatInputCommandInteraction,
-    Client,
-    Collection,
-    Events,
-    Interaction,
-    REST,
-    Routes,
-    Snowflake
+  ApplicationCommandDataResolvable,
+  ChatInputCommandInteraction,
+  Client,
+  Collection,
+  Events,
+  Interaction,
+  REST,
+  Routes,
+  Snowflake
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
@@ -19,12 +19,12 @@ import { GuildSettingsService } from "../services/guildSettings";
 import { PatreonService } from "../services/patreon";
 import { ttsService } from "../services/tts";
 import {
-    GuildData,
-    isRedisAvailable,
-    removeBotFromGuild,
-    setBotInGuild,
-    setBotStatus,
-    syncBotGuildsWithData
+  GuildData,
+  isRedisAvailable,
+  removeBotFromGuild,
+  setBotInGuild,
+  setBotStatus,
+  syncBotGuildsWithData
 } from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";

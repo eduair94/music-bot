@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { ttsService, TTSLanguage, TTSSpeaker } from "../services/tts";
+import { TTSLanguage, ttsService, TTSSpeaker } from "../services/tts";
 import { i18n } from "../utils/i18n";
 
 /**
