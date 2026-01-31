@@ -81,25 +81,43 @@ class TTSService {
 
     const output = await this.replicate.run("qwen/qwen3-tts", { input });
 
+    // Debug: log the output type and structure
+    console.log(`[TTS] 🔍 Output type: ${typeof output}`);
+    console.log(`[TTS] 🔍 Output constructor: ${output?.constructor?.name}`);
+    
     // Handle different response formats from Replicate
+    // FileOutput objects need to be converted to string via href property or toString()
     let audioUrl: string;
+    
     if (typeof output === "string") {
       audioUrl = output;
     } else if (output && typeof output === "object") {
-      // Could be a FileOutput object with url() method or a direct URL property
-      if ("url" in output && typeof (output as any).url === "function") {
-        audioUrl = (output as any).url();
-      } else if ("url" in output && typeof (output as any).url === "string") {
-        audioUrl = (output as any).url;
+      // FileOutput from Replicate has an href property
+      if ("href" in output && typeof (output as any).href === "string") {
+        audioUrl = (output as any).href;
+      } else if (typeof (output as any).toString === "function") {
+        // FileOutput also has toString() that returns the URL
+        const str = (output as any).toString();
+        if (str.startsWith("http")) {
+          audioUrl = str;
+        } else {
+          audioUrl = String(output);
+        }
       } else if (Array.isArray(output) && output.length > 0) {
-        // Sometimes returns an array of URLs
-        audioUrl = typeof output[0] === "string" ? output[0] : (output[0] as any).url?.() || (output[0] as any).url;
+        // Sometimes returns an array
+        const first = output[0];
+        audioUrl = typeof first === "string" ? first : (first as any).href || String(first);
       } else {
-        // Try to extract href or toString
-        audioUrl = (output as any).href || String(output);
+        audioUrl = String(output);
       }
     } else {
       throw new Error("Unexpected output format from Replicate TTS");
+    }
+
+    // Ensure we have a valid URL string
+    if (typeof audioUrl !== "string" || !audioUrl.startsWith("http")) {
+      console.error(`[TTS] ❌ Invalid audio URL: ${audioUrl}`);
+      throw new Error("Failed to get valid audio URL from Replicate");
     }
 
     console.log(`[TTS] ✅ Audio generated: ${audioUrl}`);
