@@ -69,11 +69,16 @@ export class DiscordPlayerService {
       skipFFmpeg: false, // We need FFmpeg for transcoding
     });
 
-    // Check if cookies file exists
-    const hasCookies = fs.existsSync("./cookies.txt");
-    if (hasCookies) {
+    // Check if cookies file exists (prioritize youtube_cookies.txt over cookies.txt)
+    let cookiesFile: string | null = null;
+    if (fs.existsSync("./youtube_cookies.txt")) {
+      cookiesFile = "./youtube_cookies.txt";
+      console.log("[DiscordPlayer] 🍪 Found youtube_cookies.txt, will use for YouTube authentication");
+    } else if (fs.existsSync("./cookies.txt")) {
+      cookiesFile = "./cookies.txt";
       console.log("[DiscordPlayer] 🍪 Found cookies.txt, will use for YouTube authentication");
     }
+    const hasCookies = cookiesFile !== null;
 
     // Custom stream function that uses yt-dlp for reliable streaming
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
@@ -86,7 +91,7 @@ export class DiscordPlayerService {
         throw new Error(`Track has no URL: ${track.title}`);
       }
       
-      const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
+      const cookieArgs = hasCookies && cookiesFile ? ['--cookies', cookiesFile] : [];
       
       // Build yt-dlp arguments - use simple format selection for best compatibility
       // Use format IDs directly: 251 (opus 128k), 250 (opus 70k), 249 (opus 50k), 140 (m4a 128k), 139 (m4a 48k)

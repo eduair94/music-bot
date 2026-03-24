@@ -6,6 +6,10 @@ config.json
 !/sounds/putmusichere.mp3
 /dist
 
+# Cookie files (may contain sensitive authentication data)
+cookies.txt
+youtube_cookies.txt
+
 # Logs
 logs
 *.log

@@ -41,6 +41,16 @@ Copy or Rename `config.json.example` to `config.json` and fill out the values:
 }
 ```
 
+### 🍪 Optional: YouTube Cookies (for age-restricted content)
+
+For age-restricted or region-locked YouTube videos, you can provide YouTube cookies:
+
+1. Create a file named `youtube_cookies.txt` in the bot's root directory
+2. Export cookies from your browser in Netscape format (use a browser extension like "Get cookies.txt")
+3. The bot will automatically detect and use the cookies file
+
+⚠️ **Note: Keep your cookies file secure and never share it publicly** ⚠️
+
 ## 🐬 Docker Configuration
 
 For those who would prefer to use our [Docker container](https://hub.docker.com/repository/docker/eritislami/evobot), you may provide values from `config.json` as environment variables.
