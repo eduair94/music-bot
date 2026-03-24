@@ -92,11 +92,11 @@ export class DiscordPlayerService {
       
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
-      // Build yt-dlp arguments - use simple format selection for best compatibility
-      // Use format IDs directly: 251 (opus 128k), 250 (opus 70k), 249 (opus 50k), 140 (m4a 128k), 139 (m4a 48k)
-      // Or use 'ba' (best audio) / 'wa' (worst audio) as fallback
+      // Build yt-dlp arguments - use format selectors (not hardcoded IDs)
+      // 'ba' = best audio-only stream; 'ba*' = best stream with audio (may include video);
+      // This way yt-dlp picks whatever is available for the specific video.
       const ytdlpArgs = [
-        '--format', '251/250/249/140/139/ba/b',
+        '--format', 'ba[ext=webm]/ba[ext=m4a]/ba/ba*/b',
         '--no-playlist',
         '--no-check-certificates',
         '--quiet',

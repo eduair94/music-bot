@@ -1,9 +1,8 @@
-# ── Stage 1: Build ────────────────────────────────────────────
-FROM node:22-slim AS build
+# ── Stage 1: Install ALL dependencies (cached unless package*.json changes) ──
+FROM node:22-slim AS deps
 
 WORKDIR /app
 
-# Install build tools for native modules (opus, sodium, etc.)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends python3 build-essential && \
     rm -rf /var/lib/apt/lists/*
@@ -11,18 +10,32 @@ RUN apt-get update && \
 COPY package*.json ./
 RUN npm ci
 
-COPY . .
+# ── Stage 2: Build TypeScript (re-runs only when source changes) ─────────────
+FROM deps AS build
+
+COPY tsconfig.json ./
+COPY index.ts ./
+COPY commands ./commands
+COPY interfaces ./interfaces
+COPY locales ./locales
+COPY models ./models
+COPY services ./services
+COPY shared ./shared
+COPY structs ./structs
+COPY utils ./utils
+COPY workers ./workers
+
 RUN npm run build
 
-# Prune to production deps only
-RUN rm -rf node_modules && npm ci --omit=dev
+# ── Stage 3: Production dependencies only (cached with stage 1) ──────────────
+FROM deps AS prod-deps
+RUN npm prune --omit=dev
 
-# ── Stage 2: Production ──────────────────────────────────────
+# ── Stage 4: Final slim image ────────────────────────────────────────────────
 FROM node:22-slim
 
 WORKDIR /app
 
-# Install runtime dependencies: ffmpeg + yt-dlp + python3 (needed by yt-dlp)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg python3 curl ca-certificates && \
     curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
@@ -30,13 +43,11 @@ RUN apt-get update && \
     apt-get purge -y curl && apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy built app & production node_modules
 COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/locales ./locales
 
-# Entrypoint script handles cookies.txt validation
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
