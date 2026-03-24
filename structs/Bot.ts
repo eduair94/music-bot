@@ -14,8 +14,10 @@ import { join } from "path";
 import { Command } from "../interfaces/Command";
 import { DashboardSyncService } from "../services/dashboardSync";
 import { DatabaseService } from "../services/database";
+import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { logBuffer } from "../services/logBuffer";
 import { PatreonService } from "../services/patreon";
 import { ttsService } from "../services/tts";
 import {
@@ -39,6 +41,9 @@ export class Bot {
   public cooldowns = new Collection<string, Collection<Snowflake, number>>();
 
   public constructor(public readonly client: Client) {
+    // Install log buffer FIRST so every subsequent console.log is captured
+    logBuffer.install();
+
     this.client.login(config.TOKEN);
 
     this.client.on("ready", async () => {
@@ -161,6 +166,13 @@ export class Bot {
         ttsService.initialize();
       } catch (error) {
         console.error("⚠️ TTS service initialization failed:", error);
+      }
+
+      // Start debug panel (requires DEBUG_TOKEN env var)
+      try {
+        DebugPanel.getInstance().start(this.client);
+      } catch (error) {
+        console.error("⚠️ Debug panel failed to start:", error);
       }
 
       // Generate and display bot invite link

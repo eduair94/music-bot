@@ -5,6 +5,9 @@ services:
     container_name: music-bot
     restart: unless-stopped
     env_file: .env
+    ports:
+      # Debug panel (set DEBUG_TOKEN in .env to enable)
+      - "${DEBUG_PORT:-9090}:${DEBUG_PORT:-9090}"
     volumes:
       # Mount cookies.txt from host for YouTube auth (create an empty file if you don't have one)
       - ./cookies.txt:/app/cookies.txt:ro
