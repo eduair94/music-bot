@@ -5,34 +5,6 @@ services:
     container_name: music-bot
     restart: unless-stopped
     env_file: .env
-    depends_on:
-      mongo:
-        condition: service_started
-      redis:
-        condition: service_started
     volumes:
       # Mount cookies.txt from host for YouTube auth (create an empty file if you don't have one)
       - ./cookies.txt:/app/cookies.txt:ro
-
-  # ── MongoDB ─────────────────────────────────────────────────
-  mongo:
-    image: mongo:7
-    container_name: music-bot-mongo
-    restart: unless-stopped
-    volumes:
-      - mongo_data:/data/db
-    # Uncomment to expose on host for debugging:
-    # ports:
-    #   - "27017:27017"
-
-  # ── Redis ───────────────────────────────────────────────────
-  redis:
-    image: redis:7-alpine
-    container_name: music-bot-redis
-    restart: unless-stopped
-    # Uncomment to expose on host for debugging:
-    # ports:
-    #   - "6379:6379"
-
-volumes:
-  mongo_data:
