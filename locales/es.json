@@ -136,6 +136,9 @@
     "errorGenerate": "❌ Error al generar el audio. Intenta de nuevo.",
     "success": "🎤 Reproduciendo: \"{text}\" ({language}, {voice})"
   },
+  "sayconfig": {
+    "description": "Configura tus ajustes de TTS (Texto a Voz)"
+  },
   "skipto": {
     "description": "Salta a la posición seleccionada en la cola",
     "usageReply": "Cómo usarlo: {prefix}{name} <Número en la Cola>",

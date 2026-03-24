@@ -487,6 +487,9 @@
     "errorGenerate": "❌ Failed to generate speech. Please try again.",
     "success": "🎤 Playing: \"{text}\" ({language}, {voice})"
   },
+  "sayconfig": {
+    "description": "Configure your TTS (Text-to-Speech) settings"
+  },
   "radio": {
     "description": "Start a radio based on the current track",
     "notInVoice": "You need to be in a voice channel.",
