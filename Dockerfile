@@ -1,32 +1,44 @@
-ARG NODE_VERSION=18.18.2-slim
-FROM node:${NODE_VERSION} as base
+# ── Stage 1: Build ────────────────────────────────────────────
+FROM node:22-slim AS build
 
-ENV USER=evobot
+WORKDIR /app
 
+# Install build tools for native modules (opus, sodium, etc.)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends python3 build-essential && \
-    apt-get purge -y --auto-remove && \
     rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r ${USER} && \
-    useradd --create-home --home /home/evobot -r -g ${USER} ${USER}
-
-USER ${USER}
-WORKDIR /home/evobot
-
-FROM base as build
-
-COPY --chown=${USER}:${USER}  . .
+COPY package*.json ./
 RUN npm ci
+
+COPY . .
 RUN npm run build
 
-RUN rm -rf node_modules && \
-    npm ci --omit=dev
+# Prune to production deps only
+RUN rm -rf node_modules && npm ci --omit=dev
 
-FROM node:${NODE_VERSION} as prod
+# ── Stage 2: Production ──────────────────────────────────────
+FROM node:22-slim
 
-COPY --chown=${USER}:${USER} package*.json ./
-COPY --from=build --chown=${USER}:${USER} /home/evobot/node_modules ./node_modules
-COPY --from=build --chown=${USER}:${USER} /home/evobot/dist ./dist
+WORKDIR /app
 
-CMD [ "node", "./dist/index.js" ]
+# Install runtime dependencies: ffmpeg + yt-dlp + python3 (needed by yt-dlp)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg python3 curl ca-certificates && \
+    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/yt-dlp && \
+    chmod a+rx /usr/local/bin/yt-dlp && \
+    apt-get purge -y curl && apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy built app & production node_modules
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/locales ./locales
+
+# Entrypoint script handles cookies.txt validation
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["node", "dist/index.js"]

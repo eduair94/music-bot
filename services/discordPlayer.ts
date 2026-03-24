@@ -69,10 +69,14 @@ export class DiscordPlayerService {
       skipFFmpeg: false, // We need FFmpeg for transcoding
     });
 
-    // Check if cookies file exists
-    const hasCookies = fs.existsSync("./cookies.txt");
+    // Check if cookies file exists and is a real non-empty file
+    const hasCookies = fs.existsSync("./cookies.txt") 
+      && fs.statSync("./cookies.txt").isFile() 
+      && fs.statSync("./cookies.txt").size > 0;
     if (hasCookies) {
       console.log("[DiscordPlayer] 🍪 Found cookies.txt, will use for YouTube authentication");
+    } else {
+      console.log("[DiscordPlayer] ⚠️ No cookies.txt found – YouTube may throttle requests (slow loading / AbortError)");
     }
 
     // Custom stream function that uses yt-dlp for reliable streaming
@@ -99,8 +103,10 @@ export class DiscordPlayerService {
         '--no-warnings',
         '--extractor-retries', '5',
         '--socket-timeout', '30',
-        '--retries', '3',
-        '--fragment-retries', '3',
+        '--retries', '5',
+        '--fragment-retries', '5',
+        '--force-ipv4',
+        '--geo-bypass',
         '--output', '-',
         ...cookieArgs,
         track.url
@@ -174,7 +180,7 @@ export class DiscordPlayerService {
               resolve(ytdlpProcess.stdout);
             }
           }
-        }, 500);
+        }, 2000);
 
         // Also resolve immediately if we start receiving data
         ytdlpProcess.stdout.once('data', () => {
@@ -495,7 +501,8 @@ export class DiscordPlayerService {
           leaveOnEndCooldown: 300000, // 5 minutes
           selfDeaf: true,
           volume: 80,
-          bufferingTimeout: 15000, // 15 second buffering timeout
+          bufferingTimeout: 60000, // 60 seconds – yt-dlp can be slow without cookies
+          connectionTimeout: 60000, // 60 seconds for voice connection setup
         },
         requestedBy: textChannel.client.user,
         connectionOptions: {
