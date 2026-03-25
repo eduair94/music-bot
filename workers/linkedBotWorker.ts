@@ -129,8 +129,11 @@ async function initializePlayer(): Promise<void> {
             stdio: ['ignore', 'pipe', 'pipe'],
         });
 
+        let stderrOutput = '';
+
         proc.stderr.on('data', (data: Buffer) => {
             const msg = data.toString().trim();
+            stderrOutput += msg + '\n';
             if (msg.includes('ERROR') || msg.includes('error')) {
                 console.error(`[LinkedBot] ⚠️ yt-dlp stderr: ${msg}`);
             }
@@ -138,11 +141,17 @@ async function initializePlayer(): Promise<void> {
 
         proc.on('error', (err) => {
             console.error(`[LinkedBot] ❌ yt-dlp spawn error:`, err);
+            proc.stdout.destroy(err);
         });
 
         proc.on('exit', (code) => {
             if (code !== 0 && code !== null) {
-                console.warn(`[LinkedBot] ⚠️ yt-dlp exited with code ${code} for: ${track.title}`);
+                const errorLine = stderrOutput.split('\n').find(l => l.includes('ERROR'))?.trim()
+                    || `yt-dlp exited with code ${code}`;
+                console.error(`[LinkedBot] ❌ yt-dlp failed for: ${track.title} — ${errorLine}`);
+                if (!proc.stdout.destroyed) {
+                    proc.stdout.destroy(new Error(errorLine));
+                }
             }
         });
 

@@ -117,9 +117,12 @@ export class DiscordPlayerService {
         stdio: ['ignore', 'pipe', 'pipe'],
       });
 
+      let stderrOutput = '';
+
       // Log stderr for diagnostics (but don't block on it)
       proc.stderr.on('data', (data: Buffer) => {
         const msg = data.toString().trim();
+        stderrOutput += msg + '\n';
         if (msg.includes('ERROR') || msg.includes('error')) {
           console.error(`[DiscordPlayer] ⚠️ yt-dlp stderr: ${msg}`);
         }
@@ -127,11 +130,20 @@ export class DiscordPlayerService {
 
       proc.on('error', (err) => {
         console.error(`[DiscordPlayer] ❌ yt-dlp spawn error:`, err);
+        // Destroy stdout so discord-player's FFmpeg pipeline gets an error
+        // instead of playing silence from an empty stream.
+        proc.stdout.destroy(err);
       });
 
       proc.on('exit', (code, signal) => {
         if (code !== 0 && code !== null) {
-          console.warn(`[DiscordPlayer] ⚠️ yt-dlp exited with code ${code} for: ${track.title}`);
+          const errorLine = stderrOutput.split('\n').find(l => l.includes('ERROR'))?.trim()
+            || `yt-dlp exited with code ${code}`;
+          console.error(`[DiscordPlayer] ❌ yt-dlp failed for: ${track.title} — ${errorLine}`);
+          // Destroy stdout so the track is skipped rather than playing silence
+          if (!proc.stdout.destroyed) {
+            proc.stdout.destroy(new Error(errorLine));
+          }
         }
       });
 
