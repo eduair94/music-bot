@@ -120,6 +120,7 @@ async function initializePlayer(): Promise<void> {
             '--fragment-retries', '3',
             '--force-ipv4',
             '--geo-bypass',
+            '--js-runtimes', 'node',
             '--output', '-',
             ...cookieArgs,
             track.url,

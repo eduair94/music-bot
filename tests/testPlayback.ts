@@ -63,6 +63,7 @@ const createStreamURL = async (track: Track): Promise<string> => {
       "--no-check-certificates",
       "--force-ipv4",
       "--geo-bypass",
+      "--js-runtimes", "node",
       ...(hasCookies ? ["--cookies", "./cookies.txt"] : []),
       track.url,
     ];
@@ -90,6 +91,7 @@ const createStreamRawStdout = async (track: Track): Promise<Readable> => {
     "--no-warnings",
     "--force-ipv4",
     "--geo-bypass",
+    "--js-runtimes", "node",
     "--output", "-",
     ...(hasCookies ? ["--cookies", "./cookies.txt"] : []),
     track.url,
