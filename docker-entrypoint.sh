@@ -9,11 +9,11 @@ if [ -e /app/cookies.txt ]; then
   if [ -d /app/cookies.txt ]; then
     # Docker created an empty directory – remove it
     echo "[entrypoint] ⚠️  cookies.txt is a directory (file not found on host), removing"
-    rm -rf /app/cookies.txt
+    rm -rf /app/cookies.txt 2>/dev/null || true
   elif [ ! -s /app/cookies.txt ]; then
-    # File exists but is empty – remove it
+    # File exists but is empty – truncate it (rm fails on bind mounts)
     echo "[entrypoint] ⚠️  cookies.txt is empty, ignoring"
-    rm -f /app/cookies.txt
+    : > /app/cookies.txt 2>/dev/null || true
   else
     echo "[entrypoint] 🍪 cookies.txt found ($(wc -c < /app/cookies.txt) bytes)"
   fi
