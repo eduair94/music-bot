@@ -2,7 +2,6 @@ import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@dis
 import { spawn } from "child_process";
 import { GuildQueue, Player, Playlist, SearchResult, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { entersState, getVoiceConnection, joinVoiceChannel, VoiceConnectionStatus } from "discord-voip";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
 import { Readable } from "stream";
@@ -80,28 +79,26 @@ export class DiscordPlayerService {
       console.log("[DiscordPlayer] ⚠️ No cookies.txt found – YouTube may throttle requests (slow loading / AbortError)");
     }
 
-    // Custom stream function that uses yt-dlp for reliable streaming
+    // Custom stream function that uses yt-dlp for reliable streaming.
+    // KEY INSIGHT: Return process.stdout IMMEDIATELY — do NOT wait for first
+    // data event or wrap in PassThrough.  discord-player pipes the returned
+    // stream into FFmpeg → AudioResource → AudioPlayer in parallel while
+    // the voice connection is being established.  Any artificial delay here
+    // causes the internal connectionTimeout to fire before audio arrives.
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
       console.log(`[DiscordPlayer] 🎧 Creating yt-dlp stream for: ${track.title}`);
       console.log(`[DiscordPlayer] 🔗 Track URL: ${track.url}`);
       
-      // Validate track URL
       if (!track.url) {
-        console.error(`[DiscordPlayer] ❌ Track has no URL: ${track.title}`);
         throw new Error(`Track has no URL: ${track.title}`);
       }
       
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
-      // Build yt-dlp arguments - use format selectors (not hardcoded IDs)
-      // 'bestaudio*' = best stream with audio (may include video muxed formats);
-      // 'bestaudio' = best audio-only stream; 'best' = best overall as last resort.
-      // Using 'bestaudio*' first ensures we match even when audio-only streams are unavailable.
       const ytdlpArgs = [
         '--format', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio[ext=opus]/bestaudio*/bestaudio/best',
         '--no-playlist',
         '--no-check-certificates',
-        '--quiet',
         '--no-warnings',
         '--extractor-retries', '3',
         '--socket-timeout', '15',
@@ -111,92 +108,36 @@ export class DiscordPlayerService {
         '--geo-bypass',
         '--output', '-',
         ...cookieArgs,
-        track.url
+        track.url,
       ];
       
       console.log(`[DiscordPlayer] 🛠️ yt-dlp args: ${ytdlpArgs.join(' ')}`);
 
-      return new Promise((resolve, reject) => {
-        const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
-          stdio: ['ignore', 'pipe', 'pipe']
-        });
-
-        let hasReceivedData = false;
-        let errorOutput = '';
-        let processExited = false;
-        let streamResolved = false;
-
-        // Collect stderr output
-        ytdlpProcess.stderr.on('data', (data) => {
-          const msg = data.toString();
-          errorOutput += msg;
-          if (msg.includes('ERROR') || msg.includes('error')) {
-            console.error(`[DiscordPlayer] ⚠️ yt-dlp: ${msg.trim()}`);
-          }
-        });
-
-        // Track when we receive actual audio data
-        ytdlpProcess.stdout.on('data', () => {
-          if (!hasReceivedData) {
-            hasReceivedData = true;
-            console.log(`[DiscordPlayer] 📡 Receiving audio data for: ${track.title}`);
-          }
-        });
-
-        ytdlpProcess.on('error', (error) => {
-          console.error('[DiscordPlayer] ❌ yt-dlp process error:', error);
-          if (!streamResolved) {
-            streamResolved = true;
-            reject(new Error(`yt-dlp process error: ${error.message}`));
-          }
-        });
-
-        ytdlpProcess.on('exit', (code, signal) => {
-          processExited = true;
-          if (code !== 0 && code !== null && !hasReceivedData) {
-            console.error(`[DiscordPlayer] ❌ yt-dlp exited with code ${code} for: ${track.title}`);
-            const errorMsg = errorOutput.includes('ERROR') 
-              ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || `yt-dlp exited with code ${code}`
-              : `yt-dlp exited with code ${code}`;
-            if (!streamResolved) {
-              // Promise not yet resolved — reject it so discord-player never gets a dead stream
-              streamResolved = true;
-              reject(new Error(errorMsg));
-            } else {
-              // Stream was already handed off — destroy it so discord-player stops waiting
-              ytdlpProcess.stdout.destroy(new Error(errorMsg));
-            }
-          }
-        });
-
-        // Give yt-dlp enough time to start and check for immediate failures
-        // yt-dlp format validation takes ~5s, so 8s ensures we catch format errors
-        // before handing off a dead stream to discord-player
-        setTimeout(() => {
-          if (!streamResolved) {
-            streamResolved = true;
-            if (processExited && !hasReceivedData) {
-              // Process already exited without sending data - this is an error
-              const errorMsg = errorOutput.includes('ERROR') 
-                ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || 'yt-dlp failed to stream'
-                : 'yt-dlp failed to stream - no audio data received';
-              console.error(`[DiscordPlayer] ❌ ${errorMsg}`);
-              reject(new Error(errorMsg));
-            } else {
-              // Process is running or has sent data, return the stream
-              resolve(ytdlpProcess.stdout);
-            }
-          }
-        }, 8000);
-
-        // Also resolve immediately if we start receiving data
-        ytdlpProcess.stdout.once('data', () => {
-          if (!streamResolved) {
-            streamResolved = true;
-            resolve(ytdlpProcess.stdout);
-          }
-        });
+      const proc = spawn('yt-dlp', ytdlpArgs, {
+        stdio: ['ignore', 'pipe', 'pipe'],
       });
+
+      // Log stderr for diagnostics (but don't block on it)
+      proc.stderr.on('data', (data: Buffer) => {
+        const msg = data.toString().trim();
+        if (msg.includes('ERROR') || msg.includes('error')) {
+          console.error(`[DiscordPlayer] ⚠️ yt-dlp stderr: ${msg}`);
+        }
+      });
+
+      proc.on('error', (err) => {
+        console.error(`[DiscordPlayer] ❌ yt-dlp spawn error:`, err);
+      });
+
+      proc.on('exit', (code, signal) => {
+        if (code !== 0 && code !== null) {
+          console.warn(`[DiscordPlayer] ⚠️ yt-dlp exited with code ${code} for: ${track.title}`);
+        }
+      });
+
+      // Return stdout immediately — discord-player's FFmpeg pipeline will
+      // pull data as soon as it becomes available.
+      return proc.stdout as unknown as Readable;
     };
 
     // Register YoutubeiExtractor with custom stream function using yt-dlp
@@ -499,64 +440,19 @@ export class DiscordPlayerService {
         audioBitrate: audioBitrate,
       };
 
-      // Pre-connect to voice channel so it's Ready before discord-player tries to play.
-      // discord-player's player.play() joins the channel but does NOT await Ready state,
-      // so playStream() can hit a 15s connectionTimeout if the first WS handshake fails.
-      const guildId = voiceChannel.guild.id;
-      let connection = getVoiceConnection(guildId);
-
-      if (!connection || connection.state.status === VoiceConnectionStatus.Destroyed) {
-        console.log(`[DiscordPlayer] 🔌 Pre-connecting to voice channel...`);
-        connection = joinVoiceChannel({
-          channelId: voiceChannel.id,
-          guildId: guildId,
-          adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-          selfDeaf: true,
-        });
-      } else {
-        console.log(`[DiscordPlayer] 🔌 Reusing existing voice connection (status: ${connection.state.status})`);
-      }
-
-      // Wait for the connection to reach Ready with retries
-      if (connection.state.status !== VoiceConnectionStatus.Ready) {
-        const VC_MAX_RETRIES = 3;
-        const VC_TIMEOUT = 10_000; // 10s per attempt
-        for (let attempt = 1; attempt <= VC_MAX_RETRIES; attempt++) {
-          try {
-            await entersState(connection, VoiceConnectionStatus.Ready, VC_TIMEOUT);
-            break;
-          } catch {
-            console.warn(`[DiscordPlayer] ⚠️ Voice connection attempt ${attempt}/${VC_MAX_RETRIES} failed (status: ${connection.state.status})`);
-            if (attempt < VC_MAX_RETRIES) {
-              // Rejoin – this resets the WS and UDP handshake
-              connection.rejoin({
-                channelId: voiceChannel.id,
-                selfDeaf: true,
-                selfMute: false,
-              });
-              // Small delay before re-waiting
-              await new Promise(r => setTimeout(r, 500));
-            } else {
-              console.error(`[DiscordPlayer] ❌ Voice connection failed after ${VC_MAX_RETRIES} attempts`);
-              try { connection.destroy(); } catch { /* ignore */ }
-              throw new Error("Failed to establish voice connection after multiple attempts");
-            }
-          }
-        }
-      }
-      console.log(`[DiscordPlayer] ✅ Voice connection Ready (${Date.now() - startTime}ms)`);
-
+      // discord-player handles voice connection internally via player.play().
+      // With a proper connectionTimeout (120s) there is no need to pre-connect.
       const result = await this.player.play(voiceChannel, query, {
         nodeOptions: {
-          metadata: queueMetadata, // Store queue metadata with audio quality
+          metadata: queueMetadata,
           leaveOnEmpty: true,
           leaveOnEmptyCooldown: 300000, // 5 minutes
           leaveOnEnd: false,
           leaveOnEndCooldown: 300000, // 5 minutes
           selfDeaf: true,
           volume: 80,
-          bufferingTimeout: 30000, // 30 seconds – yt-dlp errors are caught early by the 8s initial check
-          connectionTimeout: 15000, // 15 seconds – voice reconnects quickly on retry
+          bufferingTimeout: 1_000,     // 1s — yt-dlp stdout arrives almost immediately
+          connectionTimeout: 120_000,  // 120s — default; voice DAVE handshake needs time
         },
         requestedBy: textChannel.client.user,
         connectionOptions: {

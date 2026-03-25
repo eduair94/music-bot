@@ -97,7 +97,9 @@ async function initializePlayer(): Promise<void> {
         && fs.statSync("./cookies.txt").isFile()
         && fs.statSync("./cookies.txt").size > 0;
 
-    // Custom stream function using yt-dlp
+    // Custom stream function using yt-dlp.
+    // Return process.stdout IMMEDIATELY — no PassThrough, no waiting.
+    // discord-player's FFmpeg pipeline pulls data as it arrives.
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
         console.log(`[LinkedBot] 🎵 Creating stream for: ${track.title}`);
 
@@ -111,51 +113,40 @@ async function initializePlayer(): Promise<void> {
             '--format', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio[ext=opus]/bestaudio*/bestaudio/best',
             '--no-playlist',
             '--no-check-certificates',
-            '--quiet',
             '--no-warnings',
             '--extractor-retries', '3',
             '--socket-timeout', '15',
             '--retries', '3',
             '--fragment-retries', '3',
+            '--force-ipv4',
+            '--geo-bypass',
             '--output', '-',
             ...cookieArgs,
-            track.url
+            track.url,
         ];
 
-        return new Promise((resolve, reject) => {
-            const ytdlpProcess = spawn('yt-dlp', ytdlpArgs, {
-                stdio: ['ignore', 'pipe', 'pipe']
-            });
-
-            let hasReceivedData = false;
-            let errorOutput = '';
-
-            ytdlpProcess.stderr.on('data', (data) => {
-                errorOutput += data.toString();
-            });
-
-            ytdlpProcess.stdout.on('data', () => {
-                if (!hasReceivedData) {
-                    hasReceivedData = true;
-                }
-            });
-
-            ytdlpProcess.on('error', (error) => {
-                reject(new Error(`yt-dlp error: ${error.message}`));
-            });
-
-            const timeout = setTimeout(() => {
-                if (!hasReceivedData) {
-                    ytdlpProcess.kill();
-                    reject(new Error('Stream timeout'));
-                }
-            }, 15000);
-
-            ytdlpProcess.stdout.once('data', () => {
-                clearTimeout(timeout);
-                resolve(ytdlpProcess.stdout as Readable);
-            });
+        const proc = spawn('yt-dlp', ytdlpArgs, {
+            stdio: ['ignore', 'pipe', 'pipe'],
         });
+
+        proc.stderr.on('data', (data: Buffer) => {
+            const msg = data.toString().trim();
+            if (msg.includes('ERROR') || msg.includes('error')) {
+                console.error(`[LinkedBot] ⚠️ yt-dlp stderr: ${msg}`);
+            }
+        });
+
+        proc.on('error', (err) => {
+            console.error(`[LinkedBot] ❌ yt-dlp spawn error:`, err);
+        });
+
+        proc.on('exit', (code) => {
+            if (code !== 0 && code !== null) {
+                console.warn(`[LinkedBot] ⚠️ yt-dlp exited with code ${code} for: ${track.title}`);
+            }
+        });
+
+        return proc.stdout as unknown as Readable;
     };
 
     // Register extractors
