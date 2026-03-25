@@ -93,7 +93,9 @@ async function initializePlayer(): Promise<void> {
         skipFFmpeg: false,
     });
 
-    const hasCookies = fs.existsSync("./cookies.txt");
+    const hasCookies = fs.existsSync("./cookies.txt")
+        && fs.statSync("./cookies.txt").isFile()
+        && fs.statSync("./cookies.txt").size > 0;
 
     // Custom stream function using yt-dlp
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
