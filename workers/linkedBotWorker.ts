@@ -106,13 +106,13 @@ async function initializePlayer(): Promise<void> {
         const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
 
         const ytdlpArgs = [
-            '--format', '251/250/249/140/139/ba/b',
+            '--format', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio[ext=opus]/bestaudio*/bestaudio/best',
             '--no-playlist',
             '--no-check-certificates',
             '--quiet',
             '--no-warnings',
-            '--extractor-retries', '5',
-            '--socket-timeout', '30',
+            '--extractor-retries', '3',
+            '--socket-timeout', '15',
             '--retries', '3',
             '--fragment-retries', '3',
             '--output', '-',

@@ -1,5 +1,5 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, ModalBuilder, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction, TextInputBuilder, TextInputStyle } from "discord.js";
-import { ttsService, TTS_LANGUAGES, TTS_SPEAKERS, TTSLanguage, TTSMode, TTSSpeaker } from "../services/tts";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { TTS_LANGUAGES, TTS_SPEAKERS, TTSMode, ttsService } from "../services/tts";
 import { i18n } from "../utils/i18n";
 
 /**

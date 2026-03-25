@@ -93,18 +93,19 @@ export class DiscordPlayerService {
       const cookieArgs = hasCookies ? ['--cookies', './cookies.txt'] : [];
       
       // Build yt-dlp arguments - use format selectors (not hardcoded IDs)
-      // 'ba' = best audio-only stream; 'ba*' = best stream with audio (may include video);
-      // This way yt-dlp picks whatever is available for the specific video.
+      // 'bestaudio*' = best stream with audio (may include video muxed formats);
+      // 'bestaudio' = best audio-only stream; 'best' = best overall as last resort.
+      // Using 'bestaudio*' first ensures we match even when audio-only streams are unavailable.
       const ytdlpArgs = [
-        '--format', 'ba[ext=webm]/ba[ext=m4a]/ba/ba*/b',
+        '--format', 'bestaudio[ext=webm]/bestaudio[ext=m4a]/bestaudio[ext=opus]/bestaudio*/bestaudio/best',
         '--no-playlist',
         '--no-check-certificates',
         '--quiet',
         '--no-warnings',
-        '--extractor-retries', '5',
-        '--socket-timeout', '30',
-        '--retries', '5',
-        '--fragment-retries', '5',
+        '--extractor-retries', '3',
+        '--socket-timeout', '15',
+        '--retries', '3',
+        '--fragment-retries', '3',
         '--force-ipv4',
         '--geo-bypass',
         '--output', '-',
@@ -153,18 +154,23 @@ export class DiscordPlayerService {
           processExited = true;
           if (code !== 0 && code !== null && !hasReceivedData) {
             console.error(`[DiscordPlayer] ❌ yt-dlp exited with code ${code} for: ${track.title}`);
-            // If we haven't resolved yet and there was an error, reject
+            const errorMsg = errorOutput.includes('ERROR') 
+              ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || `yt-dlp exited with code ${code}`
+              : `yt-dlp exited with code ${code}`;
             if (!streamResolved) {
-              const errorMsg = errorOutput.includes('ERROR') 
-                ? errorOutput.split('\n').find(line => line.includes('ERROR'))?.trim() || `yt-dlp exited with code ${code}`
-                : `yt-dlp exited with code ${code}`;
-              // Emit error on the stream if already resolved
+              // Promise not yet resolved — reject it so discord-player never gets a dead stream
+              streamResolved = true;
+              reject(new Error(errorMsg));
+            } else {
+              // Stream was already handed off — destroy it so discord-player stops waiting
               ytdlpProcess.stdout.destroy(new Error(errorMsg));
             }
           }
         });
 
-        // Give yt-dlp a short time to start and check for immediate failures
+        // Give yt-dlp enough time to start and check for immediate failures
+        // yt-dlp format validation takes ~5s, so 8s ensures we catch format errors
+        // before handing off a dead stream to discord-player
         setTimeout(() => {
           if (!streamResolved) {
             streamResolved = true;
@@ -180,7 +186,7 @@ export class DiscordPlayerService {
               resolve(ytdlpProcess.stdout);
             }
           }
-        }, 2000);
+        }, 8000);
 
         // Also resolve immediately if we start receiving data
         ytdlpProcess.stdout.once('data', () => {
@@ -501,8 +507,8 @@ export class DiscordPlayerService {
           leaveOnEndCooldown: 300000, // 5 minutes
           selfDeaf: true,
           volume: 80,
-          bufferingTimeout: 60000, // 60 seconds – yt-dlp can be slow without cookies
-          connectionTimeout: 60000, // 60 seconds for voice connection setup
+          bufferingTimeout: 30000, // 30 seconds – yt-dlp errors are caught early by the 8s initial check
+          connectionTimeout: 30000, // 30 seconds for voice connection setup
         },
         requestedBy: textChannel.client.user,
         connectionOptions: {
