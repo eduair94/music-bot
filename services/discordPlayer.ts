@@ -2,6 +2,7 @@ import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@dis
 import { spawn } from "child_process";
 import { GuildQueue, Player, Playlist, SearchResult, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
+import { entersState, getVoiceConnection, joinVoiceChannel, VoiceConnectionStatus } from "discord-voip";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
 import { Readable } from "stream";
@@ -497,7 +498,54 @@ export class DiscordPlayerService {
         channel: textChannel,
         audioBitrate: audioBitrate,
       };
-      
+
+      // Pre-connect to voice channel so it's Ready before discord-player tries to play.
+      // discord-player's player.play() joins the channel but does NOT await Ready state,
+      // so playStream() can hit a 15s connectionTimeout if the first WS handshake fails.
+      const guildId = voiceChannel.guild.id;
+      let connection = getVoiceConnection(guildId);
+
+      if (!connection || connection.state.status === VoiceConnectionStatus.Destroyed) {
+        console.log(`[DiscordPlayer] 🔌 Pre-connecting to voice channel...`);
+        connection = joinVoiceChannel({
+          channelId: voiceChannel.id,
+          guildId: guildId,
+          adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+          selfDeaf: true,
+        });
+      } else {
+        console.log(`[DiscordPlayer] 🔌 Reusing existing voice connection (status: ${connection.state.status})`);
+      }
+
+      // Wait for the connection to reach Ready with retries
+      if (connection.state.status !== VoiceConnectionStatus.Ready) {
+        const VC_MAX_RETRIES = 3;
+        const VC_TIMEOUT = 10_000; // 10s per attempt
+        for (let attempt = 1; attempt <= VC_MAX_RETRIES; attempt++) {
+          try {
+            await entersState(connection, VoiceConnectionStatus.Ready, VC_TIMEOUT);
+            break;
+          } catch {
+            console.warn(`[DiscordPlayer] ⚠️ Voice connection attempt ${attempt}/${VC_MAX_RETRIES} failed (status: ${connection.state.status})`);
+            if (attempt < VC_MAX_RETRIES) {
+              // Rejoin – this resets the WS and UDP handshake
+              connection.rejoin({
+                channelId: voiceChannel.id,
+                selfDeaf: true,
+                selfMute: false,
+              });
+              // Small delay before re-waiting
+              await new Promise(r => setTimeout(r, 500));
+            } else {
+              console.error(`[DiscordPlayer] ❌ Voice connection failed after ${VC_MAX_RETRIES} attempts`);
+              try { connection.destroy(); } catch { /* ignore */ }
+              throw new Error("Failed to establish voice connection after multiple attempts");
+            }
+          }
+        }
+      }
+      console.log(`[DiscordPlayer] ✅ Voice connection Ready (${Date.now() - startTime}ms)`);
+
       const result = await this.player.play(voiceChannel, query, {
         nodeOptions: {
           metadata: queueMetadata, // Store queue metadata with audio quality
