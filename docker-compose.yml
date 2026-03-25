@@ -5,9 +5,8 @@ services:
     container_name: music-bot
     restart: unless-stopped
     env_file: .env
-    ports:
-      # Debug panel (set DEBUG_TOKEN in .env to enable)
-      - "${DEBUG_PORT:-9090}:${DEBUG_PORT:-9090}"
+    # Use host networking to avoid Docker NAT issues with Discord voice UDP
+    network_mode: host
     volumes:
       # Mount cookies.txt from host for YouTube auth (yt-dlp needs write access to update cookies)
       - ./cookies.txt:/app/cookies.txt

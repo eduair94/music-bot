@@ -508,7 +508,7 @@ export class DiscordPlayerService {
           selfDeaf: true,
           volume: 80,
           bufferingTimeout: 30000, // 30 seconds – yt-dlp errors are caught early by the 8s initial check
-          connectionTimeout: 30000, // 30 seconds for voice connection setup
+          connectionTimeout: 15000, // 15 seconds – voice reconnects quickly on retry
         },
         requestedBy: textChannel.client.user,
         connectionOptions: {
