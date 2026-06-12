@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { GuildSettingsService } from "../services/guildSettings";
 import { TTS_LANGUAGES, TTS_SPEAKERS, TTSLanguage, ttsService, TTSSpeaker } from "../services/tts";
 import { i18n } from "../utils/i18n";
 
@@ -79,6 +80,17 @@ export default {
     const textChannel = interaction.channel as TextChannel;
 
     try {
+      // Respect guild voice channel restrictions (same rule as /play)
+      if (guildId) {
+        const settingsService = GuildSettingsService.getInstance();
+        const isVoiceChannelAllowed = await settingsService.isVoiceChannelAllowed(guildId, voiceChannel.id);
+        if (!isVoiceChannelAllowed) {
+          return interaction.editReply({
+            content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel."
+          }).catch(console.error);
+        }
+      }
+
       // Get user's saved TTS configuration
       const userConfig = await ttsService.getConfig(userId, guildId);
 

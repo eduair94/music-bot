@@ -1,6 +1,6 @@
 import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
 import { spawn } from "child_process";
-import { GuildQueue, Player, Playlist, SearchResult, Track, TrackSkipReason } from "discord-player";
+import { GuildQueue, Player, Playlist, QueryType, SearchResult, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
@@ -352,10 +352,12 @@ export class DiscordPlayerService {
       console.log(`[DiscordPlayer] 🗑️ Queue deleted for guild: ${queue.guild?.id}`);
     });
 
-    // Debug event - log ALL debug messages to catch issues
-    this.player.events.on("debug", (queue: GuildQueue, message: string) => {
-      console.log(`[DiscordPlayer] 🐛 Debug: ${message}`);
-    });
+    // Debug event - very noisy, enable only with PLAYER_DEBUG=1
+    if (process.env.PLAYER_DEBUG) {
+      this.player.events.on("debug", (queue: GuildQueue, message: string) => {
+        console.log(`[DiscordPlayer] 🐛 Debug: ${message}`);
+      });
+    }
 
     // Player trigger - fires when player is about to play a track
     this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
@@ -444,9 +446,10 @@ export class DiscordPlayerService {
       console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
       const startTime = Date.now();
 
-      // Determine if query is a URL or search term
+      // Determine if query is a URL, a local audio file (e.g. generated TTS), or a search term
       const isUrl = query.startsWith('http://') || query.startsWith('https://');
-      
+      const isLocalFile = !isUrl && fs.existsSync(query) && fs.statSync(query).isFile();
+
       // Create metadata object with audio quality info
       const queueMetadata: QueueMetadata = {
         channel: textChannel,
@@ -471,8 +474,8 @@ export class DiscordPlayerService {
         connectionOptions: {
           deaf: true,
         },
-        // Force YouTube search for non-URL queries
-        searchEngine: isUrl ? undefined : "youtube",
+        // Local files go to AttachmentExtractor; non-URL queries are YouTube searches
+        searchEngine: isUrl ? undefined : isLocalFile ? QueryType.FILE : "youtube",
       });
 
       const loadTime = Date.now() - startTime;

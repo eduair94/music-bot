@@ -1,13 +1,20 @@
+import axios from "axios";
+import fs from "fs";
+import path from "path";
 import Replicate from "replicate";
 import { ITTSConfig, TTSConfig } from "../models/TTSConfig";
 
 /**
- * Text-to-Speech Service using Replicate's Qwen3-TTS model
- * 
+ * Text-to-Speech Service
+ *
+ * Providers (in priority order):
+ * - Google Gemini TTS (GEMINI_API_KEY) - default provider
+ * - Replicate's Qwen3-TTS (REPLICATE_API_TOKEN) - fallback, required for voice cloning
+ *
  * Features:
  * - Multi-language support (Spanish by default)
  * - Multiple voice options
- * - Voice cloning with reference audio
+ * - Voice cloning with reference audio (Replicate only)
  * - User-specific configuration persistence
  */
 
@@ -44,9 +51,23 @@ export interface TTSConfigUpdate {
   voiceDescription?: string | null;
 }
 
+/** Maps the bot's speaker names to Gemini TTS prebuilt voices */
+const GEMINI_VOICE_MAP: Record<TTSSpeaker, string> = {
+  Aiden: "Puck",
+  Aria: "Kore",
+  Aurora: "Aoede",
+  Luna: "Leda",
+  River: "Charon",
+  Sage: "Orus",
+  Willow: "Zephyr",
+};
+
+const GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts";
+
 class TTSService {
   private static instance: TTSService;
   private replicate: Replicate | null = null;
+  private geminiApiKey: string | null = null;
 
   private constructor() {}
 
@@ -58,28 +79,34 @@ class TTSService {
   }
 
   /**
-   * Initialize the Replicate client
+   * Initialize TTS providers (Google Gemini preferred, Replicate fallback)
    */
   public initialize(): void {
-    const apiToken = process.env.REPLICATE_API_TOKEN;
-    
-    if (!apiToken) {
-      console.warn("[TTS] ⚠️ REPLICATE_API_TOKEN not set. TTS features will be disabled.");
-      return;
+    const geminiKey = process.env.GEMINI_API_KEY;
+    const replicateToken = process.env.REPLICATE_API_TOKEN;
+
+    if (geminiKey) {
+      this.geminiApiKey = geminiKey;
+      console.log("[TTS] ✅ Google Gemini TTS service initialized");
     }
 
-    this.replicate = new Replicate({
-      auth: apiToken,
-    });
-    
-    console.log("[TTS] ✅ Replicate TTS service initialized");
+    if (replicateToken) {
+      this.replicate = new Replicate({
+        auth: replicateToken,
+      });
+      console.log("[TTS] ✅ Replicate TTS service initialized");
+    }
+
+    if (!geminiKey && !replicateToken) {
+      console.warn("[TTS] ⚠️ Neither GEMINI_API_KEY nor REPLICATE_API_TOKEN set. TTS features will be disabled.");
+    }
   }
 
   /**
    * Check if the TTS service is available
    */
   public isAvailable(): boolean {
-    return this.replicate !== null;
+    return this.geminiApiKey !== null || this.replicate !== null;
   }
 
   /**
@@ -143,11 +170,11 @@ class TTSService {
   }
 
   /**
-   * Generate speech from text using Qwen3-TTS
+   * Generate speech from text (Google Gemini TTS preferred, Replicate fallback)
    */
   public async generateSpeech(options: TTSOptions, userConfig?: ITTSConfig | null): Promise<TTSResult> {
-    if (!this.replicate) {
-      throw new Error("TTS service not initialized. Please set REPLICATE_API_TOKEN.");
+    if (!this.isAvailable()) {
+      throw new Error("TTS service not initialized. Please set GEMINI_API_KEY or REPLICATE_API_TOKEN.");
     }
 
     // Merge user config with provided options (options override config)
@@ -160,6 +187,21 @@ class TTSService {
     const voiceDescription = options.voiceDescription || userConfig?.voiceDescription;
 
     console.log(`[TTS] 🎤 Generating speech (${mode}): "${options.text.substring(0, 50)}${options.text.length > 50 ? '...' : ''}" (${language}, ${speaker})`);
+
+    // Voice cloning is only supported by Replicate; everything else prefers Gemini
+    const useReplicate = (mode === "voice_clone" && this.replicate) || !this.geminiApiKey;
+
+    if (mode === "voice_clone" && !this.replicate) {
+      console.warn("[TTS] ⚠️ voice_clone requested but REPLICATE_API_TOKEN not set — falling back to Gemini prebuilt voice (no cloning)");
+    }
+
+    if (!useReplicate) {
+      return this.generateSpeechGoogle(options.text, language, speaker as TTSSpeaker, styleInstruction || undefined);
+    }
+
+    if (!this.replicate) {
+      throw new Error("TTS service not initialized. Please set REPLICATE_API_TOKEN.");
+    }
 
     // Build input based on mode
     const input: Record<string, any> = {
@@ -190,6 +232,104 @@ class TTSService {
     console.log(`[TTS] ✅ Audio generated: ${audioUrl}`);
 
     return { url: audioUrl };
+  }
+
+  /**
+   * Generate speech using Google Gemini TTS.
+   * Returns a local WAV file path (Gemini returns raw PCM, not a URL).
+   */
+  private async generateSpeechGoogle(text: string, language: string, speaker: TTSSpeaker, styleInstruction?: string): Promise<TTSResult> {
+    const voiceName = GEMINI_VOICE_MAP[speaker] || "Puck";
+
+    // Gemini TTS takes style/language directives as a natural-language prefix
+    const instruction = styleInstruction
+      ? `${styleInstruction}. Say the following in ${language}:`
+      : `Say the following in ${language}:`;
+    const prompt = `${instruction} ${text}`;
+
+    console.log(`[TTS] 📝 Gemini input: voice=${voiceName}, prompt="${prompt.substring(0, 80)}${prompt.length > 80 ? '...' : ''}"`);
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_TTS_MODEL}:generateContent?key=${this.geminiApiKey}`,
+      {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName },
+            },
+          },
+        },
+      },
+      { timeout: 60_000 }
+    );
+
+    const parts = response.data?.candidates?.[0]?.content?.parts;
+    const inlineData = Array.isArray(parts) ? parts.find((p: any) => p.inlineData?.data)?.inlineData : undefined;
+
+    if (!inlineData) {
+      console.error("[TTS] ❌ Unexpected Gemini response:", JSON.stringify(response.data).substring(0, 500));
+      throw new Error("No audio data returned from Gemini TTS");
+    }
+
+    // mimeType is e.g. "audio/L16;codec=pcm;rate=24000"
+    const sampleRate = parseInt(/rate=(\d+)/.exec(inlineData.mimeType || "")?.[1] || "24000", 10);
+    const pcm = Buffer.from(inlineData.data, "base64");
+    const wav = this.pcmToWav(pcm, sampleRate);
+
+    const dir = path.join(process.cwd(), "temp", "tts");
+    fs.mkdirSync(dir, { recursive: true });
+    this.cleanupOldTTSFiles(dir);
+
+    const filePath = path.join(dir, `tts_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.wav`);
+    fs.writeFileSync(filePath, new Uint8Array(wav));
+
+    console.log(`[TTS] ✅ Audio generated: ${filePath} (${(wav.length / 1024).toFixed(1)} KB, ${sampleRate} Hz)`);
+
+    return { url: filePath };
+  }
+
+  /**
+   * Wrap raw 16-bit mono PCM in a WAV container
+   */
+  private pcmToWav(pcm: Buffer, sampleRate: number, channels = 1, bitsPerSample = 16): Buffer {
+    const byteRate = (sampleRate * channels * bitsPerSample) / 8;
+    const blockAlign = (channels * bitsPerSample) / 8;
+    const header = Buffer.alloc(44);
+
+    header.write("RIFF", 0);
+    header.writeUInt32LE(36 + pcm.length, 4);
+    header.write("WAVE", 8);
+    header.write("fmt ", 12);
+    header.writeUInt32LE(16, 16); // fmt chunk size
+    header.writeUInt16LE(1, 20); // PCM format
+    header.writeUInt16LE(channels, 22);
+    header.writeUInt32LE(sampleRate, 24);
+    header.writeUInt32LE(byteRate, 28);
+    header.writeUInt16LE(blockAlign, 32);
+    header.writeUInt16LE(bitsPerSample, 34);
+    header.write("data", 36);
+    header.writeUInt32LE(pcm.length, 40);
+
+    return Buffer.concat([new Uint8Array(header), new Uint8Array(pcm)]);
+  }
+
+  /**
+   * Remove generated TTS files older than 30 minutes
+   */
+  private cleanupOldTTSFiles(dir: string): void {
+    try {
+      const cutoff = Date.now() - 30 * 60 * 1000;
+      for (const file of fs.readdirSync(dir)) {
+        const filePath = path.join(dir, file);
+        if (fs.statSync(filePath).mtimeMs < cutoff) {
+          fs.unlinkSync(filePath);
+        }
+      }
+    } catch (error) {
+      console.warn("[TTS] ⚠️ Temp file cleanup failed:", error);
+    }
   }
 
   /**
