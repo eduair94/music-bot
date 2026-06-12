@@ -100,9 +100,15 @@ export class GuildSettingsService {
       }
     }
 
-    // Return defaults if no database or error
+    // Return defaults if no database or error.
+    // Cache briefly only — once the DB recovers, real settings must win.
     const defaults = this.getDefaultSettings(guildId);
     this.cache.set(guildId, defaults);
+    setTimeout(() => {
+      if (this.cache.get(guildId) === defaults) {
+        this.cache.delete(guildId);
+      }
+    }, 30 * 1000);
     return defaults;
   }
 

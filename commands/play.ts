@@ -85,13 +85,16 @@ export default {
         }).catch(console.error);
       }
 
-      // Move bot to user's channel if in different channel
+      // Move bot to user's channel if in different channel (keep current queue)
       if (existingQueue?.channel && existingQueue.channel.id !== voiceChannel.id) {
         try {
-          existingQueue.delete();
-          console.log(`[play] 🔄 Moving bot to ${voiceChannel.id}`);
+          await existingQueue.connect(voiceChannel);
+          console.log(`[play] 🔄 Moved bot to ${voiceChannel.id}`);
         } catch (error) {
-          console.error("[play] Error moving to new channel:", error);
+          console.error("[play] Error moving to new channel, recreating queue:", error);
+          try {
+            existingQueue.delete();
+          } catch {}
         }
       }
 
@@ -114,8 +117,9 @@ export default {
       // Increment song played counter
       await settingsService.incrementSongPlayed(guildId);
 
-      // Get embed color from settings
-      const embedColor = parseInt(settings.embedColor.replace("#", ""), 16);
+      // Get embed color from settings (fall back to default on malformed values)
+      const parsedColor = parseInt(settings.embedColor?.replace("#", "") ?? "", 16);
+      const embedColor = Number.isNaN(parsedColor) ? 0xf8aa2a : parsedColor;
 
       // Check if this is a playlist - only treat as playlist if it's actually a playlist link
       const isSpotifyPlaylist = query.includes("spotify.com") && query.includes("/playlist/");

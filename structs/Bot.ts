@@ -32,6 +32,7 @@ import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { i18n } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
+import { safeReply } from "../utils/safeReply";
 
 export class Bot {
   public readonly prefix = "/";
@@ -44,7 +45,10 @@ export class Bot {
     // Install log buffer FIRST so every subsequent console.log is captured
     logBuffer.install();
 
-    this.client.login(config.TOKEN);
+    this.client.login(config.TOKEN).catch((error) => {
+      console.error("[Bot] ❌ Discord login failed:", error);
+      process.exit(1);
+    });
 
     this.client.on("ready", async () => {
       console.log(`${this.client.user!.username} ready!`);
@@ -183,7 +187,9 @@ export class Bot {
       console.log(inviteLink);
       console.log('=================================================\n');
 
-      this.registerSlashCommands();
+      this.registerSlashCommands().catch((error) => {
+        console.error("[Bot] ❌ Failed to register slash commands:", error);
+      });
     });
 
     this.client.on("warn", (info) => console.log(info));
@@ -247,6 +253,14 @@ export class Bot {
 
       if (!command) return;
 
+      // Commands assume a guild context (interaction.guild!.id, voice channels, etc.)
+      if (!interaction.guild) {
+        return interaction.reply({
+          content: "❌ Commands can only be used in a server.",
+          ephemeral: true
+        }).catch(console.error);
+      }
+
       // Check guild settings for blacklisted users and allowed channels
       const guildId = interaction.guild?.id;
       if (guildId) {
@@ -306,18 +320,18 @@ export class Bot {
         const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
 
         if (permissionsCheck.result) {
-          command.execute(interaction as ChatInputCommandInteraction);
+          await command.execute(interaction as ChatInputCommandInteraction);
         } else {
           throw new MissingPermissionsException(permissionsCheck.missing);
         }
       } catch (error: any) {
         console.error(error);
 
-        if (error.message.includes("permissions")) {
-          interaction.reply({ content: error.toString(), ephemeral: true }).catch(console.error);
-        } else {
-          interaction.reply({ content: i18n.__("common.errorCommand"), ephemeral: true }).catch(console.error);
-        }
+        const message = typeof error?.message === "string" && error.message.includes("permissions")
+          ? error.toString()
+          : i18n.__("common.errorCommand");
+
+        await safeReply(interaction, { content: message, ephemeral: true });
       }
     });
   }

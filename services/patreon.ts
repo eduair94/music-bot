@@ -54,7 +54,7 @@ interface PatreonApiResponse {
 export class PatreonService {
   private static instance: PatreonService;
   private baseUrl = "https://www.patreon.com/api/oauth2/v2";
-  private cache: Map<string, { data: IPatreonUser; expires: number }> = new Map();
+  private cache: Map<string, { data: IPatreonUser | null; expires: number }> = new Map();
   private cacheTimeout = 5 * 60 * 1000; // 5 minutes
 
   private constructor() {}
@@ -397,13 +397,12 @@ export class PatreonService {
 
     try {
       const patron = await PatreonUser.findOne({ discordId });
-      
-      if (patron) {
-        this.cache.set(discordId, {
-          data: patron,
-          expires: Date.now() + this.cacheTimeout,
-        });
-      }
+
+      // Cache misses too — most users are not patrons and this is on the /play hot path
+      this.cache.set(discordId, {
+        data: patron,
+        expires: Date.now() + this.cacheTimeout,
+      });
 
       return patron;
     } catch (error) {
