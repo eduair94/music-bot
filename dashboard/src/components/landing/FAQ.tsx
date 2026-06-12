@@ -48,60 +48,85 @@ export default function FAQ() {
   const discordInvite = process.env.NEXT_PUBLIC_DISCORD_INVITE;
 
   return (
-    <section id="faq" className="py-24 bg-[#0f0f23]">
+    <section id="faq" className="py-28 bg-coal">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Frequently Asked <span className="gradient-text">Questions</span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Got questions? We have got answers.
-          </p>
-        </div>
-
-        <div className="max-w-3xl mx-auto space-y-6">
-          {faqs.map((faq, index) => (
-            <div key={index} className="glass-card rounded-xl overflow-hidden transition-all duration-300">
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full p-6 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
-              >
-                <span className="text-lg font-semibold">{faq.question}</span>
-                <svg
-                  className={`w-6 h-6 text-[#5865f2] transition-transform duration-300 flex-shrink-0 ${openIndex === index ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openIndex === index ? "max-h-96" : "max-h-0"}`}>
-                <p className="px-6 pb-6 pt-2 text-gray-400 leading-relaxed">{faq.answer}</p>
+        <div className="grid lg:grid-cols-12 gap-12">
+          {/* Sticky editorial header */}
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <div className="flex items-center gap-4 mb-6">
+                <span className="console-label text-amber!">Liner notes</span>
+                <span className="flex-1 h-px bg-line lg:max-w-24" />
               </div>
-            </div>
-          ))}
-        </div>
-
-        {discordInvite && (
-          <div className="mt-16 text-center">
-            <div className="glass-card rounded-2xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-semibold mb-4">Still have questions?</h3>
-              <p className="text-gray-400 mb-6">
-                Join our Discord support server for help from our community and team.
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                Questions,
+                <br />
+                <span className="text-amber">answered.</span>
+              </h2>
+              <p className="text-dune mt-6 leading-relaxed">
+                Everything server owners ask before hitting play.
               </p>
-              <a
-                href={discordInvite}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#5865f2] hover:bg-[#4752c4] text-white font-semibold rounded-xl transition-all duration-300"
-              >
-                <FaDiscord className="w-5 h-5" />
-                Join Support Server
-              </a>
+
+              {discordInvite && (
+                <a
+                  href={discordInvite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-8 inline-flex items-center gap-2 px-5 py-3 border border-line-bright hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors focus-amber"
+                >
+                  <FaDiscord className="w-4 h-4 text-amber" />
+                  Join support server
+                </a>
+              )}
             </div>
           </div>
-        )}
+
+          {/* Accordion */}
+          <div className="lg:col-span-8 space-y-3">
+            {faqs.map((faq, index) => {
+              const open = openIndex === index;
+              return (
+                <div
+                  key={index}
+                  className={`console-panel rounded-xl overflow-hidden transition-colors duration-300 ${
+                    open ? "border-amber/40" : ""
+                  }`}
+                >
+                  <button
+                    onClick={() => setOpenIndex(open ? null : index)}
+                    className="w-full p-5 text-left flex items-center gap-4 hover:bg-panel-raised/50 transition-colors focus-amber"
+                    aria-expanded={open}
+                  >
+                    <span className={`font-mono text-xs ${open ? "text-amber" : "text-dust"}`}>
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="font-medium text-cream flex-1">{faq.question}</span>
+                    <svg
+                      className={`w-5 h-5 transition-transform duration-300 shrink-0 ${
+                        open ? "rotate-45 text-amber" : "text-dust"
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${
+                      open ? "max-h-96" : "max-h-0"
+                    }`}
+                  >
+                    <p className="px-5 pb-5 pl-13 text-dune leading-relaxed text-sm">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface PricingTier {
   name: string;
   price: string;
@@ -30,28 +28,28 @@ const tiers: PricingTier[] = [
     ctaLink: "/invite",
   },
   {
-    name: "Founder / Beta Tester",
+    name: "Founder",
     price: "$1.50",
-    description: "Limited to 50 spots - Locked forever",
+    description: "Limited to 50 spots — price locked forever",
     features: [
       "All Free features",
-      "Audio Filters (bass boost, nightcore)",
-      "24/7 Mode - Bot stays in channel",
-      "Maximum Audio Quality",
-      "Priority Queue",
-      "Unlimited Saved Playlists",
-      "No Song Duration Limit",
-      "Vote on New Features",
-      "Exclusive Founder Role",
-      "Direct Support Channel",
+      "Audio filters (bass boost, nightcore)",
+      "24/7 mode — bot stays in channel",
+      "Maximum audio quality (320kbps)",
+      "Priority queue",
+      "Unlimited saved playlists",
+      "No song duration limit",
+      "Vote on new features",
+      "Exclusive Founder role",
+      "Direct support channel",
     ],
     highlighted: true,
-    badge: "LIMITED TIME",
+    badge: "FOUNDER PRICING",
     cta: "Become a Founder",
     ctaLink: "https://www.patreon.com/c/u36360623",
   },
   {
-    name: "Coming Soon",
+    name: "Studio",
     price: "$3.50+",
     description: "Future premium tiers",
     features: [
@@ -66,60 +64,68 @@ const tiers: PricingTier[] = [
 ];
 
 export default function Pricing() {
-  const [hoveredTier, setHoveredTier] = useState<number | null>(null);
-
   return (
-    <section id="pricing" className="py-24 bg-gradient-to-b from-[#0f0f23] to-[#1a1a2e]">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#f96854]/20 rounded-full border border-[#f96854]/30 mb-6">
-            <span className="text-sm text-[#f96854] font-semibold">Support on Patreon</span>
+    <section id="pricing" className="py-28 bg-coal relative overflow-hidden">
+      <div className="absolute -top-40 right-0 w-150 h-150 rounded-full bg-amber/5 blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-4 relative">
+        <div className="max-w-3xl mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="console-label text-amber!">Gain staging</span>
+            <span className="flex-1 h-px bg-line" />
+            <span className="console-label">3 tiers</span>
           </div>
-          
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Unlock <span className="gradient-text">Premium</span> Features
+          <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight">
+            Fair price. <span className="text-amber">Full signal.</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Support the development and get exclusive features. 
+          <p className="text-lg text-dune mt-6 max-w-xl">
+            Free forever for the essentials. Founders lock in studio features
+            at the lowest price we will ever offer.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {tiers.map((tier, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
+          {tiers.map((tier) => (
             <div
-              key={index}
-              onMouseEnter={() => setHoveredTier(index)}
-              onMouseLeave={() => setHoveredTier(null)}
-              className={`relative glass-card rounded-2xl p-8 transition-all duration-300 ${tier.highlighted ? "border-[#5865f2]/50 scale-105 shadow-xl shadow-[#5865f2]/20" : ""}`}
+              key={tier.name}
+              className={`relative console-panel rounded-2xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+                tier.highlighted ? "border-amber/60 md:-translate-y-3 md:hover:-translate-y-4" : ""
+              }`}
             >
               {tier.badge && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 bg-gradient-to-r from-[#f96854] to-[#eb459e] text-white text-sm font-bold rounded-full shadow-lg whitespace-nowrap">
+                <div className="absolute -top-3 left-8">
+                  <span className="px-3 py-1 bg-amber text-coal font-mono text-[10px] tracking-widest font-bold rounded whitespace-nowrap">
                     {tier.badge}
                   </span>
                 </div>
               )}
 
-              <h3 className={`text-2xl font-bold mb-2 ${tier.highlighted ? "gradient-text" : ""}`}>
-                {tier.name}
-              </h3>
+              <div className="console-label mb-3">{tier.name}</div>
 
-              <div className="mb-4">
-                <span className="text-5xl font-bold">{tier.price}</span>
-                {tier.price !== "$0" && tier.name !== "Coming Soon" && (
-                  <span className="text-gray-400 ml-2">/month</span>
+              <div className="mb-2 flex items-baseline gap-2">
+                <span className="stat-readout text-5xl font-bold text-cream">{tier.price}</span>
+                {tier.price !== "$0" && tier.name !== "Studio" && (
+                  <span className="font-mono text-sm text-dust">/month</span>
                 )}
               </div>
 
-              <p className="text-gray-400 mb-6">{tier.description}</p>
+              <p className="text-sm text-dune mb-6">{tier.description}</p>
+
+              <div className="ruler-x mb-6" />
 
               <ul className="space-y-3 mb-8">
-                {tier.features.map((feature, featureIndex) => (
-                  <li key={featureIndex} className="flex items-start gap-3">
-                    <svg className={`w-5 h-5 mt-0.5 flex-shrink-0 ${tier.highlighted ? "text-[#5865f2]" : "text-green-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <svg
+                      className={`w-4 h-4 mt-1 shrink-0 ${tier.highlighted ? "text-amber" : "text-signal"}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="text-gray-300">{feature}</span>
+                    <span className="text-sm text-cream/90">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -128,7 +134,11 @@ export default function Pricing() {
                 href={tier.ctaLink}
                 target={tier.ctaLink.startsWith("http") ? "_blank" : undefined}
                 rel={tier.ctaLink.startsWith("http") ? "noopener noreferrer" : undefined}
-                className={`block w-full py-4 rounded-xl font-semibold text-center transition-all duration-300 ${tier.highlighted ? "bg-gradient-to-r from-[#5865f2] to-[#eb459e] text-white hover:shadow-lg hover:shadow-[#5865f2]/30 hover:scale-105" : "bg-white/10 text-white hover:bg-white/20 border border-white/20"}`}
+                className={`block w-full py-3.5 rounded-lg font-semibold text-center transition-all duration-200 focus-amber ${
+                  tier.highlighted
+                    ? "bg-amber hover:bg-amber-hot text-coal"
+                    : "border border-line-bright text-cream hover:border-amber/60"
+                }`}
               >
                 {tier.cta}
               </a>
@@ -136,21 +146,13 @@ export default function Pricing() {
           ))}
         </div>
 
-        <div className="mt-16 text-center">
-          <p className="text-gray-400 mb-6">Trusted by thousands of Discord communities</p>
-          <div className="flex justify-center items-center gap-8 flex-wrap">
-            {[
-              { icon: "Secure", text: "Secure Payments" },
-              { icon: "Cancel", text: "Cancel Anytime" },
-              { icon: "Charge", text: "Charge Upfront" },
-              { icon: "Privacy", text: "Privacy Protected" },
-            ].map((badge, index) => (
-              <div key={index} className="flex items-center gap-2 text-gray-400">
-                <span className="text-sm font-medium">{badge.icon}</span>
-                <span>{badge.text}</span>
-              </div>
-            ))}
-          </div>
+        <div className="mt-16 flex items-center gap-x-8 gap-y-3 flex-wrap">
+          {["Secure payments", "Cancel anytime", "Privacy protected"].map((badge, i) => (
+            <div key={badge} className="flex items-center gap-2">
+              <span className="led" style={{ animationDelay: `${i * 0.8}s` }} />
+              <span className="console-label">{badge}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

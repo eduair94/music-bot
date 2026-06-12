@@ -68,25 +68,25 @@ export default function DashboardPage() {
       title: 'Saved Playlists',
       value: stats?.collectionsCount ?? '-',
       icon: <LibraryMusic sx={{ fontSize: 40 }} />,
-      color: '#EB459E',
+      color: '#f8aa2a',
     },
     {
       title: 'Total Tracks',
       value: stats?.totalTracks ?? '-',
       icon: <QueueMusic sx={{ fontSize: 40 }} />,
-      color: '#5865F2',
+      color: '#ffc24d',
     },
     {
       title: 'Premium Servers',
       value: stats?.premiumGuildsCount ?? '-',
       icon: <WorkspacePremium sx={{ fontSize: 40 }} />,
-      color: '#FEE75C',
+      color: '#5be49b',
     },
     {
       title: 'Audio Quality',
       value: stats ? `${stats.audioBitrate}kbps` : '-',
       icon: <Headphones sx={{ fontSize: 40 }} />,
-      color: '#57F287',
+      color: '#5865f2',
     },
   ];
 
@@ -97,12 +97,12 @@ export default function DashboardPage() {
           Welcome back, {session?.user?.name}!
         </Typography>
         {stats?.isPremium && (
-          <Chip 
-            label={stats.isFounder ? "🌟 Founder" : stats.tierTitle || "Premium"}
-            sx={{ 
-              bgcolor: stats.isFounder ? '#F96854' : '#5865F2',
-              color: 'white',
-              fontWeight: 600,
+          <Chip
+            label={stats.isFounder ? "★ Founder" : stats.tierTitle || "Premium"}
+            sx={{
+              bgcolor: '#f8aa2a',
+              color: '#0c0a09',
+              fontWeight: 700,
             }}
           />
         )}
@@ -114,12 +114,7 @@ export default function DashboardPage() {
       <Grid container spacing={3}>
         {statCards.map((stat, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-            <Card
-              sx={{
-                background: 'linear-gradient(135deg, rgba(88, 101, 242, 0.1) 0%, rgba(30, 30, 46, 0.9) 100%)',
-                border: '1px solid rgba(88, 101, 242, 0.2)',
-              }}
-            >
+            <Card>
               <CardContent>
                 <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                   <Box>
@@ -148,12 +143,11 @@ export default function DashboardPage() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Card
               sx={{
-                background: 'linear-gradient(135deg, rgba(87, 242, 135, 0.1) 0%, rgba(30, 30, 46, 0.9) 100%)',
-                border: '1px solid rgba(87, 242, 135, 0.2)',
                 cursor: 'pointer',
-                transition: 'transform 0.2s',
+                transition: 'transform 0.2s, border-color 0.2s',
                 '&:hover': {
                   transform: 'translateY(-4px)',
+                  borderColor: 'rgba(248, 170, 42, 0.5)',
                 },
               }}
               onClick={() => window.location.href = '/servers'}
@@ -171,12 +165,11 @@ export default function DashboardPage() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Card
               sx={{
-                background: 'linear-gradient(135deg, rgba(235, 69, 158, 0.1) 0%, rgba(30, 30, 46, 0.9) 100%)',
-                border: '1px solid rgba(235, 69, 158, 0.2)',
                 cursor: 'pointer',
-                transition: 'transform 0.2s',
+                transition: 'transform 0.2s, border-color 0.2s',
                 '&:hover': {
                   transform: 'translateY(-4px)',
+                  borderColor: 'rgba(248, 170, 42, 0.5)',
                 },
               }}
               onClick={() => window.location.href = '/premium'}

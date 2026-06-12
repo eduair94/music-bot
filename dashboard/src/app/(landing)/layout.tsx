@@ -1,9 +1,6 @@
 /**
- * Landing Page Layout
- * 
- * Uses Tailwind CSS for the marketing pages (home, invite)
- * Wraps landing pages with Tailwind-specific styling
- * globals.css is imported in root layout
+ * Landing Page Layout — studio-console chassis.
+ * Tailwind-only marketing pages; globals.css imported in root layout.
  */
 
 export default function LandingLayout({
@@ -12,7 +9,7 @@ export default function LandingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="antialiased bg-[#0f0f23] text-white min-h-screen font-sans">
+    <div className="antialiased noise bg-coal text-cream min-h-screen font-sans">
       {children}
     </div>
   );

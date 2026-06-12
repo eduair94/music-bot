@@ -1,83 +1,238 @@
 @import "tailwindcss";
 
+/* ────────────────────────────────────────────────────────────
+   BYPASS — Studio Console design system
+   Warm near-black chassis, VU-meter amber, engineered type.
+   ──────────────────────────────────────────────────────────── */
+
 :root {
-  --background: #0f0f23;
-  --foreground: #ededed;
-  --primary: #5865f2;
-  --primary-hover: #4752c4;
-  --secondary: #f96854;
-  --accent: #9b59b6;
-  --gradient-start: #5865f2;
-  --gradient-end: #eb459e;
+  /* Chassis */
+  --coal: #0c0a09;
+  --panel: #151210;
+  --panel-raised: #1d1916;
+  --line: #2b2520;
+  --line-bright: #3d342c;
+
+  /* Ink */
+  --cream: #f4efe9;
+  --dune: #a89d90;
+  --dust: #6e645a;
+
+  /* Signal */
+  --amber: #f8aa2a;
+  --amber-hot: #ffc24d;
+  --amber-deep: #b86e0a;
+  --signal: #5be49b;
+  --clip: #ff5a48;
+  --blurple: #5865f2;
+  --blurple-deep: #4752c4;
+
+  --background: var(--coal);
+  --foreground: var(--cream);
 }
 
 @theme inline {
+  --color-coal: var(--coal);
+  --color-panel: var(--panel);
+  --color-panel-raised: var(--panel-raised);
+  --color-line: var(--line);
+  --color-line-bright: var(--line-bright);
+  --color-cream: var(--cream);
+  --color-dune: var(--dune);
+  --color-dust: var(--dust);
+  --color-amber: var(--amber);
+  --color-amber-hot: var(--amber-hot);
+  --color-amber-deep: var(--amber-deep);
+  --color-signal: var(--signal);
+  --color-clip: var(--clip);
+  --color-blurple: var(--blurple);
+  --color-blurple-deep: var(--blurple-deep);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+
+  --font-display: var(--font-bricolage), Georgia, serif;
+  --font-sans: var(--font-instrument), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
-/* Reset for dashboard - prevent Tailwind defaults from affecting MUI */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   width: 100%;
+  background: var(--coal);
+  color: var(--cream);
 }
 
-/* Custom scrollbar */
+::selection {
+  background: var(--amber);
+  color: var(--coal);
+}
+
+/* ── Scrollbar — console fader rail ── */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
-
 ::-webkit-scrollbar-track {
-  background: #1a1a2e;
+  background: var(--panel);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: #5865f2;
-  border-radius: 4px;
+  background: var(--line-bright);
+  border-radius: 0;
+  border-left: 2px solid var(--panel);
+  border-right: 2px solid var(--panel);
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: #4752c4;
+  background: var(--amber-deep);
 }
 
-/* Animations */
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+/* ── Atmosphere: grain + faint raster ── */
+.noise::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='linear' slope='0.05'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.raster {
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Ruler strip: measurement ticks like console tape ── */
+.ruler-x {
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--line) 0,
+    var(--line) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+  height: 8px;
+}
+
+/* ── Panel card: machined surface ── */
+.console-panel {
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+  border: 1px solid var(--line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── LED indicator ── */
+.led {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--signal);
+  box-shadow: 0 0 6px var(--signal), 0 0 14px rgba(91, 228, 155, 0.5);
+  animation: led-breathe 2.4s ease-in-out infinite;
+}
+.led--amber {
+  background: var(--amber);
+  box-shadow: 0 0 6px var(--amber), 0 0 14px rgba(248, 170, 42, 0.5);
+}
+@keyframes led-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+/* ── EQ bars: living waveform ── */
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+.eq span {
+  width: 3px;
+  background: var(--amber);
+  animation: eq-dance 1.1s ease-in-out infinite;
+  transform-origin: bottom;
+}
+.eq span:nth-child(1) { height: 60%; animation-delay: -0.9s; }
+.eq span:nth-child(2) { height: 100%; animation-delay: -0.6s; }
+.eq span:nth-child(3) { height: 40%; animation-delay: -0.3s; }
+.eq span:nth-child(4) { height: 80%; animation-delay: -0.75s; }
+.eq span:nth-child(5) { height: 55%; animation-delay: -0.15s; }
+@keyframes eq-dance {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+
+/* ── Marquee tape (command ticker) ── */
+@keyframes tape-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.tape {
+  animation: tape-scroll 40s linear infinite;
+}
+.tape:hover {
+  animation-play-state: paused;
+}
+
+/* ── Reveal on load ── */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  opacity: 0;
+  animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.rise-1 { animation-delay: 0.05s; }
+.rise-2 { animation-delay: 0.15s; }
+.rise-3 { animation-delay: 0.25s; }
+.rise-4 { animation-delay: 0.35s; }
+.rise-5 { animation-delay: 0.5s; }
+
+/* ── Big display numerals ── */
+.stat-readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* ── Label: machined small caps ── */
+.console-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dust);
+}
+
+/* ── Keyboard / command chip ── */
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  background: var(--panel-raised);
+  border: 1px solid var(--line-bright);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
+  color: var(--amber-hot);
+  white-space: nowrap;
+}
+
+/* ── Focus ring — amber, visible, consistent ── */
+.focus-amber:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq span, .led, .tape, .rise {
+    animation: none;
   }
-  50% { 
-    box-shadow: 0 0 40px rgba(88, 101, 242, 0.8);
+  .rise {
+    opacity: 1;
   }
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #5865f2, #eb459e, #fee75c);
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.hero-gradient {
-  background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(88, 101, 242, 0.3), transparent);
 }

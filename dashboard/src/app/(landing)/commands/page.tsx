@@ -10,7 +10,7 @@ import Header from "@/components/landing/Header";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Commands - Bypass Discord Music Bot",
+  title: "Commands",
   description: "Browse all 150+ commands available in Bypass Discord Music Bot. Play music, manage queues, apply audio filters, and more.",
 };
 

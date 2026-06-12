@@ -33,11 +33,10 @@ export function ServerGrid({ guilds, showSettings, showInvite, botClientId }: Se
         <Grid size={{ xs: 12, sm: 6, md: 4 }} key={guild.id}>
           <Card
             sx={{
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
-              transition: "box-shadow 0.2s",
+              transition: "border-color 0.2s, transform 0.2s",
               "&:hover": {
-                boxShadow: "0 8px 32px rgba(88, 101, 242, 0.2)",
+                borderColor: "rgba(248, 170, 42, 0.5)",
+                transform: "translateY(-2px)",
               },
             }}
           >
@@ -122,7 +121,7 @@ export function ServerGrid({ guilds, showSettings, showInvite, botClientId }: Se
                     sx={{
                       borderColor: "primary.main",
                       "&:hover": {
-                        bgcolor: "rgba(88, 101, 242, 0.1)",
+                        bgcolor: "rgba(248, 170, 42, 0.08)",
                       },
                     }}
                   >

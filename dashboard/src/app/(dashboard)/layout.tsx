@@ -29,7 +29,9 @@ export default async function DashboardLayout({
         sx={{
           flexGrow: 1,
           minHeight: "100vh",
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+          bgcolor: "#0c0a09",
+          backgroundImage: "radial-gradient(#1d1916 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
           overflow: "auto",
         }}
       >

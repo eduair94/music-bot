@@ -20,14 +20,14 @@ export default function TermsOfServicePage() {
       {/* Spacer for fixed header */}
       <div className="h-20" />
       
-      <section className="py-16 bg-[#0f0f23]">
+      <section className="py-16 bg-coal">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl font-bold mb-8 gradient-text">Terms of Service</h1>
-          <p className="text-gray-400 mb-8">Last updated: January 2026</p>
+          <h1 className="text-4xl font-bold mb-8 text-amber font-display">Terms of Service</h1>
+          <p className="text-dune mb-8">Last updated: January 2026</p>
 
           <div className="prose prose-invert prose-lg max-w-none space-y-8">
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">1. Acceptance of Terms</h2>
               <p className="text-gray-300 leading-relaxed">
                 By inviting Bypass Discord Music Bot (&quot;the Bot&quot;) to your Discord server or using its features, 
                 you agree to be bound by these Terms of Service (&quot;Terms&quot;). If you do not agree to these Terms, 
@@ -36,7 +36,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">2. Description of Service</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">2. Description of Service</h2>
               <p className="text-gray-300 leading-relaxed">
                 Bypass is a Discord music bot that provides music playback, queue management, audio filters, 
                 and various utility features. The Bot allows users to play music from platforms like YouTube, 
@@ -45,7 +45,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">3. Eligibility</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">3. Eligibility</h2>
               <p className="text-gray-300 leading-relaxed">
                 You must be at least 13 years old to use the Bot. By using the Bot, you represent that you 
                 meet this age requirement and have the authority to agree to these Terms. If you are using 
@@ -55,7 +55,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">4. Acceptable Use</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">4. Acceptable Use</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 You agree to use the Bot in accordance with Discord&apos;s Terms of Service and Community Guidelines. 
                 You must not:
@@ -73,7 +73,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">5. Premium Services</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">5. Premium Services</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 Bypass offers premium features through Patreon subscriptions. By subscribing to premium:
               </p>
@@ -87,7 +87,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">6. User Content</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">6. User Content</h2>
               <p className="text-gray-300 leading-relaxed">
                 You retain ownership of content you create using the Bot (such as playlists and collections). 
                 However, by creating content, you grant us a license to store and display that content as 
@@ -97,7 +97,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">7. Intellectual Property</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">7. Intellectual Property</h2>
               <p className="text-gray-300 leading-relaxed">
                 The Bot, including its code, design, and features, is the intellectual property of the 
                 development team. The Bot is open source under its respective license. Music content 
@@ -107,7 +107,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">8. Third-Party Services</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">8. Third-Party Services</h2>
               <p className="text-gray-300 leading-relaxed">
                 The Bot integrates with third-party services (Discord, YouTube, Spotify, SoundCloud, etc.). 
                 Your use of these services is subject to their respective terms of service. We are not 
@@ -116,7 +116,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">9. Disclaimer of Warranties</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">9. Disclaimer of Warranties</h2>
               <p className="text-gray-300 leading-relaxed">
                 THE BOT IS PROVIDED &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; WITHOUT WARRANTIES OF ANY KIND, 
                 EITHER EXPRESS OR IMPLIED. WE DO NOT GUARANTEE THAT THE BOT WILL BE UNINTERRUPTED, 
@@ -126,7 +126,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">10. Limitation of Liability</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">10. Limitation of Liability</h2>
               <p className="text-gray-300 leading-relaxed">
                 TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, 
                 INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED 
@@ -136,7 +136,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">11. Modifications to Service</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">11. Modifications to Service</h2>
               <p className="text-gray-300 leading-relaxed">
                 We reserve the right to modify, suspend, or discontinue the Bot (or any part of it) 
                 at any time with or without notice. We may also update features, add new features, 
@@ -145,7 +145,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">12. Termination</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">12. Termination</h2>
               <p className="text-gray-300 leading-relaxed">
                 We reserve the right to terminate or restrict your access to the Bot at any time, 
                 for any reason, including but not limited to violation of these Terms. Upon termination, 
@@ -154,7 +154,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">13. Changes to Terms</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">13. Changes to Terms</h2>
               <p className="text-gray-300 leading-relaxed">
                 We may update these Terms from time to time. We will notify users of significant 
                 changes through our Discord support server or the Bot. Continued use of the Bot 
@@ -163,7 +163,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">14. Governing Law</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">14. Governing Law</h2>
               <p className="text-gray-300 leading-relaxed">
                 These Terms shall be governed by and construed in accordance with applicable laws, 
                 without regard to conflict of law principles.
@@ -171,7 +171,7 @@ export default function TermsOfServicePage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">15. Contact</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">15. Contact</h2>
               <p className="text-gray-300 leading-relaxed">
                 If you have any questions about these Terms of Service, please contact us through 
                 our Discord support server or by opening an issue on our GitHub repository.

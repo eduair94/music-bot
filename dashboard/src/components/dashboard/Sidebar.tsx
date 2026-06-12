@@ -1,9 +1,9 @@
 "use client";
 
+import BrandMark from "@/components/common/BrandMark";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import HelpIcon from "@mui/icons-material/Help";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import PersonIcon from "@mui/icons-material/Person";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SmartToyIcon from "@mui/icons-material/SmartToy";
@@ -93,25 +93,22 @@ export function DashboardSidebar({ width, isOwner }: SidebarProps) {
     >
       {/* Logo Section */}
       <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
-        <Box
-          sx={{
-            width: 44,
-            height: 44,
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #5865F2 0%, #F8AA2A 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MusicNoteIcon sx={{ color: "white", fontSize: 24 }} />
-        </Box>
+        <BrandMark size={40} />
         <Box>
           <Typography variant="h6" fontWeight={700}>
-            Music Bot
+            Bypass
           </Typography>
-          <Typography variant="caption" color="text.secondary">
-            Dashboard
+          <Typography
+            variant="caption"
+            sx={{
+              color: "text.disabled",
+              fontFamily: "var(--font-jetbrains), monospace",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              fontSize: "0.625rem",
+            }}
+          >
+            Console
           </Typography>
         </Box>
       </Box>
@@ -163,16 +160,16 @@ export function DashboardSidebar({ width, isOwner }: SidebarProps) {
                 sx={{
                   borderRadius: 2,
                   background: pathname === adminMenuItem.path
-                    ? alpha("#EB459E", 0.15)
+                    ? alpha("#ff5a48", 0.15)
                     : "transparent",
                   "&:hover": {
-                    background: alpha("#EB459E", 0.1),
+                    background: alpha("#ff5a48", 0.1),
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: pathname === adminMenuItem.path ? "#EB459E" : "text.secondary",
+                    color: pathname === adminMenuItem.path ? "#ff5a48" : "text.secondary",
                     minWidth: 40,
                   }}
                 >
@@ -182,7 +179,7 @@ export function DashboardSidebar({ width, isOwner }: SidebarProps) {
                   primary={adminMenuItem.title}
                   primaryTypographyProps={{
                     fontWeight: pathname === adminMenuItem.path ? 600 : 400,
-                    color: pathname === adminMenuItem.path ? "#EB459E" : undefined,
+                    color: pathname === adminMenuItem.path ? "#ff5a48" : undefined,
                   }}
                 />
               </ListItemButton>

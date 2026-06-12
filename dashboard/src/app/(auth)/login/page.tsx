@@ -1,15 +1,15 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { LoginButton } from "@/components/auth/LoginButton";
+import BrandMark from "@/components/common/BrandMark";
 import {
   Box,
   Card,
   CardContent,
   Container,
-  Typography,
   Stack,
+  Typography,
 } from "@mui/material";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import { LoginButton } from "@/components/auth/LoginButton";
+import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
   const session = await auth();
@@ -25,37 +25,20 @@ export default async function LoginPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+        bgcolor: "#0c0a09",
+        backgroundImage: "radial-gradient(#2b2520 1px, transparent 1px)",
+        backgroundSize: "28px 28px",
       }}
     >
       <Container maxWidth="sm">
-        <Card
-          sx={{
-            background: "rgba(22, 33, 62, 0.8)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
+        <Card>
           <CardContent sx={{ p: 6, textAlign: "center" }}>
             <Stack spacing={4} alignItems="center">
-              <Box
-                sx={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #5865F2 0%, #F8AA2A 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 8px 32px rgba(88, 101, 242, 0.3)",
-                }}
-              >
-                <MusicNoteIcon sx={{ fontSize: 40, color: "white" }} />
-              </Box>
+              <BrandMark size={72} />
 
               <Box>
                 <Typography variant="h4" fontWeight={700} gutterBottom>
-                  Welcome Back
+                  Step into the booth
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
                   Sign in with your Discord account to manage your music bot settings.
@@ -64,7 +47,7 @@ export default async function LoginPage() {
 
               <LoginButton />
 
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.disabled">
                 By signing in, you agree to our Terms of Service and Privacy Policy.
               </Typography>
             </Stack>

@@ -20,14 +20,14 @@ export default function PrivacyPolicyPage() {
       {/* Spacer for fixed header */}
       <div className="h-20" />
       
-      <section className="py-16 bg-[#0f0f23]">
+      <section className="py-16 bg-coal">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 className="text-4xl font-bold mb-8 gradient-text">Privacy Policy</h1>
-          <p className="text-gray-400 mb-8">Last updated: January 2026</p>
+          <h1 className="text-4xl font-bold mb-8 text-amber font-display">Privacy Policy</h1>
+          <p className="text-dune mb-8">Last updated: January 2026</p>
 
           <div className="prose prose-invert prose-lg max-w-none space-y-8">
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">1. Introduction</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">1. Introduction</h2>
               <p className="text-gray-300 leading-relaxed">
                 Welcome to Bypass Discord Music Bot (&quot;the Bot&quot;, &quot;we&quot;, &quot;us&quot;, or &quot;our&quot;). 
                 We are committed to protecting your privacy and ensuring transparency about how we handle your data. 
@@ -36,7 +36,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">2. Information We Collect</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">2. Information We Collect</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 We collect minimal data necessary to provide our services:
               </p>
@@ -51,7 +51,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">3. How We Use Your Information</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">3. How We Use Your Information</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 We use the collected information to:
               </p>
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">4. Data Storage and Security</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">4. Data Storage and Security</h2>
               <p className="text-gray-300 leading-relaxed">
                 Your data is stored securely using industry-standard encryption and security practices. 
                 We use MongoDB for data storage and Redis for caching. Access to data is restricted to 
@@ -75,7 +75,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">5. Data Retention</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">5. Data Retention</h2>
               <p className="text-gray-300 leading-relaxed">
                 We retain your data for as long as necessary to provide our services. 
                 Playback history is retained for a limited period (typically 30 days). 
@@ -86,7 +86,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">6. Third-Party Services</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">6. Third-Party Services</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 Our Bot integrates with third-party services including:
               </p>
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">7. Your Rights</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">7. Your Rights</h2>
               <p className="text-gray-300 leading-relaxed mb-4">
                 You have the right to:
               </p>
@@ -121,7 +121,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">8. Children&apos;s Privacy</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">8. Children&apos;s Privacy</h2>
               <p className="text-gray-300 leading-relaxed">
                 Our Bot is not intended for users under the age of 13. We do not knowingly collect 
                 personal information from children under 13. If you believe we have collected such 
@@ -130,7 +130,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">9. Changes to This Policy</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">9. Changes to This Policy</h2>
               <p className="text-gray-300 leading-relaxed">
                 We may update this Privacy Policy from time to time. We will notify users of any 
                 significant changes through our Discord support server or the Bot itself. 
@@ -139,7 +139,7 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white mb-4">10. Contact Us</h2>
+              <h2 className="text-2xl font-semibold text-cream mb-4">10. Contact Us</h2>
               <p className="text-gray-300 leading-relaxed">
                 If you have any questions about this Privacy Policy or our data practices, 
                 please contact us through our Discord support server or by opening an issue 

@@ -61,8 +61,12 @@ export function DashboardHeader() {
             label="Free Plan"
             size="small"
             sx={{
-              bgcolor: "rgba(88, 101, 242, 0.2)",
+              bgcolor: "rgba(248, 170, 42, 0.12)",
               color: "primary.main",
+              border: "1px solid rgba(248, 170, 42, 0.3)",
+              fontFamily: "var(--font-jetbrains), monospace",
+              fontSize: "0.6875rem",
+              letterSpacing: "0.1em",
               fontWeight: 600,
               display: { xs: "none", sm: "flex" },
             }}

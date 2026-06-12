@@ -41,9 +41,10 @@ export function LoginButton() {
       sx={{
         px: 4,
         py: 1.5,
-        background: "linear-gradient(90deg, #5865F2 0%, #7289DA 100%)",
+        bgcolor: "#5865F2",
+        color: "#ffffff",
         "&:hover": {
-          background: "linear-gradient(90deg, #4752c4 0%, #5b6eae 100%)",
+          bgcolor: "#4752c4",
         },
       }}
     >

@@ -276,7 +276,7 @@ export default function AdminPage() {
             title="Configured Servers"
             value={stats.guildsWithSettings}
             icon={<SettingsIcon />}
-            color="#EB459E"
+            color="#f8aa2a"
           />
         </Grid>
       </Grid>

@@ -21,9 +21,9 @@ import StorageIcon from "@mui/icons-material/Storage";
 import PersonIcon from "@mui/icons-material/Person";
 import StarIcon from "@mui/icons-material/Star";
 import HelpIcon from "@mui/icons-material/Help";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import BrandMark from "@/components/common/BrandMark";
 
 const menuItems = [
   {
@@ -99,21 +99,9 @@ export function MobileDrawer() {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "10px",
-                  background: "linear-gradient(135deg, #5865F2 0%, #F8AA2A 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <MusicNoteIcon sx={{ color: "white", fontSize: 22 }} />
-              </Box>
+              <BrandMark size={36} />
               <Typography variant="h6" fontWeight={700}>
-                Music Bot
+                Bypass
               </Typography>
             </Box>
             <IconButton onClick={toggleDrawer(false)}>

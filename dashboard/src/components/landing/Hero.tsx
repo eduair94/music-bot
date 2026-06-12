@@ -1,77 +1,153 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { FaDiscord } from "react-icons/fa";
+
+const TICKER = [
+  "/play", "/queue", "/skip", "/seek", "/volume", "/lyrics", "/shuffle",
+  "/247", "/say", "/effects", "/playlist", "/grab", "/loop", "/filters",
+  "/nowplaying", "/voteskip", "/radio", "/guesssong",
+];
 
 export default function Hero() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-500/10 rounded-full blur-3xl" />
-      </div>
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24">
+      {/* Atmosphere: dotted raster fading from top, amber glow low-left */}
+      <div className="absolute inset-0 raster opacity-40 mask-[linear-gradient(to_bottom,black,transparent_70%)]" />
+      <div className="absolute -bottom-40 -left-40 w-150 h-150 rounded-full bg-amber/10 blur-3xl" />
 
-      <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className={`text-center transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-sm">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            <span className="text-sm text-gray-300">Serving 10,000+ Discord Servers</span>
-          </div>
+      <div className="container mx-auto px-4 relative z-10 flex-1 flex items-center">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full py-16">
+          {/* ── Left: editorial statement ── */}
+          <div className="lg:col-span-7">
+            <div className="rise rise-1 inline-flex items-center gap-3 px-3 py-1.5 border border-line rounded-full mb-8 bg-panel">
+              <span className="led" />
+              <span className="console-label text-dune!">On air · 10,000+ servers</span>
+            </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
-            <span className="gradient-text">Bypass</span>
-            <br />
-            <span className="text-white">Discord Music Bot</span>
-          </h1>
+            <h1 className="rise rise-2 font-display font-bold leading-[0.95] tracking-tight text-[clamp(3rem,8vw,6.5rem)]">
+              Sound that
+              <br />
+              fills the <span className="text-amber">room.</span>
+            </h1>
 
-          <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-10">
-            The ultimate music experience for your Discord server. 
-            Play from YouTube, manage queues, and enjoy crystal-clear audio.
-          </p>
+            <p className="rise rise-3 text-lg md:text-xl text-dune max-w-xl mt-8 leading-relaxed">
+              Bypass is the studio-grade music bot for Discord. Up to 320kbps
+              audio, instant queueing, smart playlists, TTS voices — and a web
+              dashboard your whole server can drive.
+            </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/invite" className="group relative px-8 py-4 bg-[#5865f2] hover:bg-[#4752c4] text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 animate-pulse-glow flex items-center gap-3">
-              <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
-              </svg>
-              Add to Discord
-              <span className="absolute -top-1 -right-1 px-2 py-0.5 bg-green-500 text-xs rounded-full">FREE</span>
-            </Link>
-            
-            <a href="#features" className="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl border border-white/20 transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              Explore Features
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
-          </div>
+            <div className="rise rise-4 flex flex-col sm:flex-row gap-4 mt-10">
+              <Link
+                href="/invite"
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-amber hover:bg-amber-hot text-coal font-semibold rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-amber"
+              >
+                <FaDiscord className="w-5 h-5" />
+                Add to Discord
+                <span className="font-mono text-xs px-2 py-0.5 bg-coal/15 rounded">FREE</span>
+              </Link>
 
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto mt-16">
-            {[
-              { value: "10K+", label: "Servers" },
-              { value: "27+", label: "Languages" },
-              { value: "99.9%", label: "Uptime" },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold gradient-text">{stat.value}</div>
-                <div className="text-gray-400 text-sm mt-1">{stat.label}</div>
+              <a
+                href="#features"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-line-bright hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors focus-amber"
+              >
+                Explore features
+              </a>
+            </div>
+
+            {/* Stat strip — mono readouts over ruler */}
+            <div className="rise rise-5 mt-14 max-w-xl">
+              <div className="ruler-x mb-4" />
+              <div className="grid grid-cols-3 gap-6">
+                {[
+                  { value: "10K+", label: "Servers" },
+                  { value: "27", label: "Languages" },
+                  { value: "99.9%", label: "Uptime" },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <div className="stat-readout text-3xl md:text-4xl font-bold text-cream">
+                      {stat.value}
+                    </div>
+                    <div className="console-label mt-1.5">{stat.label}</div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* ── Right: console deck ── */}
+          <div className="lg:col-span-5 rise rise-4">
+            <div className="console-panel rounded-2xl p-6 lg:rotate-1 lg:translate-y-2">
+              {/* Deck header */}
+              <div className="flex items-center justify-between pb-4 border-b border-line">
+                <span className="console-label">Now playing</span>
+                <div className="flex items-center gap-2">
+                  <span className="led led--amber" />
+                  <span className="console-label text-amber!">320 kbps</span>
+                </div>
+              </div>
+
+              {/* Track row */}
+              <div className="flex items-center gap-4 py-5">
+                <div className="w-14 h-14 rounded-lg bg-panel-raised border border-line flex items-center justify-center">
+                  <div className="eq">
+                    <span /><span /><span /><span /><span />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-cream truncate">Midnight City</div>
+                  <div className="text-sm text-dust truncate">M83 · requested by @maya</div>
+                </div>
+                <div className="ml-auto font-mono text-sm text-dune">3:47</div>
+              </div>
+
+              {/* Progress */}
+              <div className="h-1 rounded-full bg-panel-raised overflow-hidden">
+                <div className="h-full w-2/3 bg-amber rounded-full" />
+              </div>
+              <div className="flex justify-between font-mono text-xs text-dust mt-2">
+                <span>2:31</span>
+                <span>-1:16</span>
+              </div>
+
+              {/* Queue preview */}
+              <div className="mt-6 space-y-2.5">
+                {[
+                  { n: "01", t: "Take On Me", a: "a-ha", d: "3:46" },
+                  { n: "02", t: "Nightcall", a: "Kavinsky", d: "4:18" },
+                  { n: "03", t: "Less I Know the Better", a: "Tame Impala", d: "3:36" },
+                ].map((q) => (
+                  <div
+                    key={q.n}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-panel-raised/60 border border-line/60"
+                  >
+                    <span className="font-mono text-xs text-dust">{q.n}</span>
+                    <span className="text-sm text-cream truncate">{q.t}</span>
+                    <span className="text-xs text-dust truncate hidden sm:inline">{q.a}</span>
+                    <span className="ml-auto font-mono text-xs text-dune">{q.d}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ruler-x mt-6" />
+              <div className="flex items-center justify-between mt-3">
+                <span className="console-label">Queue · 14 tracks</span>
+                <span className="console-label">48:12 total</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
+      {/* ── Command tape ── */}
+      <div className="relative z-10 border-y border-line bg-panel/80 backdrop-blur-sm py-3 overflow-hidden">
+        <div className="tape flex w-max gap-8 px-4">
+          {[...TICKER, ...TICKER].map((cmd, i) => (
+            <span key={i} className="font-mono text-sm text-dust whitespace-nowrap">
+              <span className="text-amber-deep">$</span> {cmd}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );

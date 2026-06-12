@@ -1,95 +1,109 @@
 "use client";
 
-export default function Comparison() {
-  const bots = [
-    {
-      name: "Jockie Music",
-      strengths: "Soporta muchisimas fuentes (Tidal, Deezer)",
-      weaknesses: "Interfaz de comandos compleja y muy saturada",
-      pricing: "Premium por niveles y cantidad de bots",
-      color: "from-orange-500 to-red-500"
-    },
-    {
-      name: "FredBoat",
-      strengths: "Es un clasico, extremadamente estable",
-      weaknesses: "Audio estandar (128kbps), sin funciones de vanguardia",
-      pricing: "Gratuito / Donaciones",
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      name: "Uzox",
-      strengths: "Muy buen diseno de mensajes",
-      weaknesses: "Se cae seguido cuando YouTube actualiza sus politicas",
-      pricing: "Premium para filtros y playlists",
-      color: "from-purple-500 to-pink-500"
-    },
-    {
-      name: "Hydra",
-      strengths: "Panel web (Dashboard) muy estetico",
-      weaknesses: "Obliga a usar su web; los comandos en Discord son limitados",
-      pricing: "Suscripcion mensual cara",
-      color: "from-green-500 to-emerald-500"
-    },
-    {
-      name: "BYPASS",
-      strengths: "Audio 320kbps desde el Tier 1, trato directo e identidad indie",
-      weaknesses: "Menos infraestructura inicial (hosteado en casa)",
-      pricing: "Patreon (Fase de Fundadores: el mas barato)",
-      color: "from-[#5865f2] to-[#eb459e]",
-      highlight: true
-    }
-  ];
+interface BotRow {
+  name: string;
+  audio: string;
+  dashboard: string;
+  pricing: string;
+  highlight?: boolean;
+}
 
+const bots: BotRow[] = [
+  {
+    name: "Jockie Music",
+    audio: "Standard quality",
+    dashboard: "None — command-only, steep learning curve",
+    pricing: "Tiered premium, per-bot pricing",
+  },
+  {
+    name: "FredBoat",
+    audio: "128kbps standard",
+    dashboard: "None",
+    pricing: "Free / donations",
+  },
+  {
+    name: "Uzox",
+    audio: "Standard quality",
+    dashboard: "None — frequent outages on YouTube changes",
+    pricing: "Premium for filters & playlists",
+  },
+  {
+    name: "Hydra",
+    audio: "Standard quality",
+    dashboard: "Web-first — Discord commands limited",
+    pricing: "Expensive monthly subscription",
+  },
+  {
+    name: "Bypass",
+    audio: "Up to 320kbps from Tier 1",
+    dashboard: "Full web dashboard + complete Discord commands",
+    pricing: "Founder tier — lowest price, locked forever",
+    highlight: true,
+  },
+];
+
+export default function Comparison() {
   return (
-    <section id="comparison" className="py-24 bg-[#0f0f23]">
+    <section id="comparison" className="py-28 bg-panel/40 border-y border-line">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Por que <span className="gradient-text">BYPASS</span>?
+        <div className="max-w-3xl mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="console-label text-amber!">A/B test</span>
+            <span className="flex-1 h-px bg-line" />
+            <span className="console-label">5 contenders</span>
+          </div>
+          <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight">
+            Hear the <span className="text-amber">difference.</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Comparacion con otros bots de musica populares
+          <p className="text-lg text-dune mt-6 max-w-xl">
+            How Bypass stacks up against the music bots your server has
+            probably already tried.
           </p>
         </div>
 
-        <div className="hidden lg:block overflow-x-auto mb-24">
-          <table className="w-full max-w-6xl mx-auto">
+        {/* Desktop table */}
+        <div className="hidden lg:block console-panel rounded-2xl overflow-hidden">
+          <table className="w-full">
             <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4 text-gray-400 font-semibold">Bot</th>
-                <th className="text-left p-4 text-gray-400 font-semibold">Fortalezas</th>
-                <th className="text-left p-4 text-gray-400 font-semibold">Debilidades (Tu oportunidad)</th>
-                <th className="text-left p-4 text-gray-400 font-semibold">Modelo de Pago</th>
+              <tr className="border-b border-line bg-panel">
+                <th className="text-left p-5 console-label">Bot</th>
+                <th className="text-left p-5 console-label">Audio</th>
+                <th className="text-left p-5 console-label">Control surface</th>
+                <th className="text-left p-5 console-label">Pricing</th>
               </tr>
             </thead>
             <tbody>
-              {bots.map((bot, index) => (
-                <tr 
-                  key={index} 
-                  className={`border-b border-white/5 transition-all ${
-                    bot.highlight 
-                      ? 'bg-gradient-to-r from-[#5865f2]/10 to-[#eb459e]/10 hover:from-[#5865f2]/20 hover:to-[#eb459e]/20' 
-                      : 'hover:bg-white/5'
+              {bots.map((bot) => (
+                <tr
+                  key={bot.name}
+                  className={`border-b border-line/60 last:border-0 transition-colors ${
+                    bot.highlight
+                      ? "bg-amber/6 hover:bg-amber/10"
+                      : "hover:bg-panel-raised/50"
                   }`}
                 >
-                  <td className="p-4">
-                    <div className={`font-bold text-lg ${bot.highlight ? 'gradient-text' : 'text-white'}`}>
-                      {bot.name}
+                  <td className="p-5">
+                    <div className="flex items-center gap-3">
+                      <span className={`font-display font-bold text-lg ${bot.highlight ? "text-amber" : "text-cream"}`}>
+                        {bot.name}
+                      </span>
                       {bot.highlight && (
-                        <span className="ml-2 text-xs px-2 py-1 bg-gradient-to-r from-[#5865f2] to-[#eb459e] text-white rounded-full">
-                          NUESTRO BOT
+                        <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber text-coal font-bold">
+                          THIS ONE
                         </span>
                       )}
                     </div>
                   </td>
-                  <td className="p-4 text-gray-300">{bot.strengths}</td>
-                  <td className="p-4 text-gray-400">{bot.weaknesses}</td>
-                  <td className="p-4">
-                    <span className={`inline-block px-3 py-1 rounded-lg text-sm font-medium ${
-                      bot.highlight 
-                        ? 'bg-gradient-to-r from-[#5865f2] to-[#eb459e] text-white' 
-                        : 'bg-white/10 text-gray-300'
-                    }`}>
+                  <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.audio}</td>
+                  <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.dashboard}</td>
+                  <td className="p-5">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
+                        bot.highlight
+                          ? "bg-amber text-coal"
+                          : "bg-panel-raised text-dune border border-line"
+                      }`}
+                    >
                       {bot.pricing}
                     </span>
                   </td>
@@ -99,46 +113,47 @@ export default function Comparison() {
           </table>
         </div>
 
-        <div className="lg:hidden grid gap-4 mb-24">
-          {bots.map((bot, index) => (
-            <div 
-              key={index}
-              className={`glass-card rounded-xl p-6 ${
-                bot.highlight 
-                  ? 'border-2 border-[#5865f2]' 
-                  : ''
-              }`}
+        {/* Mobile cards */}
+        <div className="lg:hidden grid gap-4">
+          {bots.map((bot) => (
+            <div
+              key={bot.name}
+              className={`console-panel rounded-xl p-6 ${bot.highlight ? "border-amber/60" : ""}`}
             >
-              <div className="mb-4">
-                <h3 className={`text-xl font-bold mb-2 ${bot.highlight ? 'gradient-text' : 'text-white'}`}>
+              <div className="flex items-center gap-3 mb-4">
+                <h3 className={`font-display text-xl font-bold ${bot.highlight ? "text-amber" : "text-cream"}`}>
                   {bot.name}
-                  {bot.highlight && (
-                    <span className="ml-2 text-xs px-2 py-1 bg-gradient-to-r from-[#5865f2] to-[#eb459e] text-white rounded-full">
-                      NUESTRO BOT
-                    </span>
-                  )}
                 </h3>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <div className="text-sm text-gray-500 mb-1">Fortalezas</div>
-                  <div className="text-gray-300">{bot.strengths}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 mb-1">Debilidades</div>
-                  <div className="text-gray-400">{bot.weaknesses}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 mb-1">Modelo de Pago</div>
-                  <span className={`inline-block px-3 py-1 rounded-lg text-sm font-medium ${
-                    bot.highlight 
-                      ? 'bg-gradient-to-r from-[#5865f2] to-[#eb459e] text-white' 
-                      : 'bg-white/10 text-gray-300'
-                  }`}>
-                    {bot.pricing}
+                {bot.highlight && (
+                  <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber text-coal font-bold">
+                    THIS ONE
                   </span>
-                </div>
+                )}
               </div>
+              <dl className="space-y-3">
+                <div>
+                  <dt className="console-label mb-1">Audio</dt>
+                  <dd className={bot.highlight ? "text-cream" : "text-dune"}>{bot.audio}</dd>
+                </div>
+                <div>
+                  <dt className="console-label mb-1">Control surface</dt>
+                  <dd className={bot.highlight ? "text-cream" : "text-dune"}>{bot.dashboard}</dd>
+                </div>
+                <div>
+                  <dt className="console-label mb-1">Pricing</dt>
+                  <dd>
+                    <span
+                      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
+                        bot.highlight
+                          ? "bg-amber text-coal"
+                          : "bg-panel-raised text-dune border border-line"
+                      }`}
+                    >
+                      {bot.pricing}
+                    </span>
+                  </dd>
+                </div>
+              </dl>
             </div>
           ))}
         </div>
