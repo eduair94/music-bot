@@ -109,8 +109,8 @@ export default function HelpPage() {
         severity="info"
         sx={{
           mb: 4,
-          backgroundColor: "rgba(88, 101, 242, 0.1)",
-          border: "1px solid rgba(88, 101, 242, 0.3)",
+          backgroundColor: "rgba(248, 170, 42, 0.08)",
+          border: "1px solid rgba(248, 170, 42, 0.3)",
         }}
         action={
           <Button
@@ -137,8 +137,8 @@ export default function HelpPage() {
           <Card
             key={category.name}
             sx={{
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              
+              
             }}
           >
             <Accordion
@@ -221,8 +221,8 @@ export default function HelpPage() {
           <Card
             key={index}
             sx={{
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              
+              
             }}
           >
             <Accordion
@@ -254,7 +254,7 @@ export default function HelpPage() {
       <Card
         sx={{
           mt: 4,
-          background: "linear-gradient(135deg, rgba(88, 101, 242, 0.2) 0%, rgba(22, 33, 62, 0.8) 100%)",
+          background: "linear-gradient(135deg, rgba(248, 170, 42, 0.12) 0%, rgba(21, 18, 16, 0.9) 100%)",
           border: "1px solid rgba(88, 101, 242, 0.3)",
         }}
       >

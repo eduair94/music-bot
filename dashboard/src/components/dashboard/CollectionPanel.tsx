@@ -147,8 +147,8 @@ export function CollectionPanel({
   return (
     <>
       <Card sx={{ 
-        background: "rgba(22, 33, 62, 0.6)", 
-        border: "1px solid rgba(255, 255, 255, 0.1)" 
+         
+         
       }}>
         <CardContent>
           <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>

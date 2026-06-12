@@ -74,8 +74,8 @@ export function QueueList({ queue, currentTrack, sendCommand, sendingCommand }: 
   if (queue.length === 0 && !currentTrack) {
     return (
       <Card sx={{ 
-        background: "rgba(22, 33, 62, 0.6)", 
-        border: "1px solid rgba(255, 255, 255, 0.1)" 
+         
+         
       }}>
         <CardContent sx={{ textAlign: "center", py: 4 }}>
           <QueueMusicIcon sx={{ fontSize: 48, color: "text.secondary", mb: 2 }} />
@@ -92,8 +92,8 @@ export function QueueList({ queue, currentTrack, sendCommand, sendingCommand }: 
 
   return (
     <Card sx={{ 
-      background: "rgba(22, 33, 62, 0.6)", 
-      border: "1px solid rgba(255, 255, 255, 0.1)" 
+       
+       
     }}>
       <CardContent sx={{ p: { xs: 1, sm: 2 } }}>
         {/* Header */}

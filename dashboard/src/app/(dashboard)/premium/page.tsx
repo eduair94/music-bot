@@ -102,12 +102,10 @@ export default function PremiumPage() {
             <Card
               sx={{
                 height: "100%",
-                background: plan.popular
-                  ? `linear-gradient(135deg, ${plan.color}20 0%, rgba(22, 33, 62, 0.8) 100%)`
-                  : "rgba(22, 33, 62, 0.6)",
-                border: plan.popular
-                  ? `2px solid ${plan.color}`
-                  : "1px solid rgba(255, 255, 255, 0.1)",
+                ...(plan.popular && {
+                  background: `linear-gradient(135deg, ${plan.color}20 0%, rgba(21, 18, 16, 0.9) 100%)`,
+                  border: `2px solid ${plan.color}`,
+                }),
                 position: "relative",
                 overflow: "visible",
               }}
@@ -122,7 +120,7 @@ export default function PremiumPage() {
                     left: "50%",
                     transform: "translateX(-50%)",
                     bgcolor: plan.color,
-                    color: "white",
+                    color: "#0c0a09",
                     fontWeight: 700,
                   }}
                 />
@@ -225,8 +223,8 @@ export default function PremiumPage() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Card
               sx={{
-                background: "rgba(22, 33, 62, 0.6)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                
+                
                 textAlign: "left",
               }}
             >
@@ -244,8 +242,8 @@ export default function PremiumPage() {
           <Grid size={{ xs: 12, md: 6 }}>
             <Card
               sx={{
-                background: "rgba(22, 33, 62, 0.6)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                
+                
                 textAlign: "left",
               }}
             >

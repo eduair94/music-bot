@@ -40,8 +40,8 @@ export default async function ProfilePage() {
         <Grid size={{ xs: 12, md: 4 }}>
           <Card
             sx={{
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              
+              
             }}
           >
             <CardContent sx={{ p: 4, textAlign: "center" }}>
@@ -93,8 +93,8 @@ export default async function ProfilePage() {
         <Grid size={{ xs: 12, md: 8 }}>
           <Card
             sx={{
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              
+              
             }}
           >
             <CardContent sx={{ p: 3 }}>
@@ -115,7 +115,7 @@ export default async function ProfilePage() {
                   />
                 </ListItem>
 
-                <Divider component="li" sx={{ borderColor: "rgba(255, 255, 255, 0.1)" }} />
+                <Divider component="li" sx={{ borderColor: "divider" }} />
 
                 <ListItem>
                   <ListItemIcon>
@@ -129,7 +129,7 @@ export default async function ProfilePage() {
                   />
                 </ListItem>
 
-                <Divider component="li" sx={{ borderColor: "rgba(255, 255, 255, 0.1)" }} />
+                <Divider component="li" sx={{ borderColor: "divider" }} />
 
                 <ListItem>
                   <ListItemIcon>
@@ -150,8 +150,8 @@ export default async function ProfilePage() {
           <Card
             sx={{
               mt: 3,
-              background: "rgba(22, 33, 62, 0.6)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              
+              
             }}
           >
             <CardContent sx={{ p: 3 }}>

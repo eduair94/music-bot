@@ -82,8 +82,8 @@ export function AddSong({
 
   return (
     <Card sx={{ 
-      background: "rgba(22, 33, 62, 0.6)", 
-      border: "1px solid rgba(255, 255, 255, 0.1)" 
+       
+       
     }}>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         <Typography variant="h6" fontWeight={600} gutterBottom>

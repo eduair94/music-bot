@@ -194,8 +194,8 @@ export function CollectionsClient() {
       {/* Collections Grid */}
       {collections.length === 0 ? (
         <Card sx={{ 
-          background: "rgba(22, 33, 62, 0.6)", 
-          border: "1px solid rgba(255, 255, 255, 0.1)",
+           
+          
           textAlign: "center",
           py: 6,
         }}>
@@ -222,8 +222,8 @@ export function CollectionsClient() {
             <Accordion
               key={collection._id}
               sx={{
-                background: "rgba(22, 33, 62, 0.6)",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                
+                
                 mb: 2,
                 "&:before": { display: "none" },
                 borderRadius: "8px !important",

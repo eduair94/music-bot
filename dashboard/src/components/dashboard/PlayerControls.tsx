@@ -22,7 +22,6 @@ import {
   Chip,
   CircularProgress,
   IconButton,
-  LinearProgress,
   Slider,
   Stack,
   Tooltip,
@@ -57,7 +56,13 @@ export function PlayerControls({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [localVolume, setLocalVolume] = useState(state.volume);
   const [displayPosition, setDisplayPosition] = useState(state.currentPosition);
+  const [seekPreview, setSeekPreview] = useState<number | null>(null);
   const lastUpdateRef = useRef<number>(Date.now());
+
+  // Keep the volume slider in sync when another user changes it
+  useEffect(() => {
+    setLocalVolume(state.volume);
+  }, [state.volume]);
 
   // Update display position in real-time when playing
   useEffect(() => {
@@ -93,7 +98,19 @@ export function PlayerControls({
 
   const handleStop = () => sendCommand("stop");
   const handleSkip = () => sendCommand("skip");
+  const handlePrevious = () => sendCommand("previous");
   const handleShuffle = () => sendCommand("shuffle");
+
+  const handleSeekPreview = (_: Event, value: number | number[]) => {
+    setSeekPreview(value as number);
+  };
+
+  const handleSeekCommit = (_: Event | React.SyntheticEvent, value: number | number[]) => {
+    setSeekPreview(null);
+    setDisplayPosition(value as number);
+    lastUpdateRef.current = Date.now();
+    sendCommand("seek", { seconds: Math.floor((value as number) / 1000) });
+  };
   
   const handleLoop = () => {
     const modes: Array<"off" | "track" | "queue"> = ["off", "track", "queue"];
@@ -128,17 +145,12 @@ export function PlayerControls({
     return <VolumeUpIcon />;
   };
 
-  // Progress calculation using displayPosition for smooth updates
-  const progress = state.currentTrack 
-    ? (displayPosition / state.currentTrack.duration) * 100 
-    : 0;
+  const trackDuration = state.currentTrack?.duration || 0;
+  const shownPosition = seekPreview ?? displayPosition;
 
   if (!state.isConnected && !state.currentTrack) {
     return (
-      <Card sx={{ 
-        background: "rgba(22, 33, 62, 0.6)", 
-        border: "1px solid rgba(255, 255, 255, 0.1)" 
-      }}>
+      <Card>
         <CardContent sx={{ textAlign: "center", py: 4 }}>
           <MicIcon sx={{ fontSize: 48, color: "text.secondary", mb: 2 }} />
           <Typography color="text.secondary">
@@ -153,10 +165,7 @@ export function PlayerControls({
   }
 
   return (
-    <Card sx={{ 
-      background: "rgba(22, 33, 62, 0.6)", 
-      border: "1px solid rgba(255, 255, 255, 0.1)" 
-    }}>
+    <Card>
       <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
         {/* Now Playing */}
         <Stack 
@@ -191,26 +200,25 @@ export function PlayerControls({
               {state.currentTrack?.author || "Unknown artist"}
             </Typography>
             
-            {/* Progress Bar */}
-            <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography variant="caption" color="text.secondary" sx={{ minWidth: 35 }}>
-                {formatDuration(displayPosition)}
+            {/* Seekable progress bar */}
+            <Box sx={{ mt: 1.5, display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Typography variant="caption" color="text.secondary" sx={{ minWidth: 35, fontFamily: "var(--font-jetbrains), monospace" }}>
+                {formatDuration(shownPosition)}
               </Typography>
-              <LinearProgress 
-                variant="determinate" 
-                value={progress}
-                sx={{ 
-                  flex: 1, 
-                  height: 4, 
-                  borderRadius: 2,
-                  bgcolor: "rgba(255,255,255,0.1)",
-                  "& .MuiLinearProgress-bar": {
-                    bgcolor: "primary.main"
-                  }
-                }}
+              <Slider
+                size="small"
+                value={Math.min(shownPosition, trackDuration)}
+                min={0}
+                max={trackDuration || 1}
+                disabled={!state.currentTrack || sendingCommand}
+                onChange={handleSeekPreview}
+                onChangeCommitted={handleSeekCommit}
+                valueLabelDisplay="auto"
+                valueLabelFormat={(v) => formatDuration(v)}
+                sx={{ flex: 1 }}
               />
-              <Typography variant="caption" color="text.secondary" sx={{ minWidth: 35, textAlign: "right" }}>
-                {formatDuration(state.currentTrack?.duration || 0)}
+              <Typography variant="caption" color="text.secondary" sx={{ minWidth: 35, textAlign: "right", fontFamily: "var(--font-jetbrains), monospace" }}>
+                {formatDuration(trackDuration)}
               </Typography>
             </Box>
 
@@ -256,9 +264,13 @@ export function PlayerControls({
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Skip Previous (Not implemented)">
+          <Tooltip title="Previous track">
             <span>
-              <IconButton disabled size={isMobile ? "small" : "medium"}>
+              <IconButton
+                onClick={handlePrevious}
+                disabled={sendingCommand}
+                size={isMobile ? "small" : "medium"}
+              >
                 <SkipPreviousIcon />
               </IconButton>
             </span>

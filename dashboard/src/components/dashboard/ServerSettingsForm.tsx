@@ -91,7 +91,7 @@ export function ServerSettingsForm({
   };
 
   const SectionCard = ({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) => (
-    <Card sx={{ background: "rgba(22, 33, 62, 0.6)", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+    <Card sx={{   }}>
       <CardContent sx={{ p: 3 }}>
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 3 }}>
           <Box sx={{ color: "primary.main" }}>{icon}</Box>

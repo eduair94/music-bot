@@ -573,6 +573,17 @@ export class DashboardSyncService {
           break;
         }
 
+        case "previous": {
+          const queue = player.nodes.get(guildId);
+          if (queue && !queue.history.isEmpty()) {
+            await queue.history.previous();
+            result = "Playing previous track";
+          } else {
+            result = "No previous track in history";
+          }
+          break;
+        }
+
         default:
           throw new Error(`Unknown command: ${cmd}`);
       }
