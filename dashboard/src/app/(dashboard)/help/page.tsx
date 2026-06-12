@@ -184,7 +184,7 @@ export default function HelpPage() {
                           <Typography
                             variant="subtitle1"
                             fontWeight={600}
-                            sx={{ color: "#57F287", fontFamily: "monospace" }}
+                            sx={{ color: "#f8aa2a", fontFamily: "var(--font-jetbrains), monospace" }}
                           >
                             {cmd.name}
                           </Typography>

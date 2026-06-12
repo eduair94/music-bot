@@ -54,7 +54,7 @@ const plans = [
     ],
     popular: true,
     icon: <WorkspacePremiumIcon />,
-    color: "#F96854",
+    color: "#f8aa2a",
     ctaLink: "https://www.patreon.com/c/u36360623",
   },
   {

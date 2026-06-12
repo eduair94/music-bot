@@ -112,7 +112,9 @@ export class DiscordPlayerService {
         track.url,
       ];
       
-      console.log(`[DiscordPlayer] 🛠️ yt-dlp args: ${ytdlpArgs.join(' ')}`);
+      if (process.env.PLAYER_DEBUG) {
+        console.log(`[DiscordPlayer] 🛠️ yt-dlp args: ${ytdlpArgs.join(' ')}`);
+      }
 
       const proc = spawn('yt-dlp', ytdlpArgs, {
         stdio: ['ignore', 'pipe', 'pipe'],
@@ -253,18 +255,20 @@ export class DiscordPlayerService {
   private setupEventListeners(): void {
     if (!this.player) return;
 
+    const debug = process.env.PLAYER_DEBUG
+      ? (...args: unknown[]) => console.log("[DiscordPlayer] [DEBUG]", ...args)
+      : () => {};
+
     // Track start event
     this.player.events.on("playerStart", async (queue: GuildQueue, track: Track) => {
       // Workaround: store current track in queue.metadata using QueueMetadata interface
       const metadata = (queue.metadata || {}) as QueueMetadata;
       metadata.currentTrack = track;
       queue.metadata = metadata;
-      
-      console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title}`);
-      console.log(`[DiscordPlayer] 📋 Track info: source=${track.source}, duration=${track.duration}, url=${track.url}`);
-      console.log(`[DiscordPlayer] [DEBUG] queue.currentTrack:`, queue.currentTrack?.title || 'null');
-      console.log(`[DiscordPlayer] [DEBUG] queue.metadata.currentTrack:`, metadata.currentTrack?.title || 'null');
-      
+
+      console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title} (${track.source}, ${track.duration})`);
+      debug("url:", track.url);
+
       const channel = await this.getLogChannel(queue);
       if (channel) {
         const emoji = this.getPlatformEmoji(track.source);
@@ -274,23 +278,15 @@ export class DiscordPlayerService {
 
     // Player finish - track finished playing
     this.player.events.on("playerFinish", (queue: GuildQueue, track: Track) => {
-      console.log(`[DiscordPlayer] ✅ Finished playing: ${track.title}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue size after finish: ${queue.tracks.size}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
-      console.log(`[DiscordPlayer] [DEBUG] Next track: ${queue.tracks.at(0)?.title || 'none'}`);
+      console.log(`[DiscordPlayer] ✅ Finished: ${track.title} (${queue.tracks.size} left)`);
+      debug("next:", queue.tracks.at(0)?.title || "none", "deleted:", queue.deleted);
     });
 
     // Player skip - track was skipped
     this.player.events.on("playerSkip", (queue: GuildQueue, track: Track, reason: TrackSkipReason, description: string) => {
-      console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title}`);
-      console.log(`[DiscordPlayer] [DEBUG] Skip reason: ${reason}`);
-      console.log(`[DiscordPlayer] [DEBUG] Skip description: ${description}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue size after skip: ${queue.tracks.size}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue is playing: ${queue.node.isPlaying()}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue is idle: ${queue.node.isIdle()}`);
-      console.log(`[DiscordPlayer] [DEBUG] Next track in queue: ${queue.tracks.at(0)?.title || 'none'}`);
-      
+      console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title} (${reason})`);
+      debug("description:", description, "queue size:", queue.tracks.size, "playing:", queue.node.isPlaying(), "idle:", queue.node.isIdle());
+
       // If skip reason is NoStream (ERR_NO_STREAM), the stream extraction failed
       if (reason === TrackSkipReason.NoStream) {
         console.error(`[DiscordPlayer] ❌ Stream extraction failed for: ${track.title}`);
@@ -300,17 +296,12 @@ export class DiscordPlayerService {
 
     // Audio track add
     this.player.events.on("audioTrackAdd", (queue: GuildQueue, track: Track) => {
-      console.log(`[DiscordPlayer] ➕ Added to queue: ${track.title}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue size after add: ${queue.tracks.size}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue is playing: ${queue.node.isPlaying()}`);
-      console.log(`[DiscordPlayer] [DEBUG] Current track: ${queue.currentTrack?.title || 'none'}`);
+      console.log(`[DiscordPlayer] ➕ Added to queue: ${track.title} (#${queue.tracks.size})`);
     });
 
     // Queue ended
     this.player.events.on("emptyQueue", async (queue: GuildQueue) => {
       console.log("[DiscordPlayer] 🏁 Queue ended");
-      console.log(`[DiscordPlayer] [DEBUG] Queue deleted: ${queue.deleted}`);
-      console.log(`[DiscordPlayer] [DEBUG] Current track: ${queue.currentTrack?.title || 'none'}`);
       const channel = await this.getLogChannel(queue);
       if (channel) {
         channel.send("🏁 Queue finished! Add more songs to keep the music going.").catch(console.error);
@@ -361,9 +352,7 @@ export class DiscordPlayerService {
 
     // Player trigger - fires when player is about to play a track
     this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
-      console.log(`[DiscordPlayer] 🎯 Player triggered for: ${track.title}`);
-      console.log(`[DiscordPlayer] [DEBUG] Trigger reason: ${reason}`);
-      console.log(`[DiscordPlayer] [DEBUG] Queue tracks remaining: ${queue.tracks.size}`);
+      debug(`trigger: ${track.title} (${reason}, ${queue.tracks.size} remaining)`);
     });
   }
 
@@ -430,17 +419,10 @@ export class DiscordPlayerService {
       return null;
     }
 
-    // Debug: show available extractors
-    const extractors = Array.from(this.player.extractors.store.keys());
-    console.log(`[DiscordPlayer] 📋 Available extractors: ${extractors.length > 0 ? extractors.join(', ') : 'NONE!'}`);
-
-    if (extractors.length === 0) {
+    if (this.player.extractors.store.size === 0) {
       console.error("[DiscordPlayer] ❌ No extractors available! Cannot play.");
       throw new Error("No extractors registered. Please restart the bot.");
     }
-
-    // Log audio quality
-    console.log(`[DiscordPlayer] 🎵 Audio quality: ${audioBitrate}kbps`);
 
     try {
       console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);

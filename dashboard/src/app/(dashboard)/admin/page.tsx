@@ -252,7 +252,7 @@ export default function AdminPage() {
             title="Total Servers"
             value={stats.totalGuilds}
             icon={<StorageIcon />}
-            color="#5865F2"
+            color="#f8aa2a"
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -260,7 +260,7 @@ export default function AdminPage() {
             title="Total Members"
             value={stats.totalMembers}
             icon={<GroupsIcon />}
-            color="#57F287"
+            color="#5be49b"
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -268,7 +268,7 @@ export default function AdminPage() {
             title="Currently Playing"
             value={stats.activeGuilds}
             icon={<PlayCircleIcon />}
-            color="#FEE75C"
+            color="#ffc24d"
           />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
@@ -276,22 +276,22 @@ export default function AdminPage() {
             title="Configured Servers"
             value={stats.guildsWithSettings}
             icon={<SettingsIcon />}
-            color="#f8aa2a"
+            color="#5865f2"
           />
         </Grid>
       </Grid>
 
       {/* Bot Status */}
       {stats.botStatus && (
-        <Paper sx={{ p: 3, mb: 4, background: alpha("#5865F2", 0.1), border: "1px solid", borderColor: alpha("#5865F2", 0.3) }}>
+        <Paper sx={{ p: 3, mb: 4, background: alpha("#f8aa2a", 0.06), border: "1px solid", borderColor: alpha("#f8aa2a", 0.3) }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box
               sx={{
                 width: 12,
                 height: 12,
                 borderRadius: "50%",
-                backgroundColor: stats.botStatus.online ? "#57F287" : "#ED4245",
-                boxShadow: stats.botStatus.online ? "0 0 10px #57F287" : "0 0 10px #ED4245",
+                backgroundColor: stats.botStatus.online ? "#5be49b" : "#ff5a48",
+                boxShadow: stats.botStatus.online ? "0 0 10px #5be49b" : "0 0 10px #ff5a48",
               }}
             />
             <Typography variant="h6" fontWeight={600}>
