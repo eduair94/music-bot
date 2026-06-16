@@ -172,6 +172,15 @@ export class Bot {
         console.error("⚠️ TTS service initialization failed:", error);
       }
 
+      // Start daily metrics snapshots (powers the dashboard growth analytics)
+      try {
+        const { MetricsSnapshotService } = await import("../services/metricsSnapshot");
+        MetricsSnapshotService.getInstance().start(this.client);
+        console.log("✅ Metrics snapshot service started");
+      } catch (error) {
+        console.error("⚠️ Metrics snapshot service failed to start:", error);
+      }
+
       // Start debug panel (requires DEBUG_TOKEN env var)
       try {
         DebugPanel.getInstance().start(this.client);
