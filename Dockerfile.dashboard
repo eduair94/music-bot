@@ -19,7 +19,9 @@ COPY shared ./shared
 COPY dashboard ./dashboard
 
 WORKDIR /app/dashboard
-RUN npm run build
+# public/ is empty in the repo, so git never creates it — guarantee it exists
+# for the COPY in the final stage.
+RUN mkdir -p public && npm run build
 
 # ── Stage 3: Production dependencies only (cached with stage 1) ──────────────
 FROM deps AS prod-deps
