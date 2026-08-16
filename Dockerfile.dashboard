@@ -18,6 +18,12 @@ WORKDIR /app
 COPY shared ./shared
 COPY dashboard ./dashboard
 
+# dashboard/tsconfig.json type-checks ../shared/**/*.ts, and shared/services/
+# redis.ts imports "ioredis".  From /app/shared that only resolves through a
+# repo-root node_modules, which exists locally but not in this image — point
+# one at the dashboard's own dependencies (ioredis is among them).
+RUN ln -s dashboard/node_modules node_modules
+
 WORKDIR /app/dashboard
 # public/ is empty in the repo, so git never creates it — guarantee it exists
 # for the COPY in the final stage.
@@ -40,6 +46,10 @@ COPY --from=build /app/dashboard/public ./public
 COPY --from=build /app/dashboard/package.json ./package.json
 COPY --from=build /app/dashboard/next.config.mjs ./next.config.mjs
 COPY --from=prod-deps /app/dashboard/node_modules ./node_modules
+
+# Same resolution shim as the build stage, for any server code under
+# /app/shared that Next requires at runtime rather than inlining.
+RUN ln -s dashboard/node_modules /app/node_modules
 
 EXPOSE 4123
 
