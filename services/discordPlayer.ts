@@ -4,13 +4,22 @@ import { GuildQueue, Player, Playlist, QueryType, SearchResult, Track, TrackSkip
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
 import fs from "fs";
-import { Readable } from "stream";
+import { PassThrough, Readable } from "stream";
 import { GuildSettingsService } from "./guildSettings";
 
 /**
  * Extended metadata interface for queue
  * Used to store additional state that discord-player doesn't track properly
  */
+/**
+ * In-memory headroom between yt-dlp and FFmpeg, in bytes.  8MB is roughly
+ * eight minutes of the ~130kbps Opus stream we select, so most tracks are
+ * downloaded in full before playback ever reaches for the tail.  Costs at
+ * most this much per concurrently playing guild.  Override with
+ * YTDLP_BUFFER_MB.
+ */
+const YTDLP_BUFFER_BYTES = Math.max(1, Number(process.env.YTDLP_BUFFER_MB) || 8) * 1024 * 1024;
+
 export interface QueueMetadata {
   /** The text channel where commands are sent */
   channel?: TextChannel;
@@ -122,6 +131,19 @@ export class DiscordPlayerService {
 
       let stderrOutput = '';
 
+      // Buffer yt-dlp's output in memory rather than handing FFmpeg the raw
+      // OS pipe.  A pipe only holds ~64KB, so FFmpeg's real-time reads
+      // backpressure yt-dlp within a fraction of a second and its HTTP
+      // connection then sits idle for minutes at a time.  YouTube drops
+      // those idle connections, yt-dlp reconnects (--retries/--fragment-
+      // retries), and every reconnect is an audible gap — choppy, robotic
+      // playback.  With headroom yt-dlp runs flat out (measured 8-11Mbit/s
+      // against the ~130kbps we actually consume) and usually finishes the
+      // whole track before playback needs the tail, so the network drops
+      // out of the real-time path entirely.
+      const buffered = new PassThrough({ highWaterMark: YTDLP_BUFFER_BYTES });
+      proc.stdout.pipe(buffered);
+
       // Log stderr for diagnostics (but don't block on it)
       proc.stderr.on('data', (data: Buffer) => {
         const msg = data.toString().trim();
@@ -131,11 +153,14 @@ export class DiscordPlayerService {
         }
       });
 
+      // Failures must reach the buffer, not just stdout: discord-player is
+      // reading `buffered`, so destroying stdout alone would look like a
+      // clean end-of-stream and play silence instead of skipping the track.
+      proc.stdout.on('error', (err) => buffered.destroy(err));
+
       proc.on('error', (err) => {
         console.error(`[DiscordPlayer] ❌ yt-dlp spawn error:`, err);
-        // Destroy stdout so discord-player's FFmpeg pipeline gets an error
-        // instead of playing silence from an empty stream.
-        proc.stdout.destroy(err);
+        buffered.destroy(err);
       });
 
       proc.on('exit', (code, signal) => {
@@ -143,25 +168,26 @@ export class DiscordPlayerService {
           const errorLine = stderrOutput.split('\n').find(l => l.includes('ERROR'))?.trim()
             || `yt-dlp exited with code ${code}`;
           console.error(`[DiscordPlayer] ❌ yt-dlp failed for: ${track.title} — ${errorLine}`);
-          // Destroy stdout so the track is skipped rather than playing silence
-          if (!proc.stdout.destroyed) {
-            proc.stdout.destroy(new Error(errorLine));
-          }
+          buffered.destroy(new Error(errorLine));
         }
       });
 
-      // Return stdout immediately — discord-player's FFmpeg pipeline will
-      // pull data as soon as it becomes available.
-      return proc.stdout as unknown as Readable;
+      // Return the buffer immediately — discord-player's FFmpeg pipeline
+      // pulls from it as soon as data lands, so nothing here delays the
+      // voice connection handshake.
+      return buffered;
     };
 
     // Register YoutubeiExtractor with custom stream function using yt-dlp
     try {
       await this.player.extractors.register(YoutubeiExtractor, {
         // Stream options for metadata fetching
+        // NOTE: these apply to the extractor's own streaming path, which
+        // createStream below replaces — the buffer that matters for
+        // playback is YTDLP_BUFFER_BYTES inside createYtDlpStream.
         streamOptions: {
           useClient: "IOS",
-          highWaterMark: 1024 * 1024 * 10, // 10MB buffer
+          highWaterMark: 1024 * 1024 * 10,
         },
         // Use our custom yt-dlp stream function for reliable streaming
         createStream: createYtDlpStream,
@@ -449,7 +475,7 @@ export class DiscordPlayerService {
           leaveOnEndCooldown: 300000, // 5 minutes
           selfDeaf: true,
           volume: 80,
-          bufferingTimeout: 1_000,     // 1s — yt-dlp stdout arrives almost immediately
+          bufferingTimeout: 3_000,     // 3s — start with headroom in the buffer, not on the first bytes
           connectionTimeout: 120_000,  // 120s — default; voice DAVE handshake needs time
         },
         requestedBy: textChannel.client.user,
