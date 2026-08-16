@@ -10,3 +10,15 @@ services:
     volumes:
       # Mount cookies.txt from host for YouTube auth (yt-dlp needs write access to update cookies)
       - ./cookies.txt:/app/cookies.txt
+
+  # ── Web dashboard / landing page (Next.js) ──────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: music-bot-dashboard
+    restart: unless-stopped
+    env_file: ./dashboard/.env
+    ports:
+      # Bound to loopback: public traffic arrives through cloudflared on the host
+      - "127.0.0.1:4123:4123"

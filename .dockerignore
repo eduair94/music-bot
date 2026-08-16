@@ -1,6 +1,7 @@
 .vscode
 .github
 node_modules
+**/node_modules
 npm-debug.log
 .env
 .git
@@ -24,6 +25,12 @@ Dockerfile
 docker-compose.yml
 dist
 logs
-dashboard
 commands_disabled
 docs
+
+# dashboard/ IS part of the build context (Dockerfile.dashboard needs it),
+# but its local build output and secrets must never enter the image.
+dashboard/.next
+dashboard/logs
+dashboard/.env
+dashboard/tsconfig.tsbuildinfo
