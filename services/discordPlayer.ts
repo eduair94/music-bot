@@ -2,9 +2,10 @@ import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@dis
 import { spawn } from "child_process";
 import { GuildQueue, Player, Playlist, QueryType, SearchResult, Track, TrackSkipReason } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { ChannelType, Client, GuildMember, TextChannel } from "discord.js";
+import { ChannelType, Client, GuildMember, TextChannel, User } from "discord.js";
 import fs from "fs";
 import { PassThrough, Readable } from "stream";
+import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { GuildSettingsService } from "./guildSettings";
 
 /**
@@ -19,6 +20,14 @@ import { GuildSettingsService } from "./guildSettings";
  * YTDLP_BUFFER_MB.
  */
 const YTDLP_BUFFER_BYTES = Math.max(1, Number(process.env.YTDLP_BUFFER_MB) || 8) * 1024 * 1024;
+
+/** One entry of a yt-dlp --flat-playlist listing. */
+interface PlaylistEntry {
+  id: string;
+  title: string;
+  duration: number | null;
+  uploader: string | null;
+}
 
 export interface QueueMetadata {
   /** The text channel where commands are sent */
@@ -89,11 +98,12 @@ export class DiscordPlayerService {
     }
 
     // Custom stream function that uses yt-dlp for reliable streaming.
-    // KEY INSIGHT: Return process.stdout IMMEDIATELY — do NOT wait for first
-    // data event or wrap in PassThrough.  discord-player pipes the returned
-    // stream into FFmpeg → AudioResource → AudioPlayer in parallel while
-    // the voice connection is being established.  Any artificial delay here
-    // causes the internal connectionTimeout to fire before audio arrives.
+    // KEY INSIGHT: return a stream IMMEDIATELY — never await the first data
+    // event.  discord-player pipes the returned stream into FFmpeg →
+    // AudioResource → AudioPlayer in parallel while the voice connection is
+    // being established, so any wait here lets connectionTimeout fire before
+    // audio arrives.  Wrapping in a PassThrough is fine (it returns at once);
+    // waiting on one is what breaks.
     const createYtDlpStream = async (track: Track): Promise<Readable> => {
       console.log(`[DiscordPlayer] 🎧 Creating yt-dlp stream for: ${track.title}`);
       console.log(`[DiscordPlayer] 🔗 Track URL: ${track.url}`);
@@ -422,12 +432,169 @@ export class DiscordPlayerService {
     }
 
     try {
-      const result = await this.player.search(query);
+      const result = await this.player.search(normalizeYouTubeQuery(query));
       return result;
     } catch (error) {
       console.error("[DiscordPlayer] Search error:", error);
       return null;
     }
+  }
+
+  /**
+   * Is this a bare YouTube playlist page (post-normalisation)?
+   */
+  private static isYouTubePlaylistUrl(query: string): boolean {
+    try {
+      const url = new URL(query);
+      return url.host === "www.youtube.com" && url.pathname === "/playlist" && url.searchParams.has("list");
+    } catch {
+      return false;
+    }
+  }
+
+  /** Seconds to mm:ss / h:mm:ss, the format discord-player displays. */
+  private static formatDuration(seconds: number | null): string {
+    if (!seconds || seconds < 0) return "0:00";
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return hours > 0 ? `${hours}:${pad(minutes)}:${pad(secs)}` : `${minutes}:${pad(secs)}`;
+  }
+
+  /**
+   * Expand a YouTube / YouTube Music playlist into its entries with yt-dlp.
+   *
+   * discord-player-youtubei@2 pins youtubei.js ^16, whose parser no longer
+   * understands YouTube playlist pages - it returns the playlist title with
+   * zero tracks, which reaches the user as "No results found". yt-dlp already
+   * streams every track we play and now self-updates on boot, so it is the
+   * more durable source for the track list too.
+   */
+  private expandYouTubePlaylist(
+    url: string,
+    limit: number
+  ): Promise<{ title: string; entries: PlaylistEntry[] } | null> {
+    return new Promise((resolve) => {
+      const args = [
+        "--flat-playlist",
+        "--dump-single-json",
+        "--no-warnings",
+        "--ignore-errors",
+        "--playlist-end", String(Math.max(1, limit)),
+        "--socket-timeout", "15",
+        "--force-ipv4",
+        "--geo-bypass",
+        "--js-runtimes", "node",
+        url,
+      ];
+
+      const proc = spawn("yt-dlp", args, { stdio: ["ignore", "pipe", "pipe"] });
+      let stdout = "";
+      let stderr = "";
+
+      proc.stdout.setEncoding("utf8");
+      proc.stdout.on("data", (chunk: string) => {
+        stdout += chunk;
+      });
+      proc.stderr.on("data", (chunk: Buffer) => {
+        stderr += chunk.toString();
+      });
+
+      proc.on("error", (err) => {
+        console.error("[DiscordPlayer] ❌ yt-dlp playlist spawn error:", err);
+        resolve(null);
+      });
+
+      proc.on("close", (code) => {
+        if (code !== 0) {
+          const line = stderr.split("\n").find((l) => l.includes("ERROR"))?.trim() || `exit code ${code}`;
+          console.error(`[DiscordPlayer] ❌ Playlist expansion failed: ${line}`);
+          return resolve(null);
+        }
+        try {
+          const json = JSON.parse(stdout);
+          const entries: PlaylistEntry[] = (json.entries || [])
+            .filter((entry: any) => entry && entry.id)
+            .map((entry: any) => ({
+              id: String(entry.id),
+              title: entry.title || "Unknown title",
+              duration: typeof entry.duration === "number" ? entry.duration : null,
+              uploader: entry.uploader || entry.channel || null,
+            }));
+          resolve({ title: json.title || "YouTube Playlist", entries });
+        } catch (error) {
+          console.error("[DiscordPlayer] ❌ Could not parse yt-dlp playlist JSON:", (error as Error).message);
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  /**
+   * Start the first entry through the normal path, then attach the rest of the
+   * playlist to the queue as tracks that stream via the same yt-dlp hook.
+   */
+  private async playExpandedPlaylist(
+    voiceChannel: NonNullable<GuildMember["voice"]["channel"]>,
+    playlistUrl: string,
+    expanded: { title: string; entries: PlaylistEntry[] },
+    playOptions: Parameters<Player["play"]>[2],
+    requestedBy: User | null,
+    audioBitrate: number,
+    startTime: number
+  ): Promise<{ track: Track; queue: GuildQueue; searchResult: SearchResult; playlist: Playlist | null }> {
+    const player = this.player!;
+    const [first, ...rest] = expanded.entries;
+
+    const result = await player.play(voiceChannel, `https://www.youtube.com/watch?v=${first.id}`, playOptions);
+
+    // Reuse the extractor discord-player picked for the first track so the
+    // remaining ones stream through our yt-dlp createStream hook too.
+    const extractor = result.track.extractor;
+
+    const queued = rest.map((entry) => {
+      const track = new Track(player, {
+        title: entry.title,
+        description: "",
+        author: entry.uploader || "Unknown",
+        url: `https://www.youtube.com/watch?v=${entry.id}`,
+        thumbnail: `https://i.ytimg.com/vi/${entry.id}/hqdefault.jpg`,
+        duration: DiscordPlayerService.formatDuration(entry.duration),
+        views: 0,
+        requestedBy: requestedBy ?? undefined,
+        source: "youtube",
+        queryType: QueryType.YOUTUBE_VIDEO,
+        raw: entry,
+      });
+      track.extractor = extractor;
+      return track;
+    });
+
+    if (queued.length > 0) result.queue.addTrack(queued);
+
+    const allTracks = [result.track, ...queued];
+    const playlist = new Playlist(player, {
+      title: expanded.title,
+      description: "",
+      thumbnail: result.track.thumbnail,
+      type: "playlist",
+      source: "youtube",
+      author: { name: first.uploader || "YouTube", url: "" },
+      tracks: allTracks,
+      id: new URL(playlistUrl).searchParams.get("list") || "",
+      url: playlistUrl,
+      rawPlaylist: expanded,
+    });
+
+    for (const track of allTracks) track.playlist = playlist;
+    result.searchResult.setTracks(allTracks).setPlaylist(playlist);
+
+    console.log(
+      `[DiscordPlayer] ⚡ Loaded playlist in ${Date.now() - startTime}ms via yt-dlp: ${playlist.title} (${allTracks.length} tracks) @ ${audioBitrate}kbps`
+    );
+
+    return { track: result.track, queue: result.queue, searchResult: result.searchResult, playlist };
   }
 
   /**
@@ -438,7 +605,8 @@ export class DiscordPlayerService {
     voiceChannel: GuildMember["voice"]["channel"],
     query: string,
     textChannel: TextChannel,
-    audioBitrate: number = 128 // Default 128kbps for free users
+    audioBitrate: number = 128, // Default 128kbps for free users
+    playlistLimit: number = 100 // Cap on how many playlist entries to enqueue
   ): Promise<{ track: Track; queue: GuildQueue; searchResult: SearchResult; playlist: Playlist | null } | null> {
     if (!this.player || !voiceChannel) {
       console.error("[DiscordPlayer] Player not initialized or no voice channel");
@@ -451,6 +619,11 @@ export class DiscordPlayerService {
     }
 
     try {
+      // Drop share/tracking params (YouTube Music always adds &si=).
+      // QueryResolver rebuilds any multi-param YouTube link as /watch, which
+      // without a video id resolves to nothing — playlists silently vanish.
+      query = normalizeYouTubeQuery(query);
+
       console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
       const startTime = Date.now();
 
@@ -466,7 +639,7 @@ export class DiscordPlayerService {
 
       // discord-player handles voice connection internally via player.play().
       // With a proper connectionTimeout (120s) there is no need to pre-connect.
-      const result = await this.player.play(voiceChannel, query, {
+      const playOptions: Parameters<Player["play"]>[2] = {
         nodeOptions: {
           metadata: queueMetadata,
           leaveOnEmpty: true,
@@ -484,7 +657,27 @@ export class DiscordPlayerService {
         },
         // Local files go to AttachmentExtractor; non-URL queries are YouTube searches
         searchEngine: isUrl ? undefined : isLocalFile ? QueryType.FILE : "youtube",
-      });
+      };
+
+      // YouTube playlists never reach the extractor: youtubei.js can no longer
+      // parse them, so yt-dlp supplies the track list instead.
+      if (DiscordPlayerService.isYouTubePlaylistUrl(query)) {
+        const expanded = await this.expandYouTubePlaylist(query, playlistLimit);
+        if (expanded && expanded.entries.length > 0) {
+          return await this.playExpandedPlaylist(
+            voiceChannel,
+            query,
+            expanded,
+            playOptions,
+            textChannel.client.user,
+            audioBitrate,
+            startTime
+          );
+        }
+        console.warn("[DiscordPlayer] ⚠️ yt-dlp found no playlist entries, falling back to the extractor");
+      }
+
+      const result = await this.player.play(voiceChannel, query, playOptions);
 
       const loadTime = Date.now() - startTime;
       const isPlaylist = result.searchResult.hasPlaylist();

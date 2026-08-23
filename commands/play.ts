@@ -103,7 +103,9 @@ export default {
       const audioBitrate = quality.bitrate;
 
       console.log(`[play] ⚡ Playing: "${query}" @ ${audioBitrate}kbps (source: ${quality.source}, identity: ${identity.displayName})`);
-      const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate);
+      // A playlist may only fill the queue up to the guild limit
+      const playlistLimit = Math.max(1, settings.maxQueueSize - (existingQueue?.size ?? 0));
+      const result = await playerService.play(voiceChannel, query, textChannel, audioBitrate, playlistLimit);
 
       if (!result) {
         return interaction.editReply({ 
