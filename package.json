@@ -21,6 +21,7 @@
     "test:search": "ts-node tests/testSearch.ts",
     "test:play": "ts-node tests/testPlayback.ts",
     "test:tts": "ts-node tests/testTTS.ts",
+    "test:lyrics": "ts-node tests/testLyricsQuery.ts",
     "patreon:campaign": "ts-node scripts/getCampaignId.ts"
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { i18n } from "../utils/i18n";
-// @ts-ignore
-import lyricsFinder from "lyrics-finder";
+import { isSameSong, lyricsQueries, parseTrackForLyrics } from "../utils/lyricsQuery";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { SpotifyService } from "../services/spotify";
 
 export default {
   data: new SlashCommandBuilder().setName("lyrics").setDescription(i18n.__("lyrics.description")),
@@ -16,16 +16,20 @@ export default {
 
     await interaction.reply("⏳ Loading...").catch(console.error);
 
-    let lyrics = null;
+    let lyrics: string | null = null;
     const track = queue.currentTrack;
     const title = track.title;
+    const lookup = parseTrackForLyrics(title, track.author || "");
 
-    try {
-      lyrics = await lyricsFinder(title, track.author || "");
-      if (!lyrics) lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
-    } catch (error) {
-      lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
+    for (const query of lyricsQueries(lookup)) {
+      const found = await SpotifyService.getInstance().searchLyrics(query);
+      // search_lyrics answers for its top search hit; another song's lyrics are worse than none
+      if (found && isSameSong(lookup.title, found.trackName)) {
+        lyrics = found.lines.join("\n");
+        break;
+      }
     }
+    if (!lyrics) lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
 
     const lyricsEmbed = new EmbedBuilder()
       .setTitle(i18n.__mf("lyrics.embedTitle", { title: title }))

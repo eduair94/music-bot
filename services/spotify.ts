@@ -73,6 +73,16 @@ export interface SpotifyTrack {
 }
 
 /**
+ * Lyrics found by the custom Spotify API
+ */
+export interface SpotifyLyrics {
+  trackName: string;
+  artist: string;
+  source: string;
+  lines: string[];
+}
+
+/**
  * SpotifyService - Handles Spotify API integration
  * 
  * This service manages all interactions with the custom Spotify search API
@@ -109,7 +119,7 @@ export class SpotifyService {
    */
   public async searchTracks(query: string): Promise<SpotifyTrack[]> {
     try {
-      console.log(`[SpotifyService] Ì¥ç Searching for: "${query}"`);
+      console.log(`[SpotifyService] ÔøΩÔøΩÔøΩ Searching for: "${query}"`);
 
       const response = await this.axiosInstance.get<SpotifySearchResponse>("/search", {
         params: {
@@ -144,7 +154,7 @@ export class SpotifyService {
     const cached = this.cache.get(cacheKey);
     
     if (cached && cached.expires > Date.now()) {
-      console.log(`[SpotifyService] Ì≥¶ Cache hit for: "${query}"`);
+      console.log(`[SpotifyService] ÔøΩÔøΩÔøΩ Cache hit for: "${query}"`);
       return cached.data;
     }
 
@@ -163,6 +173,41 @@ export class SpotifyService {
     });
 
     return track;
+  }
+
+  /**
+   * Search for a track and fetch its lyrics in one call. The API falls back
+   * from Spotify's own lyrics to LRCLIB, lyrics.ovh and Genius.
+   * @param query - Search query (song title, ideally with the artist)
+   * @returns The matched track and its lyric lines, or null if none were found
+   */
+  public async searchLyrics(query: string): Promise<SpotifyLyrics | null> {
+    try {
+      const response = await this.axiosInstance.get("/search_lyrics", {
+        params: { q: query },
+        timeout: 30000
+      });
+
+      const data = response.data;
+      const lines: string[] = Array.isArray(data?.lines)
+        ? data.lines.map((line: { words?: string }) => line?.words).filter(Boolean)
+        : [];
+
+      if (data?.error || lines.length === 0) {
+        console.log(`[SpotifyService] ‚ùå No lyrics found for: "${query}"`);
+        return null;
+      }
+
+      return {
+        trackName: data.track?.name || "",
+        artist: data.track?.artists?.[0]?.name || "",
+        source: data.source || "spotify",
+        lines
+      };
+    } catch (error: any) {
+      console.error("[SpotifyService] ‚ùå Lyrics error:", error.message);
+      return null;
+    }
   }
 
   /**
@@ -210,7 +255,7 @@ export class SpotifyService {
    */
   public clearCache(): void {
     this.cache.clear();
-    console.log("[SpotifyService] Ì∑ëÔ∏è Cache cleared");
+    console.log("[SpotifyService] ÔøΩÔøΩÔøΩÔ∏è Cache cleared");
   }
 
   /**
