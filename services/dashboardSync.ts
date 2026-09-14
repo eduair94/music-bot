@@ -290,7 +290,7 @@ export class DashboardSyncService {
       // Process linked bot commands
       const linkedBotCommands = await BotCommand.find({ 
         status: "pending",
-        type: { $in: ["linked_bot_start", "linked_bot_stop", "linked_bot_restart"] }
+        type: { $in: ["linked_bot_start", "linked_bot_stop", "linked_bot_restart", "admin_resync"] }
       })
         .sort({ createdAt: 1 })
         .limit(10);
@@ -315,7 +315,12 @@ export class DashboardSyncService {
   private async executeLinkedBotCommand(command: IBotCommand): Promise<void> {
     const { type, botId, _id } = command;
 
-    if (!_id || !botId || !type) return;
+    if (!_id || !type) return;
+    if (type === "admin_resync") {
+      await this.executeAdminCommand(command);
+      return;
+    }
+    if (!botId) return;
 
     try {
       // Mark as processing
@@ -379,6 +384,23 @@ export class DashboardSyncService {
         { _id },
         { status: "failed", error: errorMessage, processedAt: new Date() }
       );
+    }
+  }
+
+  /** Owner action from the dashboard: republish guild data + heartbeat. */
+  private async executeAdminCommand(command: IBotCommand): Promise<void> {
+    const { _id, type } = command;
+    try {
+      await BotCommand.updateOne({ _id }, { status: "processing" });
+      const { TelemetryService } = await import("./telemetry");
+      const { guilds } = await TelemetryService.getInstance().resyncNow();
+      const result = `Resynced ${guilds} guilds`;
+      await BotCommand.updateOne({ _id }, { status: "completed", result, processedAt: new Date() });
+      console.log(`[DashboardSync] ✅ Admin command completed: ${type} - ${result}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error(`[DashboardSync] ❌ Admin command failed: ${type} - ${errorMessage}`);
+      await BotCommand.updateOne({ _id }, { status: "failed", error: errorMessage, processedAt: new Date() });
     }
   }
 
