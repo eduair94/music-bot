@@ -52,6 +52,7 @@ music-bot/
 | `patreon.ts` | Patreon API integration for premium features |
 | `premiumGuild.ts` | Premium guild management |
 | `spotify.ts` | Spotify authentication for track extraction |
+| `telemetry.ts` | Heartbeat to Redis every 20 s; command/track/guild/error events to Mongo `botevents` (TTL 90 d) |
 
 ### Dashboard Services (`dashboard/src/lib/`)
 
@@ -70,6 +71,7 @@ music-bot/
 | `/api/guilds/[guildId]/settings` | Guild settings management |
 | `/api/guilds/[guildId]/player` | Player state and commands |
 | `/api/user/bots` | Linked bots management |
+| `/api/admin/*` | Owner-only console (`OWNER_ID` session): overview, guilds, guild detail, premium, logs (DebugPanel proxy), audit, actions leave/stop/resync |
 
 ## Data Models
 
@@ -91,6 +93,8 @@ All major interfaces are defined in the shared types module and used by both bot
 | `guildsettings` | Guild configuration | Bot, Dashboard | Bot, Dashboard |
 | `playbackstates` | Real-time playback | Bot | Dashboard |
 | `botcommands` | Dashboard commands | Dashboard | Bot |
+| `botevents` | Telemetry events (TTL 90 d) | Bot | Dashboard |
+| `adminauditlogs` | Owner action audit trail | Dashboard | Dashboard |
 | `linkedbots` | User-linked bots | Dashboard, Bot | Bot, Dashboard |
 | `patreonusers` | Premium users | Bot (webhooks) | Bot, Dashboard |
 | `premiumguilds` | Premium servers | Bot | Bot |

@@ -21,7 +21,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { MobileDrawer } from "./MobileDrawer";
 
-export function DashboardHeader() {
+export function DashboardHeader({ isOwner = false }: { isOwner?: boolean }) {
   const { data: session } = useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -49,7 +49,7 @@ export function DashboardHeader() {
       <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* Mobile Menu */}
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
-          <MobileDrawer />
+          <MobileDrawer isOwner={isOwner} />
         </Box>
         
         {/* Spacer for desktop */}

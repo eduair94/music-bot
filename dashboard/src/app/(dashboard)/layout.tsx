@@ -42,7 +42,7 @@ export default async function DashboardLayout({
             overflow: "auto",
           }}
         >
-          <DashboardHeader />
+          <DashboardHeader isOwner={isOwner} />
           <Box sx={{ p: { xs: 2, sm: 3 } }}>{children}</Box>
         </Box>
       </Box>

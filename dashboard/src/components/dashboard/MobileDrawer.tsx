@@ -23,6 +23,7 @@ import StarIcon from "@mui/icons-material/Star";
 import HelpIcon from "@mui/icons-material/Help";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import BrandMark from "@/components/common/BrandMark";
 
 const menuItems = [
@@ -53,7 +54,7 @@ const menuItems = [
   },
 ];
 
-export function MobileDrawer() {
+export function MobileDrawer({ isOwner = false }: { isOwner?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -140,6 +141,25 @@ export function MobileDrawer() {
                   </ListItemButton>
                 </ListItem>
               ))}
+              {isOwner && (
+                <ListItem disablePadding sx={{ mb: 0.5 }}>
+                  <ListItemButton
+                    component={Link}
+                    href="/admin"
+                    selected={pathname === "/admin"}
+                    onClick={handleNavigation}
+                    sx={{ borderRadius: 2 }}
+                  >
+                    <ListItemIcon sx={{ color: pathname === "/admin" ? "#ff5a48" : "text.secondary", minWidth: 40 }}>
+                      <AdminPanelSettingsIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Admin"
+                      primaryTypographyProps={{ fontWeight: pathname === "/admin" ? 600 : 400 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              )}
             </List>
           </Box>
         </Box>
