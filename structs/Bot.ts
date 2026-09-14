@@ -19,13 +19,13 @@ import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
 import { logBuffer } from "../services/logBuffer";
 import { PatreonService } from "../services/patreon";
+import { collectGuildData, TelemetryService } from "../services/telemetry";
+import { commandEvent, errorEvent, guildEvent } from "../services/telemetry/events";
 import { ttsService } from "../services/tts";
 import {
-  GuildData,
   isRedisAvailable,
   removeBotFromGuild,
   setBotInGuild,
-  setBotStatus,
   syncBotGuildsWithData
 } from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
@@ -56,37 +56,14 @@ export class Bot {
       // Initialize Redis and sync guilds with detailed data
       try {
         if (await isRedisAvailable()) {
-          const guildsData: GuildData[] = this.client.guilds.cache.map(g => ({
-            id: g.id,
-            name: g.name,
-            icon: g.icon,
-            memberCount: g.memberCount,
-            ownerId: g.ownerId,
-            joinedAt: g.joinedTimestamp || Date.now(),
-          }));
-          await syncBotGuildsWithData(guildsData);
-          await setBotStatus({
-            online: true,
-            username: this.client.user!.username,
-            discriminator: this.client.user!.discriminator,
-            avatar: this.client.user!.avatar,
-            guildCount: guildsData.length,
-            startedAt: new Date().toISOString(),
-          });
+          await syncBotGuildsWithData(collectGuildData(this.client));
           console.log("✅ Redis sync completed");
-          
-          // Set up periodic guild refresh (every 3 minutes to prevent key expiration)
+
+          // Periodic guild refresh (every 3 minutes to prevent key expiration).
+          // The online status itself is the TelemetryService heartbeat.
           setInterval(async () => {
             try {
-              const currentGuildsData: GuildData[] = this.client.guilds.cache.map(g => ({
-                id: g.id,
-                name: g.name,
-                icon: g.icon,
-                memberCount: g.memberCount,
-                ownerId: g.ownerId,
-                joinedAt: g.joinedTimestamp || Date.now(),
-              }));
-              await syncBotGuildsWithData(currentGuildsData);
+              await syncBotGuildsWithData(collectGuildData(this.client));
             } catch (error) {
               console.error("[Redis] Periodic guild sync failed:", error);
             }
@@ -118,6 +95,13 @@ export class Bot {
         console.log("✅ Discord Player service initialized");
       } catch (error) {
         console.error("❌ Failed to initialize Discord Player service:", error);
+      }
+
+      // Heartbeat + event telemetry (powers the owner admin console)
+      try {
+        TelemetryService.getInstance().start(this.client);
+      } catch (error) {
+        console.error("⚠️ Telemetry failed to start:", error);
       }
 
       // Initialize Dashboard Sync service (for web dashboard communication)
@@ -217,6 +201,9 @@ export class Bot {
       } catch (error) {
         console.error("[Redis] Failed to add guild:", error);
       }
+      TelemetryService.getInstance().record(
+        guildEvent({ guildId: guild.id, event: "join", name: guild.name, memberCount: guild.memberCount })
+      );
     });
 
     this.client.on("guildDelete", async (guild) => {
@@ -226,6 +213,9 @@ export class Bot {
       } catch (error) {
         console.error("[Redis] Failed to remove guild:", error);
       }
+      TelemetryService.getInstance().record(
+        guildEvent({ guildId: guild.id, event: "leave", name: guild.name, memberCount: guild.memberCount })
+      );
     });
 
     this.onInteractionCreate();
@@ -325,6 +315,11 @@ export class Bot {
       timestamps.set(interaction.user.id, now);
       setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
 
+      const telemetry = TelemetryService.getInstance();
+      const startedAt = Date.now();
+      const subcommand = interaction.options.getSubcommand(false);
+      const guildIdForEvent = interaction.guild.id;
+
       try {
         const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
 
@@ -333,8 +328,35 @@ export class Bot {
         } else {
           throw new MissingPermissionsException(permissionsCheck.missing);
         }
+
+        telemetry.record(
+          commandEvent({
+            guildId: guildIdForEvent,
+            userId: interaction.user.id,
+            command: interaction.commandName,
+            subcommand,
+            ok: true,
+            durationMs: Date.now() - startedAt
+          })
+        );
       } catch (error: any) {
         console.error(error);
+
+        telemetry.record(
+          commandEvent({
+            guildId: guildIdForEvent,
+            userId: interaction.user.id,
+            command: interaction.commandName,
+            subcommand,
+            ok: false,
+            durationMs: Date.now() - startedAt,
+            error
+          })
+        );
+        if (!(error instanceof MissingPermissionsException)) {
+          telemetry.noteError("command", error);
+          telemetry.record(errorEvent({ scope: "command", error, guildId: guildIdForEvent, command: interaction.commandName }));
+        }
 
         const message = typeof error?.message === "string" && error.message.includes("permissions")
           ? error.toString()
