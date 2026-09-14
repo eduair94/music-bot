@@ -23,7 +23,8 @@
     "test:tts": "ts-node tests/testTTS.ts",
     "test:lyrics": "ts-node tests/testLyricsQuery.ts",
     "test:patreon": "ts-node tests/testPatreonToken.ts",
-    "patreon:campaign": "ts-node scripts/getCampaignId.ts"
+    "patreon:campaign": "ts-node scripts/getCampaignId.ts",
+    "test": "vitest run --dir tests/unit"
   },
   "dependencies": {
     "@discord-player/extractor": "^7.2.0",
@@ -58,7 +59,8 @@
     "cz-conventional-changelog": "^3.0.1",
     "nodemon": "^2.0.22",
     "prettier": "^3.3.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "vitest": "^2.1.9"
   },
   "optionalDependencies": {
     "@discordjs/opus": "^0.9.0",
