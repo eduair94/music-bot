@@ -1,7 +1,9 @@
 import crypto from "crypto";
+import { PatreonCredential } from "../models/PatreonCredential";
 import { IPatreonUser, PatreonUser } from "../models/PatreonUser";
 import { config } from "../utils/config";
 import { DatabaseService } from "./database";
+import { PatreonTokenManager, PatreonTokenStore } from "./patreonToken";
 
 /**
  * Patreon API v2 Response Types
@@ -48,6 +50,30 @@ interface PatreonApiResponse {
   meta?: { pagination?: { cursors?: { next?: string }; total?: number } };
 }
 
+const CREDENTIAL_KEY = "creator";
+
+/**
+ * Keeps the creator token pair in MongoDB, so a pair rotated by a refresh
+ * survives restarts. Throws while disconnected so the token manager retries later.
+ */
+const mongoTokenStore: PatreonTokenStore = {
+  async load() {
+    if (!DatabaseService.getInstance().isConnected()) throw new Error("database not connected");
+    const doc = await PatreonCredential.findOne({ key: CREDENTIAL_KEY }).lean();
+    if (!doc) return null;
+    return {
+      accessToken: doc.accessToken,
+      refreshToken: doc.refreshToken || "",
+      expiresAt: doc.expiresAt,
+      seededFrom: doc.seededFrom,
+    };
+  },
+  async save(tokens) {
+    if (!DatabaseService.getInstance().isConnected()) throw new Error("database not connected");
+    await PatreonCredential.updateOne({ key: CREDENTIAL_KEY }, { $set: tokens }, { upsert: true });
+  },
+};
+
 /**
  * PatreonService - Handles Patreon API integration
  */
@@ -56,6 +82,7 @@ export class PatreonService {
   private baseUrl = "https://www.patreon.com/api/oauth2/v2";
   private cache: Map<string, { data: IPatreonUser | null; expires: number }> = new Map();
   private cacheTimeout = 5 * 60 * 1000; // 5 minutes
+  private tokenManager: PatreonTokenManager | null = null;
 
   private constructor() {}
 
@@ -80,7 +107,7 @@ export class PatreonService {
    * Make an authenticated API request to Patreon
    */
   private async apiRequest(endpoint: string, accessToken?: string): Promise<PatreonApiResponse | null> {
-    const token = accessToken || config.PATREON_CREATOR_ACCESS_TOKEN;
+    const token = accessToken || (await this.tokens().getAccessToken());
     
     if (!token) {
       console.error("[Patreon] No access token available");
@@ -88,12 +115,13 @@ export class PatreonService {
     }
 
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "User-Agent": "MusicBot-Patreon-Integration",
-        },
-      });
+      let response = await this.fetchApi(endpoint, token);
+
+      // Creator tokens expire after about a month: on a 401, refresh once and retry.
+      if (response.status === 401 && !accessToken) {
+        const refreshed = await this.tokens().refresh();
+        if (refreshed) response = await this.fetchApi(endpoint, refreshed);
+      }
 
       if (!response.ok) {
         console.error(`[Patreon] API error: ${response.status} ${response.statusText}`);
@@ -105,6 +133,31 @@ export class PatreonService {
       console.error("[Patreon] API request failed:", error);
       return null;
     }
+  }
+
+  private fetchApi(endpoint: string, token: string): Promise<Response> {
+    return fetch(`${this.baseUrl}${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "User-Agent": "MusicBot-Patreon-Integration",
+      },
+    });
+  }
+
+  /**
+   * The creator token manager, built on first use from the Patreon config
+   */
+  private tokens(): PatreonTokenManager {
+    if (!this.tokenManager) {
+      this.tokenManager = new PatreonTokenManager({
+        envAccessToken: config.PATREON_CREATOR_ACCESS_TOKEN || "",
+        envRefreshToken: config.PATREON_CREATOR_REFRESH_TOKEN || "",
+        clientId: config.PATREON_CLIENT_ID || "",
+        clientSecret: config.PATREON_CLIENT_SECRET || "",
+        store: mongoTokenStore,
+      });
+    }
+    return this.tokenManager;
   }
 
   /**
