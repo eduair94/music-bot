@@ -47,7 +47,10 @@ export async function loadOverview(now: Date = new Date()): Promise<AdminOvervie
 
   // ── Redis: heartbeat + guild inventory ─────────────────────
   const redis = await pingRedis();
-  const heartbeat = redis.ok ? ((await getBotStatus()) as IBotHeartbeat | null) : null;
+  const rawStatus = redis.ok ? ((await getBotStatus()) as (IBotHeartbeat & { online?: boolean }) | null) : null;
+  // The bot writes `{ online: false, reason, ts }` when its gateway drops;
+  // that is not a heartbeat and must render as offline, never as fresh.
+  const heartbeat = rawStatus && rawStatus.online !== false ? rawStatus : null;
   const guilds = redis.ok ? await getAllBotGuildsData() : [];
   const guildNames = new Map(guilds.map((g) => [g.id, g.name]));
   const fresh = freshness(heartbeat?.ts ?? null, nowMs);

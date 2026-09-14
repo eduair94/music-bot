@@ -50,7 +50,27 @@ export class Bot {
       process.exit(1);
     });
 
-    this.client.on("ready", async () => {
+    // A revoked token can leave an already-running gateway client disconnected
+    // without terminating the Node process. Validate it periodically so Docker
+    // can restart the service and report the failure instead of looking healthy.
+    const tokenWatchdog = setInterval(async () => {
+      try {
+        const response = await fetch("https://discord.com/api/v10/users/@me", {
+          headers: { Authorization: `Bot ${config.TOKEN}` }
+        });
+
+        if (response.status === 401 || response.status === 403) {
+          console.error(`[Bot] ❌ Discord token rejected (${response.status}); terminating stale session`);
+          process.exit(1);
+        }
+      } catch (error) {
+        // A transient DNS/network failure must not restart an otherwise healthy bot.
+        console.warn("[Bot] ⚠️ Discord token watchdog could not reach the API:", error);
+      }
+    }, 5 * 60 * 1000);
+    tokenWatchdog.unref();
+
+    this.client.once(Events.ClientReady, async () => {
       console.log(`${this.client.user!.username} ready!`);
 
       // Initialize Redis and sync guilds with detailed data
@@ -187,6 +207,31 @@ export class Bot {
 
     this.client.on("warn", (info) => console.log(info));
     this.client.on("error", console.error);
+    this.client.on(Events.ShardError, (error, shardId) => {
+      console.error(`[Bot] ❌ Discord shard ${shardId} error:`, error);
+    });
+    this.client.on(Events.ShardReconnecting, (shardId) => {
+      console.warn(`[Bot] 🔄 Discord shard ${shardId} reconnecting`);
+    });
+    this.client.on(Events.ShardResume, (shardId, replayedEvents) => {
+      console.log(`[Bot] ✅ Discord shard ${shardId} resumed (${replayedEvents} replayed events)`);
+    });
+    this.client.on(Events.ShardDisconnect, (event, shardId) => {
+      console.warn(`[Bot] ⚠️ Discord shard ${shardId} disconnected (code ${event.code})`);
+      void TelemetryService.getInstance().markOffline(`Discord gateway closed with code ${event.code}`);
+
+      // 4004 is an authentication failure and cannot recover without a valid token.
+      if (event.code === 4004) {
+        console.error("[Bot] ❌ Discord authentication failed; terminating stale session");
+        process.exit(1);
+      }
+    });
+    this.client.on(Events.Invalidated, () => {
+      console.error("[Bot] ❌ Discord session invalidated; restarting cleanly");
+      void TelemetryService.getInstance()
+        .markOffline("Discord session invalidated")
+        .finally(() => process.exit(1));
+    });
 
     // Guild join/leave events for Redis sync
     this.client.on("guildCreate", async (guild) => {

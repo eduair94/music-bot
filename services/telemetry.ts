@@ -74,6 +74,15 @@ export class TelemetryService {
     this.timer = null;
   }
 
+  /** Publish an explicit offline status (gateway closed / session invalidated). Never throws. */
+  public async markOffline(reason: string): Promise<void> {
+    try {
+      await setBotStatus({ online: false, reason, ts: new Date().toISOString() });
+    } catch (error) {
+      console.error("[Telemetry] markOffline failed:", errorMessage(error));
+    }
+  }
+
   /** Remember the last error so the next heartbeat surfaces it. */
   public noteError(scope: ErrorScope, error: unknown): void {
     this.lastError = {
@@ -109,7 +118,10 @@ export class TelemetryService {
 
   public async tick(): Promise<void> {
     const client = this.client;
-    if (!client?.user) return;
+    // Never advertise "online" while the gateway is down; the status key then
+    // simply expires (or carries the markOffline payload) and the dashboard
+    // shows the bot as offline.
+    if (!client?.user || !client.isReady()) return;
     try {
       if (!(await isRedisAvailable())) return;
       const now = Date.now();
