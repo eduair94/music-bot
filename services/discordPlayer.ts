@@ -154,7 +154,10 @@ export class DiscordPlayerService {
       // whole track before playback needs the tail, so the network drops
       // out of the real-time path entirely.
       const buffered = new PassThrough({ highWaterMark: YTDLP_BUFFER_BYTES });
-      proc.stdout.pipe(buffered);
+      // discord-player currently brings a second Node stream type into the
+      // dependency graph. The objects are runtime-compatible; normalize the
+      // destination type here so production builds remain reproducible.
+      proc.stdout.pipe(buffered as unknown as NodeJS.WritableStream);
 
       // Log stderr for diagnostics (but don't block on it)
       proc.stderr.on('data', (data: Buffer) => {

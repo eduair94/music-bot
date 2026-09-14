@@ -73,10 +73,13 @@ export class DebugPanel {
 
     this.app.get("/api/status", (_req: Request, res: Response) => {
       const mem = process.memoryUsage();
-      res.json({
+      const online = this.client?.isReady() ?? false;
+      res.status(online ? 200 : 503).json({
         bot: {
           username: this.client?.user?.username ?? "unknown",
           guilds: this.client?.guilds.cache.size ?? 0,
+          online,
+          wsStatus: this.client?.ws.status ?? -1,
           uptime: process.uptime(),
           startedAt: this.startedAt.toISOString(),
         },
@@ -185,6 +188,7 @@ async function fetchStatus(){
     const h=Math.floor(up/3600),m=Math.floor((up%3600)/60),s=up%60;
     $("statusBar").innerHTML=[
       badge("Bot",d.bot.username),
+      badge("Online",d.bot.online?"yes":"no"),
       badge("Guilds",d.bot.guilds),
       badge("Uptime",h+"h "+m+"m "+s+"s"),
       badge("Mem",d.memory.rss),

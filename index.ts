@@ -78,7 +78,6 @@ export const bot = new Bot(
       GatewayIntentBits.GuildVoiceStates,
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.GuildMessageReactions,
-      GatewayIntentBits.MessageContent,
       GatewayIntentBits.DirectMessages
     ]
   })
