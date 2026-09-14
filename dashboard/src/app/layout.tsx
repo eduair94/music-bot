@@ -3,21 +3,25 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
+// All three fonts use `optional`: the preloaded file is used when it arrives within
+// the block period, otherwise the metric-matched fallback stays for this visit and
+// the real font is cached for the next one. That removes every font-swap layout
+// shift (headline reflow pushing the page, pill rows re-wrapping).
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-bricolage",
 });
 
 const instrument = Instrument_Sans({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-instrument",
 });
 
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-jetbrains",
 });
 

@@ -84,6 +84,9 @@ interface CommandsProps {
 
 export default function Commands({ headingLevel = "h2", limit }: CommandsProps) {
   const Heading = headingLevel;
+  // Keep the outline sequential whether the section title is h1 (/commands) or h2 (home).
+  const SubHeading = headingLevel === "h1" ? "h2" : "h3";
+  const MinorHeading = headingLevel === "h1" ? "h3" : "h4";
   const [activeCategory, setActiveCategory] = useState<(typeof categories)[number]>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedCommand, setExpandedCommand] = useState<string | null>(null);
@@ -266,7 +269,7 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
                             {CategoryIcons[cmd.category]}
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-cream font-medium mb-1">How to use</h3>
+                            <SubHeading className="text-cream font-medium mb-1">How to use</SubHeading>
                             <p className="text-dune text-sm">
                               Type <code className="kbd">{cmd.usage}</code> in any text channel the
                               bot can read.{" "}
@@ -293,7 +296,7 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
           ) : (
             <div className="text-center py-16 console-panel rounded-xl" role="status">
               <p className="font-mono text-dust mb-4">{"// no signal"}</p>
-              <h3 className="font-display text-xl font-semibold text-cream mb-2">No commands found</h3>
+              <SubHeading className="font-display text-xl font-semibold text-cream mb-2">No commands found</SubHeading>
               <p className="text-dune mb-6">Nothing matches that search in this category.</p>
               <button
                 type="button"
@@ -324,13 +327,13 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
         {/* Quick tips */}
         <div className="max-w-5xl mt-16">
           <div className="console-panel rounded-2xl p-6 md:p-8">
-            <h3 className="console-label text-amber!">Engineer&apos;s notes</h3>
+            <SubHeading className="console-label text-amber!">Engineer&apos;s notes</SubHeading>
             <ul className="grid md:grid-cols-3 gap-6 mt-6" role="list">
               {TIPS.map((tip) => (
                 <li key={tip.n} className="flex gap-4">
                   <span className="font-mono text-sm text-amber" aria-hidden="true">{tip.n}</span>
                   <div>
-                    <h4 className="font-medium text-cream mb-1">{tip.title}</h4>
+                    <MinorHeading className="font-medium text-cream mb-1">{tip.title}</MinorHeading>
                     <p className="text-dune text-sm leading-relaxed">{tip.body}</p>
                   </div>
                 </li>

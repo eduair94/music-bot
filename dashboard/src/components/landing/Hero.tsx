@@ -76,9 +76,9 @@ export default function Hero() {
             </div>
 
             {/* Stat strip — mono readouts over ruler */}
-            <dl className="rise rise-5 mt-14 max-w-xl">
+            <div className="rise rise-5 mt-14 max-w-xl">
               <div className="ruler-x mb-4" aria-hidden="true" />
-              <div className="grid grid-cols-3 gap-6">
+              <dl className="grid grid-cols-3 gap-6">
                 {STATS.map((stat) => (
                   <div key={stat.label} className="flex flex-col">
                     <dt className="console-label order-2 mt-1.5">{stat.label}</dt>
@@ -87,8 +87,8 @@ export default function Hero() {
                     </dd>
                   </div>
                 ))}
-              </div>
-            </dl>
+              </dl>
+            </div>
           </div>
 
           {/* ── Right: console deck (illustrative mock of the now-playing embed) ── */}
@@ -149,7 +149,7 @@ export default function Hero() {
 
       {/* ── Command tape ── */}
       <div
-        className="relative z-10 border-y border-line bg-panel/80 backdrop-blur-sm py-3 overflow-hidden"
+        className="relative z-10 border-y border-line bg-panel py-3 overflow-hidden"
         aria-hidden="true"
       >
         <div className="tape flex w-max gap-8 px-4">
