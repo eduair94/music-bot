@@ -334,7 +334,10 @@ export type LinkedBotCommandType =
 /**
  * All command types
  */
-export type BotCommandType = PlayerCommandType | LinkedBotCommandType;
+/** Owner-only administrative commands (guild-less, like linked-bot commands) */
+export type AdminCommandType = "admin_resync";
+
+export type BotCommandType = PlayerCommandType | LinkedBotCommandType | AdminCommandType;
 
 /**
  * Command status
@@ -666,4 +669,116 @@ export function formatDuration(ms: number): string {
  */
 export function isValidSnowflake(id: string): boolean {
   return /^\d{17,19}$/.test(id);
+}
+
+// ============ Admin Telemetry ============
+
+/** Written by the bot to Redis `bot:status` every 20 s (TTL 60 s). Superset of the old status object. */
+export interface IBotHeartbeat {
+  online: true;
+  id: string;
+  username: string;
+  avatar: string | null;
+  /** ISO — process start */
+  startedAt: string;
+  /** ISO — this tick */
+  ts: string;
+  uptimeSec: number;
+  guildCount: number;
+  memberCount: number;
+  ws: { ping: number; status: number };
+  queues: { total: number; playing: number; paused: number; voiceConnections: number };
+  process: {
+    rss: number;
+    heapUsed: number;
+    heapTotal: number;
+    cpuPercent: number;
+    node: string;
+    platform: string;
+    pid: number;
+  };
+  versions: { bot: string; discordJs: string; discordPlayer: string; ytDlp: string | null };
+  services: { mongo: boolean; patreon: boolean; debugPanel: boolean };
+  lastError?: { ts: string; scope: string; message: string };
+}
+
+export type BotEventKind = "command" | "track" | "guild" | "error";
+export type TrackEventType = "start" | "finish" | "skip" | "error";
+export type GuildEventType = "join" | "leave";
+export type ErrorScope = "command" | "player" | "process";
+
+export interface CommandBotEvent {
+  kind: "command";
+  ts: Date;
+  guildId: string;
+  userId: string;
+  command: string;
+  subcommand?: string;
+  ok: boolean;
+  durationMs: number;
+  error?: string;
+}
+
+export interface TrackBotEvent {
+  kind: "track";
+  ts: Date;
+  guildId: string;
+  event: TrackEventType;
+  title: string;
+  author: string;
+  url: string;
+  source: string;
+  trackDurationMs: number;
+  requestedById?: string;
+  reason?: string;
+  error?: string;
+}
+
+export interface GuildBotEvent {
+  kind: "guild";
+  ts: Date;
+  guildId: string;
+  event: GuildEventType;
+  name: string;
+  memberCount: number;
+}
+
+export interface ErrorBotEvent {
+  kind: "error";
+  ts: Date;
+  guildId?: string;
+  scope: ErrorScope;
+  message: string;
+  stack?: string;
+  command?: string;
+  track?: string;
+}
+
+export type BotEvent = CommandBotEvent | TrackBotEvent | GuildBotEvent | ErrorBotEvent;
+
+/** Flat document shape stored in the `botevents` collection (every union field optional). */
+export interface IBotEventRecord {
+  kind: BotEventKind;
+  ts: Date;
+  guildId?: string;
+  userId?: string;
+  command?: string;
+  subcommand?: string;
+  ok?: boolean;
+  durationMs?: number;
+  error?: string;
+  event?: string;
+  title?: string;
+  author?: string;
+  url?: string;
+  source?: string;
+  trackDurationMs?: number;
+  requestedById?: string;
+  reason?: string;
+  name?: string;
+  memberCount?: number;
+  scope?: string;
+  message?: string;
+  stack?: string;
+  track?: string;
 }
