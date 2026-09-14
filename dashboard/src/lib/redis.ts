@@ -187,3 +187,23 @@ export async function getAllBotGuildsData(): Promise<GuildData[]> {
     return [];
   }
 }
+
+/** Round-trip latency to Redis, for the admin infra strip. */
+export async function pingRedis(): Promise<{ ok: boolean; ms: number | null }> {
+  try {
+    const redis = getRedis();
+    if (!redis) return { ok: false, ms: null };
+    const t = Date.now();
+    await redis.ping();
+    return { ok: true, ms: Date.now() - t };
+  } catch {
+    return { ok: false, ms: null };
+  }
+}
+
+/** Remove a guild from the bot presence keys (after an owner-initiated leave). */
+export async function removeBotGuild(guildId: string): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+  await redis.pipeline().del(REDIS_KEYS.BOT_GUILD(guildId)).srem(REDIS_KEYS.BOT_GUILDS, guildId).exec();
+}

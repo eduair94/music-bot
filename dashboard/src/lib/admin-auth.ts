@@ -1,7 +1,9 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 import "server-only";
 import { auth } from "@/auth";
+import { isSameOrigin, RateLimiter } from "./admin/guards";
 
 /**
  * Password-based admin gate for the /insights analytics area.
@@ -69,4 +71,46 @@ export async function isOwnerSession(): Promise<boolean> {
 export async function hasAdminAccess(): Promise<boolean> {
   if (await hasAdminCookie()) return true;
   return isOwnerSession();
+}
+
+// ── Owner console gates (/admin and /api/admin/*) ─────────────────────────
+
+export interface OwnerIdentity {
+  discordId: string;
+  name: string;
+}
+export type OwnerGate = { ok: true; owner: OwnerIdentity } | { ok: false; response: NextResponse };
+
+/** JSON response that must never be cached by browsers or proxies. */
+export function adminJson(data: unknown, status = 200): NextResponse {
+  return NextResponse.json(data, { status, headers: { "Cache-Control": "no-store" } });
+}
+
+function configuredOwnerId(): string | null {
+  return process.env.OWNER_ID || process.env.DISCORD_OWNER_ID || null;
+}
+
+/** Read gate: Discord session whose id equals OWNER_ID. */
+export async function requireOwner(): Promise<OwnerGate> {
+  const session = await auth();
+  const discordId = session?.user?.discordId;
+  if (!discordId) return { ok: false, response: adminJson({ error: "Unauthorized" }, 401) };
+  const ownerId = configuredOwnerId();
+  if (!ownerId || discordId !== ownerId) return { ok: false, response: adminJson({ error: "Forbidden" }, 403) };
+  return { ok: true, owner: { discordId, name: session?.user?.name ?? "owner" } };
+}
+
+const actionLimiter = new RateLimiter(10, 60_000);
+
+/** Action gate: owner + same-origin + 10 actions per minute. */
+export async function requireOwnerAction(request: Request): Promise<OwnerGate> {
+  const gate = await requireOwner();
+  if (!gate.ok) return gate;
+  if (!isSameOrigin(request.headers, request.headers.get("host"))) {
+    return { ok: false, response: adminJson({ error: "Cross-origin request rejected" }, 403) };
+  }
+  if (!actionLimiter.allow(gate.owner.discordId)) {
+    return { ok: false, response: adminJson({ error: "Rate limited, retry in a minute" }, 429) };
+  }
+  return gate;
 }
