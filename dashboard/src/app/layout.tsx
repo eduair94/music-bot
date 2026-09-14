@@ -1,8 +1,4 @@
-import { SessionProvider } from "@/components/auth/SessionProvider";
-import darkTheme from "@/theme/theme";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ThemeProvider } from "@mui/material/styles";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -25,30 +21,55 @@ const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
 });
 
+const TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   title: {
-    default: "Bypass — Studio-Grade Discord Music Bot",
-    template: "%s · Bypass",
+    default: TITLE,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    "Studio-grade music for your Discord server. Lossless-feel audio up to 320kbps, instant queueing, playlists, TTS voices, and a full web dashboard.",
-  keywords: ["discord music bot", "discord bot", "music bot", "youtube bot", "spotify discord"],
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "Bypass — Studio-Grade Discord Music Bot",
-    description:
-      "Studio-grade music for your Discord server. 320kbps audio, instant queueing, playlists, and a full web dashboard.",
+    title: TITLE,
+    description: SITE_DESCRIPTION,
     type: "website",
-    siteName: "Bypass",
+    url: "/",
+    siteName: SITE_NAME,
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bypass — Studio-Grade Discord Music Bot",
-    description: "Studio-grade music for your Discord server.",
+    title: TITLE,
+    description: SITE_DESCRIPTION,
   },
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
+  manifest: "/manifest.webmanifest",
+  category: "technology",
 };
 
 export const viewport: Viewport = {
   themeColor: "#0c0a09",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -58,16 +79,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable}`}>
-      <body style={{ margin: 0 }}>
-        <SessionProvider>
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={darkTheme}>
-              <CssBaseline />
-              {children}
-            </ThemeProvider>
-          </AppRouterCacheProvider>
-        </SessionProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

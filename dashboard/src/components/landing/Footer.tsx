@@ -1,18 +1,20 @@
-"use client";
-
 import BrandMark from "@/components/common/BrandMark";
+import { GITHUB_ISSUES_URL, GITHUB_URL, PATREON_URL } from "@/lib/site";
 import { Github } from "lucide-react";
 import Link from "next/link";
 import { FaDiscord, FaPatreon } from "react-icons/fa";
 
+const linkClass = "inline-block py-2 text-dune hover:text-cream transition-colors rounded-sm";
+const iconLinkClass =
+  "w-11 h-11 bg-panel-raised border border-line-strong hover:border-amber/60 hover:text-amber rounded-lg flex items-center justify-center text-dune transition-colors";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const discordInvite = process.env.NEXT_PUBLIC_DISCORD_INVITE;
 
   return (
     <footer className="bg-panel border-t border-line">
       {/* Tick ruler crown */}
-      <div className="ruler-x" />
+      <div className="ruler-x" aria-hidden="true" />
 
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -25,69 +27,81 @@ export default function Footer() {
               The studio-grade Discord music bot. Powerful queue management,
               320kbps audio, and a full web dashboard. Free to use, forever.
             </p>
-            <div className="flex gap-3">
-              {discordInvite && (
+            <ul className="flex gap-3" role="list" aria-label="Community links">
+              <li>
+                <Link href="/support" prefetch={false} className={iconLinkClass} aria-label="Discord support server">
+                  <FaDiscord className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </li>
+              <li>
                 <a
-                  href={discordInvite}
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-panel-raised border border-line hover:border-amber/60 hover:text-amber rounded-lg flex items-center justify-center text-dune transition-all focus-amber"
-                  title="Discord"
+                  className={iconLinkClass}
+                  aria-label="GitHub repository (opens in a new tab)"
                 >
-                  <FaDiscord className="w-4 h-4" />
+                  <Github className="w-4 h-4" aria-hidden="true" />
                 </a>
-              )}
-              <a
-                href="https://github.com/eduair94/music-bot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-panel-raised border border-line hover:border-amber/60 hover:text-amber rounded-lg flex items-center justify-center text-dune transition-all focus-amber"
-                title="GitHub"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-              <a
-                href="https://patreon.com/u36360623"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-panel-raised border border-line hover:border-amber/60 hover:text-amber rounded-lg flex items-center justify-center text-dune transition-all focus-amber"
-                title="Patreon"
-              >
-                <FaPatreon className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="console-label mb-5">Product</h4>
-            <ul className="space-y-3 text-sm">
-              <li><a href="#features" className="text-dune hover:text-cream transition-colors">Features</a></li>
-              <li><Link href="/commands" className="text-dune hover:text-cream transition-colors">Commands</Link></li>
-              <li><Link href="/install" className="text-dune hover:text-cream transition-colors">Installation Guide</Link></li>
-              <li><a href="#pricing" className="text-dune hover:text-cream transition-colors">Premium</a></li>
-              <li><Link href="/invite" className="text-dune hover:text-cream transition-colors">Add to Discord</Link></li>
+              </li>
+              <li>
+                <a
+                  href={PATREON_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={iconLinkClass}
+                  aria-label="Patreon (opens in a new tab)"
+                >
+                  <FaPatreon className="w-4 h-4" aria-hidden="true" />
+                </a>
+              </li>
             </ul>
           </div>
 
-          <div>
-            <h4 className="console-label mb-5">Support</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/support" className="text-dune hover:text-cream transition-colors">Discord Server</Link></li>
-              <li><a href="https://github.com/eduair94/music-bot/issues" target="_blank" rel="noopener noreferrer" className="text-dune hover:text-cream transition-colors">Report a Bug</a></li>
-              <li><a href="https://github.com/eduair94/music-bot" target="_blank" rel="noopener noreferrer" className="text-dune hover:text-cream transition-colors">GitHub</a></li>
-              <li><a href="https://patreon.com/u36360623" target="_blank" rel="noopener noreferrer" className="text-dune hover:text-cream transition-colors">Patreon</a></li>
+          <nav aria-labelledby="footer-product">
+            <h2 id="footer-product" className="console-label mb-4">Product</h2>
+            <ul className="space-y-1.5 text-sm">
+              <li><Link href="/#features" className={linkClass}>Features</Link></li>
+              <li><Link href="/commands" className={linkClass}>Commands</Link></li>
+              <li><Link href="/install" className={linkClass}>Installation guide</Link></li>
+              <li><Link href="/#pricing" className={linkClass}>Premium</Link></li>
+              <li><Link href="/invite" prefetch={false} className={linkClass}>Add to Discord</Link></li>
             </ul>
-          </div>
+          </nav>
+
+          <nav aria-labelledby="footer-support">
+            <h2 id="footer-support" className="console-label mb-4">Support</h2>
+            <ul className="space-y-1.5 text-sm">
+              <li><Link href="/support" prefetch={false} className={linkClass}>Discord server</Link></li>
+              <li>
+                <a href={GITHUB_ISSUES_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  Report a bug<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+              <li>
+                <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  GitHub<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+              <li>
+                <a href={PATREON_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  Patreon<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         <div className="mt-12 pt-8 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-mono text-xs text-dust">
             © {currentYear} BYPASS · MADE FOR THE DISCORD COMMUNITY
           </p>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="text-dust hover:text-cream text-sm transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="text-dust hover:text-cream text-sm transition-colors">Terms of Service</Link>
-          </div>
+          <nav aria-label="Legal">
+            <ul className="flex gap-6 text-sm">
+              <li><Link href="/privacy" className={linkClass}>Privacy Policy</Link></li>
+              <li><Link href="/terms" className={linkClass}>Terms of Service</Link></li>
+            </ul>
+          </nav>
         </div>
       </div>
     </footer>

@@ -20,7 +20,7 @@ const console_ = {
   lineBright: "#3d342c",
   cream: "#f4efe9",
   dune: "#a89d90",
-  dust: "#6e645a",
+  dust: "#8f8478",
 };
 
 export const darkTheme = createTheme({

@@ -1,31 +1,49 @@
-"use client";
-
+import { TICKER_COMMANDS } from "@/data/commands";
+import { LANGUAGE_COUNT } from "@/lib/site";
 import Link from "next/link";
 import { FaDiscord } from "react-icons/fa";
 
-const TICKER = [
-  "/play", "/queue", "/skip", "/seek", "/volume", "/lyrics", "/shuffle",
-  "/247", "/say", "/effects", "/playlist", "/grab", "/loop", "/filters",
-  "/nowplaying", "/voteskip", "/radio", "/guesssong",
+const STATS = [
+  { value: "10K+", label: "Servers" },
+  { value: String(LANGUAGE_COUNT), label: "Languages" },
+  { value: "99.9%", label: "Uptime" },
+];
+
+const QUEUE_PREVIEW = [
+  { n: "01", t: "Take On Me", a: "a-ha", d: "3:46" },
+  { n: "02", t: "Nightcall", a: "Kavinsky", d: "4:18" },
+  { n: "03", t: "Less I Know the Better", a: "Tame Impala", d: "3:36" },
 ];
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24">
+    <section
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24"
+      aria-labelledby="hero-title"
+    >
       {/* Atmosphere: dotted raster fading from top, amber glow low-left */}
-      <div className="absolute inset-0 raster opacity-40 mask-[linear-gradient(to_bottom,black,transparent_70%)]" />
-      <div className="absolute -bottom-40 -left-40 w-150 h-150 rounded-full bg-amber/10 blur-3xl" />
+      <div
+        className="absolute inset-0 raster opacity-40 mask-[linear-gradient(to_bottom,black,transparent_70%)]"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute -bottom-40 -left-40 w-150 h-150 rounded-full bg-amber/10 blur-3xl"
+        aria-hidden="true"
+      />
 
       <div className="container mx-auto px-4 relative z-10 flex-1 flex items-center">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full py-16">
           {/* ── Left: editorial statement ── */}
           <div className="lg:col-span-7">
-            <div className="rise rise-1 inline-flex items-center gap-3 px-3 py-1.5 border border-line rounded-full mb-8 bg-panel">
-              <span className="led" />
+            <p className="rise rise-1 inline-flex items-center gap-3 px-3 py-1.5 border border-line rounded-full mb-8 bg-panel">
+              <span className="led" aria-hidden="true" />
               <span className="console-label text-dune!">On air · 10,000+ servers</span>
-            </div>
+            </p>
 
-            <h1 className="rise rise-2 font-display font-bold leading-[0.95] tracking-tight text-[clamp(3rem,8vw,6.5rem)]">
+            <h1
+              id="hero-title"
+              className="rise rise-2 font-display font-bold leading-[0.95] tracking-tight text-[clamp(3rem,8vw,6rem)] text-balance"
+            >
               Sound that
               <br />
               fills the <span className="text-amber">room.</span>
@@ -33,52 +51,49 @@ export default function Hero() {
 
             <p className="rise rise-3 text-lg md:text-xl text-dune max-w-xl mt-8 leading-relaxed">
               Bypass is the studio-grade music bot for Discord. Up to 320kbps
-              audio, instant queueing, smart playlists, TTS voices — and a web
-              dashboard your whole server can drive.
+              audio, instant queueing, playlists from YouTube and Spotify,
+              stackable audio filters — and a web dashboard your whole server
+              can drive.
             </p>
 
             <div className="rise rise-4 flex flex-col sm:flex-row gap-4 mt-10">
               <Link
                 href="/invite"
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-amber hover:bg-amber-hot text-coal font-semibold rounded-lg transition-all duration-200 hover:-translate-y-0.5 focus-amber"
+                prefetch={false}
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-amber hover:bg-amber-hot text-coal font-semibold rounded-lg transition-[background-color,transform] duration-200 hover:-translate-y-0.5"
               >
-                <FaDiscord className="w-5 h-5" />
+                <FaDiscord className="w-5 h-5" aria-hidden="true" />
                 Add to Discord
                 <span className="font-mono text-xs px-2 py-0.5 bg-coal/15 rounded">FREE</span>
               </Link>
 
               <a
                 href="#features"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-line-bright hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors focus-amber"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-line-strong hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors"
               >
                 Explore features
               </a>
             </div>
 
             {/* Stat strip — mono readouts over ruler */}
-            <div className="rise rise-5 mt-14 max-w-xl">
-              <div className="ruler-x mb-4" />
+            <dl className="rise rise-5 mt-14 max-w-xl">
+              <div className="ruler-x mb-4" aria-hidden="true" />
               <div className="grid grid-cols-3 gap-6">
-                {[
-                  { value: "10K+", label: "Servers" },
-                  { value: "27", label: "Languages" },
-                  { value: "99.9%", label: "Uptime" },
-                ].map((stat) => (
-                  <div key={stat.label}>
-                    <div className="stat-readout text-3xl md:text-4xl font-bold text-cream">
+                {STATS.map((stat) => (
+                  <div key={stat.label} className="flex flex-col">
+                    <dt className="console-label order-2 mt-1.5">{stat.label}</dt>
+                    <dd className="stat-readout order-1 text-3xl md:text-4xl font-bold text-cream m-0">
                       {stat.value}
-                    </div>
-                    <div className="console-label mt-1.5">{stat.label}</div>
+                    </dd>
                   </div>
                 ))}
               </div>
-            </div>
+            </dl>
           </div>
 
-          {/* ── Right: console deck ── */}
-          <div className="lg:col-span-5 rise rise-4">
+          {/* ── Right: console deck (illustrative mock of the now-playing embed) ── */}
+          <div className="lg:col-span-5 rise rise-4" aria-hidden="true">
             <div className="console-panel rounded-2xl p-6 lg:rotate-1 lg:translate-y-2">
-              {/* Deck header */}
               <div className="flex items-center justify-between pb-4 border-b border-line">
                 <span className="console-label">Now playing</span>
                 <div className="flex items-center gap-2">
@@ -87,7 +102,6 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Track row */}
               <div className="flex items-center gap-4 py-5">
                 <div className="w-14 h-14 rounded-lg bg-panel-raised border border-line flex items-center justify-center">
                   <div className="eq">
@@ -101,7 +115,6 @@ export default function Hero() {
                 <div className="ml-auto font-mono text-sm text-dune">3:47</div>
               </div>
 
-              {/* Progress */}
               <div className="h-1 rounded-full bg-panel-raised overflow-hidden">
                 <div className="h-full w-2/3 bg-amber rounded-full" />
               </div>
@@ -110,13 +123,8 @@ export default function Hero() {
                 <span>-1:16</span>
               </div>
 
-              {/* Queue preview */}
               <div className="mt-6 space-y-2.5">
-                {[
-                  { n: "01", t: "Take On Me", a: "a-ha", d: "3:46" },
-                  { n: "02", t: "Nightcall", a: "Kavinsky", d: "4:18" },
-                  { n: "03", t: "Less I Know the Better", a: "Tame Impala", d: "3:36" },
-                ].map((q) => (
+                {QUEUE_PREVIEW.map((q) => (
                   <div
                     key={q.n}
                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-panel-raised/60 border border-line/60"
@@ -140,9 +148,12 @@ export default function Hero() {
       </div>
 
       {/* ── Command tape ── */}
-      <div className="relative z-10 border-y border-line bg-panel/80 backdrop-blur-sm py-3 overflow-hidden">
+      <div
+        className="relative z-10 border-y border-line bg-panel/80 backdrop-blur-sm py-3 overflow-hidden"
+        aria-hidden="true"
+      >
         <div className="tape flex w-max gap-8 px-4">
-          {[...TICKER, ...TICKER].map((cmd, i) => (
+          {[...TICKER_COMMANDS, ...TICKER_COMMANDS].map((cmd, i) => (
             <span key={i} className="font-mono text-sm text-dust whitespace-nowrap">
               <span className="text-amber-deep">$</span> {cmd}
             </span>

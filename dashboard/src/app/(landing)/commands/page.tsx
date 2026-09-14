@@ -1,27 +1,30 @@
 /**
  * Commands Page
- * 
+ *
  * Full page listing all bot commands with filtering and search
  */
 
 import Commands from "@/components/landing/Commands";
-import Footer from "@/components/landing/Footer";
-import Header from "@/components/landing/Header";
+import { COMMAND_COUNT } from "@/data/commands";
 import { Metadata } from "next";
+
+const description = `Browse all ${COMMAND_COUNT} Bypass slash commands: play music from YouTube and Spotify, manage the queue, apply audio filters, fetch lyrics, and configure your server.`;
 
 export const metadata: Metadata = {
   title: "Commands",
-  description: "Browse all 150+ commands available in Bypass Discord Music Bot. Play music, manage queues, apply audio filters, and more.",
+  description,
+  alternates: { canonical: "/commands" },
+  openGraph: {
+    title: "Bypass Commands",
+    description,
+    url: "/commands",
+  },
 };
 
 export default function CommandsPage() {
   return (
-    <main className="min-h-screen">
-      <Header />
-      {/* Spacer for fixed header */}
-      <div className="h-20" />
-      <Commands />
-      <Footer />
-    </main>
+    <div className="pt-20">
+      <Commands headingLevel="h1" />
+    </div>
   );
 }

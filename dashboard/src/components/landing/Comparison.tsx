@@ -1,5 +1,3 @@
-"use client";
-
 interface BotRow {
   name: string;
   audio: string;
@@ -42,17 +40,33 @@ const bots: BotRow[] = [
   },
 ];
 
+function PricingChip({ label, highlight }: { label: string; highlight?: boolean }) {
+  return (
+    <span
+      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
+        highlight ? "bg-amber text-coal" : "bg-panel-raised text-dune border border-line"
+      }`}
+    >
+      {label}
+    </span>
+  );
+}
+
 export default function Comparison() {
   return (
-    <section id="comparison" className="py-28 bg-panel/40 border-y border-line">
+    <section
+      id="comparison"
+      className="py-28 bg-panel/40 border-y border-line"
+      aria-labelledby="comparison-title"
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mb-16">
           <div className="flex items-center gap-4 mb-6">
             <span className="console-label text-amber!">A/B test</span>
-            <span className="flex-1 h-px bg-line" />
-            <span className="console-label">5 contenders</span>
+            <span className="flex-1 h-px bg-line" aria-hidden="true" />
+            <span className="console-label">{bots.length} contenders</span>
           </div>
-          <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight">
+          <h2 id="comparison-title" className="font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
             Hear the <span className="text-amber">difference.</span>
           </h2>
           <p className="text-lg text-dune mt-6 max-w-xl">
@@ -64,12 +78,15 @@ export default function Comparison() {
         {/* Desktop table */}
         <div className="hidden lg:block console-panel rounded-2xl overflow-hidden">
           <table className="w-full">
+            <caption className="sr-only">
+              Comparison of Discord music bots by audio quality, control surface, and pricing
+            </caption>
             <thead>
               <tr className="border-b border-line bg-panel">
-                <th className="text-left p-5 console-label">Bot</th>
-                <th className="text-left p-5 console-label">Audio</th>
-                <th className="text-left p-5 console-label">Control surface</th>
-                <th className="text-left p-5 console-label">Pricing</th>
+                <th scope="col" className="text-left p-5 console-label">Bot</th>
+                <th scope="col" className="text-left p-5 console-label">Audio</th>
+                <th scope="col" className="text-left p-5 console-label">Control surface</th>
+                <th scope="col" className="text-left p-5 console-label">Pricing</th>
               </tr>
             </thead>
             <tbody>
@@ -77,12 +94,10 @@ export default function Comparison() {
                 <tr
                   key={bot.name}
                   className={`border-b border-line/60 last:border-0 transition-colors ${
-                    bot.highlight
-                      ? "bg-amber/6 hover:bg-amber/10"
-                      : "hover:bg-panel-raised/50"
+                    bot.highlight ? "bg-amber/6 hover:bg-amber/10" : "hover:bg-panel-raised/50"
                   }`}
                 >
-                  <td className="p-5">
+                  <th scope="row" className="p-5 text-left font-normal">
                     <div className="flex items-center gap-3">
                       <span className={`font-display font-bold text-lg ${bot.highlight ? "text-amber" : "text-cream"}`}>
                         {bot.name}
@@ -93,19 +108,11 @@ export default function Comparison() {
                         </span>
                       )}
                     </div>
-                  </td>
+                  </th>
                   <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.audio}</td>
                   <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.dashboard}</td>
                   <td className="p-5">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
-                        bot.highlight
-                          ? "bg-amber text-coal"
-                          : "bg-panel-raised text-dune border border-line"
-                      }`}
-                    >
-                      {bot.pricing}
-                    </span>
+                    <PricingChip label={bot.pricing} highlight={bot.highlight} />
                   </td>
                 </tr>
               ))}
@@ -114,9 +121,9 @@ export default function Comparison() {
         </div>
 
         {/* Mobile cards */}
-        <div className="lg:hidden grid gap-4">
+        <ul className="lg:hidden grid gap-4" role="list">
           {bots.map((bot) => (
-            <div
+            <li
               key={bot.name}
               className={`console-panel rounded-xl p-6 ${bot.highlight ? "border-amber/60" : ""}`}
             >
@@ -142,21 +149,13 @@ export default function Comparison() {
                 <div>
                   <dt className="console-label mb-1">Pricing</dt>
                   <dd>
-                    <span
-                      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
-                        bot.highlight
-                          ? "bg-amber text-coal"
-                          : "bg-panel-raised text-dune border border-line"
-                      }`}
-                    >
-                      {bot.pricing}
-                    </span>
+                    <PricingChip label={bot.pricing} highlight={bot.highlight} />
                   </dd>
                 </div>
               </dl>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
