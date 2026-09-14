@@ -7,6 +7,8 @@ import fs from "fs";
 import { PassThrough, Readable } from "stream";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { GuildSettingsService } from "./guildSettings";
+import { TelemetryService } from "./telemetry";
+import { errorEvent, trackEvent } from "./telemetry/events";
 
 /**
  * Extended metadata interface for queue
@@ -302,6 +304,9 @@ export class DiscordPlayerService {
       metadata.currentTrack = track;
       queue.metadata = metadata;
 
+      this.recordTrack(queue, track, "start");
+      if (queue.guild?.id) void GuildSettingsService.getInstance().incrementSongPlayed(queue.guild.id);
+
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title} (${track.source}, ${track.duration})`);
       debug("url:", track.url);
 
@@ -315,12 +320,17 @@ export class DiscordPlayerService {
     // Player finish - track finished playing
     this.player.events.on("playerFinish", (queue: GuildQueue, track: Track) => {
       console.log(`[DiscordPlayer] ✅ Finished: ${track.title} (${queue.tracks.size} left)`);
+      this.recordTrack(queue, track, "finish");
+      if (queue.guild?.id && track.durationMS > 0) {
+        void GuildSettingsService.getInstance().addPlaytime(queue.guild.id, Math.round(track.durationMS / 1000));
+      }
       debug("next:", queue.tracks.at(0)?.title || "none", "deleted:", queue.deleted);
     });
 
     // Player skip - track was skipped
     this.player.events.on("playerSkip", (queue: GuildQueue, track: Track, reason: TrackSkipReason, description: string) => {
       console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title} (${reason})`);
+      this.recordTrack(queue, track, "skip", { reason: String(reason) });
       debug("description:", description, "queue size:", queue.tracks.size, "playing:", queue.node.isPlaying(), "idle:", queue.node.isIdle());
 
       // If skip reason is NoStream (ERR_NO_STREAM), the stream extraction failed
@@ -353,12 +363,19 @@ export class DiscordPlayerService {
     this.player.events.on("error", (queue: GuildQueue, error: Error) => {
       console.error("[DiscordPlayer] ❌ Queue error:", error);
       console.error("[DiscordPlayer] ❌ Error stack:", error.stack);
+      TelemetryService.getInstance().noteError("player", error);
+      TelemetryService.getInstance().record(errorEvent({ scope: "player", error, guildId: queue.guild?.id }));
     });
 
     this.player.events.on("playerError", async (queue: GuildQueue, error: Error, track: Track) => {
       console.error(`[DiscordPlayer] ❌ Player error on track: ${track?.title || 'unknown'}`);
       console.error("[DiscordPlayer] ❌ Error:", error.message);
       console.error("[DiscordPlayer] ❌ Stack:", error.stack);
+      this.recordTrack(queue, track, "error", { error });
+      TelemetryService.getInstance().noteError("player", error);
+      TelemetryService.getInstance().record(
+        errorEvent({ scope: "player", error, guildId: queue.guild?.id, track: track?.title })
+      );
       const channel = await this.getLogChannel(queue);
       if (channel) {
         channel.send(`❌ Error playing **${track?.title || 'track'}**: ${error.message}`).catch(console.error);
@@ -390,6 +407,31 @@ export class DiscordPlayerService {
     this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
       debug(`trigger: ${track.title} (${reason}, ${queue.tracks.size} remaining)`);
     });
+  }
+
+  /** Shape a track lifecycle event for telemetry (never throws). */
+  private recordTrack(
+    queue: GuildQueue,
+    track: Track | undefined,
+    event: "start" | "finish" | "skip" | "error",
+    extra?: { reason?: string; error?: unknown }
+  ): void {
+    const guildId = queue.guild?.id;
+    if (!guildId || !track) return;
+    TelemetryService.getInstance().record(
+      trackEvent({
+        guildId,
+        event,
+        title: track.title,
+        author: track.author,
+        url: track.url,
+        source: track.source,
+        trackDurationMs: track.durationMS,
+        requestedById: track.requestedBy?.id,
+        reason: extra?.reason,
+        error: extra?.error
+      })
+    );
   }
 
   /**
