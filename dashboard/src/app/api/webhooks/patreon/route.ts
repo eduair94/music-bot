@@ -30,28 +30,33 @@ export async function POST(request: NextRequest) {
     console.log(`[Webhook] Event: ${event}`);
     console.log(`[Webhook] Signature present: ${!!signature}`);
 
-    // Verify signature if webhook secret is configured
-    if (process.env.PATREON_WEBHOOK_SECRET) {
-      if (!signature) {
-        console.warn("[Webhook] Missing signature header");
-        return NextResponse.json(
-          { error: "Missing signature" },
-          { status: 401 }
-        );
-      }
-
-      if (!verifyWebhookSignature(rawBody, signature)) {
-        console.warn("[Webhook] Invalid signature");
-        return NextResponse.json(
-          { error: "Invalid signature" },
-          { status: 401 }
-        );
-      }
-
-      console.log("[Webhook] Signature verified ✓");
-    } else {
-      console.warn("[Webhook] No webhook secret configured, skipping signature verification");
+    // Unsigned webhooks are never processed: without a secret anyone could POST a
+    // forged pledge and grant any Discord account premium.
+    if (!process.env.PATREON_WEBHOOK_SECRET) {
+      console.error("[Webhook] PATREON_WEBHOOK_SECRET is not configured, rejecting webhook");
+      return NextResponse.json(
+        { error: "Webhook secret not configured" },
+        { status: 503 }
+      );
     }
+
+    if (!signature) {
+      console.warn("[Webhook] Missing signature header");
+      return NextResponse.json(
+        { error: "Missing signature" },
+        { status: 401 }
+      );
+    }
+
+    if (!verifyWebhookSignature(rawBody, signature)) {
+      console.warn("[Webhook] Invalid signature");
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 401 }
+      );
+    }
+
+    console.log("[Webhook] Signature verified ✓");
 
     // Process the webhook
     const result = await handleWebhook(event || "unknown", body);
