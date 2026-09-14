@@ -66,3 +66,6 @@ typings/
 config.json
 # Generated TTS audio files
 temp/
+
+# Admin console log-proxy route (not a log directory)
+!dashboard/src/app/api/admin/logs/
