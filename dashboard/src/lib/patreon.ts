@@ -38,13 +38,11 @@ export function isPatreonConfigured(): boolean {
 }
 
 /**
- * Get audio bitrate based on pledge amount
+ * Get audio bitrate based on pledge amount. Every paid tier gets 320kbps (the
+ * Founder tier advertises it), matching the bot's periodic patron sync.
  */
 function getAudioBitrate(pledgeAmountCents: number): number {
-  if (pledgeAmountCents >= 2500) return 320; // $25+ = 320kbps
-  if (pledgeAmountCents >= 1000) return 256; // $10+ = 256kbps
-  if (pledgeAmountCents >= 300) return 192;  // $3+ = 192kbps
-  return 128; // Free = 128kbps
+  return pledgeAmountCents > 0 ? 320 : 128;
 }
 
 /**
@@ -67,6 +65,7 @@ async function updatePatronData(data: {
   await connectToDatabase();
 
   const isPremium = data.patronStatus === "active_patron" && data.pledgeAmountCents > 0;
+  const isFounder = isPremium && !!data.tierId && data.tierId === process.env.PATREON_FOUNDER_TIER_ID;
   const audioBitrate = getAudioBitrate(data.pledgeAmountCents);
 
   await PatreonUserModel.findOneAndUpdate(
@@ -84,13 +83,14 @@ async function updatePatronData(data: {
         tierId: data.tierId,
         tierTitle: data.tierTitle,
         isPremium,
+        isFounder,
         audioBitrate,
       },
     },
     { upsert: true, new: true }
   );
 
-  console.log(`[Patreon] Updated patron ${data.discordId}: premium=${isPremium}, bitrate=${audioBitrate}`);
+  console.log(`[Patreon] Updated patron ${data.discordId}: premium=${isPremium}, founder=${isFounder}, bitrate=${audioBitrate}`);
 }
 
 /**

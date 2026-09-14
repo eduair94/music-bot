@@ -560,7 +560,7 @@ The recommended tier structure for launch:
 
 | Tier | Price | Description |
 |------|-------|-------------|
-| Founder / Beta Tester | $1.50/month | All premium features, exclusive early access |
+| Founder / Beta Tester | $3/month | All premium features, exclusive early access |
 
 **Founder Features:**
 - Audio Filters (bass boost, nightcore, etc.)

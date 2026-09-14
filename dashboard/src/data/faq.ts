@@ -27,7 +27,7 @@ export const faqs: FAQItem[] = [
   {
     question: "Why is the Founder tier limited to 50 spots?",
     answer:
-      "The Founder tier is an early supporter tier with pricing locked forever at $1.50 per month. It is capped at 50 spots to keep a small community of early supporters who help shape what Bypass builds next.",
+      "The Founder tier is an early supporter tier with pricing locked forever at $3 per month. It is capped at 50 spots to keep a small community of early supporters who help shape what Bypass builds next.",
   },
   {
     question: "Can I use the bot on multiple servers?",

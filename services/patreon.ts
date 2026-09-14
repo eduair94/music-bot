@@ -336,21 +336,18 @@ export class PatreonService {
       // Determine premium status
       const isActivePatron = data.patronStatus === "active_patron";
       const isFounder = isActivePatron && data.tierId === config.PATREON_FOUNDER_TIER_ID;
-      const isPremium = isActivePatron;
+      // A $0 (free) membership must not unlock premium features
+      const isPremium = isActivePatron && data.pledgeAmountCents > 0;
 
-      // Determine audio bitrate based on pledge amount
-      // Tier 1: $5+ = 320kbps (indie identity)
-      // Tier 2: $10+ = 320kbps
-      // Tier 3: $15+ = 320kbps
-      // Free: 128kbps
-      let audioBitrate = 128; // Default for free users
+      // Every paid tier gets 320kbps: the Founder tier, the cheapest one, advertises it.
+      // Bot identity branding starts at $5.
+      let audioBitrate = isPremium ? 320 : 128;
       let customBotName: string | undefined = undefined;
 
       if (isActivePatron) {
         const pledgeDollars = data.pledgeAmountCents / 100;
         
         if (pledgeDollars >= 5) {
-          audioBitrate = 320; // High quality audio for all patrons
           
           // Tier 1 ($5-$9.99): "Indie" identity
           if (pledgeDollars >= 5 && pledgeDollars < 10) {

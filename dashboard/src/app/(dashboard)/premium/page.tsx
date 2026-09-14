@@ -37,7 +37,7 @@ const plans = [
   },
   {
     name: "Founder / Beta Tester",
-    price: "$1.50",
+    price: "$3",
     period: "per month",
     description: "Limited to 50 spots - Locked forever",
     features: [

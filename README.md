@@ -159,7 +159,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed structure and [dashboard/REA
 
 The bot supports Patreon premium features with automatic webhook sync:
 
-- **Founder Tier**: $1.50/month with premium features
+- **Founder Tier**: $3/month with premium features
 - **Webhook Server**: Automatic patron status sync
 - **Premium Features**: Audio filters, 24/7 mode, priority queue, and more
 

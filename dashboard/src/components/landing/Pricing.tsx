@@ -31,7 +31,7 @@ const tiers: PricingTier[] = [
   },
   {
     name: "Founder",
-    price: "$1.50",
+    price: "$3",
     period: "/month",
     description: "Limited to 50 spots — price locked forever",
     features: [
