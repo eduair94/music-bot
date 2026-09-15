@@ -19,7 +19,7 @@ https://music-bot.checkleaked.com/invite
 https://music-bot.checkleaked.com
 
 ## Support Server Invite
-*(Add your Discord support server invite code here)*
+https://discord.gg/hjJQKp5zDU
 
 ## Open Source Repository
 https://github.com/eduair94/music-bot

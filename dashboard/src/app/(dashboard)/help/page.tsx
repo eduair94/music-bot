@@ -18,6 +18,7 @@ import {
     Typography,
 } from "@mui/material";
 import Link from "next/link";
+import { DISCORD_INVITE } from "@/lib/site";
 
 const commandCategories = [
   {
@@ -115,7 +116,7 @@ export default function HelpPage() {
         action={
           <Button
             component={Link}
-            href="https://discord.gg/5w6PErKpyK"
+            href={DISCORD_INVITE}
             target="_blank"
             color="inherit"
             size="small"
@@ -270,7 +271,7 @@ export default function HelpPage() {
             <Button
               variant="contained"
               component={Link}
-              href="https://discord.gg/5w6PErKpyK"
+              href={DISCORD_INVITE}
               target="_blank"
             >
               Join Support Server

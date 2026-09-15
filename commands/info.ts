@@ -7,6 +7,7 @@ import {
 import { useQueue } from "discord-player";
 import { bot } from "../index";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { SUPPORT_INVITE_URL } from "../shared/links";
 import { i18n } from "../utils/i18n";
 import { safeReply } from "../utils/safeReply";
 
@@ -104,7 +105,7 @@ export default {
       }
 
       case "support": {
-        const supportUrl = process.env.SUPPORT_SERVER || "https://discord.gg/5w6PErKpyK";
+        const supportUrl = process.env.SUPPORT_SERVER || SUPPORT_INVITE_URL;
         const embed = new EmbedBuilder()
           .setTitle("🆘 Support")
           .setColor("#5865F2")

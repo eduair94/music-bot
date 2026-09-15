@@ -1,5 +1,6 @@
 import { CommandInteraction, EmbedBuilder, SlashCommandBuilder, version as djsVersion } from "discord.js";
 import { bot } from "../index";
+import { SUPPORT_INVITE_URL } from "../shared/links";
 import { i18n } from "../utils/i18n";
 
 export default {
@@ -51,7 +52,7 @@ export default {
           name: "🔗 Links",
           value: [
             `[Dashboard](${process.env.DASHBOARD_URL || 'https://your-dashboard.com'})`,
-            `[Support Server](${process.env.SUPPORT_SERVER || 'https://discord.gg/5w6PErKpyK'})`,
+            `[Support Server](${process.env.SUPPORT_SERVER || SUPPORT_INVITE_URL})`,
             `[Invite Bot](https://discord.com/api/oauth2/authorize?client_id=${client.user?.id}&permissions=8&scope=bot%20applications.commands)`
           ].join(" • "),
           inline: false
