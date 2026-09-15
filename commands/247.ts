@@ -7,7 +7,7 @@ import {
     SlashCommandBuilder
 } from "discord.js";
 import { i18n } from "../utils/i18n";
-import { hasPremiumFeature } from "../utils/premiumCheck";
+import { requirePremiumFeature } from "../utils/premiumCheck";
 
 // Track 24/7 mode per guild
 const twentyFourSevenMode = new Map<string, boolean>();
@@ -22,15 +22,8 @@ export default {
     const member = interaction.member as GuildMember;
     const guildId = interaction.guildId!;
 
-    // Check premium status
-    const isPremium = await hasPremiumFeature(interaction.user.id, "stay_24_7");
-    
-    if (!isPremium) {
-      return interaction.reply({
-        content: i18n.__("247.premiumRequired"),
-        ephemeral: true
-      });
-    }
+    // Premium gate: replies with the Founder offer when the user lacks it
+    if (!(await requirePremiumFeature(interaction, "stay_24_7"))) return;
 
     if (!member.voice.channel) {
       return interaction.reply({

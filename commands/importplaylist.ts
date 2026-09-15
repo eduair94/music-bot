@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
-import { PatreonService } from "../services/patreon";
+import { requirePremiumFeature } from "../utils/premiumCheck";
 import { i18n } from "../utils/i18n";
 import youtube from "youtube-sr";
 
@@ -12,21 +12,8 @@ const importplaylist: Command = {
         .addStringOption(opt => opt.setName("name").setDescription("Name for the collection").setRequired(true)),
     
     async execute(interaction: ChatInputCommandInteraction) {
-        // Premium check
-        const patreon = PatreonService.getInstance();
-        const isPremium = await patreon.isPremiumUser(interaction.user.id);
-        
-        if (!isPremium) {
-            await interaction.reply({ 
-                embeds: [new EmbedBuilder()
-                    .setTitle("‚≠ê Premium Feature")
-                    .setColor(0xf96854)
-                    .setDescription("Importing playlists is a premium feature.\n\n[Support us on Patreon](https://patreon.com) to unlock this!")
-                ],
-                ephemeral: true 
-            });
-            return;
-        }
+        // Premium gate: replies with the Founder offer when the user lacks it
+        if (!(await requirePremiumFeature(interaction, "unlimited_playlists"))) return;
 
         const url = interaction.options.getString("url", true);
         const collectionName = interaction.options.getString("name", true);
@@ -69,7 +56,7 @@ const importplaylist: Command = {
 
             // Store in collections (simplified - in production, save to database)
             const embed = new EmbedBuilder()
-                .setTitle("Ì≥• Playlist Imported")
+                .setTitle("ÔøΩÔøΩÔøΩ Playlist Imported")
                 .setColor(0x2ecc71)
                 .setDescription(`Successfully imported **${tracks.length}** tracks to collection: **${collectionName}**`)
                 .addFields(

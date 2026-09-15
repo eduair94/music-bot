@@ -1,22 +1,9 @@
-import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction } from "discord.js";
 import { PatreonService } from "../services/patreon";
+import { PremiumFeature } from "./premiumFeatures";
+import { premiumUpsell } from "./upsell";
 
-/**
- * Premium feature names for display
- */
-export const PREMIUM_FEATURES = {
-  audio_filters: "Audio Filters",
-  stay_24_7: "24/7 Mode",
-  max_quality: "Maximum Quality",
-  priority_queue: "Priority Queue",
-  unlimited_playlists: "Unlimited Playlists",
-  longer_songs: "No Duration Limit",
-  vote_features: "Vote on Features",
-  founder_role: "Founder Role",
-  direct_support: "Direct Support",
-} as const;
-
-export type PremiumFeature = keyof typeof PREMIUM_FEATURES;
+export { PREMIUM_FEATURES, type PremiumFeature } from "./premiumFeatures";
 
 /**
  * Check if user has a specific premium feature
@@ -31,32 +18,17 @@ export async function hasPremiumFeature(
 }
 
 /**
- * Check premium and reply with upgrade message if needed
- * Returns true if user has the feature, false otherwise
+ * Check premium and, when the user does not have it, reply with the Founder
+ * offer. Returns true if the user has the feature.
  */
 export async function requirePremiumFeature(
   interaction: ChatInputCommandInteraction,
   feature: PremiumFeature
 ): Promise<boolean> {
-  const hasFeature = await hasPremiumFeature(interaction.user.id, feature);
+  if (await hasPremiumFeature(interaction.user.id, feature)) return true;
 
-  if (!hasFeature) {
-    const featureName = PREMIUM_FEATURES[feature];
-    const embed = new EmbedBuilder()
-      .setTitle("Premium Feature")
-      .setColor("#F96854")
-      .setDescription(
-        `**${featureName}** is a premium feature!\n\n` +
-        "Unlock this and more with a Patreon subscription.\n\n" +
-        "Use `/premium` to learn more about premium features."
-      )
-      .setFooter({ text: "Support us and get exclusive features!" });
-
-    await interaction.reply({ embeds: [embed], ephemeral: true });
-    return false;
-  }
-
-  return true;
+  await interaction.reply(premiumUpsell(feature));
+  return false;
 }
 
 /**
