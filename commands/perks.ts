@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction } from "
 import { Command } from "../interfaces/Command";
 import { PatreonService } from "../services/patreon";
 import { i18n } from "../utils/i18n";
-import { PREMIUM_TIERS } from "../shared/types";
+import { buildPerksOverview } from "../utils/perksEmbed";
 
 const perks: Command = {
     data: new SlashCommandBuilder()
@@ -15,18 +15,7 @@ const perks: Command = {
         const sub = interaction.options.getSubcommand();
 
         if (sub === "view") {
-            const embed = new EmbedBuilder().setTitle("Premium Perks").setColor(0xf96854)
-                .setDescription("Upgrade to unlock features!");
-            for (const [key, cfg] of Object.entries(PREMIUM_TIERS)) {
-                if (key === "free") continue;
-                const features = [];
-                features.push(`Audio: ${cfg.audioBitrate}kbps`);
-                if (cfg.audioFilters) features.push("Audio filters");
-                if (cfg.stayMode) features.push("24/7 mode");
-                features.push(`${cfg.maxLinkedBots} linked bot(s)`);
-                embed.addFields({ name: `${cfg.name} - $${(cfg.minPledgeCents / 100).toFixed(2)}/mo`, value: features.join("\n"), inline: true });
-            }
-            await interaction.reply({ embeds: [embed] });
+            await interaction.reply({ embeds: [buildPerksOverview()] });
         } else if (sub === "user") {
             const patreon = PatreonService.getInstance();
             const isPremium = await patreon.isPremiumUser(interaction.user.id);

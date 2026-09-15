@@ -49,14 +49,18 @@ export const PREMIUM_TIERS: Record<PremiumTier, PremiumTierConfig> = {
     audioFilters: false,
     stayMode: false,
   },
+  // Patreon sells exactly two plans today: Free and this one, "Founder / Beta
+  // Tester" at $3. `pro` and `enterprise` stay defined because stored patron
+  // documents and the linked-bot limits index by tier name, but nothing
+  // user-facing may advertise them until they exist on Patreon.
   basic: {
     tier: "basic",
-    name: "Basic",
+    name: "Founder / Beta Tester",
     minPledgeCents: 300,
     maxLinkedBots: 1,
-    audioBitrate: 192,
+    audioBitrate: 320,
     audioFilters: true,
-    stayMode: false,
+    stayMode: true,
   },
   pro: {
     tier: "pro",

@@ -23,12 +23,9 @@ export const SITE_DESCRIPTION =
 
 export const DISCORD_INVITE = process.env.NEXT_PUBLIC_DISCORD_INVITE || SUPPORT_INVITE_URL;
 
-export { FOUNDER_SPOTS, PATREON_URL } from "../../../shared/links";
+export { FOUNDER_PRICE_USD, FOUNDER_SPOTS, PATREON_URL } from "../../../shared/links";
 export const GITHUB_URL = "https://github.com/eduair94/music-bot";
 export const GITHUB_ISSUES_URL = `${GITHUB_URL}/issues`;
-
-/** Founder tier price shown on the landing page. */
-export const FOUNDER_PRICE_USD = 1.5;
 
 /** Number of bot locales shipped in /locales. */
 export const LANGUAGE_COUNT = 28;
