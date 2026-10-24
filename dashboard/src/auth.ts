@@ -15,6 +15,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Discord({
       clientId: process.env.AUTH_DISCORD_ID,
       clientSecret: process.env.AUTH_DISCORD_SECRET,
+      // Discord now returns `iss` on the OAuth callback (RFC 9207). Without an
+      // issuer, Auth.js checks it against "https://authjs.dev" and every
+      // sign-in fails with error=Configuration.
+      issuer: "https://discord.com",
       authorization: {
         params: {
           scope: "identify guilds email",
