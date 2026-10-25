@@ -69,3 +69,6 @@ temp/
 
 # Admin console log-proxy route (not a log directory)
 !dashboard/src/app/api/admin/logs/
+
+# Playwright MCP snapshots and screenshots (can hold page text such as tokens)
+.playwright-mcp/
