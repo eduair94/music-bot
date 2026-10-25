@@ -44,5 +44,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   pages: {
     signIn: "/login",
+    // Failed sign-ins come back to the login page with ?error= instead of
+    // Auth.js's unbranded error screen.
+    error: "/login",
   },
 });

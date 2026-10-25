@@ -90,7 +90,8 @@ async function signInThenCallback(extra: Record<string, string>) {
   const authorize = new URL(signin.headers.get("location")!);
   expect(authorize.origin + authorize.pathname).toBe("https://discord.com/api/oauth2/authorize");
 
-  const params = new URLSearchParams({ code: "code-from-discord", ...extra });
+  // Discord answers with either a code or an error, never both.
+  const params = new URLSearchParams("error" in extra ? extra : { code: "code-from-discord", ...extra });
   const state = authorize.searchParams.get("state");
   if (state) params.set("state", state);
 
@@ -122,7 +123,19 @@ describe("Discord sign-in", () => {
     stubDiscord();
     vi.spyOn(console, "error").mockImplementation(() => {});
     const { location, jar } = await signInThenCallback({ iss: "https://evil.example" });
-    expect(location).toContain("error=");
+    expect(location).toBe(`${ORIGIN}/login?error=Configuration`);
+    expect(jar.has("authjs.session-token")).toBe(false);
+  });
+
+  it("sends a cancelled Discord consent back to the login page", async () => {
+    stubDiscord();
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const { location, jar } = await signInThenCallback({
+      error: "access_denied",
+      error_description: "The resource owner or authorization server denied the request",
+      iss: "https://discord.com",
+    });
+    expect(location).toBe(`${ORIGIN}/login?error=OAuthCallbackError`);
     expect(jar.has("authjs.session-token")).toBe(false);
   });
 });
