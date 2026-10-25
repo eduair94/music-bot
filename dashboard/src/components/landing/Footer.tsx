@@ -16,9 +16,10 @@ export default function Footer() {
       {/* Tick ruler crown */}
       <div className="ruler-x" aria-hidden="true" />
 
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="md:col-span-2">
+      <div className="shell py-16">
+        {/* Link columns start on column 9, the line every section lede starts on. */}
+        <div className="grid gap-12 md:grid-cols-12 md:gap-x-8">
+          <div className="md:col-span-6 lg:col-span-5">
             <div className="flex items-center gap-3 mb-5">
               <BrandMark size={38} />
               <span className="font-display text-xl font-bold tracking-tight">Bypass</span>
@@ -58,7 +59,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <nav aria-labelledby="footer-product">
+          <nav aria-labelledby="footer-product" className="md:col-span-3 lg:col-span-2 lg:col-start-9">
             <h2 id="footer-product" className="console-label mb-4">Product</h2>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/#features" className={linkClass}>Features</Link></li>
@@ -69,7 +70,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <nav aria-labelledby="footer-support">
+          <nav aria-labelledby="footer-support" className="md:col-span-3 lg:col-span-2 lg:col-start-11">
             <h2 id="footer-support" className="console-label mb-4">Support</h2>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/support" prefetch={false} className={linkClass}>Discord server</Link></li>
@@ -92,9 +93,9 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-line flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="font-mono text-xs text-dust">
-            © {currentYear} BYPASS · MADE FOR THE DISCORD COMMUNITY
+        <div className="mt-12 pt-8 border-t border-line flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <p className="text-sm text-dust">
+            © {currentYear} Bypass · Made for the Discord community
           </p>
           <nav aria-label="Legal">
             <ul className="flex gap-6 text-sm">

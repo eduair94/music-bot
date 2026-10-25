@@ -1,3 +1,4 @@
+import SectionHeader from "@/components/landing/SectionHeader";
 import { LANGUAGE_COUNT, PATREON_URL } from "@/lib/site";
 import Link from "next/link";
 
@@ -8,7 +9,6 @@ interface PricingTier {
   description: string;
   features: string[];
   highlighted?: boolean;
-  badge?: string;
   cta: string;
   ctaLink: string;
 }
@@ -47,7 +47,6 @@ const tiers: PricingTier[] = [
       "Direct support channel",
     ],
     highlighted: true,
-    badge: "FOUNDER PRICING",
     cta: "Become a Founder",
     ctaLink: PATREON_URL,
   },
@@ -70,32 +69,21 @@ const ASSURANCES = ["Secure payments via Patreon", "Cancel anytime", "No card st
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-28 bg-coal relative overflow-hidden" aria-labelledby="pricing-title">
-      <div
-        className="absolute -top-40 right-0 w-150 h-150 rounded-full bg-amber/5 blur-3xl pointer-events-none"
-        aria-hidden="true"
-      />
+    <section id="pricing" className="py-24 lg:py-32" aria-labelledby="pricing-title">
+      <div className="shell">
+        <SectionHeader
+          id="pricing-title"
+          title="Fair price. Full signal."
+          lede="Free forever for the essentials. Founders lock in studio features at the lowest price we will ever offer."
+        />
 
-      <div className="container mx-auto px-4 relative">
-        <div className="max-w-3xl mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="console-label text-amber!">Gain staging</span>
-            <span className="flex-1 h-px bg-line" aria-hidden="true" />
-            <span className="console-label">{tiers.length} tiers</span>
-          </div>
-          <h2 id="pricing-title" className="font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
-            Fair price. <span className="text-amber">Full signal.</span>
-          </h2>
-          <p className="text-lg text-dune mt-6 max-w-xl">
-            Free forever for the essentials. Founders lock in studio features
-            at the lowest price we will ever offer.
-          </p>
-        </div>
-
-        <ul className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl" role="list">
+        {/* On large screens each card is a subgrid of the list's three rows, so
+            prices, feature lists and buttons line up across the tiers. */}
+        <ul className="grid gap-6 lg:grid-cols-3 lg:grid-rows-[auto_1fr_auto] lg:gap-x-8 lg:gap-y-0" role="list">
           {tiers.map((tier) => {
             const external = tier.ctaLink.startsWith("http");
-            const ctaClass = `block w-full py-3.5 rounded-lg font-semibold text-center transition-colors duration-200 ${
+            // Full-width in the three-up grid; sized to its label when a card spans a tablet row.
+            const ctaClass = `flex h-12 w-full md:w-fit md:px-8 lg:w-full items-center justify-center rounded-lg font-semibold transition-colors duration-200 ${
               tier.highlighted
                 ? "bg-amber hover:bg-amber-hot text-coal"
                 : "border border-line-strong text-cream hover:border-amber/60"
@@ -103,34 +91,29 @@ export default function Pricing() {
             return (
               <li
                 key={tier.name}
-                className={`relative console-panel rounded-2xl p-8 transition-[translate,border-color] duration-300 hover:-translate-y-1 ${
-                  tier.highlighted ? "border-amber/60 md:-translate-y-3 md:hover:-translate-y-4" : ""
+                className={`flex flex-col rounded-2xl border p-8 lg:row-span-3 lg:grid lg:grid-rows-subgrid ${
+                  tier.highlighted ? "border-amber/60 bg-panel-raised" : "border-line bg-panel"
                 }`}
               >
-                {tier.badge && (
-                  <div className="absolute -top-3 left-8">
-                    <span className="px-3 py-1 bg-amber text-coal font-mono text-[10px] tracking-widest font-bold rounded whitespace-nowrap">
-                      {tier.badge}
+                <div className="border-b border-line pb-6">
+                  <h3 className="font-display text-xl font-semibold text-cream">{tier.name}</h3>
+                  <p className="mt-4 flex items-baseline gap-1.5">
+                    <span className="font-display text-5xl font-bold tracking-[-0.03em] tabular-nums text-cream">
+                      {tier.price}
                     </span>
-                  </div>
-                )}
+                    {tier.period && <span className="text-dune">{tier.period}</span>}
+                  </p>
+                  <p className="mt-2 text-sm text-dune text-pretty">{tier.description}</p>
+                </div>
 
-                <h3 className="console-label mb-3">{tier.name}</h3>
-
-                <p className="mb-2 flex items-baseline gap-2">
-                  <span className="stat-readout text-5xl font-bold text-cream">{tier.price}</span>
-                  {tier.period && <span className="font-mono text-sm text-dust">{tier.period}</span>}
-                </p>
-
-                <p className="text-sm text-dune mb-6">{tier.description}</p>
-
-                <div className="ruler-x mb-6" aria-hidden="true" />
-
-                <ul className="space-y-3 mb-8">
+                <ul
+                  className="space-y-3 py-6 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-3 md:space-y-0 lg:block lg:space-y-3"
+                  role="list"
+                >
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
                       <svg
-                        className={`w-4 h-4 mt-1 shrink-0 ${tier.highlighted ? "text-amber" : "text-signal"}`}
+                        className={`mt-1 h-4 w-4 shrink-0 ${tier.highlighted ? "text-amber" : "text-dune"}`}
                         fill="none"
                         stroke="currentColor"
                         strokeWidth={3}
@@ -144,29 +127,24 @@ export default function Pricing() {
                   ))}
                 </ul>
 
-                {external ? (
-                  <a href={tier.ctaLink} target="_blank" rel="noopener noreferrer" className={ctaClass}>
-                    {tier.cta}
-                    <span className="sr-only"> (opens Patreon in a new tab)</span>
-                  </a>
-                ) : (
-                  <Link href={tier.ctaLink} prefetch={false} className={ctaClass}>
-                    {tier.cta}
-                  </Link>
-                )}
+                <div className="mt-auto pt-2">
+                  {external ? (
+                    <a href={tier.ctaLink} target="_blank" rel="noopener noreferrer" className={ctaClass}>
+                      {tier.cta}
+                      <span className="sr-only"> (opens Patreon in a new tab)</span>
+                    </a>
+                  ) : (
+                    <Link href={tier.ctaLink} prefetch={false} className={ctaClass}>
+                      {tier.cta}
+                    </Link>
+                  )}
+                </div>
               </li>
             );
           })}
         </ul>
 
-        <ul className="mt-16 flex items-center gap-x-8 gap-y-3 flex-wrap" role="list">
-          {ASSURANCES.map((badge, i) => (
-            <li key={badge} className="flex items-center gap-2">
-              <span className="led" style={{ animationDelay: `${i * 0.8}s` }} aria-hidden="true" />
-              <span className="console-label">{badge}</span>
-            </li>
-          ))}
-        </ul>
+        <p className="mt-8 text-sm text-dust text-pretty">{ASSURANCES.join(" · ")}</p>
       </div>
     </section>
   );

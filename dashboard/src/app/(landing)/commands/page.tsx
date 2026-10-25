@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function CommandsPage() {
   return (
-    <div className="pt-20">
+    <div className="pt-18">
       <Commands headingLevel="h1" />
     </div>
   );

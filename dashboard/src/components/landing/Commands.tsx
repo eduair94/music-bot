@@ -1,12 +1,12 @@
 "use client";
 
+import SectionHeader from "@/components/landing/SectionHeader";
 import {
   categories,
   categoryDescriptions,
   commands,
   type CommandCategory,
 } from "@/data/commands";
-import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 
 const iconProps = {
@@ -63,9 +63,9 @@ const CategoryIcons: Record<CommandCategory, React.ReactNode> = {
 };
 
 const TIPS = [
-  { n: "01", title: "Quick play", body: <>Type <code className="kbd">/play song name</code> in any channel to start playing instantly.</> },
-  { n: "02", title: "Button controls", body: <>Use the transport buttons on the now-playing message instead of typing commands.</> },
-  { n: "03", title: "Stack filters", body: <>Filters combine. Try <code className="kbd">/bassboost</code> with <code className="kbd">/8d</code>.</> },
+  { title: "Quick play", body: <>Type <code className="kbd">/play song name</code> in any channel to start playing instantly.</> },
+  { title: "Button controls", body: <>Use the transport buttons on the now-playing message instead of typing commands.</> },
+  { title: "Stack filters", body: <>Filters combine. Try <code className="kbd">/effects bassboost</code> with <code className="kbd">/effects 8d</code>.</> },
 ];
 
 const categoryCounts = Object.fromEntries(
@@ -78,12 +78,9 @@ function toSlug(name: string) {
 
 interface CommandsProps {
   headingLevel?: "h1" | "h2";
-  /** Cap the rows rendered (home page); the /commands page shows everything. */
-  limit?: number;
 }
 
-export default function Commands({ headingLevel = "h2", limit }: CommandsProps) {
-  const Heading = headingLevel;
+export default function Commands({ headingLevel = "h2" }: CommandsProps) {
   // Keep the outline sequential whether the section title is h1 (/commands) or h2 (home).
   const SubHeading = headingLevel === "h1" ? "h2" : "h3";
   const MinorHeading = headingLevel === "h1" ? "h3" : "h4";
@@ -92,6 +89,7 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
   const [expandedCommand, setExpandedCommand] = useState<string | null>(null);
   const searchId = useId();
   const listId = useId();
+  const tipsId = useId();
 
   const filteredCommands = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -107,35 +105,23 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
     });
   }, [activeCategory, searchQuery]);
 
-  const visibleCommands = limit ? filteredCommands.slice(0, limit) : filteredCommands;
-  const hiddenCount = filteredCommands.length - visibleCommands.length;
-
   const resetFilters = () => {
     setSearchQuery("");
     setActiveCategory("All");
   };
 
   return (
-    <section id="commands" className="py-28 bg-panel/40 border-y border-line" aria-labelledby="commands-title">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="console-label text-amber!">Patch bay</span>
-            <span className="flex-1 h-px bg-line" aria-hidden="true" />
-            <span className="console-label">{commands.length} commands</span>
-          </div>
-          <Heading id="commands-title" className="font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
-            The full <span className="text-amber">command rack.</span>
-          </Heading>
-          <p className="text-lg text-dune mt-6 max-w-xl">
-            Every slash command Bypass answers to. Search by name or browse by
-            category.
-          </p>
-        </div>
+    <section id="commands" className="py-24 lg:py-32 bg-panel/40 border-y border-line" aria-labelledby="commands-title">
+      <div className="shell">
+        <SectionHeader
+          id="commands-title"
+          as={headingLevel}
+          title="The full command rack."
+          lede="Every slash command Bypass answers to. Search by name or browse by category."
+        />
 
         {/* Search */}
-        <div className="max-w-5xl mb-8">
+        <div className="mb-6">
           <label htmlFor={searchId} className="sr-only">
             Search commands
           </label>
@@ -170,7 +156,7 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
         </div>
 
         {/* Category pills */}
-        <div className="max-w-5xl mb-10">
+        <div className="mb-8">
           <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by category">
             {categories.map((category) => {
               const isActive = activeCategory === category;
@@ -198,148 +184,138 @@ export default function Commands({ headingLevel = "h2", limit }: CommandsProps) 
             })}
           </div>
 
-          <p className="console-label mt-4">{categoryDescriptions[activeCategory]}</p>
+          <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 text-sm">
+            <p className="text-dune">{categoryDescriptions[activeCategory]}</p>
+            <p className="font-mono text-dune" aria-live="polite" aria-atomic="true">
+              {searchQuery
+                ? `${filteredCommands.length} match${filteredCommands.length !== 1 ? "es" : ""} for "${searchQuery}"`
+                : null}
+            </p>
+          </div>
         </div>
 
-        {/* Command list */}
-        <div className="max-w-5xl">
-          <p className="mb-4 font-mono text-sm text-dune min-h-5" aria-live="polite" aria-atomic="true">
-            {searchQuery
-              ? `${filteredCommands.length} match${filteredCommands.length !== 1 ? "es" : ""} for "${searchQuery}"`
-              : null}
-          </p>
+        {/* Results take the first eight columns; the notes sit under the lede in the last four. */}
+        <div className="grid gap-x-8 gap-y-16 lg:grid-cols-12">
+          <div className="min-w-0 lg:col-span-8">
+            {/* Command list */}
+            <div>
+              {filteredCommands.length > 0 ? (
+                <ul id={listId} className="grid grid-cols-1 gap-2" role="list">
+                  {filteredCommands.map((cmd) => {
+                    const isExpanded = expandedCommand === cmd.name;
+                    const panelId = `cmd-${toSlug(cmd.name)}`;
 
-          {filteredCommands.length > 0 ? (
-            <ul id={listId} className="grid gap-2" role="list">
-              {visibleCommands.map((cmd) => {
-                const isExpanded = expandedCommand === cmd.name;
-                const panelId = `cmd-${toSlug(cmd.name)}`;
+                    return (
+                      <li
+                        key={cmd.name}
+                        className={`console-panel rounded-xl transition-colors duration-200 ${
+                          isExpanded ? "border-amber/50" : "hover:border-line-strong"
+                        }`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setExpandedCommand(isExpanded ? null : cmd.name)}
+                          aria-expanded={isExpanded}
+                          aria-controls={panelId}
+                          className="w-full text-left p-4 rounded-xl"
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-3 mb-1 flex-wrap">
+                                <code className="text-amber font-mono font-bold">{cmd.name}</code>
+                                <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase rounded bg-panel-raised text-dune border border-line">
+                                  {cmd.category}
+                                </span>
+                                {cmd.isNew && (
+                                  <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-signal/15 text-signal border border-signal/30">
+                                    NEW
+                                  </span>
+                                )}
+                                {cmd.isPremium && (
+                                  <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber/15 text-amber border border-amber/30">
+                                    PREMIUM
+                                  </span>
+                                )}
+                                {cmd.adminOnly && (
+                                  <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-panel-raised text-dust border border-line-strong">
+                                    ADMIN
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-dune text-sm">{cmd.description}</p>
+                            </div>
 
-                return (
-                  <li
-                    key={cmd.name}
-                    className={`console-panel rounded-xl transition-colors duration-200 ${
-                      isExpanded ? "border-amber/50" : "hover:border-line-strong"
-                    }`}
+                            <div className="sm:text-right shrink-0">
+                              <code className="kbd inline-block max-w-full max-sm:whitespace-normal!">{cmd.usage}</code>
+                            </div>
+                          </div>
+                        </button>
+
+                        {/* Rendered only when open: keeps 80+ rows of boilerplate out of the HTML and RSC payload. */}
+                        {isExpanded && (
+                          <div id={panelId} className="mx-4 mb-4 pt-4 border-t border-line">
+                            <div className="flex items-start gap-3">
+                              <div className="p-2 rounded-lg bg-amber/10 text-amber border border-amber/20">
+                                {CategoryIcons[cmd.category]}
+                              </div>
+                              <div className="flex-1">
+                                <SubHeading className="text-cream font-medium mb-1">How to use</SubHeading>
+                                <p className="text-dune text-sm">
+                                  Type <code className="kbd inline-block max-w-full max-sm:whitespace-normal!">{cmd.usage}</code> in any text channel the
+                                  bot can read.{" "}
+                                  {["Music", "Queue", "Controls", "Filters"].includes(cmd.category)
+                                    ? "Join a voice channel first."
+                                    : ""}
+                                </p>
+                                {cmd.isPremium && (
+                                  <p className="text-amber text-sm mt-2">Requires a linked Premium server.</p>
+                                )}
+                                {cmd.adminOnly && (
+                                  <p className="text-dune text-sm mt-2">
+                                    Needs Manage Server permission or the configured admin role.
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="text-center py-16 console-panel rounded-xl" role="status">
+                  <p className="font-mono text-dust mb-4">{"// no signal"}</p>
+                  <SubHeading className="font-display text-xl font-semibold text-cream mb-2">No commands found</SubHeading>
+                  <p className="text-dune mb-6">Nothing matches that search in this category.</p>
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="px-6 py-3 bg-amber hover:bg-amber-hot text-coal rounded-lg font-semibold transition-colors"
                   >
-                    <button
-                      type="button"
-                      onClick={() => setExpandedCommand(isExpanded ? null : cmd.name)}
-                      aria-expanded={isExpanded}
-                      aria-controls={panelId}
-                      className="w-full text-left p-4 rounded-xl"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-3 mb-1 flex-wrap">
-                            <code className="text-amber font-mono font-bold">{cmd.name}</code>
-                            <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase rounded bg-panel-raised text-dune border border-line">
-                              {cmd.category}
-                            </span>
-                            {cmd.isNew && (
-                              <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-signal/15 text-signal border border-signal/30">
-                                NEW
-                              </span>
-                            )}
-                            {cmd.isPremium && (
-                              <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber/15 text-amber border border-amber/30">
-                                PREMIUM
-                              </span>
-                            )}
-                            {cmd.adminOnly && (
-                              <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-panel-raised text-dust border border-line-strong">
-                                ADMIN
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-dune text-sm">{cmd.description}</p>
-                        </div>
-
-                        <div className="sm:text-right shrink-0">
-                          <code className="kbd">{cmd.usage}</code>
-                        </div>
-                      </div>
-                    </button>
-
-                    {/* Rendered only when open: keeps 80+ rows of boilerplate out of the HTML and RSC payload. */}
-                    {isExpanded && (
-                      <div id={panelId} className="mx-4 mb-4 pt-4 border-t border-line">
-                        <div className="flex items-start gap-3">
-                          <div className="p-2 rounded-lg bg-amber/10 text-amber border border-amber/20">
-                            {CategoryIcons[cmd.category]}
-                          </div>
-                          <div className="flex-1">
-                            <SubHeading className="text-cream font-medium mb-1">How to use</SubHeading>
-                            <p className="text-dune text-sm">
-                              Type <code className="kbd">{cmd.usage}</code> in any text channel the
-                              bot can read.{" "}
-                              {["Music", "Queue", "Controls", "Filters"].includes(cmd.category)
-                                ? "Join a voice channel first."
-                                : ""}
-                            </p>
-                            {cmd.isPremium && (
-                              <p className="text-amber text-sm mt-2">Requires a linked Premium server.</p>
-                            )}
-                            {cmd.adminOnly && (
-                              <p className="text-dune text-sm mt-2">
-                                Needs Manage Server permission or the configured admin role.
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div className="text-center py-16 console-panel rounded-xl" role="status">
-              <p className="font-mono text-dust mb-4">{"// no signal"}</p>
-              <SubHeading className="font-display text-xl font-semibold text-cream mb-2">No commands found</SubHeading>
-              <p className="text-dune mb-6">Nothing matches that search in this category.</p>
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="px-6 py-3 bg-amber hover:bg-amber-hot text-coal rounded-lg font-semibold transition-colors"
-              >
-                Reset filters
-              </button>
+                    Reset filters
+                  </button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
-          {hiddenCount > 0 && (
-            <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between console-panel rounded-xl p-5">
-              <p className="text-dune text-sm">
-                Showing {visibleCommands.length} of {filteredCommands.length}
-                {activeCategory !== "All" ? ` ${activeCategory.toLowerCase()}` : ""} commands.
-              </p>
-              <Link
-                href="/commands"
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 border border-line-strong hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors text-sm"
-              >
-                Open the full command rack
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* Quick tips */}
-        <div className="max-w-5xl mt-16">
-          <div className="console-panel rounded-2xl p-6 md:p-8">
-            <SubHeading className="console-label text-amber!">Engineer&apos;s notes</SubHeading>
-            <ul className="grid md:grid-cols-3 gap-6 mt-6" role="list">
-              {TIPS.map((tip) => (
-                <li key={tip.n} className="flex gap-4">
-                  <span className="font-mono text-sm text-amber" aria-hidden="true">{tip.n}</span>
-                  <div>
+          {/* Quick tips */}
+          <aside className="lg:col-span-4" aria-labelledby={tipsId}>
+            <div className="rounded-2xl border border-line bg-panel p-6 lg:sticky lg:top-28">
+              <SubHeading id={tipsId} className="font-display text-xl font-semibold text-cream">
+                Engineer&apos;s notes
+              </SubHeading>
+              <ul className="mt-6 grid gap-6" role="list">
+                {TIPS.map((tip) => (
+                  <li key={tip.title}>
                     <MinorHeading className="font-medium text-cream mb-1">{tip.title}</MinorHeading>
                     <p className="text-dune text-sm leading-relaxed">{tip.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

@@ -4,7 +4,7 @@
  * Marketing home page for the Bypass Discord Music Bot
  */
 
-import Commands from "@/components/landing/Commands";
+import CommandIndex from "@/components/landing/CommandIndex";
 import Comparison from "@/components/landing/Comparison";
 import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
@@ -91,7 +91,7 @@ export default function LandingPage() {
       <Features />
       <Comparison />
       <Pricing />
-      <Commands limit={24} />
+      <CommandIndex />
       <FAQ />
     </>
   );

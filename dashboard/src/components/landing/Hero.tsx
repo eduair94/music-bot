@@ -1,164 +1,84 @@
-import { TICKER_COMMANDS } from "@/data/commands";
-import { LANGUAGE_COUNT } from "@/lib/site";
+import NowPlayingMock from "@/components/landing/NowPlayingMock";
+import { COMMAND_COUNT, EFFECT_COUNT } from "@/data/commands";
 import Link from "next/link";
 import { FaDiscord } from "react-icons/fa";
 
-const STATS = [
-  { value: "10K+", label: "Servers" },
-  { value: String(LANGUAGE_COUNT), label: "Languages" },
-  { value: "99.9%", label: "Uptime" },
-];
-
-const QUEUE_PREVIEW = [
-  { n: "01", t: "Take On Me", a: "a-ha", d: "3:46" },
-  { n: "02", t: "Nightcall", a: "Kavinsky", d: "4:18" },
-  { n: "03", t: "Less I Know the Better", a: "Tame Impala", d: "3:36" },
+/** Product facts anyone can check — no audience or uptime claims. */
+const FACTS = [
+  { figure: "320kbps", rest: "audio", lead: "Up to" },
+  { figure: String(COMMAND_COUNT), rest: "slash commands" },
+  { figure: String(EFFECT_COUNT), rest: "audio effects" },
+  { figure: "Free", rest: "to add" },
 ];
 
 export default function Hero() {
   return (
     <section
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-24"
+      className="relative border-b border-line pt-32 pb-16 sm:pt-36 lg:pt-44 lg:pb-20"
       aria-labelledby="hero-title"
     >
-      {/* Atmosphere: dotted raster fading from top, amber glow low-left */}
-      <div
-        className="absolute inset-0 raster opacity-40 mask-[linear-gradient(to_bottom,black,transparent_70%)]"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute -bottom-40 -left-40 w-150 h-150 rounded-full bg-amber/10 blur-3xl"
-        aria-hidden="true"
-      />
+      <div className="shell grid gap-x-8 gap-y-16 lg:grid-cols-12 lg:items-center">
+        <div className="lg:col-span-6">
+          <h1
+            id="hero-title"
+            className="font-display font-bold text-[clamp(3rem,6.4vw,5.5rem)] leading-[0.95] tracking-[-0.035em]"
+          >
+            Sound that
+            <br />
+            fills the room.
+          </h1>
 
-      <div className="container mx-auto px-4 relative z-10 flex-1 flex items-center">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center w-full py-16">
-          {/* ── Left: editorial statement ── */}
-          <div className="lg:col-span-7">
-            <p className="rise rise-1 inline-flex items-center gap-3 px-3 py-1.5 border border-line rounded-full mb-8 bg-panel">
-              <span className="led" aria-hidden="true" />
-              <span className="console-label text-dune!">On air · 10,000+ servers</span>
-            </p>
+          <p className="rise rise-2 mt-8 max-w-[34rem] text-lg md:text-xl text-dune leading-relaxed text-pretty">
+            Bypass is the studio-grade music bot for Discord. Up to 320kbps
+            audio, instant queueing, playlists from YouTube and Spotify,
+            stackable audio filters — and a web dashboard your whole server
+            can drive.
+          </p>
 
-            <h1
-              id="hero-title"
-              className="rise rise-2 font-display font-bold leading-[0.95] tracking-tight text-[clamp(3rem,8vw,6rem)] text-balance"
+          <div className="rise rise-3 mt-10 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/invite"
+              prefetch={false}
+              className="inline-flex h-13 items-center justify-center gap-3 rounded-lg bg-amber px-7 font-semibold text-coal transition-colors hover:bg-amber-hot"
             >
-              Sound that
-              <br />
-              fills the <span className="text-amber">room.</span>
-            </h1>
-
-            <p className="rise rise-3 text-lg md:text-xl text-dune max-w-xl mt-8 leading-relaxed">
-              Bypass is the studio-grade music bot for Discord. Up to 320kbps
-              audio, instant queueing, playlists from YouTube and Spotify,
-              stackable audio filters — and a web dashboard your whole server
-              can drive.
-            </p>
-
-            <div className="rise rise-4 flex flex-col sm:flex-row gap-4 mt-10">
-              <Link
-                href="/invite"
-                prefetch={false}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-amber hover:bg-amber-hot text-coal font-semibold rounded-lg transition-[background-color,transform] duration-200 hover:-translate-y-0.5"
-              >
-                <FaDiscord className="w-5 h-5" aria-hidden="true" />
-                Add to Discord
-                <span className="font-mono text-xs px-2 py-0.5 bg-coal/15 rounded">FREE</span>
-              </Link>
-
-              <a
-                href="#features"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 border border-line-strong hover:border-amber/60 text-cream font-semibold rounded-lg transition-colors"
-              >
-                Explore features
-              </a>
-            </div>
-
-            {/* Stat strip — mono readouts over ruler */}
-            <div className="rise rise-5 mt-14 max-w-xl">
-              <div className="ruler-x mb-4" aria-hidden="true" />
-              <dl className="grid grid-cols-3 gap-6">
-                {STATS.map((stat) => (
-                  <div key={stat.label} className="flex flex-col">
-                    <dt className="console-label order-2 mt-1.5">{stat.label}</dt>
-                    <dd className="stat-readout order-1 text-3xl md:text-4xl font-bold text-cream m-0">
-                      {stat.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+              <FaDiscord className="h-5 w-5" aria-hidden="true" />
+              Add to Discord
+            </Link>
+            <a
+              href="#features"
+              className="inline-flex h-13 items-center justify-center rounded-lg border border-line-strong px-7 font-semibold text-cream transition-colors hover:border-amber/60"
+            >
+              Explore features
+            </a>
           </div>
 
-          {/* ── Right: console deck (illustrative mock of the now-playing embed) ── */}
-          <div className="lg:col-span-5 rise rise-4" aria-hidden="true">
-            <div className="console-panel rounded-2xl p-6 lg:rotate-1 lg:translate-y-2">
-              <div className="flex items-center justify-between pb-4 border-b border-line">
-                <span className="console-label">Now playing</span>
-                <div className="flex items-center gap-2">
-                  <span className="led led--amber" />
-                  <span className="console-label text-amber!">320 kbps</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 py-5">
-                <div className="w-14 h-14 rounded-lg bg-panel-raised border border-line flex items-center justify-center">
-                  <div className="eq">
-                    <span /><span /><span /><span /><span />
-                  </div>
-                </div>
-                <div className="min-w-0">
-                  <div className="font-semibold text-cream truncate">Midnight City</div>
-                  <div className="text-sm text-dust truncate">M83 · requested by @maya</div>
-                </div>
-                <div className="ml-auto font-mono text-sm text-dune">3:47</div>
-              </div>
-
-              <div className="h-1 rounded-full bg-panel-raised overflow-hidden">
-                <div className="h-full w-2/3 bg-amber rounded-full" />
-              </div>
-              <div className="flex justify-between font-mono text-xs text-dust mt-2">
-                <span>2:31</span>
-                <span>-1:16</span>
-              </div>
-
-              <div className="mt-6 space-y-2.5">
-                {QUEUE_PREVIEW.map((q) => (
-                  <div
-                    key={q.n}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-panel-raised/60 border border-line/60"
-                  >
-                    <span className="font-mono text-xs text-dust">{q.n}</span>
-                    <span className="text-sm text-cream truncate">{q.t}</span>
-                    <span className="text-xs text-dust truncate hidden sm:inline">{q.a}</span>
-                    <span className="ml-auto font-mono text-xs text-dune">{q.d}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="ruler-x mt-6" />
-              <div className="flex items-center justify-between mt-3">
-                <span className="console-label">Queue · 14 tracks</span>
-                <span className="console-label">48:12 total</span>
-              </div>
-            </div>
-          </div>
+          {/* Two by two until xl: at lg the half-width column is too narrow for one line. */}
+          <ul
+            className="rise rise-4 mt-10 grid grid-cols-2 gap-y-2 text-sm text-dune sm:flex sm:flex-wrap sm:gap-x-7 lg:grid xl:flex"
+            role="list"
+            aria-label="At a glance"
+          >
+            {FACTS.map((fact) => (
+              <li key={fact.rest}>
+                {fact.lead && `${fact.lead} `}
+                {/* Numbers read as data, in mono; words stay in the text face */}
+                <span className={/^\d/.test(fact.figure) ? "font-mono tabular-nums text-cream" : "font-medium text-cream"}>
+                  {fact.figure}
+                </span>{" "}
+                {fact.rest}
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
 
-      {/* ── Command tape ── */}
-      <div
-        className="relative z-10 border-y border-line bg-panel py-3 overflow-hidden"
-        aria-hidden="true"
-      >
-        <div className="tape flex w-max gap-8 px-4">
-          {[...TICKER_COMMANDS, ...TICKER_COMMANDS].map((cmd, i) => (
-            <span key={i} className="font-mono text-sm text-dust whitespace-nowrap">
-              <span className="text-amber-deep">$</span> {cmd}
-            </span>
-          ))}
-        </div>
+        <figure className="rise rise-5 lg:col-span-6">
+          <NowPlayingMock />
+          <figcaption className="mt-4 max-w-[32rem] text-sm text-dust leading-relaxed text-pretty">
+            <span className="text-cream">Buttons, not commands.</span> Each{" "}
+            <code className="font-mono text-dune">/nowplaying</code> reply carries seek,
+            pause, skip and stop buttons that anyone in the voice channel can use.
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

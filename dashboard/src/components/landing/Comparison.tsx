@@ -1,3 +1,5 @@
+import SectionHeader from "@/components/landing/SectionHeader";
+
 interface BotRow {
   name: string;
   audio: string;
@@ -40,118 +42,92 @@ const bots: BotRow[] = [
   },
 ];
 
-function PricingChip({ label, highlight }: { label: string; highlight?: boolean }) {
-  return (
-    <span
-      className={`inline-block px-3 py-1 rounded-md text-sm font-medium ${
-        highlight ? "bg-amber text-coal" : "bg-panel-raised text-dune border border-line"
-      }`}
-    >
-      {label}
-    </span>
-  );
-}
+// Sized to the longest entry in each column, so every row stays on one line from 1280px up.
+const COLUMNS = [
+  { label: "Bot", width: "w-[13.5%]" },
+  { label: "Audio", width: "w-[20%]" },
+  { label: "Control surface", width: "w-[35.5%]" },
+  { label: "Pricing", width: "w-[31%]" },
+];
 
 export default function Comparison() {
   return (
     <section
       id="comparison"
-      className="py-28 bg-panel/40 border-y border-line"
+      className="py-24 lg:py-32 bg-panel/40 border-y border-line"
       aria-labelledby="comparison-title"
     >
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mb-16">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="console-label text-amber!">A/B test</span>
-            <span className="flex-1 h-px bg-line" aria-hidden="true" />
-            <span className="console-label">{bots.length} contenders</span>
-          </div>
-          <h2 id="comparison-title" className="font-display text-4xl md:text-6xl font-bold tracking-tight text-balance">
-            Hear the <span className="text-amber">difference.</span>
-          </h2>
-          <p className="text-lg text-dune mt-6 max-w-xl">
-            How Bypass stacks up against the music bots your server has
-            probably already tried.
-          </p>
-        </div>
+      <div className="shell">
+        <SectionHeader
+          id="comparison-title"
+          title="Hear the difference."
+          lede="How Bypass stacks up against the music bots your server has probably already tried."
+        />
 
         {/* Desktop table */}
-        <div className="hidden lg:block console-panel rounded-2xl overflow-hidden">
-          <table className="w-full">
+        <div className="hidden lg:block overflow-hidden rounded-2xl border border-line bg-panel">
+          <table className="w-full table-fixed text-left">
             <caption className="sr-only">
               Comparison of Discord music bots by audio quality, control surface, and pricing
             </caption>
+            <colgroup>
+              {COLUMNS.map((column) => (
+                <col key={column.label} className={column.width} />
+              ))}
+            </colgroup>
             <thead>
-              <tr className="border-b border-line bg-panel">
-                <th scope="col" className="text-left p-5 console-label">Bot</th>
-                <th scope="col" className="text-left p-5 console-label">Audio</th>
-                <th scope="col" className="text-left p-5 console-label">Control surface</th>
-                <th scope="col" className="text-left p-5 console-label">Pricing</th>
+              <tr className="border-b border-line">
+                {COLUMNS.map((column) => (
+                  <th key={column.label} scope="col" className="px-6 py-4 console-label font-normal">
+                    {column.label}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {bots.map((bot) => (
                 <tr
                   key={bot.name}
-                  className={`border-b border-line/60 last:border-0 transition-colors ${
-                    bot.highlight ? "bg-amber/6 hover:bg-amber/10" : "hover:bg-panel-raised/50"
-                  }`}
+                  className={`border-b border-line last:border-0 ${bot.highlight ? "bg-amber/[0.07]" : ""}`}
                 >
-                  <th scope="row" className="p-5 text-left font-normal">
-                    <div className="flex items-center gap-3">
-                      <span className={`font-display font-bold text-lg ${bot.highlight ? "text-amber" : "text-cream"}`}>
-                        {bot.name}
-                      </span>
-                      {bot.highlight && (
-                        <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber text-coal font-bold">
-                          THIS ONE
-                        </span>
-                      )}
-                    </div>
+                  <th
+                    scope="row"
+                    className={`px-6 py-5 align-baseline whitespace-nowrap font-display text-lg font-semibold ${bot.highlight ? "text-amber" : "text-cream"}`}
+                  >
+                    {bot.name}
                   </th>
-                  <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.audio}</td>
-                  <td className={`p-5 ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>{bot.dashboard}</td>
-                  <td className="p-5">
-                    <PricingChip label={bot.pricing} highlight={bot.highlight} />
-                  </td>
+                  {[bot.audio, bot.dashboard, bot.pricing].map((cell, i) => (
+                    <td key={i} className={`px-6 py-5 align-baseline ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>
+                      {cell}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Mobile cards */}
-        <ul className="lg:hidden grid gap-4" role="list">
+        {/* Mobile: one block per bot, separated by rules */}
+        <ul className="lg:hidden" role="list">
           {bots.map((bot) => (
             <li
               key={bot.name}
-              className={`console-panel rounded-xl p-6 ${bot.highlight ? "border-amber/60" : ""}`}
+              className={`border-t border-line last:border-b py-6 ${bot.highlight ? "-mx-[var(--gutter)] px-[var(--gutter)] bg-amber/[0.07]" : ""}`}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <h3 className={`font-display text-xl font-bold ${bot.highlight ? "text-amber" : "text-cream"}`}>
-                  {bot.name}
-                </h3>
-                {bot.highlight && (
-                  <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest rounded bg-amber text-coal font-bold">
-                    THIS ONE
-                  </span>
-                )}
-              </div>
-              <dl className="space-y-3">
-                <div>
-                  <dt className="console-label mb-1">Audio</dt>
-                  <dd className={bot.highlight ? "text-cream" : "text-dune"}>{bot.audio}</dd>
-                </div>
-                <div>
-                  <dt className="console-label mb-1">Control surface</dt>
-                  <dd className={bot.highlight ? "text-cream" : "text-dune"}>{bot.dashboard}</dd>
-                </div>
-                <div>
-                  <dt className="console-label mb-1">Pricing</dt>
-                  <dd>
-                    <PricingChip label={bot.pricing} highlight={bot.highlight} />
-                  </dd>
-                </div>
+              <h3 className={`font-display text-xl font-semibold ${bot.highlight ? "text-amber" : "text-cream"}`}>
+                {bot.name}
+              </h3>
+              <dl className="mt-4 grid gap-3 sm:grid-cols-3 sm:gap-6">
+                {[
+                  ["Audio", bot.audio],
+                  ["Control surface", bot.dashboard],
+                  ["Pricing", bot.pricing],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <dt className="console-label">{label}</dt>
+                    <dd className={`mt-1 ${bot.highlight ? "text-cream" : "text-dune"}`}>{value}</dd>
+                  </div>
+                ))}
               </dl>
             </li>
           ))}

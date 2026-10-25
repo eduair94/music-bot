@@ -4,6 +4,7 @@ import BrandMark from "@/components/common/BrandMark";
 import { PATREON_URL } from "@/lib/site";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { FaDiscord, FaPatreon } from "react-icons/fa";
 
@@ -18,6 +19,7 @@ const NAV_LINKS = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
   const menuId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -29,19 +31,29 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Lock body scroll, move focus into the drawer, close on Escape.
+  // Lock body scroll, keep focus out of the page behind the drawer, and close
+  // on Escape or once the desktop nav takes over at lg.
   useEffect(() => {
     if (!isMenuOpen) return;
     const toggle = toggleRef.current;
+    const behind = [document.getElementById("main"), document.querySelector("footer")];
     document.body.style.overflow = "hidden";
+    behind.forEach((el) => el?.setAttribute("inert", ""));
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsMenuOpen(false);
     };
+    const desktop = window.matchMedia("(min-width: 64rem)");
+    const onDesktop = (e: MediaQueryListEvent) => {
+      if (e.matches) setIsMenuOpen(false);
+    };
     window.addEventListener("keydown", onKey);
+    desktop.addEventListener("change", onDesktop);
     return () => {
       document.body.style.overflow = "";
+      behind.forEach((el) => el?.removeAttribute("inert"));
       window.removeEventListener("keydown", onKey);
+      desktop.removeEventListener("change", onDesktop);
       toggle?.focus();
     };
   }, [isMenuOpen]);
@@ -57,22 +69,27 @@ export default function Header() {
             : "bg-transparent border-transparent"
         }`}
       >
-        <div className="container mx-auto px-4">
-          <nav className="flex items-center justify-between h-18" aria-label="Primary">
-            <Link href="/" className="flex items-center gap-3 rounded-md" aria-label="Bypass home">
+        <div className="shell">
+          {/* Equal outer columns keep the link group on the page's true centre. */}
+          <nav
+            className="grid grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center gap-6 h-18"
+            aria-label="Primary"
+          >
+            <Link href="/" className="justify-self-start flex items-center gap-3 rounded-md" aria-label="Bypass home">
               <BrandMark size={36} />
               <span className="font-display text-xl font-bold tracking-tight">
                 Bypass
               </span>
             </Link>
 
-            <ul className="hidden md:flex items-center gap-1">
+            <ul className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     prefetch={link.prefetch}
-                    className="inline-flex items-center px-4 py-2.5 text-sm text-dune hover:text-cream transition-colors font-medium rounded-md"
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="inline-flex items-center px-3 py-2.5 text-sm text-dune hover:text-cream aria-[current=page]:text-cream transition-colors font-medium rounded-md"
                   >
                     {link.label}
                   </Link>
@@ -80,49 +97,50 @@ export default function Header() {
               ))}
             </ul>
 
-            <div className="hidden md:flex items-center gap-3">
+            <div className="justify-self-end flex items-center gap-3">
+              {/* Icon-only at lg so the side columns stay narrow enough to keep the nav centred */}
               <a
                 href={PATREON_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-dune hover:text-cream border border-line-strong hover:border-amber/60 rounded-lg transition-colors font-medium"
+                aria-label="Patreon (opens in a new tab)"
+                className="hidden lg:inline-flex h-10 w-10 xl:w-auto xl:px-4 items-center justify-center gap-2 text-sm text-dune hover:text-cream border border-line-strong hover:border-amber/60 rounded-lg transition-colors font-medium"
               >
                 <FaPatreon className="w-4 h-4" aria-hidden="true" />
-                Patreon
-                <span className="sr-only"> (opens in a new tab)</span>
+                <span className="hidden xl:inline">Patreon</span>
               </a>
               <Link
                 href="/invite"
                 prefetch={false}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-amber hover:bg-amber-hot text-coal rounded-lg transition-colors font-semibold"
+                className="hidden sm:inline-flex h-10 items-center gap-2 px-5 text-sm bg-amber hover:bg-amber-hot text-coal rounded-lg transition-colors font-semibold"
               >
                 <FaDiscord className="w-4 h-4" aria-hidden="true" />
                 Add to Discord
               </Link>
-            </div>
 
-            <button
-              ref={toggleRef}
-              type="button"
-              onClick={() => setIsMenuOpen((open) => !open)}
-              className="md:hidden -mr-2.5 p-2.5 text-dune hover:text-cream z-50 rounded-md"
-              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isMenuOpen}
-              aria-controls={menuId}
-            >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" aria-hidden="true" />
-              ) : (
-                <Menu className="w-6 h-6" aria-hidden="true" />
-              )}
-            </button>
+              <button
+                ref={toggleRef}
+                type="button"
+                onClick={() => setIsMenuOpen((open) => !open)}
+                className="lg:hidden -mr-2.5 p-2.5 text-dune hover:text-cream z-50 rounded-md"
+                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={isMenuOpen}
+                aria-controls={menuId}
+              >
+                {isMenuOpen ? (
+                  <X className="w-6 h-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="w-6 h-6" aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </nav>
         </div>
       </header>
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/70 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300 motion-reduce:transition-none ${
           isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={closeMenu}
@@ -136,7 +154,7 @@ export default function Header() {
         aria-modal="true"
         aria-label="Site menu"
         inert={!isMenuOpen}
-        className={`fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-panel border-r border-line z-50 md:hidden transform transition-transform duration-300 ease-out ${
+        className={`fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-panel border-r border-line z-50 lg:hidden transform transition-transform duration-300 ease-out motion-reduce:transition-none ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -170,7 +188,8 @@ export default function Header() {
                     href={link.href}
                     prefetch={link.prefetch}
                     onClick={closeMenu}
-                    className="flex items-center min-h-11 px-4 py-3 text-dune hover:text-cream hover:bg-panel-raised rounded-lg transition-colors font-medium"
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="flex items-center min-h-11 px-4 py-3 text-dune hover:text-cream aria-[current=page]:text-cream hover:bg-panel-raised rounded-lg transition-colors font-medium"
                   >
                     {link.label}
                   </Link>
