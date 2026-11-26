@@ -9,11 +9,19 @@ interface UsePlaybackOptions {
   enabled?: boolean;
 }
 
+/** What the bot answered: `result` is its human message; `queued` means it hadn't answered yet. */
+export interface CommandOutcome {
+  success: boolean;
+  error?: string;
+  result?: string;
+  queued?: boolean;
+}
+
 interface UsePlaybackReturn {
   state: PlaybackState | null;
   loading: boolean;
   error: string | null;
-  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<{ success: boolean; error?: string }>;
+  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<CommandOutcome>;
   sendingCommand: boolean;
   refresh: () => Promise<void>;
 }
@@ -69,7 +77,7 @@ export function usePlayback({
   const sendCommand = useCallback(async (
     command: BotCommandType, 
     params?: BotCommandParams
-  ): Promise<{ success: boolean; error?: string }> => {
+  ): Promise<CommandOutcome> => {
     if (!guildId) return { success: false, error: "No guild ID" };
     
     setSendingCommand(true);
@@ -89,7 +97,11 @@ export function usePlayback({
       // Refresh state after command
       setTimeout(() => fetchState(), 500);
       
-      return { success: true };
+      return {
+        success: true,
+        result: typeof data.result === "string" ? data.result : undefined,
+        queued: data.message === "Command queued",
+      };
     } catch (err) {
       return { 
         success: false, 

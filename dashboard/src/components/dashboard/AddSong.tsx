@@ -27,7 +27,7 @@ import type { DiscordChannel, BotCommandType, BotCommandParams } from "@/types/d
 interface AddSongProps {
   voiceChannels: DiscordChannel[];
   currentVoiceChannelId: string | null;
-  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<{ success: boolean; error?: string }>;
+  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<{ success: boolean; error?: string; result?: string; queued?: boolean }>;
   sendingCommand: boolean;
 }
 
@@ -58,7 +58,8 @@ export function AddSong({
       query: query.trim(),
     };
 
-    // Include voice channel if not already connected
+    // The bot plays in your own voice channel when you're in one; otherwise in
+    // the channel picked here (or the one it's already playing in).
     if (!currentVoiceChannelId && selectedChannel) {
       params.voiceChannelId = selectedChannel;
     }
@@ -66,7 +67,7 @@ export function AddSong({
     const result = await sendCommand("play", params);
 
     if (result.success) {
-      setSuccess("Song added to queue!");
+      setSuccess(result.result || (result.queued ? "Sent to the bot. It's still working on it." : "Song added to queue!"));
       setQuery("");
       setTimeout(() => setSuccess(null), 3000);
     } else {
@@ -94,11 +95,11 @@ export function AddSong({
           {/* Voice Channel Selection (only show if not connected) */}
           {!currentVoiceChannelId && voiceChannels.length > 0 && (
             <FormControl fullWidth size="small">
-              <InputLabel>Voice Channel</InputLabel>
+              <InputLabel>Voice channel (if you&apos;re not in one)</InputLabel>
               <Select
                 value={selectedChannel}
                 onChange={(e) => setSelectedChannel(e.target.value)}
-                label="Voice Channel"
+                label="Voice channel (if you're not in one)"
                 startAdornment={
                   <InputAdornment position="start">
                     <MicIcon fontSize="small" />
@@ -136,7 +137,7 @@ export function AddSong({
             variant="contained"
             fullWidth
             onClick={handlePlay}
-            disabled={sendingCommand || !query.trim() || (!currentVoiceChannelId && !selectedChannel)}
+            disabled={sendingCommand || !query.trim()}
             startIcon={sendingCommand ? <CircularProgress size={20} color="inherit" /> : <PlayArrowIcon />}
             sx={{ py: 1.5 }}
           >

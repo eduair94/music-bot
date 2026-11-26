@@ -1,11 +1,13 @@
 import { SearchQueryType } from "discord-player";
 import {
   ContainerBuilder,
+  Guild,
   GuildMember,
   MessageFlags,
   PermissionFlagsBits,
   RepliableInteraction,
-  TextChannel
+  TextChannel,
+  VoiceBasedChannel
 } from "discord.js";
 import { DiscordPlayerService, PlayError, PlayResult } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
@@ -24,6 +26,42 @@ export interface PlayRequest {
   /** Reply privately (used by context menus so the channel only sees the panel). */
   ephemeral?: boolean;
 }
+
+/**
+ * Why the play pipeline refused a request before (or instead of) queueing
+ * anything. Failures from the player itself (too long, duplicate, queue
+ * full, extractor errors) stay `PlayError`s from services/discordPlayer.ts.
+ */
+export type PlayRejectCode =
+  /** The requester is not in a voice channel (and none was chosen). */
+  | "notInVoice"
+  /** Nothing to search for. */
+  | "emptyQuery"
+  /** The player is still starting up. */
+  | "initializing"
+  /** The bot is playing for listeners in another channel. detail: channelId, channelName */
+  | "botBusy"
+  /** The bot lacks View/Connect/Speak in the target channel. detail: channelId, channelName */
+  | "cantJoin"
+  /** The server restricts music to other voice channels. */
+  | "channelNotAllowed"
+  /** The player found nothing to queue. */
+  | "noResults"
+  /** The requester is on the server's blacklist. */
+  | "blacklisted"
+  /** An admin turned the command off. detail: name */
+  | "commandDisabled";
+
+export class PlayRejection extends Error {
+  constructor(public readonly code: PlayRejectCode, public readonly detail: Record<string, string> = {}) {
+    super(code);
+    this.name = "PlayRejection";
+  }
+}
+
+/** How a channel is named in a refusal: a mention in Discord, a plain name elsewhere. */
+export type ChannelLabel = (channelId: string, channelName: string) => string;
+const mentionChannel: ChannelLabel = (channelId) => `<#${channelId}>`;
 
 /** Localized message for a play failure. */
 export function playErrorMessage(error: unknown, query: string): string {
@@ -48,6 +86,54 @@ export function playErrorMessage(error: unknown, query: string): string {
   if (message.includes("private")) return `🔒 ${i18n.__("play.private")}`;
   if (message.includes("unavailable")) return `🚫 ${i18n.__("play.unavailable")}`;
   return `⚠️ ${i18n.__mf("play.genericError", { error: safeText((error as Error)?.message || "unknown error", 150) })}`;
+}
+
+/** Localized message for a refusal from `enqueue` or `playGate`. */
+export function playRejectionMessage(rejection: PlayRejection, query: string, channel: ChannelLabel = mentionChannel): string {
+  const { code, detail } = rejection;
+  switch (code) {
+    case "notInVoice":
+      return `🔇 ${i18n.__("play.errorNotChannel")}`;
+    case "emptyQuery":
+      return i18n.__mf("play.usageReply", { prefix: "/" });
+    case "initializing":
+      return `⏳ ${i18n.__("play.initializing")}`;
+    case "botBusy":
+      return `🎧 ${i18n.__mf("play.botNotInChannel", { channel: channel(detail.channelId, detail.channelName) })}`;
+    case "cantJoin":
+      return `🔒 ${i18n.__mf("play.cantJoin", { channel: channel(detail.channelId, detail.channelName) })}`;
+    case "channelNotAllowed":
+      return `🚫 ${i18n.__("play.notAllowedChannel")}`;
+    case "noResults":
+      return playErrorMessage(new PlayError("noResults"), query);
+    case "blacklisted":
+      return `❌ ${i18n.__("router.blacklisted")}`;
+    case "commandDisabled":
+      return `🚫 ${i18n.__mf("router.commandDisabled", { name: detail.name || "play" })}`;
+  }
+}
+
+/**
+ * Refusals about the requester or the voice channel rather than the song:
+ * when queueing several songs, the rest would fail the same way.
+ */
+export function isRequesterRejection(error: unknown): error is PlayRejection {
+  return error instanceof PlayRejection && error.code !== "noResults" && error.code !== "emptyQuery";
+}
+
+/**
+ * The server rules Bot.ts applies to slash commands (blacklist, command
+ * turned off for non-managers), for play requests that arrive another way:
+ * the dashboard and persistent buttons. Returns the refusal, or null.
+ */
+export async function playGate(guildId: string, member: GuildMember, commandName = "play"): Promise<PlayRejection | null> {
+  const settings = await GuildSettingsService.getInstance().getSettings(guildId);
+  if (settings.blacklistedUsers?.includes(member.id)) return new PlayRejection("blacklisted");
+  const isManager = member.permissions.has(PermissionFlagsBits.ManageGuild);
+  if (!isManager && settings.disabledCommands?.includes(commandName)) {
+    return new PlayRejection("commandDisabled", { name: commandName });
+  }
+  return null;
 }
 
 async function send(interaction: RepliableInteraction, payload: Record<string, unknown>, ephemeral: boolean) {
@@ -90,11 +176,111 @@ export function buildPlayReply(result: PlayResult, query: string, qualityBadge: 
   return container;
 }
 
+export interface EnqueueRequest {
+  guild: Guild;
+  /** Who asked: their quality setting and premium perks apply, and they show as the requester. */
+  member: GuildMember;
+  /** Where to play; null is refused with `notInVoice`. */
+  voiceChannel: VoiceBasedChannel | null;
+  /** Where the player panel goes if this starts a new session (null: no panel). */
+  textChannel: TextChannel | null;
+  query: string;
+  next?: boolean;
+  searchEngine?: SearchQueryType;
+}
+
+export interface EnqueueHooks {
+  /**
+   * Called once the instant checks pass (voice channel, query, player ready,
+   * bot not busy elsewhere, voice permissions) and before anything slow.
+   * The slash flow defers its reply here.
+   */
+  onAccepted?: () => unknown;
+}
+
+export interface EnqueueResult extends PlayResult {
+  /** Quality line for the confirmation; null at standard quality. */
+  qualityBadge: string | null;
+}
+
+/**
+ * The play pipeline without an interaction: voice and permission checks,
+ * server limits, the requester's quality and premium perks, then the player.
+ * Throws a `PlayRejection` for refusals and a `PlayError` (or any other
+ * error) from the player; `playRejectionMessage` / `playErrorMessage` turn
+ * them into text.
+ */
+export async function enqueue(request: EnqueueRequest, hooks: EnqueueHooks = {}): Promise<EnqueueResult> {
+  const { guild, member, voiceChannel, next, searchEngine } = request;
+  const query = request.query.trim();
+  const playerService = DiscordPlayerService.getInstance();
+
+  if (!voiceChannel) throw new PlayRejection("notInVoice");
+  if (!query) throw new PlayRejection("emptyQuery");
+  if (!playerService.isInitialized()) throw new PlayRejection("initializing");
+
+  // Already playing for people in another channel: don't hijack it.
+  const existing = playerService.getQueue(guild.id);
+  const botChannel = guild.members.me?.voice.channel;
+  if (botChannel && botChannel.id !== voiceChannel.id && existing && !existing.deleted && existing.currentTrack) {
+    const listeners = botChannel.members.filter((m) => !m.user.bot).size;
+    if (listeners > 0) throw new PlayRejection("botBusy", { channelId: botChannel.id, channelName: botChannel.name });
+  }
+
+  const me = guild.members.me;
+  const perms = me ? voiceChannel.permissionsFor(me) : null;
+  if (!perms?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect, PermissionFlagsBits.Speak])) {
+    throw new PlayRejection("cantJoin", { channelId: voiceChannel.id, channelName: voiceChannel.name });
+  }
+
+  await hooks.onAccepted?.();
+
+  const settingsService = GuildSettingsService.getInstance();
+  if (!(await settingsService.isVoiceChannelAllowed(guild.id, voiceChannel.id))) {
+    throw new PlayRejection("channelNotAllowed");
+  }
+
+  const settings = await settingsService.getSettings(guild.id);
+  const live = existing && !existing.deleted ? existing : null;
+  if (live && live.tracks.size >= settings.maxQueueSize) {
+    throw new PlayError("queueFull", { max: settings.maxQueueSize });
+  }
+
+  // Idle bot in another (empty) channel: follow the requester.
+  if (live?.channel && live.channel.id !== voiceChannel.id) {
+    try {
+      await live.connect(voiceChannel);
+    } catch {
+      try {
+        live.delete();
+      } catch {
+        /* already gone */
+      }
+    }
+  }
+
+  const [{ quality }, longer] = await Promise.all([
+    getPlaybackSettings(member.id, guild.id),
+    hasPremiumFeature(member.id, "longer_songs").catch(() => false)
+  ]);
+  const playlistLimit = Math.max(1, settings.maxQueueSize - (live?.tracks.size ?? 0));
+
+  // play() only uses the text channel as a new queue's panel channel.
+  const result = await playerService.play(voiceChannel, query, request.textChannel as TextChannel, quality.bitrate, playlistLimit, {
+    requestedBy: member.user,
+    next,
+    searchEngine,
+    ignoreDurationLimit: longer
+  });
+  if (!result) throw new PlayRejection("noResults");
+
+  return { ...result, qualityBadge: quality.bitrate > 128 ? quality.qualityBadge : null };
+}
+
 /**
  * The one play pipeline behind /play, /playnext, search picks and the
- * "Play in voice channel" context menu: voice/permission checks, server
- * limits, premium quality, then a compact confirmation. The player panel
- * (services/playerPanel.ts) shows the controls.
+ * "Play in voice channel" context menu: `enqueue` plus the replies. The
+ * player panel (services/playerPanel.ts) shows the controls.
  */
 export async function runPlay(request: PlayRequest): Promise<PlayResult | null> {
   const { interaction, next, searchEngine } = request;
@@ -102,97 +288,48 @@ export async function runPlay(request: PlayRequest): Promise<PlayResult | null> 
   const query = request.query.trim();
   const guild = interaction.guild;
   const member = interaction.member as GuildMember;
-  const voiceChannel = member?.voice?.channel;
-  const playerService = DiscordPlayerService.getInstance();
-
-  if (!voiceChannel) {
-    await send(interaction, { content: `🔇 ${i18n.__("play.errorNotChannel")}` }, true);
-    return null;
-  }
-  if (!query) {
-    await send(interaction, { content: i18n.__mf("play.usageReply", { prefix: "/" }) }, true);
-    return null;
-  }
-  if (!playerService.isInitialized()) {
-    await send(interaction, { content: `⏳ ${i18n.__("play.initializing")}` }, true);
-    return null;
-  }
-
-  // Already playing for people in another channel: don't hijack it.
-  const existing = playerService.getQueue(guild.id);
-  const botChannel = guild.members.me?.voice.channel;
-  if (botChannel && botChannel.id !== voiceChannel.id && existing && !existing.deleted && existing.currentTrack) {
-    const listeners = botChannel.members.filter((m) => !m.user.bot).size;
-    if (listeners > 0) {
-      await send(interaction, { content: `🎧 ${i18n.__mf("play.botNotInChannel", { channel: `<#${botChannel.id}>` })}` }, true);
-      return null;
-    }
-  }
-
-  const me = guild.members.me;
-  const perms = me ? voiceChannel.permissionsFor(me) : null;
-  if (!perms?.has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect, PermissionFlagsBits.Speak])) {
-    await send(interaction, { content: `🔒 ${i18n.__mf("play.cantJoin", { channel: `<#${voiceChannel.id}>` })}` }, true);
-    return null;
-  }
-
-  if (!interaction.deferred && !interaction.replied) {
-    await interaction.deferReply(ephemeral ? { flags: MessageFlags.Ephemeral } : {}).catch(console.error);
-  }
+  let accepted = false;
 
   try {
-    const settingsService = GuildSettingsService.getInstance();
-    if (!(await settingsService.isVoiceChannelAllowed(guild.id, voiceChannel.id))) {
-      await send(interaction, { content: `🚫 ${i18n.__("play.notAllowedChannel")}` }, ephemeral);
-      return null;
-    }
-
-    const settings = await settingsService.getSettings(guild.id);
-    const live = existing && !existing.deleted ? existing : null;
-    if (live && live.tracks.size >= settings.maxQueueSize) {
-      throw new PlayError("queueFull", { max: settings.maxQueueSize });
-    }
-
-    // Idle bot in another (empty) channel: follow the user.
-    if (live?.channel && live.channel.id !== voiceChannel.id) {
-      try {
-        await live.connect(voiceChannel);
-      } catch {
-        try {
-          live.delete();
-        } catch {
-          /* already gone */
+    const result = await enqueue(
+      {
+        guild,
+        member,
+        voiceChannel: member?.voice?.channel ?? null,
+        textChannel: (interaction.channel ?? guild.systemChannel) as TextChannel | null,
+        query,
+        next,
+        searchEngine
+      },
+      {
+        onAccepted: async () => {
+          accepted = true;
+          if (!interaction.deferred && !interaction.replied) {
+            await interaction.deferReply(ephemeral ? { flags: MessageFlags.Ephemeral } : {}).catch(console.error);
+          }
         }
       }
-    }
+    );
 
-    const [{ quality }, longer] = await Promise.all([
-      getPlaybackSettings(interaction.user.id, guild.id),
-      hasPremiumFeature(interaction.user.id, "longer_songs").catch(() => false)
-    ]);
-    const playlistLimit = Math.max(1, settings.maxQueueSize - (live?.tracks.size ?? 0));
-
-    const textChannel = (interaction.channel ?? guild.systemChannel) as TextChannel;
-    const result = await playerService.play(voiceChannel, query, textChannel, quality.bitrate, playlistLimit, {
-      requestedBy: interaction.user,
-      next,
-      searchEngine,
-      ignoreDurationLimit: longer
-    });
-
-    if (!result) {
-      await send(interaction, { content: playErrorMessage(new PlayError("noResults"), query) }, ephemeral);
-      return null;
-    }
-
-    const badge = quality.bitrate > 128 ? quality.qualityBadge : null;
     await send(
       interaction,
-      { components: [buildPlayReply(result, query, badge)], flags: V2, allowedMentions: { parse: [] } },
+      { components: [buildPlayReply(result, query, result.qualityBadge)], flags: V2, allowedMentions: { parse: [] } },
       ephemeral
     );
     return result;
   } catch (error) {
+    // Instant refusals are always private and come before the reply is deferred.
+    if (!accepted) {
+      if (error instanceof PlayRejection) {
+        await send(interaction, { content: playRejectionMessage(error, query) }, true);
+        return null;
+      }
+      throw error;
+    }
+    if (error instanceof PlayRejection) {
+      await send(interaction, { content: playRejectionMessage(error, query) }, ephemeral);
+      return null;
+    }
     if (!(error instanceof PlayError)) console.error("[play] ❌ Error:", error);
     await send(interaction, { content: playErrorMessage(error, query), components: [] }, ephemeral);
     return null;
