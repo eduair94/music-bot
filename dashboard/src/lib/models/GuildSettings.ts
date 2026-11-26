@@ -105,7 +105,7 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
     // Customization
     language: { 
       type: String, 
-      default: "en" 
+      default: "auto" 
     },
     embedColor: { 
       type: String, 

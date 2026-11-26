@@ -2,9 +2,8 @@
  * Public slash-command catalogue shown on the landing site.
  * Every entry is a path the bot registers: structs/Bot.ts loads the top-level
  * files in commands/ (commands_disabled/ is not loaded). A command that is only
- * a group of subcommands is listed once per subcommand. A few registered
- * commands are left out because they do not do what they say yet
- * (e.g. /autoplay, /247, /importplaylist).
+ * a group of subcommands is listed once per subcommand. Admin-only
+ * tools that only toggle other commands (/commanddisable etc.) are left out.
  */
 
 export type CommandCategory =
@@ -29,23 +28,19 @@ export interface Command {
 
 export const commands: Command[] = [
   // Music
-  { name: "/play", description: "Play a song from YouTube, Spotify, or SoundCloud by name or link", usage: "/play <song or URL>", category: "Music" },
+  { name: "/play", description: "Play from YouTube, Spotify, SoundCloud, Apple Music or Deezer; results appear as you type", usage: "/play <song or URL> [next] [source]", category: "Music" },
   { name: "/play_spotify", description: "Search and play music from Spotify", usage: "/play_spotify <song or URL>", category: "Music" },
   { name: "/play_file", description: "Play an uploaded audio file", usage: "/play_file <file> [title]", category: "Music" },
   { name: "/search", description: "Search and pick from multiple results", usage: "/search <query>", category: "Music" },
-  { name: "/insert", description: "Insert a track right after the current song", usage: "/insert <song>", category: "Music", isNew: true },
   { name: "/playnext", description: "Play a track next, or start playback if nothing is on", usage: "/playnext <song or URL>", category: "Music" },
   { name: "/playnow", description: "Play a track right away, skipping the current one", usage: "/playnow <song or URL>", category: "Music" },
-  { name: "/playlist", description: "Queue a whole YouTube or Spotify playlist", usage: "/playlist <playlist URL>", category: "Music" },
-  { name: "/playrecent", description: "Re-queue the most recently played tracks", usage: "/playrecent [count]", category: "Music" },
+  { name: "/radio", description: "Start an endless station from one song", usage: "/radio <song>", category: "Music", isNew: true },
 
   // Queue
   { name: "/queue", description: "View the current queue with pagination", usage: "/queue", category: "Queue" },
   { name: "/info queue", description: "Queue length, total duration, and contributors", usage: "/info queue", category: "Queue" },
   { name: "/info nextup", description: "Preview the next five tracks in the queue", usage: "/info nextup", category: "Queue" },
   { name: "/skip", description: "Skip the current song", usage: "/skip", category: "Queue" },
-  { name: "/next", description: "Skip the current song and see what plays next", usage: "/next", category: "Queue" },
-  { name: "/skipto", description: "Skip to a specific song in the queue", usage: "/skipto <position>", category: "Queue" },
   { name: "/jump", description: "Jump to a position in the queue", usage: "/jump <position>", category: "Queue" },
   { name: "/voteskip", description: "Start a vote to skip the current track", usage: "/voteskip", category: "Queue" },
   { name: "/previous", description: "Play the previous track from history", usage: "/previous", category: "Queue" },
@@ -61,7 +56,6 @@ export const commands: Command[] = [
   { name: "/queuemanage reverse", description: "Reverse the queue order", usage: "/queuemanage reverse", category: "Queue" },
   { name: "/queuemanage sort", description: "Sort the queue by title or duration", usage: "/queuemanage sort <order>", category: "Queue" },
   { name: "/clear", description: "Clear every track from the queue", usage: "/clear", category: "Queue" },
-  { name: "/restart", description: "Restart the current track from the beginning", usage: "/restart", category: "Queue" },
 
   // Controls
   { name: "/pause", description: "Pause the current track", usage: "/pause", category: "Controls" },
@@ -71,12 +65,9 @@ export const commands: Command[] = [
   { name: "/seek", description: "Seek to a specific time in the track", usage: "/seek <time>", category: "Controls" },
   { name: "/rewind", description: "Rewind the track by a number of seconds (10 by default)", usage: "/rewind [seconds]", category: "Controls" },
   { name: "/replay", description: "Replay the current track from the start", usage: "/replay", category: "Controls" },
-  { name: "/loop", description: "Toggle loop for the current track", usage: "/loop", category: "Controls" },
-  { name: "/loopqueue", description: "Toggle loop for the whole queue", usage: "/loopqueue", category: "Controls" },
-  { name: "/repeat current", description: "Repeat the current track until you turn it off", usage: "/repeat current", category: "Controls" },
-  { name: "/repeat queue", description: "Repeat the whole queue until you turn it off", usage: "/repeat queue", category: "Controls" },
-  { name: "/repeat disable", description: "Turn off track or queue repeat", usage: "/repeat disable", category: "Controls" },
-  { name: "/repeat status", description: "Show the current repeat mode", usage: "/repeat status", category: "Controls" },
+  { name: "/loop", description: "Repeat off, this song, or the whole queue", usage: "/loop [off|track|queue]", category: "Controls" },
+  { name: "/autoplay", description: "Keep playing related songs when the queue ends", usage: "/autoplay [enabled] [default]", category: "Controls", isNew: true },
+  { name: "/247", description: "Stay in the voice channel around the clock, also after restarts", usage: "/247 [enabled]", category: "Controls", isNew: true, isPremium: true, adminOnly: true },
   { name: "/join", description: "Bring the bot into your voice channel", usage: "/join", category: "Controls" },
   { name: "/leave", description: "Disconnect the bot from the voice channel", usage: "/leave", category: "Controls" },
 
@@ -96,16 +87,14 @@ export const commands: Command[] = [
   { name: "/effects reverse", description: "Play the track's audio backwards", usage: "/effects reverse [on/off]", category: "Filters" },
   { name: "/effects list", description: "List the active effects", usage: "/effects list", category: "Filters" },
   { name: "/effects clear", description: "Remove every active effect", usage: "/effects clear", category: "Filters" },
-  { name: "/filters", description: "List every active audio filter", usage: "/filters", category: "Filters" },
-  { name: "/clearfilters", description: "Remove all audio filters", usage: "/clearfilters", category: "Filters" },
 
   // Info
-  { name: "/nowplaying", description: "Show the playing track with progress and controls", usage: "/nowplaying", category: "Info" },
+  { name: "/nowplaying", description: "Bring the live player with its buttons to the bottom of the chat", usage: "/nowplaying", category: "Info" },
   { name: "/info song", description: "Details for the playing track: artist, length, requester, and source", usage: "/info song", category: "Info" },
-  { name: "/lyrics", description: "Lyrics for the song that is playing", usage: "/lyrics", category: "Info" },
+  { name: "/lyrics", description: "Lyrics for what's playing or any song, also in DMs", usage: "/lyrics [song]", category: "Info" },
   { name: "/stats history", description: "Recently played tracks", usage: "/stats history", category: "Info" },
-  { name: "/save", description: "Save the current song to your DMs", usage: "/save", category: "Info" },
   { name: "/grab", description: "Send the current track info to your DMs", usage: "/grab", category: "Info" },
+  { name: "/vote", description: "Vote for the bot and unlock 24/7 and studio quality for 12 hours", usage: "/vote", category: "Premium", isNew: true },
   { name: "/stats bot", description: "Bot statistics and performance", usage: "/stats bot", category: "Info" },
   { name: "/stats session", description: "This session's queue size, total length, and loop mode", usage: "/stats session", category: "Info" },
   { name: "/stats leaderboard", description: "Who queued the most tracks in the current queue", usage: "/stats leaderboard", category: "Info" },
@@ -121,6 +110,7 @@ export const commands: Command[] = [
   { name: "/info faq", description: "Answers to common questions", usage: "/info faq", category: "Utility" },
 
   // Settings (admin)
+  { name: "/language", description: "Pick the server language, or let each member use their own", usage: "/language <language|auto>", category: "Settings", isNew: true, adminOnly: true },
   { name: "/settings view", description: "Show the current server settings", usage: "/settings view", category: "Settings", adminOnly: true },
   { name: "/settings djrole", description: "Pick the DJ role allowed to control music", usage: "/settings djrole", category: "Settings", adminOnly: true },
   { name: "/settings adminrole", description: "Pick the role allowed to change settings", usage: "/settings adminrole", category: "Settings", adminOnly: true },

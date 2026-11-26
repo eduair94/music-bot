@@ -12,13 +12,13 @@ interface Feature {
 const features: Feature[] = [
   {
     title: "Multi-Source Playback",
-    description: "Play music from YouTube, Spotify, SoundCloud, and more. Paste a link or search by name.",
+    description: "Play music from YouTube, Spotify, SoundCloud, Apple Music and Deezer. Paste a link, or pick from results that appear as you type.",
     commands: ["/play <song or URL>"],
   },
   {
     title: "Playlist Support",
     description: "Add entire playlists from YouTube or Spotify. Perfect for parties, gaming sessions, or background music.",
-    commands: ["/playlist <URL>"],
+    commands: ["/play <playlist URL>"],
   },
   {
     title: "Audio Filters",
@@ -31,9 +31,9 @@ const features: Feature[] = [
     commands: ["/queue", "/shuffle", "/move"],
   },
   {
-    title: "Insert & Play Next",
-    description: "Insert tracks right after the current song without disrupting your queue order.",
-    commands: ["/insert <song>"],
+    title: "Autoplay & Radio",
+    description: "When the queue ends, related songs keep playing. Or start an endless station from one song.",
+    commands: ["/autoplay", "/radio <song>"],
     isNew: true,
   },
   {
@@ -43,7 +43,7 @@ const features: Feature[] = [
   },
   {
     title: "Now Playing",
-    description: "Embeds showing track info, duration, a progress bar, and interactive transport buttons.",
+    description: "A live player card under every song: pause, skip, loop, shuffle, volume, autoplay, queue and lyrics buttons that never time out.",
     commands: ["/nowplaying"],
   },
   {
@@ -54,12 +54,12 @@ const features: Feature[] = [
   {
     title: `${LANGUAGE_COUNT} Languages`,
     description: `Fully localized in ${LANGUAGE_COUNT} languages including English, Spanish, Japanese, French, and Arabic.`,
-    commands: ["/settings language"],
+    commands: ["/language"],
   },
   {
     title: "Save to DMs",
     description: "Love a song? Send the track info to your DMs to listen later or share with friends.",
-    commands: ["/save", "/grab"],
+    commands: ["/grab"],
   },
   {
     title: "Vote Skip",

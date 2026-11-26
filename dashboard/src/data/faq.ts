@@ -37,7 +37,7 @@ export const faqs: FAQItem[] = [
   {
     question: "What languages does Bypass support?",
     answer:
-      "Bypass is localized in 28 languages, including English, Spanish, French, German, Japanese, Korean, Chinese, Portuguese, Russian, and Arabic. Server admins change it with /settings language.",
+      "Bypass is localized in 28 languages, including English, Spanish, French, German, Japanese, Korean, Chinese, Portuguese, Russian, and Arabic. Each member sees the bot in their own Discord language; server admins can pick one language for everyone with /language.",
   },
   {
     question: "The bot is not playing audio. What should I do?",

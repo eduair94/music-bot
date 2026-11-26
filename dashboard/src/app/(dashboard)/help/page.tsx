@@ -42,7 +42,7 @@ const commandCategories = [
       { name: "/shuffle", description: "Shuffle the queue", usage: "/shuffle" },
       { name: "/loop", description: "Toggle loop mode", usage: "/loop [off|track|queue]" },
       { name: "/remove", description: "Remove a track from the queue", usage: "/remove <position>" },
-      { name: "/skipto", description: "Skip to a specific track in the queue", usage: "/skipto <position>" },
+      { name: "/jump", description: "Jump to a specific track in the queue", usage: "/jump <position>" },
       { name: "/move", description: "Move a track to a different position", usage: "/move <from> <to>" },
     ],
   },
@@ -52,7 +52,7 @@ const commandCategories = [
     commands: [
       { name: "/search", description: "Search for tracks and select from results", usage: "/search <query>" },
       { name: "/lyrics", description: "Get lyrics for the current or specified song", usage: "/lyrics [song name]" },
-      { name: "/playlist", description: "Save and load playlists", usage: "/playlist <save|load|list>" },
+      { name: "/collections", description: "Save and load your own playlists", usage: "/collections <save|load|list>" },
     ],
   },
   {

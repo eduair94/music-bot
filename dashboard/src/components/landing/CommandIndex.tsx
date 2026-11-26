@@ -12,7 +12,7 @@ import Link from "next/link";
 /** A few per category, chosen not to repeat the commands Features already shows. */
 const EXAMPLES: Record<CommandCategory, string[]> = {
   Music: ["/play_spotify", "/playnow", "/play_file"],
-  Queue: ["/skipto", "/previous", "/queuemanage removedupes"],
+  Queue: ["/jump", "/previous", "/queuemanage removedupes"],
   Controls: ["/pause", "/seek", "/loop"],
   Filters: ["/effects vaporwave", "/effects lofi", "/effects karaoke"],
   Info: ["/info song", "/stats history", "/stats leaderboard"],

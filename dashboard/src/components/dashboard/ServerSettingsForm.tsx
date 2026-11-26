@@ -39,6 +39,7 @@ interface Props {
 }
 
 const languages = [
+  { code: "auto", name: "Automatic (each member's Discord language)" },
   { code: "en", name: "English" },
   { code: "es", name: "Spanish" },
   { code: "fr", name: "French" },
