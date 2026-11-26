@@ -28,7 +28,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -72,7 +72,7 @@ export default {
       queue.removeTrack(+removeArgs - 1);
       return interaction.editReply({
         content: i18n.__mf("remove.result", {
-          title: track?.title || "Unknown",
+          title: track?.title || i18n.__("common.unknown"),
           author: interaction.user.id
         })
       }).catch(console.error);

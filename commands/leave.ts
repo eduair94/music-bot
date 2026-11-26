@@ -16,7 +16,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -33,12 +33,13 @@ export default {
       return interaction.editReply({ content: `🔇 ${i18n.__("player.notInVoice")}` }).catch(console.error);
     }
 
-    const channelName = queue.channel?.name || "voice channel";
+    const channelName = queue.channel?.name || i18n.__("common.voiceChannel");
+    const logName = queue.channel?.name;
     
     // Destroy the queue which disconnects the bot
     queue.delete();
     
-    await logAction(interaction.guild!, interaction.user, "leave", channelName);
+    await logAction(interaction.guild!, interaction.user, "leave", () => logName || i18n.__("common.voiceChannel"));
     
     return interaction.editReply({ 
       content: i18n.__mf("leave.result", { channel: channelName })

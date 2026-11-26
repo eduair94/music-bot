@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 import { PatreonService } from "../services/patreon";
 import { i18n } from "../utils/i18n";
+import { premiumFeatureName } from "../utils/premiumFeatures";
 
 interface UserProfile {
   discordId: string;
@@ -18,13 +19,13 @@ const userProfiles: Map<string, UserProfile> = new Map();
 export default {
   data: new SlashCommandBuilder()
     .setName("user")
-    .setDescription("User profile and preferences")
+    .setDescription(i18n.__("user.description"))
     // Visibility/leaderboard/settings/reset were in-memory only (lost on
     // restart, read by nothing) and were removed 2026-11.
     .addSubcommand(sub => sub
       .setName("profile")
-      .setDescription("View user profile")
-      .addUserOption(opt => opt.setName("target").setDescription("User to view"))),
+      .setDescription(i18n.__("user.profile.description"))
+      .addUserOption(opt => opt.setName("target").setDescription(i18n.__("user.profile.optionTarget")))),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
@@ -44,22 +45,22 @@ export default {
           .setThumbnail(targetUser.displayAvatarURL({ size: 256 }))
           .setColor("#F8AA2A")
           .addFields(
-            { name: "Username", value: targetUser.tag, inline: true },
-            { name: "ID", value: targetUser.id, inline: true },
-            { name: "Created", value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:R>`, inline: true },
+            { name: i18n.__("profile.username"), value: targetUser.tag, inline: true },
+            { name: i18n.__("profile.id"), value: targetUser.id, inline: true },
+            { name: i18n.__("profile.created"), value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:R>`, inline: true },
             { 
-              name: "Premium", 
+              name: i18n.__("profile.premium"), 
               value: premiumInfo.tier && premiumInfo.tier !== "free" 
                 ? `⭐ ${premiumInfo.tier.charAt(0).toUpperCase() + premiumInfo.tier.slice(1)}` 
-                : "Free", 
+                : i18n.__("user.profile.free"), 
               inline: true 
             }
           );
 
         if (premiumInfo.features.length > 0) {
           embed.addFields({
-            name: "Features",
-            value: premiumInfo.features.map(f => `✨ ${f}`).join("\n")
+            name: i18n.__("profile.features"),
+            value: premiumInfo.features.map(f => `✨ ${premiumFeatureName(f)}`).join("\n")
           });
         }
 
@@ -122,7 +123,7 @@ export default {
       }
 
       default:
-        return interaction.reply({ content: "❌ Unknown subcommand.", ephemeral: true });
+        return interaction.reply({ content: `❌ ${i18n.__("common.unknownSubcommand")}`, ephemeral: true });
     }
   }
 };

@@ -1,5 +1,7 @@
 import { ChannelType, EmbedBuilder, Guild, TextChannel, User } from "discord.js";
 import { GuildSettingsService } from "../services/guildSettings";
+import { localeForGuild } from "./guildLocale";
+import { i18n, runWithLocale } from "./i18n";
 
 /**
  * Action types for logging
@@ -89,48 +91,10 @@ function getActionEmoji(action: ActionType): string {
 }
 
 /**
- * Get action description
+ * Get action description, in the active locale (actionLog.action.<type>).
  */
 function getActionDescription(action: ActionType, details?: string): string {
-  const descriptions: Record<ActionType, string> = {
-    play: "Started playing",
-    pause: "Paused playback",
-    resume: "Resumed playback",
-    stop: "Stopped playback",
-    skip: "Skipped track",
-    seek: "Seeked to position",
-    seek_forward: "Seeked forward",
-    seek_backward: "Seeked backward",
-    forward: "Fast forwarded",
-    rewind: "Rewound",
-    backward: "Rewound",
-    replay: "Restarted track",
-    restart: "Restarted queue",
-    volume_change: "Changed volume",
-    shuffle: "Shuffled queue",
-    loop: "Changed loop mode",
-    loopqueue: "Changed queue loop mode",
-    setting_change: "Updated settings",
-    queue_clear: "Cleared queue",
-    clear: "Cleared queue",
-    join: "Joined channel",
-    leave: "Left channel",
-    autoplay: "Toggled autoplay",
-    previous: "Played previous track",
-    jump: "Jumped to track",
-    swap: "Swapped tracks",
-    reverse: "Reversed queue",
-    sort: "Sorted queue",
-    removerange: "Removed range",
-    removeduplicates: "Removed duplicates",
-    removelast: "Removed last track",
-    voteskip: "Vote skipped",
-    grab: "Grabbed track",
-    insert: "Inserted track",
-    removecurrent: "Removed current track",
-  };
-  
-  let desc = descriptions[action] || action;
+  let desc = i18n.__(`actionLog.action.${action}`);
   if (details) {
     desc += ` • ${details}`;
   }
@@ -138,24 +102,29 @@ function getActionDescription(action: ActionType, details?: string): string {
 }
 
 /**
- * Log an action to the guild's log channel
+ * Log an action to the guild's log channel. The log channel is shared by the
+ * whole server, so it is written in the server's language, not the language
+ * of the member who ran the command. Pass `details` as a function when it
+ * contains translatable text, so it is rendered in that language too.
  */
 export async function logAction(
   guild: Guild,
   user: User,
   action: ActionType,
-  details?: string
+  details?: string | (() => string)
 ): Promise<void> {
   try {
     const channel = await getLogChannel(guild);
     if (!channel) return;
 
-    const emoji = getActionEmoji(action);
-    const description = getActionDescription(action, details);
-    
-    // Simple inline message for quick actions
-    const message = `${emoji} **${user.username}** ${description}`;
-    
+    const locale = await localeForGuild(guild);
+    const message = runWithLocale(locale, () => {
+      const emoji = getActionEmoji(action);
+      const description = getActionDescription(action, typeof details === "function" ? details() : details);
+      // Simple inline message for quick actions
+      return `${emoji} **${user.username}** ${description}`;
+    });
+
     await channel.send(message).catch(console.error);
   } catch (error) {
     console.error("[ActionLog] Error logging action:", error);
@@ -176,16 +145,19 @@ export async function logSettingChange(
     const channel = await getLogChannel(guild);
     if (!channel) return;
 
-    const embed = new EmbedBuilder()
-      .setColor("#FFA500")
-      .setTitle("⚙️ Settings Updated")
-      .setDescription(`**${user.username}** changed **${settingName}**`)
-      .addFields(
-        { name: "Before", value: oldValue || "Not set", inline: true },
-        { name: "After", value: newValue || "Not set", inline: true }
-      )
-      .setTimestamp()
-      .setFooter({ text: `User ID: ${user.id}` });
+    const locale = await localeForGuild(guild);
+    const embed = runWithLocale(locale, () =>
+      new EmbedBuilder()
+        .setColor("#FFA500")
+        .setTitle(`⚙️ ${i18n.__("actionLog.settings.title")}`)
+        .setDescription(i18n.__mf("actionLog.settings.changed", { user: `**${user.username}**`, setting: `**${settingName}**` }))
+        .addFields(
+          { name: i18n.__("actionLog.settings.before"), value: oldValue || i18n.__("actionLog.settings.notSet"), inline: true },
+          { name: i18n.__("actionLog.settings.after"), value: newValue || i18n.__("actionLog.settings.notSet"), inline: true }
+        )
+        .setTimestamp()
+        .setFooter({ text: i18n.__mf("actionLog.settings.userId", { id: user.id }) })
+    );
 
     await channel.send({ embeds: [embed] }).catch(console.error);
   } catch (error) {

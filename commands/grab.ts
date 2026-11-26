@@ -26,8 +26,8 @@ export default {
     const embed = new EmbedBuilder()
       .setTitle(track.title)
       .setURL(track.url)
-      .setDescription(i18n.__mf("grab.description", {
-        guild: interaction.guild?.name || "Unknown"
+      .setDescription(i18n.__mf("player.savedFrom", {
+        guild: interaction.guild?.name || i18n.__("common.unknown")
       }))
       .setThumbnail(track.thumbnail)
       .setColor("#F8AA2A")
@@ -49,7 +49,7 @@ export default {
       )
       .setFooter({ 
         text: i18n.__mf("grab.requestedBy", { 
-          user: track.requestedBy?.username || "Unknown" 
+          user: track.requestedBy?.username || i18n.__("common.unknown") 
         }) 
       });
 

@@ -7,9 +7,9 @@ import { buildPerksOverview } from "../utils/perksEmbed";
 const perks: Command = {
     data: new SlashCommandBuilder()
         .setName("perks")
-        .setDescription("View premium perks")
-        .addSubcommand(sub => sub.setName("view").setDescription("View available perks"))
-        .addSubcommand(sub => sub.setName("user").setDescription("View your current perks")) as SlashCommandBuilder,
+        .setDescription(i18n.__("perks.description"))
+        .addSubcommand(sub => sub.setName("view").setDescription(i18n.__("perks.view.description")))
+        .addSubcommand(sub => sub.setName("user").setDescription(i18n.__("perks.user.description"))) as SlashCommandBuilder,
     
     async execute(interaction: ChatInputCommandInteraction) {
         const sub = interaction.options.getSubcommand();
@@ -21,16 +21,16 @@ const perks: Command = {
             const isPremium = await patreon.isPremiumUser(interaction.user.id);
             const features = await patreon.getPremiumFeatures(interaction.user.id);
             const bitrate = await patreon.getAudioBitrate(interaction.user.id);
-            const embed = new EmbedBuilder().setTitle("Your Perks").setColor(isPremium ? 0xf96854 : 0x95a5a6);
+            const embed = new EmbedBuilder().setTitle(i18n.__("perks.user.title")).setColor(isPremium ? 0xf96854 : 0x95a5a6);
             if (isPremium) {
-                embed.setDescription(`You have **${features.tier || "Premium"}**!`);
+                embed.setDescription(i18n.__mf("perks.user.premium", { tier: features.tier || i18n.__("perks.user.premiumTier") }));
                 const featureList = [];
-                featureList.push(`Audio: ${bitrate}kbps`);
-                if (features.features.includes("audio_filters")) featureList.push("Audio filters");
-                if (features.features.includes("stay_24_7")) featureList.push("24/7 mode");
-                embed.addFields({ name: "Your Perks", value: featureList.join("\n") });
+                featureList.push(i18n.__mf("perks.user.audio", { bitrate }));
+                if (features.features.includes("audio_filters")) featureList.push(i18n.__("perks.user.audioFilters"));
+                if (features.features.includes("stay_24_7")) featureList.push(i18n.__("perks.user.stay247"));
+                embed.addFields({ name: i18n.__("perks.user.title"), value: featureList.join("\n") });
             } else {
-                embed.setDescription("You are on the **Free** tier. Get premium on Patreon!");
+                embed.setDescription(i18n.__("perks.user.free"));
             }
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }

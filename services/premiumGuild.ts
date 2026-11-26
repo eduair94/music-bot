@@ -1,5 +1,6 @@
 import { IPremiumGuild, PremiumGuild } from "../models/PremiumGuild";
 import { config } from "../utils/config";
+import { i18n } from "../utils/i18n";
 import { DatabaseService } from "./database";
 import { PatreonService } from "./patreon";
 
@@ -129,8 +130,7 @@ export class PremiumGuildService {
       if (!isOwner && (!patron || !patron.isPremium)) {
         return {
           success: false,
-          message: "❌ You need an active Patreon membership to link servers.\n\n" +
-                   "Support us on Patreon to unlock premium features!",
+          message: `❌ ${i18n.__("premium.service.needMembership")}`,
         };
       }
 
@@ -144,10 +144,11 @@ export class PremiumGuildService {
       if (currentServers >= maxServers) {
         return {
           success: false,
-          message: `❌ You've reached your server limit (${maxServers} servers).\n\n` +
-                   `Current tier: **${patron?.tierTitle || "Patron"}**\n` +
-                   `Linked servers: **${currentServers}/${maxServers}**\n\n` +
-                   `Upgrade your tier to link more servers!`,
+          message: `❌ ${i18n.__mf("premium.service.limitReached", {
+            max: maxServers,
+            tier: patron?.tierTitle || i18n.__("premium.service.patron"),
+            current: currentServers
+          })}`,
         };
       }
 
@@ -156,7 +157,7 @@ export class PremiumGuildService {
       if (existing) {
         return {
           success: false,
-          message: `ℹ️ This server is already linked to your account.`,
+          message: `ℹ️ ${i18n.__("premium.service.alreadyLinkedYou")}`,
           guild: existing,
         };
       }
@@ -165,8 +166,7 @@ export class PremiumGuildService {
       if (otherLink && !isOwner) {
         return {
           success: false,
-          message: `❌ This server is already linked to another Patreon account.\n\n` +
-                   `Only one Patreon account can have premium features active per server.`,
+          message: `❌ ${i18n.__("premium.service.alreadyLinkedOther")}`,
         };
       }
 
@@ -197,18 +197,18 @@ export class PremiumGuildService {
 
       return {
         success: true,
-        message: `✅ **Server linked successfully!**\n\n` +
-                 `🎵 **Audio Quality:** ${defaultBitrate}kbps\n` +
-                 `🎸 **Bot Identity:** ${defaultIdentity === "indie" ? "Indie Music Bot" : defaultIdentity || "Premium"}\n` +
-                 `📊 **Servers:** ${currentServers + 1}/${isOwner ? "∞" : maxServers}\n\n` +
-                 `Premium features are now active in this server!`,
+        message: `✅ **${i18n.__("premium.service.linked")}**\n\n` +
+                 `🎵 **${i18n.__("premium.audioQuality")}:** ${defaultBitrate}kbps\n` +
+                 `🎸 **${i18n.__("premium.botIdentity")}:** ${defaultIdentity === "indie" ? "Indie Music Bot" : defaultIdentity || "Premium"}\n` +
+                 `📊 **${i18n.__("premium.service.servers")}:** ${currentServers + 1}/${isOwner ? "∞" : maxServers}\n\n` +
+                 i18n.__("premium.service.linkedActive"),
         guild,
       };
     } catch (error) {
       console.error("[PremiumGuild] Error linking server:", error);
       return {
         success: false,
-        message: `❌ Error linking server: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `❌ ${i18n.__mf("premium.service.linkError", { error: error instanceof Error ? error.message : i18n.__("common.unknownError") })}`,
       };
     }
   }
@@ -229,7 +229,7 @@ export class PremiumGuildService {
       if (!guild) {
         return {
           success: false,
-          message: `❌ This server is not linked to your account.`,
+          message: `❌ ${i18n.__("premium.service.notLinked")}`,
         };
       }
 
@@ -239,15 +239,13 @@ export class PremiumGuildService {
 
       return {
         success: true,
-        message: `✅ **Server unlinked successfully!**\n\n` +
-                 `Premium features have been disabled for this server.\n` +
-                 `You can link another server with your available slots.`,
+        message: `✅ **${i18n.__("premium.service.unlinked")}**\n\n${i18n.__("premium.service.unlinkedBody")}`,
       };
     } catch (error) {
       console.error("[PremiumGuild] Error unlinking server:", error);
       return {
         success: false,
-        message: `❌ Error unlinking server: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `❌ ${i18n.__mf("premium.service.unlinkError", { error: error instanceof Error ? error.message : i18n.__("common.unknownError") })}`,
       };
     }
   }
@@ -323,7 +321,7 @@ export class PremiumGuildService {
       if (!guild) {
         return {
           success: false,
-          message: `❌ This server is not linked to your account.`,
+          message: `❌ ${i18n.__("premium.service.notLinked")}`,
         };
       }
 
@@ -331,7 +329,7 @@ export class PremiumGuildService {
         if (![128, 192, 256, 320].includes(settings.audioBitrate)) {
           return {
             success: false,
-            message: `❌ Invalid bitrate. Choose: 128, 192, 256, or 320 kbps`,
+            message: `❌ ${i18n.__("premium.service.invalidBitrate")}`,
           };
         }
         guild.audioBitrate = settings.audioBitrate;
@@ -345,13 +343,13 @@ export class PremiumGuildService {
 
       return {
         success: true,
-        message: `✅ Server settings updated successfully!`,
+        message: `✅ ${i18n.__("premium.service.updated")}`,
       };
     } catch (error) {
       console.error("[PremiumGuild] Error updating guild settings:", error);
       return {
         success: false,
-        message: `❌ Error updating settings: ${error instanceof Error ? error.message : "Unknown error"}`,
+        message: `❌ ${i18n.__mf("premium.service.updateError", { error: error instanceof Error ? error.message : i18n.__("common.unknownError") })}`,
       };
     }
   }

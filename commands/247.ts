@@ -22,7 +22,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("247")
     .setDescription(i18n.__("247.description"))
-    .addBooleanOption((option) => option.setName("enabled").setDescription("On or off (default: toggle)"))
+    .addBooleanOption((option) => option.setName("enabled").setDescription(i18n.__("common.optionToggle")))
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   category: "music",
 

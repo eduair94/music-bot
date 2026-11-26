@@ -20,11 +20,11 @@ export default {
     .addStringOption((option) =>
       option
         .setName("mode")
-        .setDescription("What to repeat")
+        .setDescription(i18n.__("loop.optionMode"))
         .addChoices(
-          { name: "Off", value: "off" },
-          { name: "This song", value: "track" },
-          { name: "Whole queue", value: "queue" }
+          { name: i18n.__("loop.mode.off"), value: "off" },
+          { name: i18n.__("loop.mode.track"), value: "track" },
+          { name: i18n.__("loop.mode.queue"), value: "queue" }
         )
     ),
   category: "music",

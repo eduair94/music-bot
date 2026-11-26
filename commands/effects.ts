@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
 import { QueueFilters } from "discord-player";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { logAction } from "../utils/actionLog";
@@ -14,89 +14,66 @@ type FilterName = keyof QueueFilters;
 // pulsator, subboost, karaoke, flanger, gate, haas, mcompand, mono, mstlr, mstrr,
 // compressor, expander, softlimiter, chorus, chorus2d, chorus3d, fadein, dim, earrape, lofi, silenceremove
 
+/** A subcommand with one optional `enabled` boolean (every effect but bass boost). */
+const toggle = (name: string) => (sub: SlashCommandSubcommandBuilder) => sub
+  .setName(name)
+  .setDescription(i18n.__(`effects.${name}.description`))
+  .addBooleanOption(opt => opt.setName("enabled").setDescription(i18n.__("effects.optionEnabled")).setRequired(false));
+
+const builder = new SlashCommandBuilder()
+  .setName("effects")
+  .setDescription(i18n.__("effects.description"))
+  // 8D Audio
+  .addSubcommand(toggle("8d"))
+  // Bass Boost
+  .addSubcommand(sub => sub
+    .setName("bassboost")
+    .setDescription(i18n.__("effects.bassboost.description"))
+    .addStringOption(opt => opt.setName("level").setDescription(i18n.__("effects.bassboost.optionLevel"))
+      .addChoices(
+        { name: i18n.__("effects.bassboost.level.off"), value: "off" },
+        { name: i18n.__("effects.bassboost.level.low"), value: "low" },
+        { name: i18n.__("effects.bassboost.level.medium"), value: "medium" },
+        { name: i18n.__("effects.bassboost.level.high"), value: "high" }
+      )))
+  // Distortion (using earrape as a distortion-like effect)
+  .addSubcommand(toggle("distortion"))
+  // Haas (spatial audio effect)
+  .addSubcommand(toggle("haas"))
+  // Karaoke
+  .addSubcommand(toggle("karaoke"))
+  // Nightcore
+  .addSubcommand(toggle("nightcore"))
+  // Vaporwave
+  .addSubcommand(toggle("vaporwave"))
+  // Pulsator
+  .addSubcommand(toggle("pulsator"))
+  // Reverse
+  .addSubcommand(toggle("reverse"))
+  // Tremolo
+  .addSubcommand(toggle("tremolo"))
+  // Vibrato
+  .addSubcommand(toggle("vibrato"))
+  // Lofi
+  .addSubcommand(toggle("lofi"))
+  // Surrounding
+  .addSubcommand(toggle("surrounding"))
+  // List active effects
+  .addSubcommand(sub => sub
+    .setName("list")
+    .setDescription(i18n.__("effects.list.description")))
+  // Clear all effects
+  .addSubcommand(sub => sub
+    .setName("clear")
+    .setDescription(i18n.__("effects.clear.description")));
+
+/** Display name of an effect subcommand, e.g. "Karaoke". */
+function effectName(subcommand: string): string {
+  return i18n.__(`effects.${subcommand}.name`);
+}
+
 export default {
-  data: new SlashCommandBuilder()
-    .setName("effects")
-    .setDescription("Manage audio effects")
-    // 8D Audio
-    .addSubcommand(sub => sub
-      .setName("8d")
-      .setDescription("Apply 8D audio effect (rotates sound)")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Bass Boost
-    .addSubcommand(sub => sub
-      .setName("bassboost")
-      .setDescription("Apply bass boost effect")
-      .addStringOption(opt => opt.setName("level").setDescription("Bass level")
-        .addChoices(
-          { name: "Off", value: "off" },
-          { name: "Low", value: "low" },
-          { name: "Medium", value: "medium" },
-          { name: "High", value: "high" }
-        )))
-    // Distortion (using earrape as a distortion-like effect)
-    .addSubcommand(sub => sub
-      .setName("distortion")
-      .setDescription("Apply distortion effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Haas (spatial audio effect)
-    .addSubcommand(sub => sub
-      .setName("haas")
-      .setDescription("Apply haas effect (spatial audio)")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Karaoke
-    .addSubcommand(sub => sub
-      .setName("karaoke")
-      .setDescription("Reduce vocals (karaoke mode)")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Nightcore
-    .addSubcommand(sub => sub
-      .setName("nightcore")
-      .setDescription("Apply nightcore effect (higher pitch + speed)")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Vaporwave
-    .addSubcommand(sub => sub
-      .setName("vaporwave")
-      .setDescription("Apply vaporwave effect (lower pitch + speed)")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Pulsator
-    .addSubcommand(sub => sub
-      .setName("pulsator")
-      .setDescription("Apply pulsator effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Reverse
-    .addSubcommand(sub => sub
-      .setName("reverse")
-      .setDescription("Reverse audio playback")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Tremolo
-    .addSubcommand(sub => sub
-      .setName("tremolo")
-      .setDescription("Apply tremolo effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Vibrato
-    .addSubcommand(sub => sub
-      .setName("vibrato")
-      .setDescription("Apply vibrato effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Lofi
-    .addSubcommand(sub => sub
-      .setName("lofi")
-      .setDescription("Apply lofi effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // Surrounding
-    .addSubcommand(sub => sub
-      .setName("surrounding")
-      .setDescription("Apply surrounding sound effect")
-      .addBooleanOption(opt => opt.setName("enabled").setDescription("Enable or disable").setRequired(false)))
-    // List active effects
-    .addSubcommand(sub => sub
-      .setName("list")
-      .setDescription("Show active effects"))
-    // Clear all effects
-    .addSubcommand(sub => sub
-      .setName("clear")
-      .setDescription("Clear all effects")),
+  data: builder,
 
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply().catch(console.error);
@@ -110,26 +87,27 @@ export default {
 
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
-      return interaction.editReply({ content: "❌ You need the DJ role to use this command." }).catch(console.error);
+      return interaction.editReply({ content: `❌ ${i18n.__("common.djRequired")}` }).catch(console.error);
     }
 
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
 
     if (!queue || !queue.currentTrack) {
-      return interaction.editReply({ content: "❌ No music is currently playing." }).catch(console.error);
+      return interaction.editReply({ content: `❌ ${i18n.__("effects.nothingPlaying")}` }).catch(console.error);
     }
 
     const currentFilters = queue.filters.ffmpeg.getFiltersEnabled();
+    const user = `<@${interaction.user.id}>`;
 
     // Handle list subcommand
     if (subcommand === "list") {
       const embed = new EmbedBuilder()
-        .setTitle("🎛️ Active Effects")
+        .setTitle(`🎛️ ${i18n.__("effects.list.title")}`)
         .setColor(0x3498db)
-        .setDescription(currentFilters.length > 0 
-          ? currentFilters.map(f => `• ${f}`).join("\n") 
-          : "No effects active");
+        .setDescription(currentFilters.length > 0
+          ? currentFilters.map(f => `• ${f}`).join("\n")
+          : i18n.__("effects.list.empty"));
       return interaction.editReply({ embeds: [embed] }).catch(console.error);
     }
 
@@ -138,8 +116,8 @@ export default {
       if (currentFilters.length > 0) {
         await queue.filters.ffmpeg.toggle(currentFilters as FilterName[]);
       }
-      await logAction(interaction.guild!, interaction.user, "setting_change", "Effects cleared");
-      return interaction.editReply({ content: "✅ All effects cleared." }).catch(console.error);
+      await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__("actionLog.detail.effectsCleared"));
+      return interaction.editReply({ content: `✅ ${i18n.__("effects.clear.done")}` }).catch(console.error);
     }
 
     // Map subcommand names to actual filter names
@@ -161,7 +139,7 @@ export default {
 
     const filterName = effectMap[subcommand];
     if (!filterName) {
-      return interaction.editReply({ content: "❌ Unknown effect." }).catch(console.error);
+      return interaction.editReply({ content: `❌ ${i18n.__("effects.unknown")}` }).catch(console.error);
     }
 
     // Bass boost levels map to discord-player presets; only one is active at a time.
@@ -170,15 +148,18 @@ export default {
       const presets: Record<string, FilterName> = { low: "bassboost_low" as FilterName, medium: "bassboost" as FilterName, high: "bassboost_high" as FilterName };
       const active = (["bassboost_low", "bassboost", "bassboost_high"] as FilterName[]).filter((f) => currentFilters.includes(f));
       const target = presets[level];
+      const levelLabel = () => i18n.__(`effects.bassboost.level.${target ? level : "off"}`);
 
       if (active.length) await queue.filters.ffmpeg.toggle(active);
       if (level === "off" || !target) {
-        await logAction(interaction.guild!, interaction.user, "setting_change", "Bass boost Off");
-        return interaction.editReply({ content: active.length ? `🔊 Bass boost disabled by <@${interaction.user.id}>` : "🔊 Bass boost is already off." }).catch(console.error);
+        await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__mf("actionLog.detail.bassBoost", { level: levelLabel() }));
+        return interaction.editReply({
+          content: `🔊 ${active.length ? i18n.__mf("effects.bassboost.disabledBy", { user }) : i18n.__("effects.bassboost.alreadyOff")}`
+        }).catch(console.error);
       }
       await queue.filters.ffmpeg.toggle([target]);
-      await logAction(interaction.guild!, interaction.user, "setting_change", `Bass boost ${level}`);
-      return interaction.editReply({ content: `🔊 Bass boost set to **${level}** by <@${interaction.user.id}>` }).catch(console.error);
+      await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__mf("actionLog.detail.bassBoost", { level: levelLabel() }));
+      return interaction.editReply({ content: `🔊 ${i18n.__mf("effects.bassboost.setBy", { level: levelLabel(), user })}` }).catch(console.error);
     }
 
     // Handle nightcore (mutually exclusive with vaporwave)
@@ -196,10 +177,12 @@ export default {
         await queue.filters.ffmpeg.toggle(["nightcore"]);
       }
 
-      const status = shouldEnable ? "enabled" : "disabled";
-      await logAction(interaction.guild!, interaction.user, "setting_change", `Nightcore ${status}`);
+      await logAction(interaction.guild!, interaction.user, "setting_change", () =>
+        i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
+      );
       const emoji = shouldEnable ? "🎵" : "❌";
-      return interaction.editReply({ content: `${emoji} Nightcore effect ${status} by <@${interaction.user.id}>` }).catch(console.error);
+      const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
+      return interaction.editReply({ content: `${emoji} ${i18n.__mf(key, { effect: effectName(subcommand), user })}` }).catch(console.error);
     }
 
     // Handle vaporwave (mutually exclusive with nightcore)
@@ -217,10 +200,12 @@ export default {
         await queue.filters.ffmpeg.toggle(["vaporwave"]);
       }
 
-      const status = shouldEnable ? "enabled" : "disabled";
-      await logAction(interaction.guild!, interaction.user, "setting_change", `Vaporwave ${status}`);
+      await logAction(interaction.guild!, interaction.user, "setting_change", () =>
+        i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
+      );
       const emoji = shouldEnable ? "🌴" : "❌";
-      return interaction.editReply({ content: `${emoji} Vaporwave effect ${status} by <@${interaction.user.id}>` }).catch(console.error);
+      const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
+      return interaction.editReply({ content: `${emoji} ${i18n.__mf(key, { effect: effectName(subcommand), user })}` }).catch(console.error);
     }
 
     // Generic toggle for other effects
@@ -232,9 +217,10 @@ export default {
       await queue.filters.ffmpeg.toggle([filterName]);
     }
 
-    const status = shouldEnable ? "enabled" : "disabled";
-    await logAction(interaction.guild!, interaction.user, "setting_change", `${filterName} ${status}`);
-    
+    await logAction(interaction.guild!, interaction.user, "setting_change", () =>
+      i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
+    );
+
     const emojiMap: Record<string, string> = {
       "8D": "🎧",
       "haas": "🔊",
@@ -247,11 +233,11 @@ export default {
       "surrounding": "🔉",
       "earrape": "💥"
     };
-    
+
     const emoji = shouldEnable ? (emojiMap[filterName] || "✅") : "❌";
-    const displayName = subcommand === "distortion" ? "Distortion" : filterName;
-    return interaction.editReply({ 
-      content: `${emoji} **${displayName}** effect ${status} by <@${interaction.user.id}>` 
+    const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
+    return interaction.editReply({
+      content: `${emoji} ${i18n.__mf(key, { effect: `**${effectName(subcommand)}**`, user })}`
     }).catch(console.error);
   }
 };

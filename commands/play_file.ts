@@ -15,17 +15,17 @@ import { i18n } from "../utils/i18n";
 export default {
   data: new SlashCommandBuilder()
     .setName("play_file")
-    .setDescription("Play an audio file from attachment")
+    .setDescription(i18n.__("play_file.description"))
     .addAttachmentOption((option) =>
       option
         .setName("file")
-        .setDescription("Audio file to play (MP3, WAV, FLAC, M4A, OGG, etc.)")
+        .setDescription(i18n.__("play_file.optionFile"))
         .setRequired(true)
     )
     .addStringOption((option) =>
       option
         .setName("title")
-        .setDescription("Optional custom title for the track")
+        .setDescription(i18n.__("play_file.optionTitle"))
         .setRequired(false)
     ),
   cooldown: 3,
@@ -53,7 +53,7 @@ export default {
 
     if (!isVoiceChannelAllowed) {
       return interaction.reply({
-        content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel.",
+        content: `❌ ${i18n.__("common.voiceChannelNotAllowed")}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -70,7 +70,7 @@ export default {
 
     if (!isAudioFile) {
       return interaction.reply({
-        content: `❌ Invalid file type. Supported formats:\n\`\`\`\n${audioExtensions.join(', ')}\n\`\`\``,
+        content: `❌ ${i18n.__mf("common.invalidFileType", { formats: `\n\`\`\`\n${audioExtensions.join(', ')}\n\`\`\`` })}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -79,7 +79,7 @@ export default {
     const maxSize = 25 * 1024 * 1024; // 25MB in bytes
     if (attachment.size > maxSize) {
       return interaction.reply({
-        content: `❌ File is too large (${(attachment.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 25MB.`,
+        content: `❌ ${i18n.__mf("common.fileTooLarge", { size: (attachment.size / 1024 / 1024).toFixed(2), max: 25 })}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -88,7 +88,7 @@ export default {
 
     if (!playerService.isInitialized()) {
       return interaction.reply({
-        content: "❌ Music player is still initializing. Please try again in a few seconds.",
+        content: `❌ ${i18n.__("common.playerInitializing")}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -100,7 +100,7 @@ export default {
     const existingQueue = playerService.getQueue(guildId);
     if (existingQueue && existingQueue.size >= settings.maxQueueSize) {
       return interaction.reply({
-        content: `❌ Queue is full! Maximum ${settings.maxQueueSize} songs allowed.`,
+        content: `❌ ${i18n.__mf("common.queueFull", { max: settings.maxQueueSize })}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -129,7 +129,7 @@ export default {
 
       if (!result) {
         return interaction.editReply({
-          content: `❌ Could not play the file: **${attachment.name}**`
+          content: `❌ ${i18n.__mf("play_file.cantPlay", { name: `**${attachment.name}**` })}`
         }).catch(console.error);
       }
 
@@ -150,21 +150,21 @@ export default {
 
       const embed = new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(isFirstTrack ? "🎵 Now Playing File" : "📎 File Added to Queue")
+        .setTitle(isFirstTrack ? `🎵 ${i18n.__("play_file.nowPlayingTitle")}` : `📎 ${i18n.__("play_file.addedTitle")}`)
         .setDescription(`**${customTitle || attachment.name}**`)
         .addFields(
-          { name: "Format", value: fileExt, inline: true },
-          { name: "Size", value: `${fileSizeMB} MB`, inline: true },
-          { name: "Duration", value: track.duration || "Unknown", inline: true }
+          { name: i18n.__("play_file.format"), value: fileExt, inline: true },
+          { name: i18n.__("play_file.size"), value: `${fileSizeMB} MB`, inline: true },
+          { name: i18n.__("common.field.duration"), value: track.duration || i18n.__("common.unknown"), inline: true }
         )
-        .setFooter({ text: `${quality.qualityBadge} • ${identity.displayName} • Requested by ${interaction.user.username}` });
+        .setFooter({ text: `${quality.qualityBadge} • ${identity.displayName} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
 
       if (!isFirstTrack) {
-        embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+        embed.addFields({ name: i18n.__("common.field.positionInQueue"), value: `#${queue.size}`, inline: true });
       }
 
       // Add load time
-      embed.addFields({ name: "Load Time", value: `${loadTime}ms`, inline: true });
+      embed.addFields({ name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true });
 
       return interaction.editReply({ embeds: [embed] }).catch(console.error);
 
@@ -187,17 +187,17 @@ function getErrorMessage(error: any, fileName: string): string {
   const message = error.message?.toLowerCase() || '';
 
   if (message.includes("no results") || message.includes("not found")) {
-    return `❌ Could not load the file: **${fileName}**\n\nPossible reasons:\n• File format not supported\n• File is corrupted\n• File URL expired`;
+    return `❌ ${i18n.__mf("play_file.error.load", { name: `**${fileName}**` })}`;
   }
   if (message.includes("timeout")) {
-    return `❌ File download timed out. The file might be too large or the connection is slow.`;
+    return `❌ ${i18n.__("play_file.error.timeout")}`;
   }
   if (message.includes("403") || message.includes("forbidden")) {
-    return `❌ Access denied to the file. Please re-upload and try again.`;
+    return `❌ ${i18n.__("play_file.error.forbidden")}`;
   }
   if (message.includes("404")) {
-    return `❌ File not found. The attachment URL may have expired.`;
+    return `❌ ${i18n.__("play_file.error.notFound")}`;
   }
 
-  return error.message ? `❌ ${error.message}` : `❌ An error occurred while playing the file.`;
+  return error.message ? `❌ ${error.message}` : `❌ ${i18n.__("play_file.error.generic")}`;
 }

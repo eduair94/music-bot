@@ -6,7 +6,7 @@ import { i18n } from "../utils/i18n";
 const commandenableall: Command = {
     data: new SlashCommandBuilder()
         .setName("commandenableall")
-        .setDescription("Enable all disabled commands")
+        .setDescription(i18n.__("commandenableall.description"))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator) as SlashCommandBuilder,
     
     async execute(interaction: ChatInputCommandInteraction) {
@@ -22,11 +22,11 @@ const commandenableall: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: [] });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("✅ All Commands Enabled")
+            .setTitle(`✅ ${i18n.__("commandenableall.title")}`)
             .setColor(0x2ecc71)
             .setDescription(disabledCount > 0 
-                ? `Re-enabled **${disabledCount}** commands.\n\nAll commands are now available.`
-                : "No commands were disabled.")] });
+                ? i18n.__mf("commandenableall.done", { count: disabledCount })
+                : i18n.__("commandenableall.none"))] });
     }
 };
 

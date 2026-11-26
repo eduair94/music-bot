@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";
+import { i18n } from "../utils/i18n";
 
 /**
  * /premium command - Manage premium server links
@@ -15,35 +16,35 @@ import { PremiumGuildService } from "../services/premiumGuild";
 export default {
   data: new SlashCommandBuilder()
     .setName("premium")
-    .setDescription("Manage premium features and server links")
+    .setDescription(i18n.__("premium.description"))
     .addSubcommand((subcommand) =>
       subcommand
         .setName("link")
-        .setDescription("Link this server to your Patreon account")
+        .setDescription(i18n.__("premium.link.description"))
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("unlink")
-        .setDescription("Unlink this server from your Patreon account")
+        .setDescription(i18n.__("premium.unlink.description"))
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("list")
-        .setDescription("List all servers linked to your Patreon account")
+        .setDescription(i18n.__("premium.list.description"))
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("status")
-        .setDescription("Show premium status for this server")
+        .setDescription(i18n.__("premium.status.description"))
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("config")
-        .setDescription("Configure premium settings for this server")
+        .setDescription(i18n.__("premium.config.description"))
         .addIntegerOption((option) =>
           option
             .setName("bitrate")
-            .setDescription("Audio bitrate in kbps")
+            .setDescription(i18n.__("premium.config.optionBitrate"))
             .setRequired(false)
             .addChoices(
               { name: "128 kbps", value: 128 },
@@ -55,7 +56,7 @@ export default {
         .addStringOption((option) =>
           option
             .setName("identity")
-            .setDescription("Custom bot identity for this server")
+            .setDescription(i18n.__("premium.config.optionIdentity"))
             .setRequired(false)
         )
     ),
@@ -79,7 +80,7 @@ export default {
           
           const embed = new EmbedBuilder()
             .setColor(result.success ? "#1DB954" : "#FF0000")
-            .setTitle(result.success ? "✅ Server Linked" : "❌ Link Failed")
+            .setTitle(result.success ? `✅ ${i18n.__("premium.link.successTitle")}` : `❌ ${i18n.__("premium.link.failTitle")}`)
             .setDescription(result.message)
             .setTimestamp();
 
@@ -89,15 +90,15 @@ export default {
             const currentServers = await premiumService.getUserServers(userId);
 
             embed.addFields(
-              { name: "🎵 Audio Quality", value: `${result.guild.audioBitrate}kbps`, inline: true },
-              { name: "🎸 Bot Identity", value: result.guild.customBotName === "indie" ? "Indie Music Bot" : result.guild.customBotName || "Premium", inline: true },
-              { name: "📊 Server Slots", value: `${currentServers.length}/${maxServers}`, inline: true }
+              { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: `${result.guild.audioBitrate}kbps`, inline: true },
+              { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: result.guild.customBotName === "indie" ? "Indie Music Bot" : result.guild.customBotName || "Premium", inline: true },
+              { name: `📊 ${i18n.__("premium.serverSlots")}`, value: `${currentServers.length}/${maxServers}`, inline: true }
             );
 
             if (patron) {
               embed.addFields({ 
-                name: "💎 Patreon Tier", 
-                value: patron.tierTitle || "Supporter", 
+                name: `💎 ${i18n.__("premium.patreonTier")}`, 
+                value: patron.tierTitle || i18n.__("premium.supporter"), 
                 inline: true 
               });
             }
@@ -111,7 +112,7 @@ export default {
           
           const embed = new EmbedBuilder()
             .setColor(result.success ? "#1DB954" : "#FF0000")
-            .setTitle(result.success ? "✅ Server Unlinked" : "❌ Unlink Failed")
+            .setTitle(result.success ? `✅ ${i18n.__("premium.unlink.successTitle")}` : `❌ ${i18n.__("premium.unlink.failTitle")}`)
             .setDescription(result.message)
             .setTimestamp();
 
@@ -125,37 +126,36 @@ export default {
 
           const embed = new EmbedBuilder()
             .setColor("#1DB954")
-            .setTitle("🗂️ Your Linked Servers")
+            .setTitle(`🗂️ ${i18n.__("premium.list.title")}`)
             .setDescription(
               servers.length === 0
-                ? "You haven't linked any servers yet.\n\nUse `/premium link` to link this server!"
+                ? i18n.__("premium.list.empty")
                 : servers
                     .map((s, i) => 
                       `**${i + 1}.** ${s.guildName || s.guildId}\n` +
                       `   🎵 ${s.audioBitrate}kbps • 🎸 ${s.customBotName === "indie" ? "Indie Music Bot" : s.customBotName || "Premium"}\n` +
-                      `   📅 Linked: <t:${Math.floor(s.linkedAt.getTime() / 1000)}:R>`
+                      `   📅 ${i18n.__mf("premium.list.linkedAt", { time: `<t:${Math.floor(s.linkedAt.getTime() / 1000)}:R>` })}`
                     )
                     .join("\n\n")
             )
             .addFields({ 
-              name: "📊 Server Slots", 
-              value: `${servers.length}/${maxServers} used`, 
+              name: `📊 ${i18n.__("premium.serverSlots")}`, 
+              value: i18n.__mf("premium.list.slotsUsed", { used: servers.length, max: maxServers }), 
               inline: true 
             })
             .setTimestamp();
 
           if (patron) {
             embed.addFields({ 
-              name: "💎 Patreon Tier", 
-              value: patron.tierTitle || "Supporter", 
+              name: `💎 ${i18n.__("premium.patreonTier")}`, 
+              value: patron.tierTitle || i18n.__("premium.supporter"), 
               inline: true 
             });
           }
 
           if (!patron || !patron.isPremium) {
             embed.setDescription(
-              "❌ You don't have an active Patreon membership.\n\n" +
-              "Support us on Patreon to unlock premium features!"
+              `❌ ${i18n.__("premium.list.noMembership")}`
             );
             embed.setColor("#FF0000");
           }
@@ -169,11 +169,11 @@ export default {
 
           const embed = new EmbedBuilder()
             .setColor(isPremium ? "#1DB954" : "#808080")
-            .setTitle(isPremium ? "✨ Premium Server" : "📭 Free Server")
+            .setTitle(isPremium ? `✨ ${i18n.__("premium.status.premiumTitle")}` : `📭 ${i18n.__("premium.status.freeTitle")}`)
             .setDescription(
               isPremium
-                ? `This server has premium features enabled!`
-                : `This server is using free tier.\n\nUse \`/premium link\` to enable premium features.`
+                ? i18n.__("premium.status.premiumBody")
+                : i18n.__("premium.status.freeBody")
             )
             .setTimestamp();
 
@@ -189,14 +189,14 @@ export default {
               guild.customBotName || "Bypass";
 
             embed.addFields(
-              { name: "🎵 Audio Quality", value: qualityBadge, inline: true },
-              { name: "🎸 Bot Identity", value: identityLabel, inline: true },
-              { name: "📅 Linked", value: `<t:${Math.floor(guild.linkedAt.getTime() / 1000)}:R>`, inline: true }
+              { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: qualityBadge, inline: true },
+              { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: identityLabel, inline: true },
+              { name: `📅 ${i18n.__("premium.status.linked")}`, value: `<t:${Math.floor(guild.linkedAt.getTime() / 1000)}:R>`, inline: true }
             );
 
             if (guild.lastUsed) {
               embed.addFields({ 
-                name: "⏰ Last Used", 
+                name: `⏰ ${i18n.__("premium.status.lastUsed")}`, 
                 value: `<t:${Math.floor(guild.lastUsed.getTime() / 1000)}:R>`, 
                 inline: true 
               });
@@ -204,14 +204,14 @@ export default {
 
             // Show who owns this premium link
             if (guild.discordId === userId) {
-              embed.setFooter({ text: "You own this premium link" });
+              embed.setFooter({ text: i18n.__("premium.status.ownFooter") });
             } else {
-              embed.setFooter({ text: "Premium provided by another user" });
+              embed.setFooter({ text: i18n.__("premium.status.otherFooter") });
             }
           } else {
             embed.addFields(
-              { name: "🎵 Audio Quality", value: "🎵 128kbps (Free)", inline: true },
-              { name: "🎸 Bot Identity", value: "Bypass", inline: true }
+              { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: `🎵 ${i18n.__("premium.status.freeQuality")}`, inline: true },
+              { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: "Bypass", inline: true }
             );
           }
 
@@ -224,8 +224,7 @@ export default {
 
           if (!bitrate && !identity) {
             return interaction.editReply({
-              content: "❌ Please specify at least one setting to configure.\n\n" +
-                       "Example: `/premium config bitrate:320 identity:indie`"
+              content: `❌ ${i18n.__("premium.config.nothing")}`
             });
           }
 
@@ -236,7 +235,7 @@ export default {
 
           const embed = new EmbedBuilder()
             .setColor(result.success ? "#1DB954" : "#FF0000")
-            .setTitle(result.success ? "⚙️ Settings Updated" : "❌ Update Failed")
+            .setTitle(result.success ? `⚙️ ${i18n.__("premium.config.successTitle")}` : `❌ ${i18n.__("premium.config.failTitle")}`)
             .setDescription(result.message)
             .setTimestamp();
 
@@ -244,8 +243,8 @@ export default {
             const guild = await premiumService.getGuildSettings(guildId);
             if (guild) {
               embed.addFields(
-                { name: "🎵 Audio Quality", value: `${guild.audioBitrate}kbps`, inline: true },
-                { name: "🎸 Bot Identity", value: guild.customBotName === "indie" ? "Indie Music Bot" : guild.customBotName || "Premium", inline: true }
+                { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: `${guild.audioBitrate}kbps`, inline: true },
+                { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: guild.customBotName === "indie" ? "Indie Music Bot" : guild.customBotName || "Premium", inline: true }
               );
             }
           }
@@ -254,13 +253,13 @@ export default {
         }
 
         default:
-          return interaction.editReply({ content: "❌ Unknown subcommand." });
+          return interaction.editReply({ content: `❌ ${i18n.__("common.unknownSubcommand")}` });
       }
     } catch (error: any) {
       console.error("[premium] Error:", error);
       
       // Check for database connection errors and provide user-friendly message
-      const errorMessage = error.message || "Unknown error";
+      const errorMessage = error.message || i18n.__("common.unknownError");
       const isDbError = errorMessage.includes("buffering timed out") || 
                         errorMessage.includes("Database connection") ||
                         errorMessage.includes("ECONNREFUSED") ||
@@ -269,15 +268,12 @@ export default {
       
       if (isDbError) {
         return interaction.editReply({
-          content: "❌ **Database Temporarily Unavailable**\n\n" +
-                   "The bot is having trouble connecting to the database. " +
-                   "Please try again in a few moments.\n\n" +
-                   "If this issue persists, the bot administrator has been notified."
+          content: `❌ ${i18n.__("premium.dbUnavailable")}`
         });
       }
       
       return interaction.editReply({
-        content: `❌ An error occurred: ${errorMessage}`
+        content: `❌ ${i18n.__mf("premium.error", { error: errorMessage })}`
       });
     }
   }

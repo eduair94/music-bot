@@ -29,27 +29,27 @@ function formatBytes(bytes: number): string {
 export default {
   data: new SlashCommandBuilder()
     .setName("stats")
-    .setDescription("View bot and session statistics")
+    .setDescription(i18n.__("stats.description"))
     // Bot stats
     .addSubcommand(sub => sub
       .setName("bot")
-      .setDescription("Show bot statistics"))
+      .setDescription(i18n.__("stats.bot.description")))
     // Uptime
     .addSubcommand(sub => sub
       .setName("uptime")
-      .setDescription("Show bot uptime"))
+      .setDescription(i18n.__("stats.uptime.description")))
     // Session leaderboard
     .addSubcommand(sub => sub
       .setName("leaderboard")
-      .setDescription("Show queue leaderboard"))
+      .setDescription(i18n.__("stats.leaderboard.description")))
     // History
     .addSubcommand(sub => sub
       .setName("history")
-      .setDescription("Show recently played tracks"))
+      .setDescription(i18n.__("stats.history.description")))
     // Session info
     .addSubcommand(sub => sub
       .setName("session")
-      .setDescription("Show current session info")),
+      .setDescription(i18n.__("stats.session.description"))),
 
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply().catch(console.error);
@@ -80,17 +80,17 @@ export default {
         const uptime = process.uptime();
         
         const embed = new EmbedBuilder()
-          .setTitle("📈 Bot Statistics")
+          .setTitle(`📈 ${i18n.__("stats.bot.title")}`)
           .setColor("#3498db")
           .addFields(
-            { name: "🌐 Servers", value: `${client.guilds.cache.size}`, inline: true },
-            { name: "👥 Users", value: `${client.users.cache.size}`, inline: true },
-            { name: "📺 Channels", value: `${client.channels.cache.size}`, inline: true },
-            { name: "🎵 Active Queues", value: `${activeQueues}`, inline: true },
-            { name: "🎶 Tracks Playing", value: `${totalTracksInQueues}`, inline: true },
-            { name: "⏱️ Uptime", value: formatUptime(uptime), inline: true },
-            { name: "💾 Memory", value: formatBytes(memUsage.heapUsed), inline: true },
-            { name: "🖥️ Platform", value: `${os.platform()} ${os.arch()}`, inline: true },
+            { name: `🌐 ${i18n.__("stats.bot.servers")}`, value: `${client.guilds.cache.size}`, inline: true },
+            { name: `👥 ${i18n.__("stats.bot.users")}`, value: `${client.users.cache.size}`, inline: true },
+            { name: `📺 ${i18n.__("stats.bot.channels")}`, value: `${client.channels.cache.size}`, inline: true },
+            { name: `🎵 ${i18n.__("stats.bot.activeQueues")}`, value: `${activeQueues}`, inline: true },
+            { name: `🎶 ${i18n.__("stats.bot.tracksPlaying")}`, value: `${totalTracksInQueues}`, inline: true },
+            { name: `⏱️ ${i18n.__("stats.bot.uptime")}`, value: formatUptime(uptime), inline: true },
+            { name: `💾 ${i18n.__("stats.bot.memory")}`, value: formatBytes(memUsage.heapUsed), inline: true },
+            { name: `🖥️ ${i18n.__("stats.bot.platform")}`, value: `${os.platform()} ${os.arch()}`, inline: true },
             { name: "📦 Node.js", value: process.version, inline: true }
           )
           .setTimestamp();
@@ -157,7 +157,7 @@ export default {
         const leaderboardText = sortedUsers
           .map((user, index) => {
             const prefix = index < 3 ? medals[index] : `**${index + 1}.**`;
-            return `${prefix} <@${user.userId}> - ${user.count} tracks`;
+            return `${prefix} ${i18n.__mf("stats.leaderboard.line", { user: `<@${user.userId}>`, count: user.count })}`;
           })
           .join("\n");
 
@@ -198,7 +198,7 @@ export default {
 
       case "session": {
         if (!queue) {
-          return interaction.editReply({ content: "❌ No active session in this server." }).catch(console.error);
+          return interaction.editReply({ content: `❌ ${i18n.__("stats.session.noSession")}` }).catch(console.error);
         }
 
         const currentTrack = queue.currentTrack;
@@ -209,13 +209,13 @@ export default {
         }, currentTrack?.durationMS || 0);
 
         const embed = new EmbedBuilder()
-          .setTitle("🎵 Session Info")
+          .setTitle(`🎵 ${i18n.__("stats.session.title")}`)
           .setColor("#9b59b6")
           .addFields(
-            { name: "Now Playing", value: currentTrack ? `[${currentTrack.title}](${currentTrack.url})` : "Nothing", inline: false },
-            { name: "Tracks in Queue", value: `${tracksInQueue}`, inline: true },
-            { name: "Total Duration", value: formatUptime(Math.floor(totalDuration / 1000)), inline: true },
-            { name: "Loop Mode", value: queue.repeatMode === 0 ? "Off" : queue.repeatMode === 1 ? "Track" : "Queue", inline: true }
+            { name: i18n.__("stats.session.nowPlaying"), value: currentTrack ? `[${currentTrack.title}](${currentTrack.url})` : i18n.__("stats.session.nothing"), inline: false },
+            { name: i18n.__("stats.session.tracksInQueue"), value: `${tracksInQueue}`, inline: true },
+            { name: i18n.__("stats.session.totalDuration"), value: formatUptime(Math.floor(totalDuration / 1000)), inline: true },
+            { name: i18n.__("common.field.loopMode"), value: queue.repeatMode === 0 ? i18n.__("common.loop.off") : queue.repeatMode === 1 ? i18n.__("common.loop.track") : i18n.__("common.loop.queue"), inline: true }
           )
           .setTimestamp();
 
@@ -223,7 +223,7 @@ export default {
       }
 
       default:
-        return interaction.editReply({ content: "❌ Unknown subcommand." }).catch(console.error);
+        return interaction.editReply({ content: `❌ ${i18n.__("common.unknownSubcommand")}` }).catch(console.error);
     }
   }
 };

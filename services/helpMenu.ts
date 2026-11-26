@@ -12,7 +12,7 @@ import { PATREON_URL, SITE_URL, SUPPORT_INVITE_URL, TOPGG_VOTE_URL } from "../sh
 import { categoryOf, commandId, commands, mention } from "../structs/commandRegistry";
 import { registerComponentHandler } from "../structs/componentRouter";
 import { truncate } from "../utils/format";
-import { i18n } from "../utils/i18n";
+import { currentLocale, i18n, ownTranslation } from "../utils/i18n";
 
 const ORDER: CommandCategory[] = ["music", "queue", "effects", "playlists", "info", "settings", "premium", "other"];
 const ICON: Record<CommandCategory, string> = {
@@ -26,10 +26,15 @@ const ICON: Record<CommandCategory, string> = {
   other: "🧩"
 };
 
+/**
+ * Translated description for "<name>.description" (a command, or
+ * "<command>.<subcommand>" for a subcommand), else the builder's English.
+ * Reads the catalogs directly: i18n.__ on a missing nested key writes it into
+ * the in-memory catalog, which can replace a string parent with an object.
+ */
 function describe(name: string, fallback: string): string {
   const key = `${name}.description`;
-  const translated = i18n.__(key);
-  return translated && translated !== key ? translated : fallback;
+  return ownTranslation(currentLocale(), key) ?? ownTranslation("en", key) ?? fallback;
 }
 
 /** Each subcommand as its own clickable mention; plain commands as one line. */
@@ -40,7 +45,7 @@ function linesFor(category: CommandCategory): string[] {
     const json = command.data.toJSON() as any;
     const subs = (json.options || []).filter((o: any) => o.type === 1);
     if (subs.length > 0 && subs.length <= 6) {
-      for (const sub of subs) lines.push(`${mention(json.name, sub.name)} — ${truncate(sub.description, 70)}`);
+      for (const sub of subs) lines.push(`${mention(json.name, sub.name)} — ${truncate(describe(`${json.name}.${sub.name}`, sub.description), 70)}`);
     } else {
       lines.push(`${mention(json.name)} — ${truncate(describe(json.name, json.description), 70)}`);
     }

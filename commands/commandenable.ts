@@ -6,8 +6,8 @@ import { i18n } from "../utils/i18n";
 const commandenable: Command = {
     data: new SlashCommandBuilder()
         .setName("commandenable")
-        .setDescription("Enable a disabled command")
-        .addStringOption(opt => opt.setName("command").setDescription("Command to enable").setRequired(true).setAutocomplete(true))
+        .setDescription(i18n.__("commandenable.description"))
+        .addStringOption(opt => opt.setName("command").setDescription(i18n.__("commandenable.optionCommand")).setRequired(true).setAutocomplete(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild) as SlashCommandBuilder,
     
     async autocomplete(interaction: AutocompleteInteraction) {
@@ -36,7 +36,7 @@ const commandenable: Command = {
         
         const index = disabled.indexOf(commandName);
         if (index === -1) {
-            await interaction.reply({ content: `Command \`${commandName}\` is not disabled.`, ephemeral: true });
+            await interaction.reply({ content: i18n.__mf("commandenable.notDisabled", { command: `\`${commandName}\`` }), ephemeral: true });
             return;
         }
 
@@ -44,9 +44,9 @@ const commandenable: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: disabled });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("✅ Command Enabled")
+            .setTitle(`✅ ${i18n.__("commandenable.title")}`)
             .setColor(0x2ecc71)
-            .setDescription(`Command \`/${commandName}\` has been re-enabled in this server.`)] });
+            .setDescription(i18n.__mf("commandenable.done", { command: `\`/${commandName}\`` }))] });
     }
 };
 

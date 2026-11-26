@@ -17,11 +17,11 @@ import { i18n } from "../utils/i18n";
 export default {
   data: new SlashCommandBuilder()
     .setName("play_spotify")
-    .setDescription("Search and play a song from Spotify")
+    .setDescription(i18n.__("play_spotify.description"))
     .addStringOption((option) => 
       option
         .setName("query")
-        .setDescription("Song name, artist, or Spotify URL to search for")
+        .setDescription(i18n.__("play_spotify.optionQuery"))
         .setRequired(true)
     ),
   cooldown: 1,
@@ -55,7 +55,7 @@ export default {
     
     if (!isVoiceChannelAllowed) {
       return interaction.reply({
-        content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel.",
+        content: `❌ ${i18n.__("common.voiceChannelNotAllowed")}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -64,7 +64,7 @@ export default {
     
     if (!playerService.isInitialized()) {
       return interaction.reply({ 
-        content: "❌ Music player is still initializing. Please try again in a few seconds.", 
+        content: `❌ ${i18n.__("common.playerInitializing")}`, 
         ephemeral: true 
       }).catch(console.error);
     }
@@ -76,7 +76,7 @@ export default {
     const existingQueue = playerService.getQueue(guildId);
     if (existingQueue && existingQueue.size >= settings.maxQueueSize) {
       return interaction.reply({
-        content: `❌ Queue is full! Maximum ${settings.maxQueueSize} songs allowed.`,
+        content: `❌ ${i18n.__mf("common.queueFull", { max: settings.maxQueueSize })}`,
         ephemeral: true
       }).catch(console.error);
     }
@@ -106,7 +106,7 @@ export default {
 
         if (!result) {
           return interaction.editReply({ 
-            content: `❌ Could not play the Spotify link: **${query}**`
+            content: `❌ ${i18n.__mf("play_spotify.cantPlayLink", { query: `**${query}**` })}`
           }).catch(console.error);
         }
 
@@ -130,43 +130,43 @@ export default {
         let embed: EmbedBuilder;
 
         if (isPlaylist) {
-          const playlistTitle = playlist?.title || "Spotify Playlist";
+          const playlistTitle = playlist?.title || i18n.__("play_spotify.playlistFallback");
           const playlistUrl = playlist?.url || query;
           const playlistThumbnail = playlist?.thumbnail || track.thumbnail || null;
 
           embed = new EmbedBuilder()
             .setColor(embedColor)
-            .setTitle("📋 Spotify Playlist Added")
+            .setTitle(`📋 ${i18n.__("play_spotify.playlistAdded")}`)
             .setDescription(`**[${playlistTitle}](${playlistUrl})**`)
             .addFields(
-              { name: "Tracks", value: `${totalTracks} songs`, inline: true },
-              { name: "Source", value: "🎵 Spotify", inline: true },
-              { name: "Load Time", value: `${loadTime}ms`, inline: true }
+              { name: i18n.__("common.field.tracks"), value: i18n.__mf("play_spotify.songs", { count: totalTracks }), inline: true },
+              { name: i18n.__("common.field.source"), value: "🎵 Spotify", inline: true },
+              { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(playlistThumbnail)
-            .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
 
           embed.addFields({ 
-            name: "▶️ Now Playing", 
-            value: `**${track.title}** by ${track.author || "Unknown"}`, 
+            name: `▶️ ${i18n.__("play_spotify.nowPlaying")}`, 
+            value: i18n.__mf("play_spotify.trackBy", { title: `**${track.title}**`, author: track.author || i18n.__("common.unknown") }), 
             inline: false 
           });
         } else {
           const isFirstTrack = queue.size === 0;
           embed = new EmbedBuilder()
             .setColor(embedColor)
-            .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
+            .setTitle(isFirstTrack ? `🎵 ${i18n.__("play_spotify.nowPlayingTitle")}` : `➕ ${i18n.__("play_spotify.addedTitle")}`)
             .setDescription(`**[${track.title}](${track.url})**`)
             .addFields(
-              { name: "Artist", value: track.author || "Unknown", inline: true },
-              { name: "Duration", value: track.duration || "Unknown", inline: true },
-              { name: "Load Time", value: `${loadTime}ms`, inline: true }
+              { name: i18n.__("common.field.artist"), value: track.author || i18n.__("common.unknown"), inline: true },
+              { name: i18n.__("common.field.duration"), value: track.duration || i18n.__("common.unknown"), inline: true },
+              { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(track.thumbnail || null)
-            .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
 
           if (!isFirstTrack) {
-            embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+            embed.addFields({ name: i18n.__("common.field.positionInQueue"), value: `#${queue.size}`, inline: true });
           }
         }
 
@@ -181,7 +181,7 @@ export default {
       
       if (!trackResult) {
         return interaction.editReply({ 
-          content: `❌ No results found on Spotify for: **${query}**\n\nTry:\n• Different keywords\n• Adding the artist name\n• Using a direct Spotify link`
+          content: `❌ ${i18n.__mf("play_spotify.noResults", { query: `**${query}**` })}`
         }).catch(console.error);
       }
 
@@ -196,7 +196,7 @@ export default {
 
       if (!result) {
         return interaction.editReply({ 
-          content: `❌ Could not find on YouTube: **${trackResult.name}** by ${trackResult.artist}`
+          content: `❌ ${i18n.__mf("play_spotify.notOnYoutube", { title: `**${trackResult.name}**`, artist: trackResult.artist })}`
         }).catch(console.error);
       }
 
@@ -215,18 +215,18 @@ export default {
 
       const embed = new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(isFirstTrack ? "🎵 Now Playing from Spotify" : "➕ Added to Queue from Spotify")
+        .setTitle(isFirstTrack ? `🎵 ${i18n.__("play_spotify.nowPlayingTitle")}` : `➕ ${i18n.__("play_spotify.addedTitle")}`)
         .setDescription(`**${trackResult.name}**`)
         .addFields(
-          { name: "Artist", value: trackResult.artist, inline: true },
-          { name: "Duration", value: trackResult.durationFormatted, inline: true },
-          { name: "Load Time", value: `${loadTime}ms`, inline: true }
+          { name: i18n.__("common.field.artist"), value: trackResult.artist, inline: true },
+          { name: i18n.__("common.field.duration"), value: trackResult.durationFormatted, inline: true },
+          { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
         )
         .setThumbnail(trackResult.albumArt)
-        .setFooter({ text: `${qualityBadge} • ${botIdentity} • Requested by ${interaction.user.username}` });
+        .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
 
       if (!isFirstTrack) {
-        embed.addFields({ name: "Position in Queue", value: `#${queue.size}`, inline: true });
+        embed.addFields({ name: i18n.__("common.field.positionInQueue"), value: `#${queue.size}`, inline: true });
       }
 
       return interaction.editReply({ embeds: [embed] }).catch(console.error);
@@ -253,17 +253,17 @@ function getErrorMessage(error: any, query: string): string {
     return i18n.__mf("play.errorNoResults", { url: `<${query}>` });
   }
   if (message.includes("sign in") || message.includes("login")) {
-    return "❌ This Spotify track requires authentication. Try a different track.";
+    return `❌ ${i18n.__("play_spotify.error.auth")}`;
   }
   if (message.includes("premium") || message.includes("subscription")) {
-    return "❌ This track requires Spotify Premium.";
+    return `❌ ${i18n.__("play_spotify.error.premium")}`;
   }
   if (message.includes("private")) {
-    return "❌ This Spotify track is private and cannot be played.";
+    return `❌ ${i18n.__("play_spotify.error.private")}`;
   }
   if (message.includes("unavailable") || message.includes("not available")) {
-    return "❌ This track is unavailable in your region.";
+    return `❌ ${i18n.__("play_spotify.error.region")}`;
   }
   
-  return error.message ? `❌ ${error.message}` : "❌ An error occurred while playing the Spotify track.";
+  return error.message ? `❌ ${error.message}` : `❌ ${i18n.__("play_spotify.error.generic")}`;
 }

@@ -47,7 +47,7 @@ export default {
     .setName("seek")
     .setDescription(i18n.__("seek.description"))
     .addStringOption((option) =>
-      option.setName("time").setDescription("Time to seek to (e.g., 1:30, 90, 1m30s)").setRequired(true)
+      option.setName("time").setDescription(i18n.__("seek.optionTime")).setRequired(true)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
     await interaction.deferReply().catch(console.error);
@@ -61,7 +61,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
