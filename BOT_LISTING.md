@@ -76,11 +76,15 @@ Slash commands only. To test: join a voice channel, run `/play song:never gonna 
 | Site | State | Wired |
 |---|---|---|
 | top.gg | Listed; copy, tags, 18 languages, support invite and repo updated | v1 token (stats + command sync), signed vote webhook verified (200 signed / 401 forged) |
-| discordbotlist.com | Listed; copy, tags, invite and support updated | Vote webhook + secret set. API token still missing (the "Generate token" link on the bot page didn't respond to automation; one click by the owner) |
+| discordbotlist.com | Listed; copy, tags, invite and support updated | API token set (stats + 54 commands synced), vote webhook + secret set |
 | discord.bots.gg | Listed; copy updated | API key set, stats posting (200) |
 | botlist.me | Submitted 2026-11-26, in review queue (~1 day). Owner joined their server (required) | Token after approval |
+| voidbots.net | Submitted, pending review. Owner joined their server (required; leaving removes the bot) | Token + webhook after approval |
+| discordlist.gg | Submitted (API answered 200); the page appears after approval | Token after approval |
+| radarcord.net | Form filled but not submitted: they require joining their server, and the owner account stopped accepting invites (Discord's 100-server cap) | — |
+| bots.ondiscord.xyz | Not submitted: also requires joining their server (same cap) | — |
 | discords.com | Not listed: their "Add bot" lookup answers "not found" for our public ID | Retry later |
-| discordlist.gg, voidbots.net, discord.place, radarcord.net, bots.ondiscord.xyz | Not submitted yet | — |
+| discord.place | Not listed: Cloudflare challenge, then a blank page in the automated browser | Owner can submit by hand |
 
 ## Where to list it
 
