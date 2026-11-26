@@ -1,117 +1,104 @@
-# Bot Listing Information
+# Bot listing kit
 
-## Bot ID
-1315125264786653225
+Everything needed to list **Bypass Hi-Fi Music Bot** on bot directories. Every claim below is something the bot does today (checked 2026-11-26). Keep it that way: reviewers test the bot, and users who find a missing feature leave.
 
-## Help Command
-`/help`
+## Facts for the forms
 
-## Overview
-A powerful Discord music bot with 150+ commands, audio filters, playlists, games, and premium features.
+| Field | Value |
+|---|---|
+| Bot / application ID | `1315125264786653225` |
+| Name | Bypass Hi-Fi Music Bot |
+| Prefix | `/` (slash commands only; no message prefix) |
+| Help command | `/help` |
+| Library | discord.js (TypeScript) |
+| Invite URL | https://music-bot.checkleaked.com/invite |
+| Website | https://music-bot.checkleaked.com |
+| Support server | https://discord.gg/hjJQKp5zDU (permanent invite) |
+| Privacy policy | https://music-bot.checkleaked.com/privacy |
+| Terms | https://music-bot.checkleaked.com/terms |
+| Source | https://github.com/eduair94/music-bot |
+| Premium | Optional. Founder on Patreon ($3/month). Voting unlocks 24/7 and studio quality for 12 h. |
+| Permissions | No Administrator. View/Send/Embed/Attach/Read History/External Emojis in text; Connect/Speak/Voice Activity/Request to Speak in voice; Set Voice Channel Status. |
+| Tags | Music, Radio, Spotify, YouTube, Lyrics, 24/7, Playlists, Multilingual |
+| Languages | 28: English, Spanish, Portuguese (BR), French, German, Italian, Dutch, Polish, Russian, Ukrainian, Turkish, Arabic, Persian, Japanese, Korean, Chinese (Simplified, Singapore, Traditional), Thai, Vietnamese, Indonesian, Czech, Bulgarian, Greek, Romanian, Swedish, Norwegian, Māori |
 
-## Bot Library
-discord.js
+## Short descriptions
 
-## Invite URL
-https://music-bot.checkleaked.com/invite
+- **≤ 140 chars (top.gg):** Hi-fi music with a button player: YouTube, Spotify, SoundCloud, Apple Music, Deezer. Autoplay radio, lyrics, effects, 24/7, 28 languages.
+- **≤ 191 chars (discordbotlist.com, botlist.me):** Hi-fi music bot with a button player that never expires. Play YouTube, Spotify, SoundCloud, Apple Music and Deezer, with live search, autoplay radio, lyrics, effects, playlists and 24/7.
+- **≤ 200 chars (discords.com):** Same as above.
 
-## Website
-https://music-bot.checkleaked.com
+## Long description (Markdown)
 
-## Support Server Invite
-https://discord.gg/hjJQKp5zDU
+```markdown
+# 🎶 Bypass — hi-fi music for your server
 
-## Open Source Repository
-https://github.com/eduair94/music-bot
+Join a voice channel and type **/play**. Results show up while you type, so you pick the exact song before it plays.
 
----
+## Play anything
+- **YouTube & YouTube Music**: songs, live streams and whole playlists
+- **Spotify**: tracks, albums and playlists
+- **SoundCloud**, **Apple Music** and **Deezer** links
+- Audio files: right-click any message with a link or file → *Apps → Play in voice channel*
 
-# Long Description (Plain Text)
+## A player you can actually use
+Every song gets a live player card with buttons: previous, pause, skip, stop, loop, shuffle, volume, autoplay, queue, lyrics and save-to-DMs. The buttons keep working for as long as the music plays, with no timeouts. The voice channel's status shows what's playing.
 
-Music Bot is a powerful, feature-rich Discord music bot designed to deliver the ultimate audio experience for your server. With over 150 commands at your fingertips, you can play music from YouTube, Spotify, SoundCloud, and many other platforms with crystal-clear audio quality. The bot offers advanced queue management including shuffle, loop, move, swap, and reorder functionality, giving you complete control over your listening session. Transform your audio with a variety of filters like bass boost, nightcore, 8D spatial audio, karaoke mode, distortion, echo, and pulsator effects. Create personal playlists, import existing ones from popular platforms, and share your music collections with unique codes. Engage your community with interactive music games like Guess the Song, compete on leaderboards, and track your listening statistics through customizable user profiles. Server administrators can configure permissions, set channel restrictions, customize announcements, and establish track length limits. Premium features include 24/7 mode to keep the music playing around the clock, custom profile backgrounds, extended playlist limits, and priority support. The bot supports multiple languages including English, Spanish, French, German, and more, making it accessible to communities worldwide. Whether you want casual background music or an interactive music experience, Music Bot has everything you need to bring your Discord server to life.
+## Never runs out
+- **Autoplay** queues related songs when your queue ends (from the YouTube mix of the last song)
+- **/radio <song>** starts an endless station from one song
+- **24/7 mode** keeps the bot in your channel and brings it back after restarts
 
----
+## Everything else
+- **Queue**: /queue with pages, /move, /remove, /shuffle, /jump, /clear, /playnext, /playnow, vote-skip
+- **Effects**: bass boost (3 levels), nightcore, vaporwave, 8D, karaoke, and more
+- **Lyrics** for what's playing or any song (also works in DMs if you install the app to your account)
+- **Saved playlists** with /collections
+- **Server settings**: DJ role, allowed channels, volume limits, max queue size, max song length, duplicate blocking, auto-leave timer
+- **28 languages**: each member sees the bot in their Discord language, or set one for the server with /language
 
-# Description
+## Free, with optional perks
+Everything above is free. Voting unlocks 24/7 mode and studio quality for 12 hours. Founder supporters ($3/month on Patreon) keep them permanently.
 
-🎵 **Music Bot** - The Ultimate Discord Music Experience
+Support: https://discord.gg/hjJQKp5zDU · Website: https://music-bot.checkleaked.com
+```
 
-A feature-rich music bot built with **discord.js** and **TypeScript** that brings high-quality music playback to your Discord server.
+## Plain-sentence description (bots.ondiscord.xyz forbids lists and pipes)
 
-## 🎶 Music & Playback
+Bypass is a music bot that plays YouTube, Spotify, SoundCloud, Apple Music and Deezer in your voice channel with a button player that keeps working all session. Search results appear while you type in /play, autoplay keeps related songs going when the queue ends, and /radio starts an endless station from one song. It shows lyrics, applies effects such as bass boost and nightcore, saves playlists, and can stay in your channel around the clock. Server admins can set a DJ role, allowed channels and limits, and every member sees the bot in their own language, with 28 to choose from.
 
-- **Multi-Platform Support** - Play from YouTube, Spotify, SoundCloud, and more
-- **Smart Search** - Search and select tracks with `/play` or `/search`
-- **Queue Management** - Full queue control with shuffle, loop, move, remove
-- **Audio Filters** - Bass boost, nightcore, 8D, karaoke, distortion & more
-- **Autoplay** - Never stop the music with intelligent autoplay
-- **24/7 Mode** - Keep the bot connected around the clock ⭐
+## Reviewer note
 
-## 📋 Advanced Queue Features
+Slash commands only. To test: join a voice channel, run `/play song:never gonna give you up`, then use the buttons on the player card. `/help` lists every command. Premium is not needed for review; to try 24/7, vote once on this site, then run `/247`.
 
-- `/queue` - View and manage your queue
-- `/shuffle` - Randomize track order
-- `/loop` & `/loopqueue` - Repeat tracks or entire queue
-- `/move`, `/swap`, `/reorder` - Organize your queue
-- `/remove`, `/clear`, `/removeduplicates` - Clean up tracks
-- `/insert`, `/playnext`, `/playnow` - Priority playback
+## Where to list it
 
-## 🎨 Audio Filters
+Approval needs an owner login on each site. Order by reach:
 
-- `/bassboost` - Enhanced bass
-- `/nightcore` - Speed up with higher pitch
-- `/8d` - Immersive 8D audio
-- `/karaoke` - Remove vocals
-- `/distortion`, `/echo`, `/pulsator`
-- `/clearfilters` - Reset all filters
+| Site | Submit at | Notes |
+|---|---|---|
+| top.gg | https://top.gg/bot/new | ~1 week review. After approval: Project → Integrations & API → create a v1 token → `TOPGG_TOKEN`; Webhooks → URL below, secret → `TOPGG_WEBHOOK_SECRET`. Max 3–5 vote-locked commands (we have one: /247). |
+| discordbotlist.com | https://discordbotlist.com/bots/new | Token → `DISCORDBOTLIST_TOKEN`; webhook secret → `DISCORDBOTLIST_WEBHOOK_SECRET`. |
+| discord.bots.gg | https://discord.bots.gg/bots/add | Token → `DISCORDBOTSGG_TOKEN`. Owner must stay in their server. No voting. |
+| discords.com | https://discords.com/bots/add | Token → `DISCORDS_TOKEN`; webhook secret → `DISCORDS_WEBHOOK_SECRET`. |
+| botlist.me | https://botlist.me/add | Token → `BOTLISTME_TOKEN`; webhook → `BOTLISTME_WEBHOOK_SECRET`. Owner must join their server. |
+| discordlist.gg | https://discordlist.gg | Token → `DISCORDLISTGG_TOKEN`. |
+| voidbots.net | https://voidbots.net | Token → `VOIDBOTS_TOKEN`; webhook → `VOIDBOTS_WEBHOOK_SECRET`. |
+| discord.place | https://discord.place | Token → `DISCORDPLACE_TOKEN` (the bot posts at most once per 6 h; more gets the key revoked). |
+| radarcord.net | https://radarcord.net | Token → `RADARCORD_TOKEN`. |
+| bots.ondiscord.xyz | https://bots.ondiscord.xyz | Use the plain-sentence description. Token → `BOTSONDISCORD_TOKEN`. |
 
-## 💾 Collections & Playlists
+**Skip:** omniplex.gg (ex-Infinity Bot List) rejects YouTube music bots. discordservices.net, disforge.com, discord-botlist.eu and wonderbotlist.com are dead. The Discord App Directory needs a verified app, which opens around 75 servers.
 
-- Create and manage personal playlists
-- Import from YouTube, Spotify, and more
-- Share collections with unique codes
-- Clone playlists from other users
+## Wiring after approval
 
-## 🎮 Fun & Games
-
-- `/guesssong` - Test your music knowledge
-- `/leaderboard` - Compete with friends
-- Track listening history and stats
-
-## 👤 User Profiles
-
-- Customizable profiles with backgrounds
-- Listening statistics and history
-- Privacy controls
-
-## ⚙️ Server Configuration
-
-- Permission management per role/user
-- Channel restrictions (voice & text)
-- Custom prefixes and announcements
-- Vote skip settings
-- Track length limits
-
-## 📊 Information Commands
-
-- `/nowplaying` - Current track with progress bar
-- `/lyrics` - Get song lyrics instantly
-- `/albuminfo`, `/artistinfo`, `/songinfo`
-- `/history` - Recently played tracks
-
-## 🌍 Multi-Language Support
-
-Available in multiple languages including English, Spanish, French, German, and more!
-
-## ⭐ Premium Features
-
-- 24/7 Mode
-- Custom profile backgrounds
-- Extended playlist limits
-- Priority support
-
----
-
-**[🌐 Dashboard](https://music-bot.checkleaked.com)** | **[📖 Commands](https://music-bot.checkleaked.com/commands)** | **[💬 Support](https://music-bot.checkleaked.com/support)**
-
-Made with ❤️ using discord.js
+1. Put each site's API token in the **bot** `.env` (names above). The bot posts the server count every 30 minutes and syncs its command list to top.gg and discordbotlist.com.
+2. Put each webhook secret in the **dashboard** `.env`. Vote webhook URLs:
+   - top.gg: `https://music-bot.checkleaked.com/api/webhooks/vote/topgg` (v1 signed webhooks and the legacy secret both work)
+   - discordbotlist.com: `.../api/webhooks/vote/discordbotlist`
+   - discords.com: `.../api/webhooks/vote/discords`
+   - botlist.me: `.../api/webhooks/vote/botlistme`
+   - voidbots.net: `.../api/webhooks/vote/voidbots`
+   - discord.place: `.../api/webhooks/vote/discordplace`
+3. Optional: `VOTE_LOG_WEBHOOK_URL` (dashboard) = a Discord channel webhook in the support server, to thank voters publicly.
+4. `/vote` and the Vote button in `/help` appear automatically once a site's token is set.
