@@ -526,7 +526,7 @@
     "description": "Configure your TTS (Text-to-Speech) settings"
   },
   "radio": {
-    "description": "Start a radio based on the current track",
+    "description": "Start an endless radio from a song or artist",
     "notInVoice": "You need to be in a voice channel.",
     "noQueue": "There is no track playing to base the radio on.",
     "success": "📻 Started radio based on **{title}**",
@@ -931,7 +931,7 @@
   },
   "perks": {
     "title": "⭐ Premium Perks",
-    "description": "Upgrade to premium to unlock these amazing features!",
+    "description": "View premium perks",
     "how_to_get": "How to Get Premium",
     "patreon_link": "Support us on Patreon: https://patreon.com/u36360623",
     "user_title": "Your Premium Status",
@@ -1097,5 +1097,47 @@
     "vote": "Vote",
     "addToServer": "Add to server",
     "invite": "Invite"
+  },
+  "commanddisable": {
+    "description": "Disable commands in this server"
+  },
+  "commanddisableall": {
+    "description": "Disable all commands except essential ones"
+  },
+  "commandenable": {
+    "description": "Enable a disabled command"
+  },
+  "commandenableall": {
+    "description": "Enable all disabled commands"
+  },
+  "effects": {
+    "description": "Manage audio effects"
+  },
+  "info": {
+    "description": "Bot information and help"
+  },
+  "patreon": {
+    "description": "Check your Patreon status and sync benefits"
+  },
+  "play_file": {
+    "description": "Play an audio file from attachment"
+  },
+  "play_spotify": {
+    "description": "Search and play a song from Spotify"
+  },
+  "premium": {
+    "description": "Manage premium features and server links"
+  },
+  "queuemanage": {
+    "description": "Advanced queue management"
+  },
+  "settings": {
+    "description": "Configure bot settings for this server (Admin only)"
+  },
+  "stats": {
+    "description": "View bot and session statistics"
+  },
+  "user": {
+    "description": "User profile and preferences"
   }
 }

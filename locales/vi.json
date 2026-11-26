@@ -1,4 +1,14 @@
 {
+  "247": {
+    "description": "Bật/tắt chế độ 24/7 (bot ở lại kênh thoại)",
+    "premiumRequired": "⭐ Chế độ 24/7 là tính năng premium. Dùng `/premium` để biết thêm.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "title": "🌙 Chế độ 24/7",
+    "enabled": "Đã **bật** chế độ 24/7. Bot sẽ ở lại kênh thoại vô thời hạn.",
+    "disabled": "Đã **tắt** chế độ 24/7. Bot sẽ rời đi khi không hoạt động.",
+    "footer": "Tính năng premium"
+  },
   "clip": {
     "description": "Phát một đoạn âm thanh",
     "usagesReply": "Sử dụng: {prefix}clip <tên>",
@@ -78,7 +88,32 @@
     "songNotFound": "Không tìm thấy âm thanh",
     "songAccessErr": "Video có giới hạn độ tuổi, riêng tư hoặc không khả dụng",
     "errorNoResults": "Không có kết quả cho {url}",
-    "errorInvalidURL": "URL không hợp lệ, vui lòng thử tìm kiếm hoặc nhập URL YouTube"
+    "errorInvalidURL": "URL không hợp lệ, vui lòng thử tìm kiếm hoặc nhập URL YouTube",
+    "optionSong": "Tên bài hát hoặc link (YouTube, Spotify, SoundCloud, Apple Music…)",
+    "optionNext": "Phát ngay sau bài hiện tại",
+    "optionSource": "Nơi tìm kiếm khi bạn nhập tên",
+    "addedTitle": "Đã thêm vào hàng chờ",
+    "nowPlayingTitle": "Đang phát",
+    "playlistTitle": "Đã thêm playlist",
+    "playlistTracks": "{count} bài hát",
+    "position": "Vị trí #{position}",
+    "positionNext": "Phát tiếp theo",
+    "notAllowedChannel": "Mình không được phép phát nhạc trong kênh thoại này.",
+    "queueFull": "Hàng chờ đã đầy ({max} bài).",
+    "tooLong": "Bài này dài hơn giới hạn của server ({max}).",
+    "duplicate": "**{title}** đã có trong hàng chờ.",
+    "noResults": "Không tìm thấy gì cho {query}.",
+    "initializing": "Trình phát đang khởi động, thử lại sau vài giây nhé.",
+    "ageRestricted": "Video này bị giới hạn độ tuổi.",
+    "private": "Video này ở chế độ riêng tư.",
+    "unavailable": "Video này không khả dụng.",
+    "genericError": "Không thể phát: {error}",
+    "searchSuggestion": "Tìm kiếm: {query}",
+    "botNotInChannel": "Mình đang phát ở {channel}. Vào kênh đó để thêm bài nhé.",
+    "cantJoin": "Mình không thể vào {channel}: cần quyền Kết nối và Nói ở đó.",
+    "contextName": "Phát trong kênh thoại",
+    "contextNextName": "Phát tiếp theo",
+    "contextNoQuery": "Tin nhắn này không có link, file âm thanh hay nội dung nào để phát."
   },
   "playlist": {
     "description": "Phát danh sách phát từ youtube",
@@ -176,5 +211,933 @@
     "errorCommand": "Có lỗi khi thực hiện lệnh đó."
   },
   "Invite me to your server!": "Mời tôi vào máy chủ của bạn!",
-  "Invite": "Mời"
+  "Invite": "Mời",
+  "seek": {
+    "description": "Tua đến một thời điểm cụ thể trong bài",
+    "errorNotQueue": "Không có gì đang phát.",
+    "errorInvalidTime": "Định dạng thời gian không hợp lệ. Dùng dạng như: 1:30, 90, 1m30s",
+    "errorOutOfRange": "Thời gian phải nằm trong khoảng 0:00 đến {duration}",
+    "result": "<@{author}> ⏩ đã tua đến **{time}**"
+  },
+  "forward": {
+    "description": "Tua nhanh bài hát theo số giây chỉ định",
+    "errorNotQueue": "Không có gì đang phát.",
+    "errorNearEnd": "Không thể tua, đã quá gần cuối bài.",
+    "result": "<@{author}> ⏩ đã tua tới **{seconds}s** (hiện ở {position})"
+  },
+  "rewind": {
+    "description": "Tua lại bài hát theo số giây chỉ định",
+    "errorNotQueue": "Không có gì đang phát.",
+    "result": "<@{author}> ⏪ đã tua lại **{seconds}s** (hiện ở {position})"
+  },
+  "replay": {
+    "description": "Phát lại bài hiện tại từ đầu",
+    "errorNotQueue": "Không có gì đang phát.",
+    "result": "<@{author}> 🔄 đã phát lại **{title}**"
+  },
+  "clear": {
+    "description": "Xóa toàn bộ hàng chờ",
+    "errorNotQueue": "Hàng chờ đã trống rồi.",
+    "result": "<@{author}> 🗑️ đã xóa **{count}** bài khỏi hàng chờ"
+  },
+  "loopqueue": {
+    "description": "Bật/tắt lặp hàng chờ",
+    "errorNotQueue": "Không có gì đang phát.",
+    "result": "🔁 Lặp hàng chờ hiện đang {loop}"
+  },
+  "join": {
+    "description": "Cho bot vào kênh thoại của bạn",
+    "errorDifferentChannel": "Mình đang ở một kênh thoại khác rồi.",
+    "errorCantJoin": "Mình không thể vào kênh thoại của bạn.",
+    "result": "✅ Đã vào **{channel}**"
+  },
+  "leave": {
+    "description": "Cho bot rời kênh thoại",
+    "errorNotInChannel": "Mình không ở trong kênh thoại nào.",
+    "result": "👋 Đã rời **{channel}**"
+  },
+  "save": {
+    "description": "Lưu bài hiện tại vào tin nhắn riêng của bạn",
+    "errorNotQueue": "Không có gì đang phát.",
+    "errorDMClosed": "Mình không gửi tin nhắn riêng cho bạn được. Hãy bật tin nhắn riêng từ thành viên server nhé.",
+    "result": "💾 Đã gửi **{title}** vào tin nhắn riêng của bạn!"
+  },
+  "autoplay": {
+    "description": "Bật/tắt tự động phát (phát bài tương tự khi hết hàng chờ)",
+    "errorNotQueue": "Không có hàng chờ nào đang hoạt động.",
+    "result": "🔄 Tự động phát hiện đang {status}"
+  },
+  "history": {
+    "description": "Hiển thị các bài đã phát gần đây",
+    "errorNotQueue": "Không có hàng chờ nào đang hoạt động.",
+    "errorEmpty": "Chưa có bài nào trong lịch sử.",
+    "embedTitle": "Đã phát gần đây",
+    "footer": "Hiển thị {count} bài gần nhất"
+  },
+  "previous": {
+    "description": "Phát bài trước đó",
+    "errorNotQueue": "Không có hàng chờ nào đang hoạt động.",
+    "errorNoHistory": "Không có bài trước đó trong lịch sử.",
+    "result": "<@{author}> ⏮️ đang phát bài trước đó"
+  },
+  "jump": {
+    "description": "Chuyển đến một vị trí cụ thể trong hàng chờ",
+    "errorNotQueue": "Không có hàng chờ.",
+    "errorInvalidPosition": "Vị trí không hợp lệ. Hàng chờ chỉ có {max} bài.",
+    "errorNotFound": "Không tìm thấy bài ở vị trí đó.",
+    "result": "<@{author}> ⏭️ đã chuyển đến **{title}**"
+  },
+  "about": {
+    "description": "Hiển thị thông tin về bot",
+    "embedDescription": "Bot nhạc Discord mạnh mẽ với chất lượng âm thanh cao",
+    "footer": "Cảm ơn bạn đã dùng bot!"
+  },
+  "support": {
+    "description": "Lấy link server hỗ trợ",
+    "embedDescription": "Cần giúp đỡ? Vào server hỗ trợ của tụi mình nhé!",
+    "footer": "Tụi mình luôn sẵn sàng giúp bạn!"
+  },
+  "dashboard": {
+    "description": "Lấy link bảng điều khiển",
+    "embedDescription": "Truy cập bảng điều khiển web để quản lý cài đặt server, xem hàng chờ và nhiều hơn nữa!",
+    "footer": "Quản lý trải nghiệm âm nhạc của bạn"
+  },
+  "clean": {
+    "description": "Xóa tin nhắn của bot khỏi kênh",
+    "noMessages": "Không tìm thấy tin nhắn nào của bot để xóa.",
+    "success": "🗑️ Đã xóa {count} tin nhắn của bot.",
+    "error": "Đã xảy ra lỗi khi dọn tin nhắn."
+  },
+  "upcoming": {
+    "description": "Hiển thị các bài sắp phát trong hàng chờ",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "noUpcoming": "Không có bài nào sắp phát trong hàng chờ."
+  },
+  "massremove": {
+    "description": "Xóa nhiều bài khỏi hàng chờ",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "noTracks": "Hàng chờ đang trống.",
+    "invalidIndexes": "Số thứ tự không hợp lệ. Hàng chờ có {max} bài. Dùng định dạng: '1 3 5' hoặc '1-5 8'",
+    "success": "🗑️ Đã xóa {count} bài: {tracks}"
+  },
+  "removeuser": {
+    "description": "Xóa tất cả bài do một người dùng yêu cầu",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "noTracks": "Hàng chờ đang trống.",
+    "noUserTracks": "Không tìm thấy bài nào của {user} trong hàng chờ.",
+    "success": "🗑️ Đã xóa {count} bài do {user} yêu cầu."
+  },
+  "pulsator": {
+    "description": "Áp dụng hiệu ứng pulsator (luân phiên giữa các kênh âm thanh)",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "disabled": "🔇 Đã tắt hiệu ứng pulsator.",
+    "enabled": "🔊 Đã bật hiệu ứng pulsator ở {frequency} Hz.",
+    "error": "Đã xảy ra lỗi khi áp dụng hiệu ứng pulsator."
+  },
+  "rate": {
+    "description": "Thay đổi tốc độ phát (tốc độ + cao độ)",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "disabled": "🔇 Đã tắt hiệu ứng tốc độ.",
+    "enabled": "⚡ Đã đặt tốc độ thành {percentage}%.",
+    "info": "Dùng `/rate percentage:150` để thay đổi tốc độ.\n\n**Lưu ý:** Thao tác này thay đổi cả tốc độ và cao độ.",
+    "error": "Đã xảy ra lỗi khi áp dụng hiệu ứng tốc độ."
+  },
+  "starttime": {
+    "description": "Đặt vị trí bắt đầu của bài hiện tại",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "notInVoice": "Bạn cần vào một kênh thoại.",
+    "noTrack": "Hiện không có bài nào đang phát.",
+    "reset": "⏱️ Đã đặt lại thời điểm bắt đầu về đầu bài.",
+    "invalidTime": "Định dạng thời gian không hợp lệ. Dùng: '30s', '1:30', '1m 30s'",
+    "tooLong": "Thời gian vượt quá độ dài bài ({duration}).",
+    "success": "⏱️ Đã tua đến {time}.",
+    "error": "Đã xảy ra lỗi khi đặt thời điểm bắt đầu."
+  },
+  "searchlyrics": {
+    "description": "Tìm bài hát theo lời",
+    "noResults": "Không tìm thấy bài hát nào khớp với lời: \"{query}\"",
+    "noLyricsFound": "Không có lời cho bài hát này.",
+    "error": "Đã xảy ra lỗi khi tìm lời bài hát."
+  },
+  "requested": {
+    "description": "Hiển thị tất cả bài do một người dùng yêu cầu",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "noTracks": "Không tìm thấy bài nào của {user} trong hàng chờ.",
+    "empty": "Không có bài nào để hiển thị."
+  },
+  "collections": {
+    "description": "Quản lý bộ sưu tập nhạc cá nhân của bạn",
+    "tracks": "bài",
+    "notFound": "Không tìm thấy bộ sưu tập **{name}**.",
+    "list": {
+      "description": "Xem tất cả bộ sưu tập của bạn",
+      "title": "📁 Bộ sưu tập của bạn",
+      "empty": "Bạn chưa có bộ sưu tập nào. Tạo một cái bằng `/collections create` nhé!",
+      "footer": "Tổng: {count} bộ sưu tập"
+    },
+    "create": {
+      "description": "Tạo bộ sưu tập mới",
+      "nameOption": "Tên bộ sưu tập",
+      "descriptionOption": "Mô tả bộ sưu tập",
+      "limitReached": "Bạn đã đạt số lượng bộ sưu tập tối đa (50).",
+      "exists": "Đã có bộ sưu tập tên **{name}**.",
+      "success": "✅ Đã tạo bộ sưu tập **{name}**!"
+    },
+    "delete": {
+      "description": "Xóa một bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập cần xóa",
+      "success": "🗑️ Đã xóa bộ sưu tập **{name}**."
+    },
+    "view": {
+      "description": "Xem các bài trong bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập cần xem",
+      "empty": "Bộ sưu tập này đang trống.",
+      "tracksField": "Bài hát",
+      "durationField": "Thời lượng",
+      "shareCodeField": "Mã chia sẻ",
+      "andMore": "...và {count} bài khác"
+    },
+    "save": {
+      "description": "Lưu hàng chờ hiện tại thành bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập",
+      "noQueue": "Hàng chờ không có gì để lưu.",
+      "success": "💾 Đã lưu **{count}** bài vào bộ sưu tập **{name}**!"
+    },
+    "load": {
+      "description": "Tải một bộ sưu tập vào hàng chờ",
+      "nameOption": "Tên bộ sưu tập cần tải",
+      "empty": "Bộ sưu tập này đang trống.",
+      "success": "📂 Đã tải **{count}** bài từ bộ sưu tập **{name}**!"
+    },
+    "rename": {
+      "description": "Đổi tên bộ sưu tập",
+      "oldNameOption": "Tên hiện tại của bộ sưu tập",
+      "newNameOption": "Tên mới cho bộ sưu tập",
+      "exists": "Đã có bộ sưu tập tên **{name}**.",
+      "success": "✏️ Đã đổi tên **{oldName}** thành **{newName}**."
+    },
+    "share": {
+      "description": "Tạo mã chia sẻ cho bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập cần chia sẻ",
+      "success": "🔗 Mã chia sẻ cho **{name}**: `{code}`\nNgười khác có thể dùng `/collections clone` với mã này!"
+    },
+    "unshare": {
+      "description": "Gỡ mã chia sẻ khỏi bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập muốn hủy chia sẻ",
+      "success": "🔒 Đã xóa mã chia sẻ khỏi **{name}**."
+    },
+    "clone": {
+      "description": "Sao chép bộ sưu tập từ mã chia sẻ",
+      "shareCodeOption": "Mã chia sẻ để sao chép",
+      "nameOption": "Tên cho bộ sưu tập mới của bạn",
+      "invalidCode": "Mã chia sẻ không hợp lệ hoặc đã hết hạn.",
+      "success": "📋 Đã sao chép **{count}** bài vào bộ sưu tập mới **{name}**!"
+    },
+    "merge": {
+      "description": "Gộp một bộ sưu tập vào bộ sưu tập khác",
+      "sourceOption": "Bộ sưu tập nguồn",
+      "targetOption": "Bộ sưu tập đích",
+      "sameCollection": "Không thể gộp một bộ sưu tập vào chính nó.",
+      "notFound": "Không tìm thấy một hoặc cả hai bộ sưu tập.",
+      "success": "🔀 Đã gộp **{source}** vào **{target}** (tổng cộng {count} bài)."
+    },
+    "addcurrent": {
+      "description": "Thêm bài đang phát vào bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập muốn thêm vào",
+      "noTrack": "Hiện không có bài nào đang phát.",
+      "success": "➕ Đã thêm **{track}** vào bộ sưu tập **{name}**!"
+    },
+    "removetrack": {
+      "description": "Xóa một bài khỏi bộ sưu tập",
+      "nameOption": "Tên bộ sưu tập",
+      "positionOption": "Vị trí bài muốn xóa (bắt đầu từ 1)",
+      "invalidPosition": "Vị trí không hợp lệ. Bộ sưu tập có {max} bài.",
+      "success": "🗑️ Đã xóa **{track}** khỏi bộ sưu tập **{name}**."
+    }
+  },
+  "endtime": {
+    "description": "Đặt thời điểm kết thúc cho bài hiện tại",
+    "timeOption": "Thời điểm kết thúc bài (vd: 3:00, 180, 3m)",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "noTrack": "Hiện không có bài nào đang phát.",
+    "info": "Thời lượng bài: **{duration}**\nDùng `/endtime time:3:00` để đặt thời điểm kết thúc sớm.",
+    "invalidTime": "Định dạng thời gian không hợp lệ. Dùng: '1:30', '90', '1m30s'",
+    "tooLong": "Thời gian vượt quá thời lượng bài ({duration}).",
+    "tooEarly": "Thời điểm kết thúc phải sau vị trí hiện tại ({position}).",
+    "success": "⏱️ Bài sẽ kết thúc lúc **{time}** (còn {remaining})."
+  },
+  "massmove": {
+    "description": "Di chuyển nhiều bài đến vị trí mới",
+    "indexesOption": "Số thứ tự bài cần di chuyển (vd: 1 3 5 hoặc 1-5)",
+    "positionOption": "Vị trí mới cho các bài",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "invalidIndexes": "Không tìm thấy số thứ tự hợp lệ. Dùng dạng: 1 3 5 hoặc 1-5",
+    "invalidPosition": "Vị trí phải từ 1 đến {max}.",
+    "success": "📦 Đã di chuyển **{count}** bài đến vị trí **{position}**: {tracks}"
+  },
+  "faq": {
+    "description": "Xem các câu hỏi thường gặp",
+    "title": "❓ Câu hỏi thường gặp",
+    "q1": {
+      "question": "Làm sao để phát nhạc?",
+      "answer": "Dùng `/play <tên bài hoặc URL>` để phát nhạc. Bot sẽ vào kênh thoại của bạn và bắt đầu phát."
+    },
+    "q2": {
+      "question": "Sao nhạc bị giật hoặc ngắt quãng?",
+      "answer": "Thường là do sự cố mạng. Thử dùng `/resetbitrate` hoặc kiểm tra khu vực máy chủ của bạn."
+    },
+    "q3": {
+      "question": "Làm sao để tạo playlist?",
+      "answer": "Dùng `/collections create <name>` để tạo bộ sưu tập. Sau đó dùng `/collections save <name>` để lưu hàng chờ hiện tại."
+    },
+    "q4": {
+      "question": "Hỗ trợ những nguồn nhạc nào?",
+      "answer": "Hỗ trợ YouTube, Spotify, SoundCloud và URL trực tiếp."
+    },
+    "q5": {
+      "question": "Làm sao để bỏ qua bài hát?",
+      "answer": "Dùng `/skip` để bỏ qua bài hiện tại, hoặc `/skipto <number>` để chuyển đến một bài cụ thể."
+    },
+    "q6": {
+      "question": "Làm sao để bật chế độ 24/7?",
+      "answer": "Chế độ 24/7 là tính năng premium. Dùng `/premium` để biết thêm thông tin."
+    },
+    "footer": "Cần thêm trợ giúp? Tham gia server hỗ trợ bằng /support"
+  },
+  "next": {
+    "description": "Chuyển sang bài tiếp theo trong hàng chờ",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ để bỏ qua.",
+    "success": "⏭️ Đã chuyển sang bài tiếp theo."
+  },
+  "say": {
+    "description": "Chuyển văn bản thành giọng nói và phát trong kênh thoại",
+    "errorNotAvailable": "❌ Dịch vụ TTS không khả dụng. Vui lòng liên hệ quản trị viên bot.",
+    "errorGenerate": "❌ Không thể tạo giọng nói. Vui lòng thử lại.",
+    "success": "🎤 Đang phát: \"{text}\" ({language}, {voice})"
+  },
+  "sayconfig": {
+    "description": "Cấu hình cài đặt TTS (chuyển văn bản thành giọng nói) của bạn"
+  },
+  "radio": {
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có bài nào đang phát để làm cơ sở cho radio.",
+    "success": "📻 Đã bật radio dựa trên **{title}**",
+    "error": "Không thể bật radio. Vui lòng thử lại.",
+    "description": "Bắt đầu radio không giới hạn từ một bài hát hoặc nghệ sĩ"
+  },
+  "playrecent": {
+    "description": "Phát các bài đã phát gần đây",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noHistory": "Không tìm thấy bài nào đã phát gần đây.",
+    "success": "📜 Đã thêm **{count}** bài phát gần đây vào hàng chờ.",
+    "error": "Không thể phát các bài gần đây."
+  },
+  "removeabsent": {
+    "description": "Xóa bài của những người không ở trong kênh thoại",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "title": "🧹 Đã xóa bài của người vắng mặt",
+    "noTracks": "Không tìm thấy bài nào của người vắng mặt.",
+    "success": "Đã xóa **{count}** bài của những người không ở trong kênh thoại."
+  },
+  "removekeyword": {
+    "description": "Xóa các bài khớp với từ khóa",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "title": "🔍 Đã xóa theo từ khóa",
+    "noMatches": "Không tìm thấy bài nào khớp với từ khóa: **{keyword}**",
+    "success": "Đã xóa **{count}** bài khớp với **{keyword}**.",
+    "removedField": "Các bài đã xóa"
+  },
+  "removedupes": {
+    "description": "Xóa các bài trùng lặp khỏi hàng chờ",
+    "notInVoice": "Bạn cần vào kênh thoại.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "title": "🧹 Đã xóa bài trùng",
+    "noDupes": "Không có bài trùng nào trong hàng chờ.",
+    "success": "Đã xóa **{count}** bài trùng.",
+    "removedField": "Bài trùng đã xóa"
+  },
+  "grab": {
+    "description": "Gửi thông tin bài đang phát vào DM của bạn",
+    "noQueue": "Không có bài nào đang phát.",
+    "author": "Nghệ sĩ",
+    "duration": "Thời lượng",
+    "url": "Liên kết",
+    "requestedBy": "Yêu cầu bởi {user}",
+    "success": "✉️ Kiểm tra DM để xem thông tin bài hát nhé!",
+    "dmFailed": "Mình không gửi DM cho bạn được. Hãy kiểm tra cài đặt quyền riêng tư nhé."
+  },
+  "length": {
+    "description": "Xem tổng thời lượng hàng chờ",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "title": "📊 Độ dài hàng chờ",
+    "totalTracks": "Tổng số bài",
+    "totalDuration": "Tổng thời lượng"
+  },
+  "playnow": {
+    "description": "Phát ngay một bài, bỏ qua bài hiện tại",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noResults": "Không tìm thấy kết quả nào.",
+    "title": "⏯️ Phát ngay",
+    "success": "Đang phát **{title}** của **{author}**",
+    "playing": "Bắt đầu phát **{title}** của **{author}**",
+    "error": "Không phát được bài hát. Vui lòng thử lại."
+  },
+  "playnext": {
+    "description": "Thêm bài hát để phát tiếp theo",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noResults": "Không tìm thấy kết quả nào.",
+    "title": "⏭️ Đã thêm vào tiếp theo",
+    "success": "**{title}** của **{author}** sẽ được phát tiếp theo!",
+    "playing": "Bắt đầu phát **{title}** của **{author}**",
+    "error": "Không thêm được bài hát. Vui lòng thử lại."
+  },
+  "reverse": {
+    "description": "Đảo ngược thứ tự hàng chờ",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noQueue": "Không đủ bài trong hàng chờ để đảo ngược.",
+    "title": "🔄 Đã đảo ngược hàng chờ",
+    "success": "Đã đảo ngược **{count}** bài trong hàng chờ."
+  },
+  "sort": {
+    "description": "Sắp xếp hàng chờ theo nhiều tiêu chí",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noQueue": "Không đủ bài trong hàng chờ để sắp xếp.",
+    "title": "📋 Đã sắp xếp hàng chờ",
+    "success": "Đã sắp xếp **{count}** bài theo **{criteria}**."
+  },
+  "swap": {
+    "description": "Hoán đổi hai bài trong hàng chờ",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noQueue": "Không đủ bài trong hàng chờ để hoán đổi.",
+    "samePosition": "Không thể hoán đổi một bài với chính nó.",
+    "outOfRange": "Vị trí không hợp lệ. Hàng chờ có {max} bài.",
+    "title": "🔀 Đã hoán đổi bài hát",
+    "success": "Đã hoán đổi **#{pos1}** ({title1}) với **#{pos2}** ({title2})."
+  },
+  "voteskip": {
+    "description": "Bỏ phiếu bỏ qua bài hiện tại",
+    "notInVoice": "Bạn cần vào kênh thoại trước.",
+    "noQueue": "Không có bài nào đang phát.",
+    "alreadyVoted": "Bạn đã bỏ phiếu bỏ qua bài này rồi.",
+    "title": "🗳️ Bỏ phiếu bỏ qua",
+    "voted": "**{user}** đã bỏ phiếu bỏ qua! ({current}/{required} phiếu)",
+    "skippedTitle": "⏭️ Bỏ qua thành công",
+    "skipped": "Đã bỏ qua **{title}** theo bình chọn."
+  },
+  "tip": {
+    "description": "Nhận một mẹo ngẫu nhiên",
+    "title": "💡 Mẹo",
+    "footer": "Dùng /help để xem thêm lệnh"
+  },
+  "vote": {
+    "description": "Bình chọn cho bot trên các trang danh sách bot",
+    "title": "🗳️ Bình chọn cho bọn mình nhé!",
+    "message": "Lượt bình chọn của bạn giúp bọn mình phát triển và cải thiện! Bình chọn trên các nền tảng dưới đây:",
+    "rewards": "Phần thưởng bình chọn",
+    "rewardsList": "• Tính năng Premium trong 12 giờ\n• Huy hiệu người bình chọn độc quyền\n• Chất lượng âm thanh cao hơn",
+    "footer": "Cảm ơn bạn đã ủng hộ!",
+    "body": "Bình chọn giúp nhiều server biết đến bot hơn. Mỗi lượt bình chọn trên top.gg mở khóa **chế độ 24/7** và **chất lượng studio** cho bạn trong 12 giờ.",
+    "active": "Quyền lợi bình chọn của bạn còn hiệu lực thêm {time}.",
+    "inactive": "Chưa có lượt bình chọn nào. Bình chọn bên dưới, quyền lợi sẽ có trong vòng một phút.",
+    "notListed": "Bình chọn sẽ mở khi bot được niêm yết. Cảm ơn bạn đã muốn giúp đỡ!"
+  },
+  "leaderboard": {
+    "description": "Xem bảng xếp hạng bài hát của phiên",
+    "noQueue": "Không có hàng chờ nào đang hoạt động.",
+    "noData": "Chưa có dữ liệu bài hát.",
+    "title": "🏆 Bảng xếp hạng phiên",
+    "footer": "Tổng số bài trong hàng chờ: {total}"
+  },
+  "categories": {
+    "description": "Liệt kê tất cả danh mục lệnh",
+    "title": "📚 Danh mục lệnh",
+    "footer": "Dùng /help để xem chi tiết lệnh"
+  },
+  "changelogs": {
+    "description": "Xem nhật ký thay đổi và cập nhật gần đây",
+    "title": "📋 Nhật ký thay đổi",
+    "footer": "Cảm ơn bạn đã sử dụng bot!"
+  },
+  "shards": {
+    "description": "Xem thông tin shard",
+    "title": "🌐 Thông tin shard",
+    "currentShard": "Shard hiện tại",
+    "totalShards": "Tổng số shard",
+    "ping": "Ping",
+    "guilds": "Server",
+    "users": "Người dùng",
+    "status": "Trạng thái",
+    "footer": "Bạn đang kết nối với shard #{shardId}"
+  },
+  "setup": {
+    "description": "Hướng dẫn thiết lập bot",
+    "title": "🔧 Hướng dẫn thiết lập bot",
+    "welcome": "Chào mừng bạn! Làm theo các bước sau để thiết lập bot:",
+    "step1": {
+      "title": "Vào kênh thoại",
+      "desc": "Vào một kênh thoại, rồi dùng `/play <song>` để bắt đầu phát nhạc."
+    },
+    "step2": {
+      "title": "Tùy chỉnh cài đặt",
+      "desc": "Dùng `/settings` để xem và tùy chỉnh bot cho server của bạn."
+    },
+    "step3": {
+      "title": "Thiết lập quyền",
+      "desc": "Admin có thể giới hạn lệnh cho các vai trò cụ thể bằng tính năng phân quyền có sẵn của Discord."
+    },
+    "step4": {
+      "title": "Khám phá tính năng",
+      "desc": "Dùng `/help` để xem tất cả lệnh, hoặc `/categories` để duyệt theo danh mục."
+    },
+    "commands": {
+      "title": "Lệnh cơ bản",
+      "desc": "`/play` - Phát nhạc\n`/skip` - Bỏ qua bài\n`/queue` - Xem hàng chờ\n`/help` - Trợ giúp"
+    },
+    "footer": "Cần trợ giúp? Dùng /support để vào server hỗ trợ của tụi mình."
+  },
+  "playleave": {
+    "description": "Phát một bài và rời đi khi bài kết thúc",
+    "notInVoice": "Bạn cần ở trong một kênh thoại.",
+    "title": "🎵 Đang phát (rời sau đó)",
+    "success": "Đang phát **{title}** của **{author}**. Bot sẽ rời đi sau bài này.",
+    "footer": "Bot sẽ ngắt kết nối sau khi phát xong",
+    "error": "Không thể phát bài này."
+  },
+  "lock": {
+    "description": "Khóa hoặc mở khóa phiên nghe nhạc",
+    "enable": {
+      "description": "Khóa phiên cho riêng bạn"
+    },
+    "disable": {
+      "description": "Mở khóa phiên"
+    },
+    "status": {
+      "description": "Kiểm tra trạng thái khóa"
+    },
+    "notInVoice": "Bạn cần ở trong một kênh thoại.",
+    "noQueue": "Hiện không có hàng chờ nào.",
+    "alreadyLocked": "Phiên đã bị khóa bởi <@{userId}>.",
+    "lockedTitle": "🔒 Đã khóa phiên",
+    "locked": "**{user}** đã khóa phiên này. Chỉ người đó mới điều khiển được việc phát nhạc.",
+    "notLocked": "Phiên này chưa bị khóa.",
+    "notOwner": "Chỉ người khóa hoặc admin mới mở khóa được.",
+    "unlockedTitle": "🔓 Đã mở khóa phiên",
+    "unlocked": "Phiên đã được mở khóa. Giờ ai cũng có thể điều khiển việc phát nhạc.",
+    "statusTitle": "🔐 Trạng thái khóa",
+    "statusLocked": "Phiên đang bị khóa bởi <@{userId}>.",
+    "statusUnlocked": "Phiên đang mở."
+  },
+  "rebind": {
+    "description": "Chuyển thông báo của bot sang kênh khác",
+    "noQueue": "Hiện không có hàng chờ nào.",
+    "invalidChannel": "Kênh không hợp lệ. Vui lòng chọn một kênh văn bản.",
+    "title": "📢 Đã đổi kênh",
+    "success": "Giờ thông báo sẽ được gửi đến {channel}."
+  },
+  "disabledcommands": {
+    "description": "Xem tất cả lệnh bị tắt trong server này",
+    "none": "Hiện không có lệnh nào bị tắt.",
+    "title": "🚫 Lệnh bị tắt",
+    "footer": "{count} lệnh bị tắt"
+  },
+  "commandtoggle": {
+    "description": "Bật hoặc tắt một lệnh",
+    "protected": "Lệnh này không thể tắt.",
+    "enabledTitle": "✅ Đã bật lệnh",
+    "enabled": "Lệnh `/{command}` đã được **bật**.",
+    "disabledTitle": "🚫 Đã tắt lệnh",
+    "disabled": "Lệnh `/{command}` đã bị **tắt**."
+  },
+  "songinfo": {
+    "description": "Xem thông tin chi tiết về một bài",
+    "noQueue": "Không có hàng chờ.",
+    "invalidPosition": "Vị trí không hợp lệ. Hàng chờ có {max} bài.",
+    "noTrack": "Không tìm thấy bài nào.",
+    "author": "Nghệ sĩ",
+    "duration": "Thời lượng",
+    "source": "Nguồn",
+    "views": "Lượt xem",
+    "live": "Trực tiếp",
+    "requestedBy": "Yêu cầu bởi"
+  },
+  "artistinfo": {
+    "description": "Xem thông tin về một nghệ sĩ",
+    "noArtist": "Bạn chưa chỉ định nghệ sĩ và không có bài nào đang phát.",
+    "title": "🎤 {artist}",
+    "tracksInQueue": "Bài trong hàng chờ",
+    "footer": "Nhấn vào liên kết để tìm thêm nhạc của nghệ sĩ này"
+  },
+  "blacklist": {
+    "description": "Quản lý danh sách chặn nghệ sĩ và tiêu đề",
+    "author": {
+      "description": "Chặn một tác giả/nghệ sĩ",
+      "title": "🚫 Đã chặn nghệ sĩ",
+      "exists": "Nghệ sĩ **{name}** đã nằm trong danh sách chặn.",
+      "added": "Đã chặn nghệ sĩ **{name}**. Bài hát của nghệ sĩ này sẽ không được phát."
+    },
+    "title": {
+      "description": "Chặn một từ khóa trong tiêu đề",
+      "addedTitle": "🚫 Đã chặn tiêu đề",
+      "exists": "Từ khóa **{keyword}** đã nằm trong danh sách chặn.",
+      "added": "Đã chặn từ khóa **{keyword}**. Bài hát có từ này trong tiêu đề sẽ không được phát."
+    },
+    "list": {
+      "description": "Xem tất cả mục bị chặn",
+      "title": "📋 Danh sách chặn",
+      "empty": "Chưa có mục nào bị chặn.",
+      "authors": "Nghệ sĩ bị chặn",
+      "titles": "Từ khóa tiêu đề bị chặn"
+    },
+    "removeauthor": {
+      "description": "Gỡ một nghệ sĩ khỏi danh sách chặn",
+      "title": "✅ Đã bỏ chặn nghệ sĩ",
+      "notfound": "Nghệ sĩ **{name}** không có trong danh sách chặn.",
+      "removed": "Đã gỡ nghệ sĩ **{name}** khỏi danh sách chặn."
+    },
+    "removetitle": {
+      "description": "Gỡ một từ khóa tiêu đề khỏi danh sách chặn",
+      "title": "✅ Đã bỏ chặn tiêu đề",
+      "notfound": "Từ khóa **{keyword}** không có trong danh sách chặn.",
+      "removed": "Đã gỡ từ khóa **{keyword}** khỏi danh sách chặn."
+    }
+  },
+  "profile": {
+    "description": "Xem hồ sơ của bạn hoặc của người khác",
+    "title": "👤 Hồ sơ của {user}",
+    "username": "Tên người dùng",
+    "id": "ID người dùng",
+    "created": "Ngày tạo tài khoản",
+    "premium": "Trạng thái Premium",
+    "features": "Tính năng Premium"
+  },
+  "games": {
+    "description": "Xem các trò chơi hiện có",
+    "title": "🎮 Trò chơi hiện có",
+    "info": "Chơi các trò chơi âm nhạc vui nhộn cùng bạn bè!",
+    "guessTheSong": {
+      "title": "Đoán bài hát",
+      "description": "Thử đoán các bài hát từ lịch sử nghe của bạn!"
+    },
+    "footer": "Dùng lệnh hiển thị để bắt đầu trò chơi"
+  },
+  "guesssong": {
+    "description": "Chơi trò Đoán bài hát",
+    "start": {
+      "description": "Bắt đầu trò chơi mới"
+    },
+    "guess": {
+      "description": "Đưa ra câu trả lời"
+    },
+    "stop": {
+      "description": "Dừng trò chơi hiện tại"
+    },
+    "notInVoice": "Bạn cần ở trong kênh thoại để bắt đầu trò chơi.",
+    "alreadyActive": "Đang có một trò chơi diễn ra! Dùng `/guesssong stop` để kết thúc.",
+    "noHistory": "Lịch sử chưa đủ bài hát để bắt đầu. Hãy phát vài bài trước nhé!",
+    "startedTitle": "🎵 Đoán bài hát!",
+    "started": "Trò chơi đã bắt đầu! Hãy thử đoán tên bài hát hoặc nghệ sĩ.",
+    "hint": "Gợi ý",
+    "howToGuess": "Dùng /guesssong guess <câu trả lời> để đoán",
+    "noGame": "Không có trò chơi nào đang diễn ra. Dùng `/guesssong start` để bắt đầu.",
+    "wrong": "❌ Sai rồi! Thử lại nhé.",
+    "winnerTitle": "🎉 Chính xác!",
+    "winner": "**{user}** đã đoán đúng trong **{time}** giây!",
+    "answer": "Đáp án là",
+    "notHost": "Chỉ người tổ chức mới có thể dừng trò chơi.",
+    "stoppedTitle": "🛑 Đã dừng trò chơi",
+    "stopped": "Trò chơi đã được dừng."
+  },
+  "permissions": {
+    "title": "⚙️ Cài đặt quyền",
+    "view_description": "Cấu hình quyền hiện tại của máy chủ này:",
+    "no_custom": "Không có quyền tùy chỉnh",
+    "default_message": "Tất cả lệnh đang dùng quyền mặc định. Dùng `/permissions allow` hoặc `/permissions deny` để cấu hình.",
+    "allowed": "Được phép",
+    "denied": "Bị từ chối",
+    "updated": "✅ Đã cập nhật quyền",
+    "allow_success": "**{permission}** hiện đã được cho phép với {role}",
+    "deny_success": "**{permission}** hiện đã bị từ chối với {role}",
+    "everyone": "mọi người",
+    "reset_title": "🔄 Đã đặt lại quyền",
+    "reset_success": "Tất cả quyền tùy chỉnh đã được đặt lại về mặc định.",
+    "allowall_success": "Tất cả quyền hiện đã được cho phép với {role}",
+    "denyall_success": "Tất cả quyền hiện đã bị từ chối với {role}"
+  },
+  "setsettings": {
+    "updated": "✅ Đã cập nhật cài đặt",
+    "maxtracklen_unlimited": "Độ dài bài hát tối đa giờ là **không giới hạn**.",
+    "maxtracklen_set": "Độ dài bài hát tối đa giờ là **{seconds}** giây.",
+    "maxqueue_set": "Kích thước hàng chờ tối đa giờ là **{size}** bài.",
+    "maxvolume_set": "Âm lượng tối đa giờ là **{volume}%**.",
+    "defaultvolume_set": "Âm lượng mặc định giờ là **{volume}%**.",
+    "voteskip_enabled": "Bỏ phiếu bỏ qua đã được **bật** ở mức **{percentage}%**.",
+    "voteskip_disabled": "Bỏ phiếu bỏ qua đã bị **tắt**.",
+    "announce_enabled": "Thông báo bài đang phát đã được **bật**.",
+    "announce_disabled": "Thông báo bài đang phát đã bị **tắt**.",
+    "autoleave_enabled": "Tự động rời kênh đã được **bật** với thời gian chờ **{timeout}** giây.",
+    "autoleave_disabled": "Tự động rời kênh đã bị **tắt**.",
+    "duplicates_prevented": "Bài hát trùng lặp giờ sẽ bị **chặn**.",
+    "duplicates_allowed": "Bài hát trùng lặp giờ đã được **cho phép**.",
+    "language_set": "Ngôn ngữ đã được đặt thành **{lang}**.",
+    "embedcolor_set": "Màu embed đã được đặt thành **{color}**.",
+    "invalid_color": "Mã màu hex không hợp lệ. Hãy dùng định dạng như #F8AA2A.",
+    "reset_title": "🔄 Đã đặt lại cài đặt",
+    "reset_success": "Tất cả cài đặt đã được đặt lại về giá trị mặc định."
+  },
+  "ownership": {
+    "claimed_title": "👑 Đã nhận quyền sở hữu",
+    "claimed_success": "{user} giờ là chủ phiên.",
+    "claimed_footer": "Là chủ phiên, bạn có quyền điều khiển phiên phát nhạc.",
+    "already_claimed": "Phiên này đã thuộc về {owner}.",
+    "not_owner": "Bạn không phải chủ phiên.",
+    "user_not_in_vc": "Người dùng đó không ở trong kênh thoại.",
+    "transferred_title": "🔄 Đã chuyển quyền sở hữu",
+    "transferred_success": "{from} đã chuyển quyền sở hữu cho {to}.",
+    "view_title": "👑 Chủ phiên",
+    "current_owner": "Chủ phiên hiện tại: {owner}",
+    "no_owner": "Phiên này chưa có chủ. Dùng `/ownership claim` để nhận quyền."
+  },
+  "channels": {
+    "log_title": "📝 Kênh nhật ký",
+    "log_set": "Kênh nhật ký đã được đặt thành {channel}.",
+    "log_disabled": "Kênh nhật ký đã bị tắt.",
+    "text_updated": "📝 Đã cập nhật cài đặt kênh văn bản",
+    "text_enabled": "{channel} giờ đã được bật cho lệnh bot.",
+    "text_disabled": "{channel} giờ đã bị tắt cho lệnh bot.",
+    "text_enableall": "Tất cả kênh văn bản giờ đã được bật.",
+    "text_disableall": "Tất cả kênh văn bản giờ đã bị tắt, trừ {channel}.",
+    "text_view_title": "📝 Kênh văn bản được phép",
+    "all_text_enabled": "Tất cả kênh văn bản hiện đang được bật.",
+    "allowed_text_list": "Các kênh văn bản được phép:",
+    "voice_updated": "🔊 Đã cập nhật cài đặt kênh thoại",
+    "voice_enabled": "{channel} giờ đã được bật để phát nhạc.",
+    "voice_disabled": "{channel} giờ đã bị tắt phát nhạc.",
+    "voice_enableall": "Tất cả kênh thoại giờ đã được bật.",
+    "voice_disableall_hint": "Hãy dùng `/channels voice enable` để bật các kênh thoại cụ thể trước.",
+    "voice_view_title": "🔊 Kênh thoại được phép",
+    "all_voice_enabled": "Tất cả kênh thoại hiện đang được bật.",
+    "allowed_voice_list": "Các kênh thoại được phép:",
+    "use_disableall_first": "Dùng 'disableall' trước để giới hạn kênh, sau đó bật từng kênh cụ thể."
+  },
+  "perks": {
+    "title": "⭐ Đặc quyền Premium",
+    "how_to_get": "Cách nhận Premium",
+    "patreon_link": "Ủng hộ chúng mình trên Patreon: https://patreon.com/u36360623",
+    "user_title": "Trạng thái Premium của bạn",
+    "user_premium": "Bạn đang có premium **{tier}**! 🎉",
+    "your_perks": "Đặc quyền đang hoạt động",
+    "user_free": "Bạn đang dùng gói **Free**.",
+    "upgrade": "Nâng cấp lên Premium",
+    "upgrade_message": "Nhận tính năng premium bằng cách ủng hộ chúng mình trên Patreon!",
+    "description": "Xem các đặc quyền premium"
+  },
+  "boost": {
+    "no_premium_title": "❌ Chưa có Premium",
+    "no_premium": "Bạn cần premium để boost server. Nhận premium trên Patreon nhé!",
+    "already_boosted_title": "⚠️ Đã được boost",
+    "already_boosted_self": "Bạn đã boost server này rồi!",
+    "already_boosted_other": "Server này đã được người khác boost.",
+    "activated_title": "🚀 Đã boost server!",
+    "activated_success": "Server này giờ đã được boost với premium **{tier}**!",
+    "not_your_boost_title": "❌ Không phải boost của bạn",
+    "not_your_boost": "Bạn không boost server này.",
+    "deactivated_title": "📤 Đã gỡ boost",
+    "deactivated_success": "Boost của bạn đã được gỡ khỏi server này.",
+    "list_title": "📋 Các boost đang hoạt động",
+    "no_boosts": "Bạn chưa boost server nào.",
+    "active_boosts": "Các server bạn đang boost:",
+    "info_title": "ℹ️ Thông tin boost server",
+    "guild_boosted": "Server này đã được boost! 🎉",
+    "tier": "Gói",
+    "boosted_by": "Được boost bởi",
+    "since": "Từ",
+    "guild_not_boosted": "Server này chưa được boost.",
+    "how_to_boost": "Cách boost",
+    "boost_instructions": "Dùng `/boost activate` để boost server này bằng premium của bạn."
+  },
+  "alias": {
+    "added_title": "✅ Đã thêm alias",
+    "added_success": "Alias `{alias}` giờ sẽ chạy `{command}`.",
+    "removed_title": "🗑️ Đã xóa alias",
+    "removed_success": "Đã xóa alias `{alias}`.",
+    "list_title": "📋 Alias của server",
+    "no_aliases": "Server này chưa có alias nào.",
+    "cleared_title": "🧹 Đã xóa hết alias",
+    "cleared_success": "Đã xóa toàn bộ alias của server.",
+    "not_found": "Alias đó không tồn tại.",
+    "no_spaces": "Tên alias không được chứa dấu cách."
+  },
+  "nightcore": {
+    "description": "Bật/tắt hiệu ứng nightcore cho nhạc",
+    "errorNotQueue": "Không có gì đang phát.",
+    "result": "<@{author}> 🎵 Hiệu ứng nightcore giờ đã {status}"
+  },
+  "player": {
+    "nowPlaying": "Đang phát",
+    "paused": "Đã tạm dừng",
+    "live": "TRỰC TIẾP",
+    "requestedBy": "yêu cầu bởi {user}",
+    "autoplayPick": "được autoplay chọn",
+    "upNext": "Tiếp theo: {title}",
+    "upNextMore": "Tiếp theo: {title} (+{count} bài nữa)",
+    "upNextAutoplay": "Autoplay sẽ chọn bài tiếp theo",
+    "queueEmpty": "Hàng chờ trống. Thêm bài bằng /play",
+    "loopOff": "Tắt lặp",
+    "loopTrack": "Đang lặp bài này",
+    "loopQueue": "Đang lặp hàng chờ",
+    "volume": "Âm lượng {volume}%",
+    "autoplayOn": "Autoplay bật",
+    "stay247On": "24/7 bật",
+    "ended": "Đã hết hàng chờ. Dùng /play để tiếp tục nghe nhạc.",
+    "endedAutoplayHint": "Mẹo: bật autoplay để nhạc không bao giờ dừng.",
+    "stopped": "Đã dừng phát.",
+    "disconnected": "Đã rời kênh thoại.",
+    "notInVoice": "Vào kênh thoại của mình để dùng các nút điều khiển nhé.",
+    "needDj": "Bạn cần role DJ để làm điều đó.",
+    "nothingPlaying": "Hiện không có gì đang phát.",
+    "noPrevious": "Không có bài trước đó.",
+    "shuffled": "Đã xáo trộn {count} bài.",
+    "nothingToShuffle": "Thêm ít nhất hai bài để xáo trộn.",
+    "dmSent": "Đã gửi vào DM của bạn.",
+    "dmClosed": "DM của bạn đang đóng, nên đây nhé:",
+    "savedFrom": "Lưu từ {guild}",
+    "lyricsNotFound": "Không tìm thấy lời bài hát cho {title}.",
+    "lyricsLoading": "Đang tìm lời bài hát…",
+    "autoplayEnabled": "Đã bật autoplay: các bài liên quan sẽ tiếp tục phát.",
+    "autoplayDisabled": "Đã tắt autoplay.",
+    "volumeLimit": "Server này giới hạn âm lượng ở {max}%.",
+    "lyricsButton": "Lời bài hát",
+    "saveButton": "Lưu"
+  },
+  "queueView": {
+    "title": "Hàng chờ",
+    "nowPlaying": "Đang phát",
+    "empty": "Hàng chờ trống. Thêm bài bằng /play",
+    "page": "Trang {page}/{pages}",
+    "summary": "{count} bài · tổng {duration}",
+    "nothingPlaying": "Không có gì đang phát trong server này."
+  },
+  "lyricsCmd": {
+    "optionQuery": "Bài hát cần tìm (mặc định là bài đang phát)",
+    "needQuery": "Không có gì đang phát ở đây. Cho mình biết bài nào: /lyrics query:<song>",
+    "source": "Lời bài hát từ {source}"
+  },
+  "welcome": {
+    "title": "Cảm ơn bạn đã thêm {bot}!",
+    "body": "Vào một kênh thoại và gõ **/play** kèm tên bài hát hoặc link từ YouTube, Spotify, SoundCloud hay Apple Music. Các nút bên dưới mỗi bài cho phép mọi người trong kênh tạm dừng, bỏ qua, lặp lại và nhiều hơn nữa.",
+    "tips": "**/help** liệt kê mọi lệnh · **/settings** đặt vai trò DJ, ngôn ngữ và giới hạn · **/autoplay** tự phát tiếp các bài liên quan",
+    "commands": "Lệnh",
+    "dashboard": "Bảng điều khiển",
+    "support": "Server hỗ trợ",
+    "vote": "Bình chọn"
+  },
+  "router": {
+    "guildOnly": "Lệnh này chỉ dùng được trong server.",
+    "blacklisted": "Bạn không được phép dùng bot ở đây.",
+    "channelNotAllowed": "Không được dùng lệnh bot trong kênh này.",
+    "commandDisabled": "Quản trị viên đã tắt /{name} trong server này.",
+    "cooldown": "Chậm lại chút! Thử lại /{name} sau {time}s nhé.",
+    "missingPermissions": "Mình đang thiếu quyền ở đây: {permissions}",
+    "error": "Đã có lỗi khi chạy lệnh. Lỗi đã được ghi lại, bạn thử lại nhé.",
+    "expired": "Các nút điều khiển này không còn hoạt động nữa."
+  },
+  "helpMenu": {
+    "title": "{bot} — danh sách lệnh",
+    "intro": "Vào một kênh thoại và dùng </play:{playId}> kèm tên bài hát hoặc link. Chọn một danh mục bên dưới để xem các lệnh khác.",
+    "pick": "Chọn danh mục",
+    "category": {
+      "music": "Phát nhạc",
+      "queue": "Hàng chờ",
+      "effects": "Hiệu ứng & bộ lọc",
+      "playlists": "Playlist",
+      "info": "Lời bài hát & thông tin",
+      "settings": "Cài đặt server",
+      "premium": "Premium & bình chọn",
+      "other": "Khác"
+    },
+    "categoryDesc": {
+      "music": "Phát, tạm dừng, bỏ qua, tua, lặp lại, tự phát",
+      "queue": "Xem, sắp xếp lại và dọn dẹp hàng chờ",
+      "effects": "Tăng bass, nightcore, 8D, âm lượng…",
+      "playlists": "Lưu và tải playlist của riêng bạn",
+      "info": "Lời bài hát, bài đang phát, thống kê",
+      "settings": "Vai trò DJ, ngôn ngữ, giới hạn, kênh",
+      "premium": "Đặc quyền Founder, phần thưởng bình chọn",
+      "other": "Mọi thứ khác"
+    },
+    "links": "Liên kết"
+  },
+  "stay247": {
+    "enabledHere": "Đã bật 24/7: Mình sẽ ở lại {channel} và vào lại sau khi khởi động lại.",
+    "disabledNow": "Đã tắt 24/7: Mình sẽ rời đi sau {minutes} phút im lặng hoặc khi kênh trống.",
+    "lost": "Chế độ 24/7 đã bị tắt vì thành viên bật nó không còn Founder hoặc lượt bình chọn còn hiệu lực.",
+    "needVoice": "Hãy vào kênh thoại mà bạn muốn mình ở lại, rồi chạy lại /247."
+  },
+  "language": {
+    "description": "Đặt ngôn ngữ bot dùng trong server này",
+    "optionLanguage": "Ngôn ngữ (tự động theo ngôn ngữ Discord của từng thành viên)",
+    "auto": "Tự động (ngôn ngữ Discord của từng thành viên)",
+    "set": "Đã đặt ngôn ngữ thành {language}.",
+    "needManage": "Bạn cần quyền Quản lý máy chủ để đổi ngôn ngữ."
+  },
+  "links": {
+    "website": "Trang web",
+    "support": "Hỗ trợ",
+    "premium": "Premium",
+    "vote": "Bình chọn",
+    "addToServer": "Thêm vào server",
+    "invite": "Mời bot"
+  },
+  "commanddisable": {
+    "description": "Tắt lệnh trong server này"
+  },
+  "commanddisableall": {
+    "description": "Tắt tất cả lệnh trừ các lệnh thiết yếu"
+  },
+  "commandenable": {
+    "description": "Bật lại một lệnh đã tắt"
+  },
+  "commandenableall": {
+    "description": "Bật lại tất cả lệnh đã tắt"
+  },
+  "effects": {
+    "description": "Quản lý hiệu ứng âm thanh"
+  },
+  "info": {
+    "description": "Thông tin và trợ giúp về bot"
+  },
+  "patreon": {
+    "description": "Kiểm tra trạng thái Patreon và đồng bộ quyền lợi của bạn"
+  },
+  "play_file": {
+    "description": "Phát tệp âm thanh từ tệp đính kèm"
+  },
+  "play_spotify": {
+    "description": "Tìm và phát bài hát từ Spotify"
+  },
+  "premium": {
+    "description": "Quản lý tính năng premium và liên kết server"
+  },
+  "queuemanage": {
+    "description": "Quản lý hàng chờ nâng cao"
+  },
+  "settings": {
+    "description": "Cấu hình bot cho server này (chỉ Admin)"
+  },
+  "stats": {
+    "description": "Xem thống kê bot và phiên nghe"
+  },
+  "user": {
+    "description": "Hồ sơ và tùy chọn người dùng"
+  }
 }

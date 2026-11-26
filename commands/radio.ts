@@ -13,7 +13,7 @@ import play from "./play";
 export default {
   data: new SlashCommandBuilder()
     .setName("radio")
-    .setDescription("Start an endless radio from a song or artist")
+    .setDescription(i18n.__("radio.description"))
     .addStringOption((option) =>
       option.setName("song").setDescription(i18n.__("play.optionSong")).setRequired(true).setAutocomplete(true)
     ),

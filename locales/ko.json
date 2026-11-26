@@ -1,4 +1,14 @@
 {
+  "247": {
+    "description": "24/7 모드 켜기/끄기 (봇이 음성 채널에 계속 머물러요)",
+    "premiumRequired": "⭐ 24/7 모드는 프리미엄 기능이에요. 자세한 내용은 `/premium`을 사용해 보세요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "title": "🌙 24/7 모드",
+    "enabled": "24/7 모드가 **켜졌어요**. 봇이 음성 채널에 계속 머물러요.",
+    "disabled": "24/7 모드가 **꺼졌어요**. 재생이 없으면 봇이 나가요.",
+    "footer": "프리미엄 기능"
+  },
   "clip": {
     "description": "주어진 클립을 재생합니다.",
     "usagesReply": "사용 방법: {prefix}clip <name>",
@@ -31,7 +41,11 @@
     "description": "대기열에서 음악을 이동합니다.",
     "errorNotQueue": "대기열에 음악이 없습니다.",
     "usagesReply": "사용 방법: {prefix}move <Queue Number>",
-    "result": "<@{author}> 🚚 **{title}** 를 대기열에서 {index}번째로 옮겼습니다."
+    "result": "<@{author}> 🚚 **{title}** 를 대기열에서 {index}번째로 옮겼습니다.",
+    "args": {
+      "movefrom": "옮길 곡의 위치",
+      "moveto": "옮겨갈 위치"
+    }
   },
   "nowplaying": {
     "description": "현재 재생중인 음악을 표시합니다.",
@@ -72,7 +86,34 @@
     "stopSong": "<@{author}> ⏹ 음악을 중지했습니다.",
     "leaveChannel": "채널을 떠나는 중입니다.",
     "songNotFound": "오디오를 찾을 수 없음",
-    "songAccessErr": "동영상에 연령 제한이 있거나 비공개이거나 사용할 수 없습니다."
+    "songAccessErr": "동영상에 연령 제한이 있거나 비공개이거나 사용할 수 없습니다.",
+    "errorNoResults": "{url}에 대한 결과를 찾을 수 없어요",
+    "errorInvalidURL": "잘못된 URL이에요. 검색어나 YouTube URL을 입력해 주세요",
+    "optionSong": "노래 제목 또는 링크 (YouTube, Spotify, SoundCloud, Apple Music…)",
+    "optionNext": "현재 곡 바로 다음에 재생",
+    "optionSource": "제목으로 검색할 때 사용할 곳",
+    "addedTitle": "대기열에 추가됨",
+    "nowPlayingTitle": "지금 재생 중",
+    "playlistTitle": "플레이리스트 추가됨",
+    "playlistTracks": "{count}곡",
+    "position": "#{position}번째",
+    "positionNext": "다음에 재생",
+    "notAllowedChannel": "이 음성 채널에서는 재생할 수 없어요.",
+    "queueFull": "대기열이 가득 찼어요 ({max}곡).",
+    "tooLong": "이 곡은 서버 제한 길이({max})보다 길어요.",
+    "duplicate": "**{title}**은(는) 이미 대기열에 있어요.",
+    "noResults": "{query}에 대한 결과가 없어요.",
+    "initializing": "플레이어를 준비 중이에요. 몇 초 후에 다시 시도해 주세요.",
+    "ageRestricted": "연령 제한이 있는 영상이에요.",
+    "private": "비공개 영상이에요.",
+    "unavailable": "이용할 수 없는 영상이에요.",
+    "genericError": "재생할 수 없어요: {error}",
+    "searchSuggestion": "검색: {query}",
+    "botNotInChannel": "이미 {channel}에서 재생 중이에요. 곡을 추가하려면 해당 채널에 들어와 주세요.",
+    "cantJoin": "{channel}에 들어갈 수 없어요: 해당 채널에서 연결 및 말하기 권한이 필요해요.",
+    "contextName": "음성 채널에서 재생",
+    "contextNextName": "다음에 재생",
+    "contextNoQuery": "이 메시지에는 재생할 수 있는 링크, 오디오 파일 또는 텍스트가 없어요."
   },
   "playlist": {
     "description": "Youtube 부터 재생목록을 재생합니다.",
@@ -118,7 +159,9 @@
     "errorAlreadyCollector": "해당 채널에 메세지 컬렉터가 이미 존재합니다.",
     "errorNotChannel": "음성 채널에 들어와 있지 않습니다.",
     "resultEmbedTitle": "**재생할 음악 번호를 답장으로 보내주세요.**",
-    "resultEmbedDesc": "검색 결과: {search}"
+    "resultEmbedDesc": "검색 결과: {search}",
+    "optionQuery": "검색어",
+    "noResults": "검색 결과가 없어요. 다른 검색어로 시도해 주세요"
   },
   "shuffle": {
     "description": "대기열 섞기",
@@ -135,7 +178,10 @@
     "usageReply": "사용 방법: {prefix}{name} <Queue Number>",
     "errorNotQueue": "대기열에 음악이 없습니다.",
     "errorNotValid": "대기열에 {length} 개의 음악이 존재합니다.",
-    "result": "<@{author}> ⏭ {arg} 개의 음악을 넘겼습니다."
+    "result": "<@{author}> ⏭ {arg} 개의 음악을 넘겼습니다.",
+    "args": {
+      "number": "건너뛸 대기열 번호"
+    }
   },
   "stop": {
     "description": "모든 음악을 멈춥니다.",
@@ -163,5 +209,935 @@
     "errorNotChannel": "음성 채널에 들어와 있지 않습니다.",
     "cooldownMessage": "`{name}` 명령어를 실행하기 전 {time} 초 만큼 기다려주세요.",
     "errorCommand": "명령어 실행에 실패했습니다."
+  },
+  "seek": {
+    "description": "곡의 특정 시간으로 이동",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "errorInvalidTime": "잘못된 시간 형식이에요. 예: 1:30, 90, 1m30s",
+    "errorOutOfRange": "시간은 0:00에서 {duration} 사이여야 해요",
+    "result": "<@{author}> ⏩ **{time}**(으)로 이동했어요"
+  },
+  "forward": {
+    "description": "지정한 초만큼 앞으로 건너뛰기",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "errorNearEnd": "곡의 끝에 너무 가까워서 앞으로 건너뛸 수 없어요.",
+    "result": "<@{author}> ⏩ **{seconds}초** 앞으로 이동했어요 (현재 {position})"
+  },
+  "rewind": {
+    "description": "지정한 초만큼 되감기",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "result": "<@{author}> ⏪ **{seconds}초** 되감았어요 (현재 {position})"
+  },
+  "replay": {
+    "description": "현재 곡을 처음부터 다시 재생",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "result": "<@{author}> 🔄 **{title}**을(를) 처음부터 다시 재생했어요"
+  },
+  "clear": {
+    "description": "대기열 전체 비우기",
+    "errorNotQueue": "대기열이 이미 비어 있어요.",
+    "result": "<@{author}> 🗑️ 대기열에서 **{count}**곡을 지웠어요"
+  },
+  "loopqueue": {
+    "description": "대기열 반복 모드 켜기/끄기",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "result": "🔁 대기열 반복: {loop}"
+  },
+  "join": {
+    "description": "봇을 내 음성 채널로 부르기",
+    "errorDifferentChannel": "이미 다른 음성 채널에 있어요.",
+    "errorCantJoin": "음성 채널에 들어갈 수 없었어요.",
+    "result": "✅ **{channel}**에 들어왔어요"
+  },
+  "leave": {
+    "description": "봇을 음성 채널에서 내보내기",
+    "errorNotInChannel": "음성 채널에 있지 않아요.",
+    "result": "👋 **{channel}**에서 나갔어요"
+  },
+  "save": {
+    "description": "현재 곡을 DM으로 저장",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "errorDMClosed": "DM을 보낼 수 없어요. 서버 멤버의 DM 허용을 켜 주세요.",
+    "result": "💾 **{title}**을(를) DM으로 보냈어요!"
+  },
+  "autoplay": {
+    "description": "자동 재생 켜기/끄기 (대기열이 끝나면 비슷한 곡 재생)",
+    "errorNotQueue": "활성화된 대기열이 없어요.",
+    "result": "🔄 자동 재생: {status}"
+  },
+  "history": {
+    "description": "최근 재생한 곡 보기",
+    "errorNotQueue": "활성화된 대기열이 없어요.",
+    "errorEmpty": "아직 재생 기록이 없어요.",
+    "embedTitle": "최근 재생한 곡",
+    "footer": "최근 {count}곡 표시 중"
+  },
+  "previous": {
+    "description": "이전 곡 재생",
+    "errorNotQueue": "활성화된 대기열이 없어요.",
+    "errorNoHistory": "기록에 이전 곡이 없어요.",
+    "result": "<@{author}> ⏮️ 이전 곡을 재생해요"
+  },
+  "jump": {
+    "description": "대기열의 특정 위치로 이동",
+    "errorNotQueue": "대기열이 없어요.",
+    "errorInvalidPosition": "잘못된 위치예요. 대기열에는 {max}곡만 있어요.",
+    "errorNotFound": "해당 위치에서 곡을 찾을 수 없어요.",
+    "result": "<@{author}> ⏭️ **{title}**(으)로 이동했어요"
+  },
+  "Invite me to your server!": "내 서버에 초대해 보세요!",
+  "Invite": "초대하기",
+  "about": {
+    "description": "봇 정보 보기",
+    "embedDescription": "고음질 오디오 재생을 지원하는 강력한 Discord 음악 봇",
+    "footer": "봇을 이용해 줘서 고마워요!"
+  },
+  "support": {
+    "description": "서포트 서버 링크 받기",
+    "embedDescription": "도움이 필요해요? 서포트 서버에 들어와서 도움을 받아보세요!",
+    "footer": "언제든 도와드릴게요!"
+  },
+  "dashboard": {
+    "description": "대시보드 링크 받기",
+    "embedDescription": "웹 대시보드에서 서버 설정 관리, 대기열 확인 등을 할 수 있어요!",
+    "footer": "나만의 음악 경험을 관리해 보세요"
+  },
+  "clean": {
+    "description": "채널에서 봇 메시지 삭제",
+    "noMessages": "삭제할 봇 메시지가 없어요.",
+    "success": "🗑️ 봇 메시지 {count}개를 삭제했어요.",
+    "error": "메시지를 정리하는 중에 오류가 발생했어요."
+  },
+  "upcoming": {
+    "description": "대기열의 다음 트랙 보기",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "noUpcoming": "대기열에 다음 트랙이 없어요."
+  },
+  "massremove": {
+    "description": "대기열에서 여러 트랙 삭제",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noTracks": "대기열이 비어 있어요.",
+    "invalidIndexes": "잘못된 번호예요. 대기열에 트랙이 {max}개 있어요. 형식: '1 3 5' 또는 '1-5 8'",
+    "success": "🗑️ 트랙 {count}개를 삭제했어요: {tracks}"
+  },
+  "removeuser": {
+    "description": "특정 사용자가 신청한 트랙 모두 삭제",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noTracks": "대기열이 비어 있어요.",
+    "noUserTracks": "대기열에 {user}님이 신청한 트랙이 없어요.",
+    "success": "🗑️ {user}님이 신청한 트랙 {count}개를 삭제했어요."
+  },
+  "pulsator": {
+    "description": "펄세이터 효과 적용 (좌우 채널을 번갈아 재생)",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "disabled": "🔇 펄세이터 효과를 껐어요.",
+    "enabled": "🔊 펄세이터 효과를 {frequency} Hz로 켰어요.",
+    "error": "펄세이터 효과를 적용하는 중에 오류가 발생했어요."
+  },
+  "rate": {
+    "description": "재생 속도 변경 (속도 + 음높이)",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "disabled": "🔇 재생 속도 효과를 껐어요.",
+    "enabled": "⚡ 재생 속도를 {percentage}%로 설정했어요.",
+    "info": "`/rate percentage:150`으로 재생 속도를 바꿀 수 있어요.\n\n**참고:** 속도와 음높이가 함께 바뀌어요.",
+    "error": "재생 속도 효과를 적용하는 중에 오류가 발생했어요."
+  },
+  "starttime": {
+    "description": "현재 트랙의 시작 위치 설정",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noTrack": "지금 재생 중인 트랙이 없어요.",
+    "reset": "⏱️ 시작 위치를 처음으로 되돌렸어요.",
+    "invalidTime": "시간 형식이 올바르지 않아요. 예: '30s', '1:30', '1m 30s'",
+    "tooLong": "트랙 길이({duration})를 넘는 시간이에요.",
+    "success": "⏱️ {time}(으)로 이동했어요.",
+    "error": "시작 위치를 설정하는 중에 오류가 발생했어요."
+  },
+  "searchlyrics": {
+    "description": "가사로 노래 검색",
+    "noResults": "가사 \"{query}\"와(과) 일치하는 노래를 찾지 못했어요.",
+    "noLyricsFound": "이 노래의 가사를 찾을 수 없어요.",
+    "error": "가사를 검색하는 중에 오류가 발생했어요."
+  },
+  "requested": {
+    "description": "특정 사용자가 신청한 트랙 모두 보기",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "noTracks": "대기열에 {user}님이 신청한 트랙이 없어요.",
+    "empty": "표시할 트랙이 없어요."
+  },
+  "collections": {
+    "description": "나만의 음악 컬렉션 관리",
+    "tracks": "트랙",
+    "notFound": "**{name}** 컬렉션을 찾을 수 없어요.",
+    "list": {
+      "description": "내 컬렉션 모두 보기",
+      "title": "📁 내 컬렉션",
+      "empty": "아직 컬렉션이 없어요. `/collections create`로 만들어 보세요!",
+      "footer": "총 {count}개 컬렉션"
+    },
+    "create": {
+      "description": "새 컬렉션 만들기",
+      "nameOption": "컬렉션 이름",
+      "descriptionOption": "컬렉션 설명",
+      "limitReached": "컬렉션 최대 개수(50개)에 도달했어요.",
+      "exists": "**{name}**(이)라는 컬렉션이 이미 있어요.",
+      "success": "✅ **{name}** 컬렉션을 만들었어요!"
+    },
+    "delete": {
+      "description": "컬렉션 삭제",
+      "nameOption": "삭제할 컬렉션 이름",
+      "success": "🗑️ **{name}** 컬렉션을 삭제했어요."
+    },
+    "view": {
+      "description": "컬렉션의 트랙 보기",
+      "nameOption": "볼 컬렉션 이름",
+      "empty": "이 컬렉션은 비어 있어요.",
+      "tracksField": "트랙",
+      "durationField": "길이",
+      "shareCodeField": "공유 코드",
+      "andMore": "...외 트랙 {count}개"
+    },
+    "save": {
+      "description": "현재 대기열을 컬렉션으로 저장",
+      "nameOption": "컬렉션 이름",
+      "noQueue": "대기열에 저장할 트랙이 없어요.",
+      "success": "💾 트랙 **{count}**개를 **{name}** 컬렉션에 저장했어요!"
+    },
+    "load": {
+      "description": "컬렉션을 대기열에 불러오기",
+      "nameOption": "불러올 컬렉션 이름",
+      "empty": "이 컬렉션은 비어 있어요.",
+      "success": "📂 **{name}** 컬렉션에서 트랙 **{count}**개를 불러왔어요!"
+    },
+    "rename": {
+      "description": "컬렉션 이름 변경",
+      "oldNameOption": "컬렉션의 현재 이름",
+      "newNameOption": "컬렉션의 새 이름",
+      "exists": "**{name}** 컬렉션이 이미 있어요.",
+      "success": "✏️ **{oldName}**의 이름을 **{newName}**(으)로 바꿨어요."
+    },
+    "share": {
+      "description": "컬렉션 공유 코드 만들기",
+      "nameOption": "공유할 컬렉션 이름",
+      "success": "🔗 **{name}**의 공유 코드: `{code}`\n다른 사람들이 이 코드로 `/collections clone`을 사용할 수 있어요!"
+    },
+    "unshare": {
+      "description": "컬렉션의 공유 코드 삭제",
+      "nameOption": "공유를 해제할 컬렉션 이름",
+      "success": "🔒 **{name}**의 공유 코드를 삭제했어요."
+    },
+    "clone": {
+      "description": "공유 코드로 컬렉션 복제",
+      "shareCodeOption": "복제할 공유 코드",
+      "nameOption": "새 컬렉션 이름",
+      "invalidCode": "잘못되었거나 만료된 공유 코드예요.",
+      "success": "📋 **{count}**개 트랙을 새 컬렉션 **{name}**에 복제했어요!"
+    },
+    "merge": {
+      "description": "컬렉션을 다른 컬렉션에 합치기",
+      "sourceOption": "합칠 원본 컬렉션",
+      "targetOption": "합쳐질 대상 컬렉션",
+      "sameCollection": "같은 컬렉션끼리는 합칠 수 없어요.",
+      "notFound": "컬렉션 하나 또는 둘 다 찾을 수 없어요.",
+      "success": "🔀 **{source}**을(를) **{target}**에 합쳤어요 (총 {count}개 트랙)."
+    },
+    "addcurrent": {
+      "description": "현재 재생 중인 트랙을 컬렉션에 추가",
+      "nameOption": "추가할 컬렉션 이름",
+      "noTrack": "지금 재생 중인 트랙이 없어요.",
+      "success": "➕ **{track}**을(를) 컬렉션 **{name}**에 추가했어요!"
+    },
+    "removetrack": {
+      "description": "컬렉션에서 트랙 삭제",
+      "nameOption": "컬렉션 이름",
+      "positionOption": "삭제할 트랙의 위치 (1부터 시작)",
+      "invalidPosition": "잘못된 위치예요. 컬렉션에는 {max}개 트랙이 있어요.",
+      "success": "🗑️ 컬렉션 **{name}**에서 **{track}**을(를) 삭제했어요."
+    }
+  },
+  "endtime": {
+    "description": "현재 트랙의 종료 위치 설정",
+    "timeOption": "트랙 종료 시간 (예: 3:00, 180, 3m)",
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "noTrack": "지금 재생 중인 트랙이 없어요.",
+    "info": "트랙 길이: **{duration}**\n`/endtime time:3:00`으로 더 일찍 끝나도록 설정할 수 있어요.",
+    "invalidTime": "잘못된 시간 형식이에요. 예: '1:30', '90', '1m30s'",
+    "tooLong": "트랙 길이({duration})를 초과했어요.",
+    "tooEarly": "종료 시간은 현재 위치({position}) 이후여야 해요.",
+    "success": "⏱️ 트랙이 **{time}**에 끝나요 ({remaining} 남음)."
+  },
+  "massmove": {
+    "description": "여러 트랙을 새 위치로 이동",
+    "indexesOption": "이동할 트랙 번호 (예: 1 3 5 또는 1-5)",
+    "positionOption": "트랙의 새 위치",
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "invalidIndexes": "유효한 트랙 번호가 없어요. 예: 1 3 5 또는 1-5",
+    "invalidPosition": "위치는 1에서 {max} 사이여야 해요.",
+    "success": "📦 **{count}**개 트랙을 **{position}**번 위치로 옮겼어요: {tracks}"
+  },
+  "faq": {
+    "description": "자주 묻는 질문 보기",
+    "title": "❓ 자주 묻는 질문",
+    "q1": {
+      "question": "음악은 어떻게 재생하나요?",
+      "answer": "`/play <노래 제목 또는 URL>`로 음악을 재생하세요. 봇이 음성 채널에 들어와 재생을 시작해요."
+    },
+    "q2": {
+      "question": "음악이 끊기거나 버벅이는 이유는 뭔가요?",
+      "answer": "보통 네트워크 문제 때문이에요. `/resetbitrate`를 사용하거나 서버 지역을 확인해 보세요."
+    },
+    "q3": {
+      "question": "플레이리스트는 어떻게 만드나요?",
+      "answer": "`/collections create <이름>`으로 컬렉션을 만든 다음, `/collections save <이름>`으로 현재 대기열을 저장하세요."
+    },
+    "q4": {
+      "question": "어떤 음악 소스를 지원하나요?",
+      "answer": "YouTube, Spotify, SoundCloud, 그리고 직접 URL을 지원해요."
+    },
+    "q5": {
+      "question": "노래는 어떻게 건너뛰나요?",
+      "answer": "`/skip`으로 현재 트랙을 건너뛰거나, `/skipto <번호>`로 특정 트랙으로 이동하세요."
+    },
+    "q6": {
+      "question": "24/7 모드는 어떻게 켜나요?",
+      "answer": "24/7 모드는 프리미엄 기능이에요. 자세한 내용은 `/premium`을 사용하세요."
+    },
+    "footer": "도움이 더 필요하세요? /support로 지원 서버에 참여하세요"
+  },
+  "next": {
+    "description": "대기열의 다음 트랙으로 건너뛰기",
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noQueue": "건너뛸 대기열이 없어요.",
+    "success": "⏭️ 다음 트랙으로 건너뛰었어요."
+  },
+  "say": {
+    "description": "텍스트를 음성으로 변환해 음성 채널에서 재생",
+    "errorNotAvailable": "❌ TTS 서비스를 사용할 수 없어요. 봇 관리자에게 문의하세요.",
+    "errorGenerate": "❌ 음성 생성에 실패했어요. 다시 시도해 주세요.",
+    "success": "🎤 재생 중: \"{text}\" ({language}, {voice})"
+  },
+  "sayconfig": {
+    "description": "TTS(텍스트 음성 변환) 설정하기"
+  },
+  "radio": {
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noQueue": "라디오의 기반이 될 재생 중인 트랙이 없어요.",
+    "success": "📻 **{title}** 기반 라디오를 시작했어요",
+    "error": "라디오를 시작하지 못했어요. 다시 시도해 주세요.",
+    "description": "노래나 아티스트로 끝없는 라디오 시작하기"
+  },
+  "playrecent": {
+    "description": "최근 재생한 트랙 재생",
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noHistory": "최근 재생한 트랙이 없어요.",
+    "success": "📜 최근 재생한 트랙 **{count}**개를 대기열에 추가했어요.",
+    "error": "최근 트랙을 재생하지 못했어요."
+  },
+  "removeabsent": {
+    "description": "음성 채널에 없는 사용자의 트랙 삭제",
+    "notInVoice": "음성 채널에 들어가 있어야 해요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "title": "🧹 자리에 없는 사용자의 트랙 삭제됨",
+    "noTracks": "자리에 없는 사용자의 트랙이 없어요.",
+    "success": "음성 채널에 없는 사용자의 트랙 **{count}**개를 삭제했어요."
+  },
+  "removekeyword": {
+    "description": "키워드와 일치하는 트랙 삭제",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "title": "🔍 키워드로 삭제됨",
+    "noMatches": "키워드와 일치하는 트랙이 없어요: **{keyword}**",
+    "success": "**{keyword}**와(과) 일치하는 트랙 **{count}**개를 삭제했어요.",
+    "removedField": "삭제된 트랙"
+  },
+  "removedupes": {
+    "description": "대기열에서 중복된 트랙 삭제",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "title": "🧹 중복 트랙 삭제됨",
+    "noDupes": "대기열에 중복된 트랙이 없어요.",
+    "success": "중복된 트랙 **{count}**개를 삭제했어요.",
+    "removedField": "삭제된 중복 트랙"
+  },
+  "grab": {
+    "description": "현재 트랙 정보를 DM으로 받기",
+    "noQueue": "재생 중인 트랙이 없어요.",
+    "author": "아티스트",
+    "duration": "길이",
+    "url": "링크",
+    "requestedBy": "{user}님의 신청곡",
+    "success": "✉️ DM에서 트랙 정보를 확인하세요!",
+    "dmFailed": "DM을 보낼 수 없었어요. 개인정보 설정을 확인해 주세요."
+  },
+  "length": {
+    "description": "대기열 전체 길이 보기",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "title": "📊 대기열 길이",
+    "totalTracks": "전체 트랙 수",
+    "totalDuration": "전체 재생 시간"
+  },
+  "playnow": {
+    "description": "현재 트랙을 건너뛰고 바로 재생",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noResults": "검색 결과가 없어요.",
+    "title": "⏯️ 바로 재생",
+    "success": "**{author}**의 **{title}** 재생 중",
+    "playing": "**{author}**의 **{title}** 재생을 시작했어요",
+    "error": "트랙을 재생하지 못했어요. 다시 시도해 주세요."
+  },
+  "playnext": {
+    "description": "트랙을 대기열 다음 순서에 추가",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noResults": "검색 결과가 없어요.",
+    "title": "⏭️ 다음 곡으로 추가됨",
+    "success": "**{author}**의 **{title}**이(가) 다음에 재생돼요!",
+    "playing": "**{author}**의 **{title}** 재생을 시작했어요",
+    "error": "트랙을 추가하지 못했어요. 다시 시도해 주세요."
+  },
+  "reverse": {
+    "description": "대기열 순서 뒤집기",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "대기열에 뒤집을 트랙이 충분하지 않아요.",
+    "title": "🔄 대기열 뒤집기 완료",
+    "success": "대기열의 트랙 **{count}**개 순서를 뒤집었어요."
+  },
+  "sort": {
+    "description": "다양한 기준으로 대기열 정렬",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "대기열에 정렬할 트랙이 충분하지 않아요.",
+    "title": "📋 대기열 정렬 완료",
+    "success": "트랙 **{count}**개를 **{criteria}** 기준으로 정렬했어요."
+  },
+  "swap": {
+    "description": "대기열의 두 트랙 위치 바꾸기",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "대기열에 바꿀 트랙이 충분하지 않아요.",
+    "samePosition": "같은 트랙끼리는 바꿀 수 없어요.",
+    "outOfRange": "범위를 벗어난 위치예요. 대기열에는 트랙이 {max}개 있어요.",
+    "title": "🔀 트랙 위치 변경됨",
+    "success": "**#{pos1}** ({title1})와(과) **#{pos2}** ({title2})의 위치를 바꿨어요."
+  },
+  "voteskip": {
+    "description": "현재 트랙 건너뛰기 투표",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "재생 중인 트랙이 없어요.",
+    "alreadyVoted": "이미 이 트랙 건너뛰기에 투표했어요.",
+    "title": "🗳️ 건너뛰기 투표",
+    "voted": "**{user}**님이 건너뛰기에 투표했어요! ({current}/{required}표)",
+    "skippedTitle": "⏭️ 건너뛰기 성공",
+    "skipped": "투표로 **{title}**을(를) 건너뛰었어요."
+  },
+  "tip": {
+    "description": "랜덤 팁 받기",
+    "title": "💡 팁",
+    "footer": "더 많은 명령어는 /help 를 사용하세요"
+  },
+  "vote": {
+    "description": "봇 목록 사이트에서 봇에 투표하기",
+    "title": "🗳️ 투표해 주세요!",
+    "message": "여러분의 투표가 저희의 성장과 발전에 힘이 돼요! 아래 플랫폼에서 투표해 주세요:",
+    "rewards": "투표 보상",
+    "rewardsList": "• 12시간 동안 프리미엄 기능\n• 투표자 전용 배지\n• 더 높은 음질",
+    "footer": "응원해 주셔서 감사해요!",
+    "body": "투표하면 더 많은 서버가 봇을 찾을 수 있어요. top.gg에 투표할 때마다 12시간 동안 **24/7 모드**와 **스튜디오 음질**이 열려요.",
+    "active": "투표 혜택이 {time} 더 유지돼요.",
+    "inactive": "활성화된 투표가 없어요. 아래에서 투표하면 1분 안에 혜택이 시작돼요.",
+    "notListed": "봇이 등록되면 투표가 열려요. 도와주려는 마음에 감사해요!"
+  },
+  "leaderboard": {
+    "description": "이번 세션 트랙 순위 보기",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "noData": "트랙 데이터가 없어요.",
+    "title": "🏆 세션 순위",
+    "footer": "대기열 전체 트랙: {total}"
+  },
+  "categories": {
+    "description": "모든 명령어 카테고리 보기",
+    "title": "📚 명령어 카테고리",
+    "footer": "자세한 명령어 정보는 /help 를 사용하세요"
+  },
+  "changelogs": {
+    "description": "최근 변경 사항 및 업데이트 보기",
+    "title": "📋 변경 사항",
+    "footer": "봇을 이용해 주셔서 감사해요!"
+  },
+  "shards": {
+    "description": "샤드 정보 보기",
+    "title": "🌐 샤드 정보",
+    "currentShard": "현재 샤드",
+    "totalShards": "전체 샤드",
+    "ping": "핑",
+    "guilds": "서버",
+    "users": "사용자",
+    "status": "상태",
+    "footer": "샤드 #{shardId}에 연결되어 있어요"
+  },
+  "setup": {
+    "description": "봇 설정 가이드",
+    "title": "🔧 봇 설정 가이드",
+    "welcome": "환영해요! 아래 단계를 따라 봇을 설정해 보세요:",
+    "step1": {
+      "title": "음성 채널 참가하기",
+      "desc": "음성 채널에 들어간 다음 `/play <song>`으로 음악을 재생해 보세요."
+    },
+    "step2": {
+      "title": "설정 구성하기",
+      "desc": "`/settings`로 서버에 맞게 봇 설정을 확인하고 바꿀 수 있어요."
+    },
+    "step3": {
+      "title": "권한 설정하기",
+      "desc": "관리자는 Discord 기본 권한 기능으로 특정 역할만 명령어를 쓰도록 제한할 수 있어요."
+    },
+    "step4": {
+      "title": "기능 둘러보기",
+      "desc": "`/help`로 모든 명령어를 보거나 `/categories`로 카테고리별로 둘러보세요."
+    },
+    "commands": {
+      "title": "필수 명령어",
+      "desc": "`/play` - 음악 재생\n`/skip` - 트랙 건너뛰기\n`/queue` - 대기열 보기\n`/help` - 도움말"
+    },
+    "footer": "도움이 필요하세요? /support로 지원 서버에 참가하세요."
+  },
+  "playleave": {
+    "description": "트랙을 재생하고 끝나면 나가기",
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "title": "🎵 재생 중 (재생 후 나가기)",
+    "success": "**{author}**의 **{title}** 재생 중이에요. 이 트랙이 끝나면 나갈게요.",
+    "footer": "재생이 끝나면 봇이 연결을 끊어요",
+    "error": "트랙을 재생하지 못했어요."
+  },
+  "lock": {
+    "description": "음악 세션 잠금 또는 해제",
+    "enable": {
+      "description": "세션을 나만 쓰도록 잠그기"
+    },
+    "disable": {
+      "description": "세션 잠금 해제"
+    },
+    "status": {
+      "description": "잠금 상태 확인"
+    },
+    "notInVoice": "음성 채널에 먼저 들어가 주세요.",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "alreadyLocked": "이미 <@{userId}>님이 세션을 잠갔어요.",
+    "lockedTitle": "🔒 세션 잠김",
+    "locked": "**{user}**님이 세션을 잠갔어요. 이제 이 사용자만 재생을 제어할 수 있어요.",
+    "notLocked": "이 세션은 잠겨 있지 않아요.",
+    "notOwner": "잠근 사람이나 관리자만 잠금을 해제할 수 있어요.",
+    "unlockedTitle": "🔓 세션 잠금 해제됨",
+    "unlocked": "세션 잠금이 해제됐어요. 이제 누구나 재생을 제어할 수 있어요.",
+    "statusTitle": "🔐 잠금 상태",
+    "statusLocked": "<@{userId}>님이 세션을 잠갔어요.",
+    "statusUnlocked": "세션이 잠겨 있지 않아요."
+  },
+  "rebind": {
+    "description": "봇 알림을 다른 채널로 변경",
+    "noQueue": "활성화된 대기열이 없어요.",
+    "invalidChannel": "잘못된 채널이에요. 텍스트 채널을 선택해 주세요.",
+    "title": "📢 채널 변경됨",
+    "success": "이제 {channel}에 알림을 보낼게요."
+  },
+  "disabledcommands": {
+    "description": "이 서버에서 비활성화된 명령어 모두 보기",
+    "none": "현재 비활성화된 명령어가 없어요.",
+    "title": "🚫 비활성화된 명령어",
+    "footer": "명령어 {count}개 비활성화됨"
+  },
+  "commandtoggle": {
+    "description": "명령어 활성화 또는 비활성화",
+    "protected": "이 명령어는 비활성화할 수 없어요.",
+    "enabledTitle": "✅ 명령어 활성화됨",
+    "enabled": "`/{command}` 명령어가 **활성화**됐어요.",
+    "disabledTitle": "🚫 명령어 비활성화됨",
+    "disabled": "`/{command}` 명령어가 **비활성화**됐어요."
+  },
+  "songinfo": {
+    "description": "트랙의 자세한 정보 보기",
+    "noQueue": "대기열이 없어요.",
+    "invalidPosition": "잘못된 위치예요. 대기열에 트랙이 {max}개 있어요.",
+    "noTrack": "트랙을 찾을 수 없어요.",
+    "author": "아티스트",
+    "duration": "길이",
+    "source": "출처",
+    "views": "조회수",
+    "live": "라이브",
+    "requestedBy": "신청자"
+  },
+  "artistinfo": {
+    "description": "아티스트 정보 보기",
+    "noArtist": "아티스트를 지정하지 않았고 재생 중인 트랙도 없어요.",
+    "title": "🎤 {artist}",
+    "tracksInQueue": "대기열의 트랙",
+    "footer": "링크를 눌러 이 아티스트의 다른 곡을 찾아보세요"
+  },
+  "blacklist": {
+    "description": "블랙리스트에 등록된 아티스트와 제목 관리",
+    "author": {
+      "description": "아티스트를 블랙리스트에 추가",
+      "title": "🚫 아티스트 블랙리스트 추가됨",
+      "exists": "**{name}** 아티스트는 이미 블랙리스트에 있어요.",
+      "added": "**{name}** 아티스트를 블랙리스트에 추가했어요. 이 아티스트의 곡은 재생되지 않아요."
+    },
+    "title": {
+      "description": "제목 키워드를 블랙리스트에 추가",
+      "addedTitle": "🚫 제목 블랙리스트 추가됨",
+      "exists": "**{keyword}** 키워드는 이미 블랙리스트에 있어요.",
+      "added": "**{keyword}** 키워드를 블랙리스트에 추가했어요. 제목에 이 키워드가 포함된 곡은 재생되지 않아요."
+    },
+    "list": {
+      "description": "블랙리스트 항목 모두 보기",
+      "title": "📋 블랙리스트",
+      "empty": "블랙리스트에 등록된 항목이 없어요.",
+      "authors": "블랙리스트 아티스트",
+      "titles": "블랙리스트 제목 키워드"
+    },
+    "removeauthor": {
+      "description": "블랙리스트에서 아티스트 제거",
+      "title": "✅ 아티스트 블랙리스트 해제",
+      "notfound": "아티스트 **{name}**은(는) 블랙리스트에 없어요.",
+      "removed": "아티스트 **{name}**을(를) 블랙리스트에서 제거했어요."
+    },
+    "removetitle": {
+      "description": "블랙리스트에서 제목 키워드 제거",
+      "title": "✅ 제목 블랙리스트 해제",
+      "notfound": "키워드 **{keyword}**은(는) 블랙리스트에 없어요.",
+      "removed": "키워드 **{keyword}**을(를) 블랙리스트에서 제거했어요."
+    }
+  },
+  "profile": {
+    "description": "내 프로필 또는 다른 사용자의 프로필 보기",
+    "title": "👤 {user}님의 프로필",
+    "username": "사용자 이름",
+    "id": "사용자 ID",
+    "created": "계정 생성일",
+    "premium": "프리미엄 상태",
+    "features": "프리미엄 기능"
+  },
+  "games": {
+    "description": "이용 가능한 게임 보기",
+    "title": "🎮 이용 가능한 게임",
+    "info": "친구들과 재밌는 음악 게임을 즐겨보세요!",
+    "guessTheSong": {
+      "title": "노래 맞히기",
+      "description": "감상 기록 속 노래를 맞혀보세요!"
+    },
+    "footer": "표시된 명령어로 게임을 시작하세요"
+  },
+  "guesssong": {
+    "description": "노래 맞히기 게임하기",
+    "start": {
+      "description": "새 게임 시작"
+    },
+    "guess": {
+      "description": "정답 맞히기"
+    },
+    "stop": {
+      "description": "현재 게임 종료"
+    },
+    "notInVoice": "게임을 시작하려면 음성 채널에 있어야 해요.",
+    "alreadyActive": "이미 게임이 진행 중이에요! `/guesssong stop`으로 종료하세요.",
+    "noHistory": "기록에 노래가 부족해서 게임을 시작할 수 없어요. 먼저 노래를 재생해 보세요!",
+    "startedTitle": "🎵 노래 맞히기!",
+    "started": "게임이 시작됐어요! 노래 제목이나 아티스트를 맞혀보세요.",
+    "hint": "힌트",
+    "howToGuess": "/guesssong guess <정답>으로 정답을 입력하세요",
+    "noGame": "진행 중인 게임이 없어요. `/guesssong start`로 시작하세요.",
+    "wrong": "❌ 틀렸어요! 다시 시도해 보세요.",
+    "winnerTitle": "🎉 정답!",
+    "winner": "**{user}**님이 **{time}**초 만에 맞혔어요!",
+    "answer": "정답",
+    "notHost": "게임 호스트만 게임을 종료할 수 있어요.",
+    "stoppedTitle": "🛑 게임 종료",
+    "stopped": "게임이 종료됐어요."
+  },
+  "permissions": {
+    "title": "⚙️ 권한 설정",
+    "view_description": "이 서버의 현재 권한 설정:",
+    "no_custom": "사용자 지정 권한 없음",
+    "default_message": "모든 명령어가 기본 권한을 사용해요. `/permissions allow` 또는 `/permissions deny`로 설정하세요.",
+    "allowed": "허용됨",
+    "denied": "거부됨",
+    "updated": "✅ 권한 업데이트됨",
+    "allow_success": "이제 {role}에게 **{permission}** 권한이 허용돼요",
+    "deny_success": "이제 {role}에게 **{permission}** 권한이 거부돼요",
+    "everyone": "모든 사람",
+    "reset_title": "🔄 권한 초기화",
+    "reset_success": "모든 사용자 지정 권한이 기본값으로 초기화됐어요.",
+    "allowall_success": "이제 {role}에게 모든 권한이 허용돼요",
+    "denyall_success": "이제 {role}에게 모든 권한이 거부돼요"
+  },
+  "setsettings": {
+    "updated": "✅ 설정 업데이트됨",
+    "maxtracklen_unlimited": "최대 트랙 길이가 이제 **무제한**이에요.",
+    "maxtracklen_set": "최대 트랙 길이가 이제 **{seconds}**초예요.",
+    "maxqueue_set": "최대 대기열 크기가 이제 **{size}**곡이에요.",
+    "maxvolume_set": "최대 볼륨이 이제 **{volume}%**예요.",
+    "defaultvolume_set": "기본 볼륨이 이제 **{volume}%**예요.",
+    "voteskip_enabled": "투표 스킵이 **{percentage}%** 기준으로 **활성화**됐어요.",
+    "voteskip_disabled": "투표 스킵이 **비활성화**됐어요.",
+    "announce_enabled": "현재 재생 중 알림이 **활성화**됐어요.",
+    "announce_disabled": "현재 재생 중 알림이 **비활성화**됐어요.",
+    "autoleave_enabled": "자동 퇴장이 **{timeout}**초 타임아웃으로 **활성화**됐어요.",
+    "autoleave_disabled": "자동 퇴장이 **비활성화**됐어요.",
+    "duplicates_prevented": "이제 중복 트랙이 **차단**돼요.",
+    "duplicates_allowed": "이제 중복 트랙이 **허용**돼요.",
+    "language_set": "언어가 **{lang}**(으)로 설정됐어요.",
+    "embedcolor_set": "임베드 색상이 **{color}**(으)로 설정됐어요.",
+    "invalid_color": "잘못된 HEX 색상이에요. #F8AA2A 같은 형식을 사용하세요.",
+    "reset_title": "🔄 설정 초기화",
+    "reset_success": "모든 설정이 기본값으로 초기화됐어요."
+  },
+  "ownership": {
+    "claimed_title": "👑 소유권 획득",
+    "claimed_success": "{user}님이 이제 세션 소유자예요.",
+    "claimed_footer": "소유자로서 재생 세션을 제어할 수 있어요.",
+    "already_claimed": "이 세션은 이미 {owner}님이 소유하고 있어요.",
+    "not_owner": "세션 소유자가 아니에요.",
+    "user_not_in_vc": "해당 사용자가 음성 채널에 없어요.",
+    "transferred_title": "🔄 소유권 이전됨",
+    "transferred_success": "{from}님이 {to}님에게 소유권을 넘겼어요.",
+    "view_title": "👑 세션 소유자",
+    "current_owner": "현재 세션 소유자: {owner}",
+    "no_owner": "이 세션에는 소유자가 없어요. `/ownership claim`으로 소유권을 가져가세요."
+  },
+  "channels": {
+    "log_title": "📝 로그 채널",
+    "log_set": "로그 채널이 {channel}(으)로 설정됐어요.",
+    "log_disabled": "로그 채널이 비활성화됐어요.",
+    "text_updated": "📝 텍스트 채널 설정 업데이트됨",
+    "text_enabled": "이제 {channel}에서 봇 명령어를 사용할 수 있어요.",
+    "text_disabled": "이제 {channel}에서 봇 명령어를 사용할 수 없어요.",
+    "text_enableall": "모든 텍스트 채널이 활성화됐어요.",
+    "text_disableall": "이제 {channel}을(를) 제외한 모든 텍스트 채널이 비활성화되었어요.",
+    "text_view_title": "📝 허용된 텍스트 채널",
+    "all_text_enabled": "현재 모든 텍스트 채널이 활성화되어 있어요.",
+    "allowed_text_list": "허용된 텍스트 채널:",
+    "voice_updated": "🔊 음성 채널 설정이 업데이트되었어요",
+    "voice_enabled": "이제 {channel}에서 음악을 재생할 수 있어요.",
+    "voice_disabled": "이제 {channel}에서 음악을 재생할 수 없어요.",
+    "voice_enableall": "이제 모든 음성 채널이 활성화되었어요.",
+    "voice_disableall_hint": "먼저 `/channels voice enable`로 특정 음성 채널을 활성화하세요.",
+    "voice_view_title": "🔊 허용된 음성 채널",
+    "all_voice_enabled": "현재 모든 음성 채널이 활성화되어 있어요.",
+    "allowed_voice_list": "허용된 음성 채널:",
+    "use_disableall_first": "먼저 'disableall'로 채널을 제한한 다음, 원하는 채널을 활성화하세요."
+  },
+  "perks": {
+    "title": "⭐ 프리미엄 혜택",
+    "how_to_get": "프리미엄 받는 방법",
+    "patreon_link": "Patreon에서 후원해 주세요: https://patreon.com/u36360623",
+    "user_title": "내 프리미엄 상태",
+    "user_premium": "**{tier}** 프리미엄을 이용 중이에요! 🎉",
+    "your_perks": "활성화된 혜택",
+    "user_free": "**Free** 등급을 이용 중이에요.",
+    "upgrade": "프리미엄으로 업그레이드",
+    "upgrade_message": "Patreon에서 후원하고 프리미엄 기능을 받아보세요!",
+    "description": "프리미엄 혜택 보기"
+  },
+  "boost": {
+    "no_premium_title": "❌ 프리미엄 없음",
+    "no_premium": "서버를 부스트하려면 프리미엄이 필요해요. Patreon에서 프리미엄을 받아보세요!",
+    "already_boosted_title": "⚠️ 이미 부스트됨",
+    "already_boosted_self": "이미 이 서버를 부스트했어요!",
+    "already_boosted_other": "이 서버는 이미 다른 사용자가 부스트했어요.",
+    "activated_title": "🚀 서버 부스트 완료!",
+    "activated_success": "이제 이 서버에 **{tier}** 프리미엄이 적용되었어요!",
+    "not_your_boost_title": "❌ 내 부스트가 아님",
+    "not_your_boost": "이 서버를 부스트하지 않았어요.",
+    "deactivated_title": "📤 부스트 해제됨",
+    "deactivated_success": "이 서버에서 부스트가 해제되었어요.",
+    "list_title": "📋 활성화된 부스트",
+    "no_boosts": "아직 부스트한 서버가 없어요.",
+    "active_boosts": "활성화된 서버 부스트:",
+    "info_title": "ℹ️ 서버 부스트 정보",
+    "guild_boosted": "이 서버는 부스트되었어요! 🎉",
+    "tier": "등급",
+    "boosted_by": "부스트한 사용자",
+    "since": "부스트 시작일",
+    "guild_not_boosted": "이 서버는 부스트되지 않았어요.",
+    "how_to_boost": "부스트 방법",
+    "boost_instructions": "`/boost activate`로 프리미엄을 사용해 이 서버를 부스트하세요."
+  },
+  "alias": {
+    "added_title": "✅ 별칭 추가됨",
+    "added_success": "이제 별칭 `{alias}`이(가) `{command}`을(를) 실행해요.",
+    "removed_title": "🗑️ 별칭 삭제됨",
+    "removed_success": "별칭 `{alias}`이(가) 삭제되었어요.",
+    "list_title": "📋 서버 별칭",
+    "no_aliases": "이 서버에 설정된 별칭이 없어요.",
+    "cleared_title": "🧹 별칭 초기화됨",
+    "cleared_success": "모든 서버 별칭이 삭제되었어요.",
+    "not_found": "존재하지 않는 별칭이에요.",
+    "no_spaces": "별칭 이름에는 공백을 넣을 수 없어요."
+  },
+  "nightcore": {
+    "description": "음악에 나이트코어 효과를 켜거나 꺼요",
+    "errorNotQueue": "재생 중인 곡이 없어요.",
+    "result": "<@{author}> 🎵 나이트코어 효과: {status}"
+  },
+  "player": {
+    "nowPlaying": "지금 재생 중",
+    "paused": "일시정지됨",
+    "live": "LIVE",
+    "requestedBy": "{user}님의 신청곡",
+    "autoplayPick": "자동 재생으로 선택됨",
+    "upNext": "다음 곡: {title}",
+    "upNextMore": "다음 곡: {title} (외 {count}곡)",
+    "upNextAutoplay": "자동 재생이 다음 곡을 골라요",
+    "queueEmpty": "대기열이 비었어요. /play로 곡을 추가하세요",
+    "loopOff": "반복 꺼짐",
+    "loopTrack": "이 곡 반복 중",
+    "loopQueue": "대기열 반복 중",
+    "volume": "볼륨 {volume}%",
+    "autoplayOn": "자동 재생 켜짐",
+    "stay247On": "24/7 켜짐",
+    "ended": "대기열이 끝났어요. /play로 음악을 계속 들어보세요.",
+    "endedAutoplayHint": "팁: 자동 재생을 켜면 음악이 멈추지 않아요.",
+    "stopped": "재생이 중지되었어요.",
+    "disconnected": "음성 채널에서 나갔어요.",
+    "notInVoice": "컨트롤을 사용하려면 제가 있는 음성 채널에 들어와 주세요.",
+    "needDj": "그렇게 하려면 DJ 역할이 필요해요.",
+    "nothingPlaying": "지금 재생 중인 곡이 없어요.",
+    "noPrevious": "이전 곡이 없어요.",
+    "shuffled": "{count}곡을 섞었어요.",
+    "nothingToShuffle": "섞으려면 곡을 2개 이상 추가하세요.",
+    "dmSent": "DM으로 보냈어요.",
+    "dmClosed": "DM이 막혀 있어서 여기에 보여드릴게요:",
+    "savedFrom": "{guild}에서 저장됨",
+    "lyricsNotFound": "{title}의 가사를 찾을 수 없어요.",
+    "lyricsLoading": "가사를 찾는 중…",
+    "autoplayEnabled": "자동 재생 켜짐: 관련 곡이 계속 재생돼요.",
+    "autoplayDisabled": "자동 재생 꺼짐.",
+    "volumeLimit": "이 서버는 볼륨을 최대 {max}%로 제한하고 있어요.",
+    "lyricsButton": "가사",
+    "saveButton": "저장"
+  },
+  "queueView": {
+    "title": "대기열",
+    "nowPlaying": "지금 재생 중",
+    "empty": "대기열이 비어 있어요. /play로 노래를 추가해 보세요",
+    "page": "{page}/{pages} 페이지",
+    "summary": "{count}곡 · 총 {duration}",
+    "nothingPlaying": "이 서버에서 재생 중인 곡이 없어요."
+  },
+  "lyricsCmd": {
+    "optionQuery": "검색할 노래 (기본값: 지금 재생 중인 곡)",
+    "needQuery": "지금 재생 중인 곡이 없어요. 어떤 노래인지 알려 주세요: /lyrics query:<노래>",
+    "source": "가사 출처: {source}"
+  },
+  "welcome": {
+    "title": "{bot}을(를) 추가해 줘서 고마워요!",
+    "body": "음성 채널에 들어가서 **/play**에 노래 제목이나 YouTube, Spotify, SoundCloud, Apple Music 링크를 입력해 보세요. 각 곡 아래의 버튼으로 채널에 있는 누구나 일시정지, 건너뛰기, 반복 등을 할 수 있어요.",
+    "tips": "**/help**로 모든 명령어 보기 · **/settings**로 DJ 역할, 언어, 제한 설정 · **/autoplay**로 비슷한 노래 계속 재생",
+    "commands": "명령어",
+    "dashboard": "대시보드",
+    "support": "지원 서버",
+    "vote": "투표"
+  },
+  "router": {
+    "guildOnly": "이 명령어는 서버에서만 사용할 수 있어요.",
+    "blacklisted": "여기서는 이 봇을 사용할 수 없어요.",
+    "channelNotAllowed": "이 채널에서는 봇 명령어를 사용할 수 없어요.",
+    "commandDisabled": "관리자가 이 서버에서 /{name}을(를) 꺼 두었어요.",
+    "cooldown": "잠시만요! {time}초 후에 /{name}을(를) 다시 시도해 주세요.",
+    "missingPermissions": "여기서 필요한 권한이 없어요: {permissions}",
+    "error": "실행 중 문제가 발생했어요. 오류는 기록되었으니 다시 시도해 주세요.",
+    "expired": "이 컨트롤은 더 이상 사용할 수 없어요."
+  },
+  "helpMenu": {
+    "title": "{bot} — 명령어",
+    "intro": "음성 채널에 들어가서 </play:{playId}>에 노래 제목이나 링크를 입력하세요. 아래에서 카테고리를 골라 나머지 명령어를 확인해 보세요.",
+    "pick": "카테고리 선택",
+    "category": {
+      "music": "재생",
+      "queue": "대기열",
+      "effects": "효과 및 필터",
+      "playlists": "플레이리스트",
+      "info": "가사 및 정보",
+      "settings": "서버 설정",
+      "premium": "프리미엄 및 투표",
+      "other": "기타"
+    },
+    "categoryDesc": {
+      "music": "재생, 일시정지, 건너뛰기, 탐색, 반복, 자동 재생",
+      "queue": "대기열 보기, 순서 변경, 정리",
+      "effects": "베이스 부스트, 나이트코어, 8D, 볼륨…",
+      "playlists": "나만의 플레이리스트 저장 및 불러오기",
+      "info": "가사, 지금 재생 중, 통계",
+      "settings": "DJ 역할, 언어, 제한, 채널",
+      "premium": "Founder 혜택, 투표 보상",
+      "other": "그 밖의 모든 것"
+    },
+    "links": "링크"
+  },
+  "stay247": {
+    "enabledHere": "24/7 켜짐: {channel}에 계속 머무르고, 재시작 후에도 다시 들어올게요.",
+    "disabledNow": "24/7 꺼짐: {minutes}분 동안 조용하거나 채널이 비면 나갈게요.",
+    "lost": "24/7 모드를 켠 멤버에게 더 이상 Founder 또는 유효한 투표가 없어서 24/7 모드가 꺼졌어요.",
+    "needVoice": "제가 머무를 음성 채널에 먼저 들어간 다음 /247을 다시 실행해 주세요."
+  },
+  "language": {
+    "description": "이 서버에서 봇이 사용할 언어 설정",
+    "optionLanguage": "언어 (자동: 각 멤버의 Discord 언어를 따름)",
+    "auto": "자동 (각 멤버의 Discord 언어)",
+    "set": "언어가 {language}(으)로 설정되었어요.",
+    "needManage": "언어를 변경하려면 서버 관리 권한이 필요해요."
+  },
+  "links": {
+    "website": "웹사이트",
+    "support": "지원",
+    "premium": "프리미엄",
+    "vote": "투표",
+    "addToServer": "서버에 추가",
+    "invite": "초대"
+  },
+  "commanddisable": {
+    "description": "이 서버에서 명령어 비활성화하기"
+  },
+  "commanddisableall": {
+    "description": "필수 명령어를 제외한 모든 명령어 비활성화하기"
+  },
+  "commandenable": {
+    "description": "비활성화된 명령어 다시 활성화하기"
+  },
+  "commandenableall": {
+    "description": "비활성화된 모든 명령어 활성화하기"
+  },
+  "effects": {
+    "description": "오디오 효과 관리하기"
+  },
+  "info": {
+    "description": "봇 정보 및 도움말"
+  },
+  "patreon": {
+    "description": "Patreon 상태 확인 및 혜택 동기화하기"
+  },
+  "play_file": {
+    "description": "첨부된 오디오 파일 재생하기"
+  },
+  "play_spotify": {
+    "description": "Spotify에서 노래 검색 및 재생하기"
+  },
+  "premium": {
+    "description": "프리미엄 기능 및 서버 연결 관리하기"
+  },
+  "queuemanage": {
+    "description": "고급 대기열 관리"
+  },
+  "settings": {
+    "description": "이 서버의 봇 설정 구성하기 (관리자 전용)"
+  },
+  "stats": {
+    "description": "봇 및 세션 통계 보기"
+  },
+  "user": {
+    "description": "사용자 프로필 및 환경설정"
   }
 }

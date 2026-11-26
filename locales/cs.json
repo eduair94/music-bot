@@ -1,4 +1,14 @@
 {
+  "247": {
+    "description": "Zapnout/vypnout režim 24/7 (bot zůstane v hlasovém kanálu)",
+    "premiumRequired": "⭐ Režim 24/7 je prémiová funkce. Víc info najdeš přes `/premium`.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "title": "🌙 Režim 24/7",
+    "enabled": "Režim 24/7 **zapnut**. Bot zůstane v hlasovém kanálu napořád.",
+    "disabled": "Režim 24/7 **vypnut**. Bot odejde, když bude nečinný.",
+    "footer": "Prémiová funkce"
+  },
   "clip": {
     "description": "Přehraje klipový zvuk",
     "usagesReply": "Použití: {prefix}clip <název>",
@@ -31,7 +41,11 @@
     "description": "Přesouvat skladby ve frontě",
     "errorNotQueue": "Není tu žádná fronta.",
     "usagesReply": "Použití: {prefix}move <číslo ve frontě>",
-    "result": "<@{author}> 🚚 přesunul **{title}** na {index}. pozici ve frontě."
+    "result": "<@{author}> 🚚 přesunul **{title}** na {index}. pozici ve frontě.",
+    "args": {
+      "movefrom": "Pozice, ze které přesunout",
+      "moveto": "Pozice, na kterou přesunout"
+    }
   },
   "nowplaying": {
     "description": "Zobrazit právě hrající skladbu",
@@ -72,7 +86,34 @@
     "stopSong": "<@{author}> ⏹ zastavil hudbu!",
     "leaveChannel": "Opouštění hlasového kanálu...",
     "songNotFound": "Hudba nenalezena",
-    "songAccessErr": "Video je omezeno věkem, soukromé nebo nedostupné"
+    "songAccessErr": "Video je omezeno věkem, soukromé nebo nedostupné",
+    "errorNoResults": "Pro {url} nebyly nalezeny žádné výsledky",
+    "errorInvalidURL": "Neplatná URL, zkus vyhledávání nebo odkaz na YouTube",
+    "optionSong": "Název skladby nebo odkaz (YouTube, Spotify, SoundCloud, Apple Music…)",
+    "optionNext": "Přehrát hned po aktuální skladbě",
+    "optionSource": "Kde hledat, když zadáš název",
+    "addedTitle": "Přidáno do fronty",
+    "nowPlayingTitle": "Právě hraje",
+    "playlistTitle": "Playlist přidán",
+    "playlistTracks": "Skladeb: {count}",
+    "position": "Pozice #{position}",
+    "positionNext": "Hraje jako další",
+    "notAllowedChannel": "V tomhle hlasovém kanálu nesmím hrát.",
+    "queueFull": "Fronta je plná ({max} skladeb).",
+    "tooLong": "Ta skladba je delší než limit tohoto serveru ({max}).",
+    "duplicate": "**{title}** už ve frontě je.",
+    "noResults": "Pro {query} se nic nenašlo.",
+    "initializing": "Přehrávač se spouští, zkus to znovu za pár sekund.",
+    "ageRestricted": "To video má věkové omezení.",
+    "private": "To video je soukromé.",
+    "unavailable": "To video není dostupné.",
+    "genericError": "Nepodařilo se to přehrát: {error}",
+    "searchSuggestion": "Hledat: {query}",
+    "botNotInChannel": "Už hraju v {channel}. Připoj se tam, abys mohl přidávat skladby.",
+    "cantJoin": "Nemůžu se připojit do {channel}: potřebuju tam oprávnění Připojit a Mluvit.",
+    "contextName": "Přehrát v hlasovém kanálu",
+    "contextNextName": "Přehrát jako další",
+    "contextNoQuery": "Ta zpráva neobsahuje odkaz, zvukový soubor ani text, který bych mohl přehrát."
   },
   "playlist": {
     "description": "Přehrát playlist z YouTube",
@@ -118,7 +159,9 @@
     "errorAlreadyCollector": "V tomto kanálu je již spuštěno sbírání zpráv.",
     "errorNotChannel": "Nejprve se musíš připojit do hlasového kanálu!",
     "resultEmbedTitle": "**Odpověz číslem skladby, kterou chceš přehrát**",
-    "resultEmbedDesc": "Výsledky pro: {search}"
+    "resultEmbedDesc": "Výsledky pro: {search}",
+    "optionQuery": "Hledaný výraz",
+    "noResults": "Žádné výsledky, zkus něco jiného"
   },
   "shuffle": {
     "description": "Zamíchat frontu",
@@ -135,7 +178,10 @@
     "usageReply": "Použití: {prefix}{name} <číslo ve frontě>",
     "errorNotQueue": "Neexistuje žádná fronta.",
     "errorNotValid": "Fronta má délku pouze {length} skladeb!",
-    "result": "<@{author}> ⏭ přeskočil {arg} skladeb"
+    "result": "<@{author}> ⏭ přeskočil {arg} skladeb",
+    "args": {
+      "number": "Číslo ve frontě, na které přeskočit"
+    }
   },
   "stop": {
     "description": "Zastaví hudbu",
@@ -163,5 +209,935 @@
     "errorNotChannel": "Nejprve se musíš připojit do hlasového kanálu!",
     "cooldownMessage": "počkej prosím ještě {time} sekund před opětovným použitím příkazu `{name}`.",
     "errorCommand": "Při vykonávání tohoto příkazu se vyskytla chyba."
+  },
+  "seek": {
+    "description": "Přetočit na konkrétní čas ve skladbě",
+    "errorNotQueue": "Nic nehraje.",
+    "errorInvalidTime": "Neplatný formát času. Použij např.: 1:30, 90, 1m30s",
+    "errorOutOfRange": "Čas musí být mezi 0:00 a {duration}",
+    "result": "<@{author}> ⏩ přetočeno na **{time}**"
+  },
+  "forward": {
+    "description": "Přetočit skladbu dopředu o zadaný počet sekund",
+    "errorNotQueue": "Nic nehraje.",
+    "errorNearEnd": "Nelze přetočit, skladba je příliš blízko konce.",
+    "result": "<@{author}> ⏩ přetočeno o **{seconds}s** dopředu (teď na {position})"
+  },
+  "rewind": {
+    "description": "Přetočit skladbu zpět o zadaný počet sekund",
+    "errorNotQueue": "Nic nehraje.",
+    "result": "<@{author}> ⏪ přetočeno o **{seconds}s** zpět (teď na {position})"
+  },
+  "replay": {
+    "description": "Přehrát aktuální skladbu od začátku",
+    "errorNotQueue": "Nic nehraje.",
+    "result": "<@{author}> 🔄 spustil(a) znovu **{title}**"
+  },
+  "clear": {
+    "description": "Vymazat celou frontu",
+    "errorNotQueue": "Fronta už je prázdná.",
+    "result": "<@{author}> 🗑️ odstranil(a) z fronty skladby: **{count}**"
+  },
+  "loopqueue": {
+    "description": "Zapnout/vypnout opakování fronty",
+    "errorNotQueue": "Nic nehraje.",
+    "result": "🔁 Opakování fronty: {loop}"
+  },
+  "join": {
+    "description": "Připojit bota do tvého hlasového kanálu",
+    "errorDifferentChannel": "Už jsem v jiném hlasovém kanálu.",
+    "errorCantJoin": "Nepodařilo se mi připojit do tvého hlasového kanálu.",
+    "result": "✅ Připojeno do **{channel}**"
+  },
+  "leave": {
+    "description": "Odpojit bota z hlasového kanálu",
+    "errorNotInChannel": "Nejsem v žádném hlasovém kanálu.",
+    "result": "👋 Odpojeno z **{channel}**"
+  },
+  "save": {
+    "description": "Uložit aktuální skladbu do tvých DM",
+    "errorNotQueue": "Nic nehraje.",
+    "errorDMClosed": "Nemohl jsem ti poslat DM. Povol si prosím DM od členů serveru.",
+    "result": "💾 **{title}** odesláno do tvých DM!"
+  },
+  "autoplay": {
+    "description": "Zapnout/vypnout automatické přehrávání (podobné skladby po skončení fronty)",
+    "errorNotQueue": "Není aktivní žádná fronta.",
+    "result": "🔄 Automatické přehrávání: {status}"
+  },
+  "history": {
+    "description": "Zobrazit nedávno přehrané skladby",
+    "errorNotQueue": "Není aktivní žádná fronta.",
+    "errorEmpty": "V historii zatím nejsou žádné skladby.",
+    "embedTitle": "Nedávno přehrané",
+    "footer": "Posledních skladeb: {count}"
+  },
+  "previous": {
+    "description": "Přehrát předchozí skladbu",
+    "errorNotQueue": "Není aktivní žádná fronta.",
+    "errorNoHistory": "V historii nejsou žádné předchozí skladby.",
+    "result": "<@{author}> ⏮️ přehrává předchozí skladbu"
+  },
+  "jump": {
+    "description": "Skočit na konkrétní pozici ve frontě",
+    "errorNotQueue": "Žádná fronta není.",
+    "errorInvalidPosition": "Neplatná pozice. Fronta má jen {max} skladeb.",
+    "errorNotFound": "Na této pozici nebyla nalezena žádná skladba.",
+    "result": "<@{author}> ⏭️ skok na **{title}**"
+  },
+  "Invite me to your server!": "Pozvi mě na svůj server!",
+  "Invite": "Pozvat",
+  "about": {
+    "description": "Zobrazí informace o botovi",
+    "embedDescription": "Výkonný hudební bot pro Discord s vysoce kvalitním přehráváním zvuku",
+    "footer": "Díky, že používáš našeho bota!"
+  },
+  "support": {
+    "description": "Získej odkaz na server podpory",
+    "embedDescription": "Potřebuješ pomoc? Připoj se na náš server podpory!",
+    "footer": "Jsme tu, abychom ti pomohli!"
+  },
+  "dashboard": {
+    "description": "Získej odkaz na dashboard",
+    "embedDescription": "Otevři webový dashboard, kde můžeš spravovat nastavení serveru, prohlížet frontu a další!",
+    "footer": "Spravuj svůj hudební zážitek"
+  },
+  "clean": {
+    "description": "Smaže zprávy bota z kanálu",
+    "noMessages": "Nenašly se žádné zprávy bota ke smazání.",
+    "success": "🗑️ Smazáno zpráv bota: {count}.",
+    "error": "Při mazání zpráv došlo k chybě."
+  },
+  "upcoming": {
+    "description": "Zobrazí nadcházející skladby ve frontě",
+    "noQueue": "Není aktivní žádná fronta.",
+    "noUpcoming": "Ve frontě nejsou žádné nadcházející skladby."
+  },
+  "massremove": {
+    "description": "Odebere více skladeb z fronty",
+    "noQueue": "Není aktivní žádná fronta.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noTracks": "Fronta je prázdná.",
+    "invalidIndexes": "Neplatná čísla. Fronta má {max} skladeb. Použij formát: '1 3 5' nebo '1-5 8'",
+    "success": "🗑️ Odebráno skladeb: {count}: {tracks}"
+  },
+  "removeuser": {
+    "description": "Odebere všechny skladby, které přidal uživatel",
+    "noQueue": "Není aktivní žádná fronta.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noTracks": "Fronta je prázdná.",
+    "noUserTracks": "Ve frontě nejsou žádné skladby od {user}.",
+    "success": "🗑️ Odebráno {count} skladeb od {user}."
+  },
+  "pulsator": {
+    "description": "Použije zvukový efekt pulsator (střídá kanály)",
+    "noQueue": "Není aktivní žádná fronta.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "disabled": "🔇 Efekt pulsator vypnut.",
+    "enabled": "🔊 Efekt pulsator zapnut na {frequency} Hz.",
+    "error": "Při použití efektu pulsator došlo k chybě."
+  },
+  "rate": {
+    "description": "Změní rychlost přehrávání (rychlost + výška tónu)",
+    "noQueue": "Není aktivní žádná fronta.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "disabled": "🔇 Efekt rychlosti vypnut.",
+    "enabled": "⚡ Rychlost nastavena na {percentage} %.",
+    "info": "Použij `/rate percentage:150` pro změnu rychlosti.\n\n**Poznámka:** Mění se rychlost i výška tónu.",
+    "error": "Při použití efektu rychlosti došlo k chybě."
+  },
+  "starttime": {
+    "description": "Nastaví počáteční pozici aktuální skladby",
+    "noQueue": "Není aktivní žádná fronta.",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noTrack": "Právě nehraje žádná skladba.",
+    "reset": "⏱️ Počáteční čas vrácen na začátek.",
+    "invalidTime": "Neplatný formát času. Použij: '30s', '1:30', '1m 30s'",
+    "tooLong": "Čas přesahuje délku skladby ({duration}).",
+    "success": "⏱️ Přetočeno na {time}.",
+    "error": "Při nastavování počátečního času došlo k chybě."
+  },
+  "searchlyrics": {
+    "description": "Vyhledá skladbu podle textu",
+    "noResults": "Nenašly se žádné skladby s textem: \"{query}\"",
+    "noLyricsFound": "Text k této skladbě není dostupný.",
+    "error": "Při hledání textu došlo k chybě."
+  },
+  "requested": {
+    "description": "Zobrazí všechny skladby, které přidal uživatel",
+    "noQueue": "Není aktivní žádná fronta.",
+    "noTracks": "Ve frontě nejsou žádné skladby od {user}.",
+    "empty": "Žádné skladby k zobrazení."
+  },
+  "collections": {
+    "description": "Spravuj své osobní hudební kolekce",
+    "tracks": "skladeb",
+    "notFound": "Kolekce **{name}** nebyla nalezena.",
+    "list": {
+      "description": "Zobrazí všechny tvoje kolekce",
+      "title": "📁 Tvoje kolekce",
+      "empty": "Zatím nemáš žádné kolekce. Vytvoř si jednu pomocí `/collections create`!",
+      "footer": "Celkem kolekcí: {count}"
+    },
+    "create": {
+      "description": "Vytvoří novou kolekci",
+      "nameOption": "Název kolekce",
+      "descriptionOption": "Popis kolekce",
+      "limitReached": "Dosáhl jsi maximálního počtu kolekcí (50).",
+      "exists": "Kolekce s názvem **{name}** už existuje.",
+      "success": "✅ Kolekce **{name}** vytvořena!"
+    },
+    "delete": {
+      "description": "Smaže kolekci",
+      "nameOption": "Název kolekce ke smazání",
+      "success": "🗑️ Kolekce **{name}** smazána."
+    },
+    "view": {
+      "description": "Zobrazí skladby v kolekci",
+      "nameOption": "Název kolekce k zobrazení",
+      "empty": "Tato kolekce je prázdná.",
+      "tracksField": "Skladby",
+      "durationField": "Délka",
+      "shareCodeField": "Kód pro sdílení",
+      "andMore": "...a dalších {count} skladeb"
+    },
+    "save": {
+      "description": "Uloží aktuální frontu jako kolekci",
+      "nameOption": "Název kolekce",
+      "noQueue": "Ve frontě není nic k uložení.",
+      "success": "💾 Uloženo **{count}** skladeb do kolekce **{name}**!"
+    },
+    "load": {
+      "description": "Načte kolekci do fronty",
+      "nameOption": "Název kolekce k načtení",
+      "empty": "Tato kolekce je prázdná.",
+      "success": "📂 Načteno **{count}** skladeb z kolekce **{name}**!"
+    },
+    "rename": {
+      "description": "Přejmenovat kolekci",
+      "oldNameOption": "Aktuální název kolekce",
+      "newNameOption": "Nový název kolekce",
+      "exists": "Kolekce s názvem **{name}** už existuje.",
+      "success": "✏️ Kolekce **{oldName}** přejmenována na **{newName}**."
+    },
+    "share": {
+      "description": "Vytvořit kód pro sdílení kolekce",
+      "nameOption": "Název kolekce ke sdílení",
+      "success": "🔗 Kód pro sdílení kolekce **{name}**: `{code}`\nOstatní ho můžou použít s `/collections clone`!"
+    },
+    "unshare": {
+      "description": "Odebrat kód pro sdílení z kolekce",
+      "nameOption": "Název kolekce, kterou chceš přestat sdílet",
+      "success": "🔒 Kód pro sdílení byl z kolekce **{name}** odebrán."
+    },
+    "clone": {
+      "description": "Naklonovat kolekci pomocí kódu pro sdílení",
+      "shareCodeOption": "Kód pro sdílení, ze kterého chceš klonovat",
+      "nameOption": "Název tvé nové kolekce",
+      "invalidCode": "Neplatný nebo vypršelý kód pro sdílení.",
+      "success": "📋 Naklonováno **{count}** skladeb do nové kolekce **{name}**!"
+    },
+    "merge": {
+      "description": "Sloučit jednu kolekci do jiné",
+      "sourceOption": "Kolekce, ze které se slučuje",
+      "targetOption": "Kolekce, do které se slučuje",
+      "sameCollection": "Kolekci nelze sloučit samu se sebou.",
+      "notFound": "Jedna nebo obě kolekce nebyly nalezeny.",
+      "success": "🔀 Kolekce **{source}** sloučena do **{target}** (celkem {count} skladeb)."
+    },
+    "addcurrent": {
+      "description": "Přidat právě hranou skladbu do kolekce",
+      "nameOption": "Název kolekce, do které chceš přidat",
+      "noTrack": "Právě nehraje žádná skladba.",
+      "success": "➕ Skladba **{track}** přidána do kolekce **{name}**!"
+    },
+    "removetrack": {
+      "description": "Odebrat skladbu z kolekce",
+      "nameOption": "Název kolekce",
+      "positionOption": "Pozice skladby k odebrání (od 1)",
+      "invalidPosition": "Neplatná pozice. Kolekce má {max} skladeb.",
+      "success": "🗑️ Skladba **{track}** odebrána z kolekce **{name}**."
+    }
+  },
+  "endtime": {
+    "description": "Nastavit koncovou pozici aktuální skladby",
+    "timeOption": "Čas ukončení skladby (např. 3:00, 180, 3m)",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "noTrack": "Právě nehraje žádná skladba.",
+    "info": "Délka skladby: **{duration}**\nPoužij `/endtime time:3:00` pro dřívější ukončení.",
+    "invalidTime": "Neplatný formát času. Použij: '1:30', '90', '1m30s'",
+    "tooLong": "Čas přesahuje délku skladby ({duration}).",
+    "tooEarly": "Čas ukončení musí být po aktuální pozici ({position}).",
+    "success": "⏱️ Skladba skončí v **{time}** (za {remaining})."
+  },
+  "massmove": {
+    "description": "Přesunout více skladeb na novou pozici",
+    "indexesOption": "Čísla skladeb k přesunu (např. 1 3 5 nebo 1-5)",
+    "positionOption": "Nová pozice pro skladby",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "invalidIndexes": "Nenalezena žádná platná čísla skladeb. Použij čísla jako: 1 3 5 nebo 1-5",
+    "invalidPosition": "Pozice musí být mezi 1 a {max}.",
+    "success": "📦 Přesunuto **{count}** skladeb na pozici **{position}**: {tracks}"
+  },
+  "faq": {
+    "description": "Zobrazit často kladené otázky",
+    "title": "❓ Často kladené otázky",
+    "q1": {
+      "question": "Jak pustím hudbu?",
+      "answer": "Použij `/play <název skladby nebo URL>`. Bot se připojí do tvého hlasového kanálu a začne hrát."
+    },
+    "q2": {
+      "question": "Proč se hudba seká nebo vypadává?",
+      "answer": "Obvykle jde o problémy se sítí. Zkus `/resetbitrate` nebo zkontroluj region serveru."
+    },
+    "q3": {
+      "question": "Jak vytvořím playlist?",
+      "answer": "Použij `/collections create <název>` k vytvoření kolekce. Pak pomocí `/collections save <název>` ulož aktuální frontu."
+    },
+    "q4": {
+      "question": "Jaké hudební zdroje jsou podporované?",
+      "answer": "Podporujeme YouTube, Spotify, SoundCloud a přímé URL."
+    },
+    "q5": {
+      "question": "Jak přeskočím skladbu?",
+      "answer": "Použij `/skip` k přeskočení aktuální skladby nebo `/skipto <číslo>` ke skoku na konkrétní skladbu."
+    },
+    "q6": {
+      "question": "Jak zapnu režim 24/7?",
+      "answer": "Režim 24/7 je prémiová funkce. Více informací najdeš přes `/premium`."
+    },
+    "footer": "Potřebuješ další pomoc? Připoj se na náš support server přes /support"
+  },
+  "next": {
+    "description": "Přeskočit na další skladbu ve frontě",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není žádná fronta k přeskočení.",
+    "success": "⏭️ Přeskočeno na další skladbu."
+  },
+  "say": {
+    "description": "Převést text na řeč a přehrát ho v hlasovém kanálu",
+    "errorNotAvailable": "❌ Služba TTS není dostupná. Kontaktuj prosím správce bota.",
+    "errorGenerate": "❌ Nepodařilo se vygenerovat řeč. Zkus to prosím znovu.",
+    "success": "🎤 Přehrávám: \"{text}\" ({language}, {voice})"
+  },
+  "sayconfig": {
+    "description": "Nastavit si TTS (převod textu na řeč)"
+  },
+  "radio": {
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Nehraje žádná skladba, podle které by se dalo spustit rádio.",
+    "success": "📻 Spuštěno rádio podle skladby **{title}**",
+    "error": "Rádio se nepodařilo spustit. Zkus to prosím znovu.",
+    "description": "Spusť nekonečné rádio podle skladby nebo interpreta"
+  },
+  "playrecent": {
+    "description": "Přehrát nedávno hrané skladby",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noHistory": "Nenalezeny žádné nedávno hrané skladby.",
+    "success": "📜 Do fronty přidáno **{count}** nedávno hraných skladeb.",
+    "error": "Nedávné skladby se nepodařilo přehrát."
+  },
+  "removeabsent": {
+    "description": "Odebrat skladby uživatelů, kteří nejsou v hlasovém kanálu",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "title": "🧹 Odebrány skladby nepřítomných uživatelů",
+    "noTracks": "Nenalezeny žádné skladby od nepřítomných uživatelů.",
+    "success": "Odebráno **{count}** skladeb od uživatelů, kteří nejsou v hlasovém kanálu."
+  },
+  "removekeyword": {
+    "description": "Odebrat skladby odpovídající klíčovému slovu",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "title": "🔍 Odebráno podle klíčového slova",
+    "noMatches": "Nenalezeny žádné skladby odpovídající slovu: **{keyword}**",
+    "success": "Odebráno **{count}** skladeb odpovídajících **{keyword}**.",
+    "removedField": "Odebrané skladby"
+  },
+  "removedupes": {
+    "description": "Odeber duplicitní skladby z fronty",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "title": "🧹 Duplicity odebrány",
+    "noDupes": "Ve frontě nejsou žádné duplicitní skladby.",
+    "success": "Odebráno **{count}** duplicitních skladeb.",
+    "removedField": "Odebrané duplicity"
+  },
+  "grab": {
+    "description": "Pošli si do DM info o aktuální skladbě",
+    "noQueue": "Nehraje žádná skladba.",
+    "author": "Interpret",
+    "duration": "Délka",
+    "url": "Odkaz",
+    "requestedBy": "Přidal(a) {user}",
+    "success": "✉️ Info o skladbě najdeš v DM!",
+    "dmFailed": "Nepodařilo se mi ti poslat DM. Zkontroluj si nastavení soukromí."
+  },
+  "length": {
+    "description": "Zobraz celkovou délku fronty",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není aktivní žádná fronta.",
+    "title": "📊 Délka fronty",
+    "totalTracks": "Celkem skladeb",
+    "totalDuration": "Celková délka"
+  },
+  "playnow": {
+    "description": "Okamžitě přehraj skladbu a přeskoč aktuální",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noResults": "Pro tvůj dotaz nebyly nalezeny žádné výsledky.",
+    "title": "⏯️ Hraje teď",
+    "success": "Teď hraje **{title}** od **{author}**",
+    "playing": "Spuštěno **{title}** od **{author}**",
+    "error": "Skladbu se nepodařilo přehrát. Zkus to znovu."
+  },
+  "playnext": {
+    "description": "Přidej skladbu jako další ve frontě",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noResults": "Pro tvůj dotaz nebyly nalezeny žádné výsledky.",
+    "title": "⏭️ Přidáno jako další",
+    "success": "**{title}** od **{author}** bude hrát jako další!",
+    "playing": "Spuštěno **{title}** od **{author}**",
+    "error": "Skladbu se nepodařilo přidat. Zkus to znovu."
+  },
+  "reverse": {
+    "description": "Obrať pořadí fronty",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Ve frontě není dost skladeb k obrácení.",
+    "title": "🔄 Fronta obrácena",
+    "success": "Obráceno **{count}** skladeb ve frontě."
+  },
+  "sort": {
+    "description": "Seřaď frontu podle různých kritérií",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Ve frontě není dost skladeb k seřazení.",
+    "title": "📋 Fronta seřazena",
+    "success": "Seřazeno **{count}** skladeb podle **{criteria}**."
+  },
+  "swap": {
+    "description": "Prohoď dvě skladby ve frontě",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Ve frontě není dost skladeb k prohození.",
+    "samePosition": "Skladbu nelze prohodit samu se sebou.",
+    "outOfRange": "Pozice mimo rozsah. Fronta má {max} skladeb.",
+    "title": "🔀 Skladby prohozeny",
+    "success": "Prohozeno **#{pos1}** ({title1}) s **#{pos2}** ({title2})."
+  },
+  "voteskip": {
+    "description": "Hlasuj pro přeskočení aktuální skladby",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Nehraje žádná skladba.",
+    "alreadyVoted": "Pro přeskočení této skladby už jsi hlasoval(a).",
+    "title": "🗳️ Hlasování o přeskočení",
+    "voted": "**{user}** hlasuje pro přeskočení! ({current}/{required} hlasů)",
+    "skippedTitle": "⏭️ Přeskočeno",
+    "skipped": "Skladba **{title}** byla přeskočena hlasováním."
+  },
+  "tip": {
+    "description": "Získej náhodný tip",
+    "title": "💡 Tip",
+    "footer": "Další příkazy najdeš přes /help"
+  },
+  "vote": {
+    "description": "Hlasuj pro bota na seznamech botů",
+    "title": "🗳️ Hlasuj pro nás!",
+    "message": "Tvé hlasy nám pomáhají růst a zlepšovat se! Hlasuj na platformách níže:",
+    "rewards": "Odměny za hlasování",
+    "rewardsList": "• Prémiové funkce na 12 hodin\n• Exkluzivní odznak hlasujícího\n• Vyšší kvalita zvuku",
+    "footer": "Díky za podporu!",
+    "body": "Hlasování pomáhá dalším serverům bota najít. Každý hlas na top.gg ti na 12 hodin odemkne **režim 24/7** a **studiovou kvalitu**.",
+    "active": "Tvoje výhody za hlas jsou aktivní ještě {time}.",
+    "inactive": "Nemáš aktivní hlas. Hlasuj níže, výhody se aktivují do minuty.",
+    "notListed": "Hlasování se otevře, jakmile bude bot zveřejněn. Díky, že chceš pomoct!"
+  },
+  "leaderboard": {
+    "description": "Zobraz žebříček skladeb této relace",
+    "noQueue": "Není aktivní žádná fronta.",
+    "noData": "Nejsou k dispozici žádná data o skladbách.",
+    "title": "🏆 Žebříček relace",
+    "footer": "Celkem skladeb ve frontě: {total}"
+  },
+  "categories": {
+    "description": "Zobraz všechny kategorie příkazů",
+    "title": "📚 Kategorie příkazů",
+    "footer": "Podrobnosti o příkazech najdeš přes /help"
+  },
+  "changelogs": {
+    "description": "Zobraz nedávné změny a aktualizace",
+    "title": "📋 Seznam změn",
+    "footer": "Díky, že používáš našeho bota!"
+  },
+  "shards": {
+    "description": "Zobrazit informace o shardech",
+    "title": "🌐 Informace o shardech",
+    "currentShard": "Aktuální shard",
+    "totalShards": "Celkem shardů",
+    "ping": "Ping",
+    "guilds": "Servery",
+    "users": "Uživatelé",
+    "status": "Stav",
+    "footer": "Jsi připojen ke shardu #{shardId}"
+  },
+  "setup": {
+    "description": "Průvodce nastavením bota",
+    "title": "🔧 Průvodce nastavením bota",
+    "welcome": "Vítej! Postupuj podle těchto kroků a nastav si bota:",
+    "step1": {
+      "title": "Připoj se do hlasového kanálu",
+      "desc": "Připoj se do hlasového kanálu a pak použij `/play <song>` a pusť si hudbu."
+    },
+    "step2": {
+      "title": "Uprav nastavení",
+      "desc": "Použij `/settings` a zobraz si nebo uprav bota pro svůj server."
+    },
+    "step3": {
+      "title": "Nastav oprávnění",
+      "desc": "Admini můžou omezit příkazy na konkrétní role pomocí vestavěných oprávnění Discordu."
+    },
+    "step4": {
+      "title": "Objevuj funkce",
+      "desc": "Použij `/help` pro zobrazení všech příkazů nebo `/categories` pro procházení podle kategorií."
+    },
+    "commands": {
+      "title": "Základní příkazy",
+      "desc": "`/play` - Přehrát hudbu\n`/skip` - Přeskočit skladbu\n`/queue` - Zobrazit frontu\n`/help` - Nápověda"
+    },
+    "footer": "Potřebuješ pomoc? Použij /support a připoj se na náš support server."
+  },
+  "playleave": {
+    "description": "Přehraj skladbu a po jejím skončení se odpoj",
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "title": "🎵 Přehrávám (pak odejdu)",
+    "success": "Přehrávám **{title}** od **{author}**. Po této skladbě se odpojím.",
+    "footer": "Bot se po přehrání odpojí",
+    "error": "Skladbu se nepodařilo přehrát."
+  },
+  "lock": {
+    "description": "Zamkni nebo odemkni hudební relaci",
+    "enable": {
+      "description": "Zamkni relaci jen pro sebe"
+    },
+    "disable": {
+      "description": "Odemkni relaci"
+    },
+    "status": {
+      "description": "Zkontroluj stav zámku"
+    },
+    "notInVoice": "Musíš být v hlasovém kanálu.",
+    "noQueue": "Není žádná aktivní fronta.",
+    "alreadyLocked": "Relaci už zamkl(a) <@{userId}>.",
+    "lockedTitle": "🔒 Relace zamčena",
+    "locked": "**{user}** zamkl(a) tuto relaci. Přehrávání může ovládat jen on/ona.",
+    "notLocked": "Tato relace není zamčená.",
+    "notOwner": "Odemknout může jen vlastník zámku nebo admin.",
+    "unlockedTitle": "🔓 Relace odemčena",
+    "unlocked": "Relace byla odemčena. Přehrávání teď může ovládat kdokoli.",
+    "statusTitle": "🔐 Stav zámku",
+    "statusLocked": "Relaci zamkl(a) <@{userId}>.",
+    "statusUnlocked": "Relace je odemčená."
+  },
+  "rebind": {
+    "description": "Přesměruj oznámení bota do jiného kanálu",
+    "noQueue": "Není žádná aktivní fronta.",
+    "invalidChannel": "Neplatný kanál. Vyber prosím textový kanál.",
+    "title": "📢 Kanál změněn",
+    "success": "Oznámení teď posílám do {channel}."
+  },
+  "disabledcommands": {
+    "description": "Zobraz všechny vypnuté příkazy na tomto serveru",
+    "none": "Momentálně nejsou vypnuté žádné příkazy.",
+    "title": "🚫 Vypnuté příkazy",
+    "footer": "Vypnuté příkazy: {count}"
+  },
+  "commandtoggle": {
+    "description": "Zapni nebo vypni příkaz",
+    "protected": "Tento příkaz nelze vypnout.",
+    "enabledTitle": "✅ Příkaz zapnut",
+    "enabled": "Příkaz `/{command}` byl **zapnut**.",
+    "disabledTitle": "🚫 Příkaz vypnut",
+    "disabled": "Příkaz `/{command}` byl **vypnut**."
+  },
+  "songinfo": {
+    "description": "Zobraz podrobné informace o skladbě",
+    "noQueue": "Není žádná fronta.",
+    "invalidPosition": "Neplatná pozice. Fronta má {max} skladeb.",
+    "noTrack": "Žádná skladba nenalezena.",
+    "author": "Interpret",
+    "duration": "Délka",
+    "source": "Zdroj",
+    "views": "Zhlédnutí",
+    "live": "Živě",
+    "requestedBy": "Přidal(a)"
+  },
+  "artistinfo": {
+    "description": "Zobraz informace o interpretovi",
+    "noArtist": "Nezadal(a) jsi interpreta a nic se nepřehrává.",
+    "title": "🎤 {artist}",
+    "tracksInQueue": "Skladby ve frontě",
+    "footer": "Klikni na odkazy a najdi další tvorbu tohoto interpreta"
+  },
+  "blacklist": {
+    "description": "Spravuj zakázané autory a názvy",
+    "author": {
+      "description": "Zakaž autora/interpreta",
+      "title": "🚫 Autor zakázán",
+      "exists": "Autor **{name}** už je zakázaný.",
+      "added": "Autor **{name}** byl zakázán. Skladby tohoto interpreta se nebudou přehrávat."
+    },
+    "title": {
+      "description": "Zakaž klíčové slovo v názvu",
+      "addedTitle": "🚫 Název zakázán",
+      "exists": "Klíčové slovo **{keyword}** už je zakázané.",
+      "added": "Klíčové slovo **{keyword}** bylo zakázáno. Skladby s ním v názvu se nebudou přehrávat."
+    },
+    "list": {
+      "description": "Zobraz všechny zakázané položky",
+      "title": "📋 Blacklist",
+      "empty": "Žádné položky nejsou zakázané.",
+      "authors": "Zakázaní autoři",
+      "titles": "Zakázaná klíčová slova v názvech"
+    },
+    "removeauthor": {
+      "description": "Odeber autora z blacklistu",
+      "title": "✅ Autor odebrán z blacklistu",
+      "notfound": "Autor **{name}** není na blacklistu.",
+      "removed": "Autor **{name}** byl odebrán z blacklistu."
+    },
+    "removetitle": {
+      "description": "Odebrat klíčové slovo názvu z blacklistu",
+      "title": "✅ Název odebrán z blacklistu",
+      "notfound": "Klíčové slovo **{keyword}** není na blacklistu.",
+      "removed": "Klíčové slovo **{keyword}** bylo odebráno z blacklistu."
+    }
+  },
+  "profile": {
+    "description": "Zobraz svůj profil nebo profil jiného uživatele",
+    "title": "👤 Profil uživatele {user}",
+    "username": "Uživatelské jméno",
+    "id": "ID uživatele",
+    "created": "Účet vytvořen",
+    "premium": "Stav Premium",
+    "features": "Funkce Premium"
+  },
+  "games": {
+    "description": "Zobrazit dostupné hry",
+    "title": "🎮 Dostupné hry",
+    "info": "Hraj zábavné hudební hry s kamarády!",
+    "guessTheSong": {
+      "title": "Uhádni písničku",
+      "description": "Zkus uhádnout písničky ze své historie poslechu!"
+    },
+    "footer": "Hru spustíš zobrazeným příkazem"
+  },
+  "guesssong": {
+    "description": "Zahraj si hru Uhádni písničku",
+    "start": {
+      "description": "Spustit novou hru"
+    },
+    "guess": {
+      "description": "Tipnout si"
+    },
+    "stop": {
+      "description": "Ukončit aktuální hru"
+    },
+    "notInVoice": "Pro spuštění hry musíš být v hlasovém kanálu.",
+    "alreadyActive": "Hra už běží! Ukončíš ji pomocí `/guesssong stop`.",
+    "noHistory": "V historii není dost písniček ke spuštění hry. Nejdřív si nějaké pusť!",
+    "startedTitle": "🎵 Uhádni písničku!",
+    "started": "Hra začala! Zkus uhádnout název písničky nebo interpreta.",
+    "hint": "Nápověda",
+    "howToGuess": "Tipni si pomocí /guesssong guess <odpověď>",
+    "noGame": "Žádná hra neběží. Spusť ji pomocí `/guesssong start`.",
+    "wrong": "❌ Špatný tip! Zkus to znovu.",
+    "winnerTitle": "🎉 Správně!",
+    "winner": "**{user}** uhádl(a) správně za **{time}** s!",
+    "answer": "Správná odpověď byla",
+    "notHost": "Hru může ukončit jen hostitel.",
+    "stoppedTitle": "🛑 Hra ukončena",
+    "stopped": "Hra byla ukončena."
+  },
+  "permissions": {
+    "title": "⚙️ Nastavení oprávnění",
+    "view_description": "Aktuální nastavení oprávnění na tomto serveru:",
+    "no_custom": "Žádná vlastní oprávnění",
+    "default_message": "Všechny příkazy používají výchozí oprávnění. Nastavíš je pomocí `/permissions allow` nebo `/permissions deny`.",
+    "allowed": "Povoleno",
+    "denied": "Zakázáno",
+    "updated": "✅ Oprávnění aktualizována",
+    "allow_success": "**{permission}** je nyní povoleno pro {role}",
+    "deny_success": "**{permission}** je nyní zakázáno pro {role}",
+    "everyone": "všechny",
+    "reset_title": "🔄 Oprávnění resetována",
+    "reset_success": "Všechna vlastní oprávnění byla obnovena na výchozí.",
+    "allowall_success": "Všechna oprávnění jsou nyní povolena pro {role}",
+    "denyall_success": "Všechna oprávnění jsou nyní zakázána pro {role}"
+  },
+  "setsettings": {
+    "updated": "✅ Nastavení aktualizováno",
+    "maxtracklen_unlimited": "Maximální délka skladby je nyní **neomezená**.",
+    "maxtracklen_set": "Maximální délka skladby je nyní **{seconds}** s.",
+    "maxqueue_set": "Maximální velikost fronty je nyní **{size}** skladeb.",
+    "maxvolume_set": "Maximální hlasitost je nyní **{volume}%**.",
+    "defaultvolume_set": "Výchozí hlasitost je nyní **{volume}%**.",
+    "voteskip_enabled": "Hlasování o přeskočení je nyní **zapnuto** na **{percentage}%**.",
+    "voteskip_disabled": "Hlasování o přeskočení je nyní **vypnuto**.",
+    "announce_enabled": "Oznámení o právě hrající skladbě jsou nyní **zapnutá**.",
+    "announce_disabled": "Oznámení o právě hrající skladbě jsou nyní **vypnutá**.",
+    "autoleave_enabled": "Automatické odpojení je nyní **zapnuto** s časovým limitem **{timeout}** s.",
+    "autoleave_disabled": "Automatické odpojení je nyní **vypnuto**.",
+    "duplicates_prevented": "Duplicitní skladby budou nyní **blokovány**.",
+    "duplicates_allowed": "Duplicitní skladby jsou nyní **povoleny**.",
+    "language_set": "Jazyk je nyní nastaven na **{lang}**.",
+    "embedcolor_set": "Barva embedu je nyní nastavena na **{color}**.",
+    "invalid_color": "Neplatná hex barva. Použij formát jako #F8AA2A.",
+    "reset_title": "🔄 Nastavení resetováno",
+    "reset_success": "Všechna nastavení byla obnovena na výchozí hodnoty."
+  },
+  "ownership": {
+    "claimed_title": "👑 Vlastnictví převzato",
+    "claimed_success": "{user} je nyní vlastníkem relace.",
+    "claimed_footer": "Jako vlastník ovládáš přehrávání.",
+    "already_claimed": "Relaci už vlastní {owner}.",
+    "not_owner": "Nejsi vlastníkem relace.",
+    "user_not_in_vc": "Tento uživatel není v hlasovém kanálu.",
+    "transferred_title": "🔄 Vlastnictví předáno",
+    "transferred_success": "{from} předal(a) vlastnictví uživateli {to}.",
+    "view_title": "👑 Vlastník relace",
+    "current_owner": "Aktuální vlastník relace: {owner}",
+    "no_owner": "Tato relace nemá vlastníka. Převezmi ji pomocí `/ownership claim`."
+  },
+  "channels": {
+    "log_title": "📝 Kanál pro logy",
+    "log_set": "Kanál pro logy byl nastaven na {channel}.",
+    "log_disabled": "Kanál pro logy byl vypnut.",
+    "text_updated": "📝 Nastavení textových kanálů aktualizováno",
+    "text_enabled": "V kanálu {channel} jsou nyní příkazy bota povoleny.",
+    "text_disabled": "V kanálu {channel} jsou nyní příkazy bota zakázány.",
+    "text_enableall": "Všechny textové kanály jsou nyní povoleny.",
+    "text_disableall": "Všechny textové kanály jsou teď vypnuté kromě {channel}.",
+    "text_view_title": "📝 Povolené textové kanály",
+    "all_text_enabled": "Všechny textové kanály jsou momentálně povolené.",
+    "allowed_text_list": "Povolené textové kanály:",
+    "voice_updated": "🔊 Nastavení hlasových kanálů aktualizováno",
+    "voice_enabled": "{channel} je teď povolený pro přehrávání hudby.",
+    "voice_disabled": "{channel} je teď zakázaný pro přehrávání hudby.",
+    "voice_enableall": "Všechny hlasové kanály jsou teď povolené.",
+    "voice_disableall_hint": "Nejdřív povol konkrétní hlasové kanály pomocí `/channels voice enable`.",
+    "voice_view_title": "🔊 Povolené hlasové kanály",
+    "all_voice_enabled": "Všechny hlasové kanály jsou momentálně povolené.",
+    "allowed_voice_list": "Povolené hlasové kanály:",
+    "use_disableall_first": "Nejdřív použij 'disableall' k omezení kanálů a pak povol ty konkrétní."
+  },
+  "perks": {
+    "title": "⭐ Výhody Premium",
+    "how_to_get": "Jak získat Premium",
+    "patreon_link": "Podpoř nás na Patreonu: https://patreon.com/u36360623",
+    "user_title": "Tvůj stav Premium",
+    "user_premium": "Máš Premium **{tier}**! 🎉",
+    "your_perks": "Tvoje aktivní výhody",
+    "user_free": "Máš úroveň **Free**.",
+    "upgrade": "Přejít na Premium",
+    "upgrade_message": "Získej prémiové funkce tím, že nás podpoříš na Patreonu!",
+    "description": "Zobraz výhody premium"
+  },
+  "boost": {
+    "no_premium_title": "❌ Žádné Premium",
+    "no_premium": "K boostování serverů potřebuješ Premium. Získej ho na Patreonu!",
+    "already_boosted_title": "⚠️ Už boostnuto",
+    "already_boosted_self": "Tenhle server už jsi boostnul!",
+    "already_boosted_other": "Tenhle server už boostuje jiný uživatel.",
+    "activated_title": "🚀 Server boostnut!",
+    "activated_success": "Tenhle server je teď boostnutý s Premium **{tier}**!",
+    "not_your_boost_title": "❌ Není to tvůj boost",
+    "not_your_boost": "Tenhle server jsi neboostnul.",
+    "deactivated_title": "📤 Boost odebrán",
+    "deactivated_success": "Tvůj boost byl z tohoto serveru odebrán.",
+    "list_title": "📋 Tvoje aktivní boosty",
+    "no_boosts": "Zatím jsi neboostnul žádný server.",
+    "active_boosts": "Tvoje aktivní boosty serverů:",
+    "info_title": "ℹ️ Info o boostu serveru",
+    "guild_boosted": "Tenhle server je boostnutý! 🎉",
+    "tier": "Úroveň",
+    "boosted_by": "Boostnul",
+    "since": "Od",
+    "guild_not_boosted": "Tenhle server není boostnutý.",
+    "how_to_boost": "Jak boostnout",
+    "boost_instructions": "Použij `/boost activate` a boostni tenhle server svým Premium."
+  },
+  "alias": {
+    "added_title": "✅ Alias přidán",
+    "added_success": "Alias `{alias}` teď spouští `{command}`.",
+    "removed_title": "🗑️ Alias odebrán",
+    "removed_success": "Alias `{alias}` byl odebrán.",
+    "list_title": "📋 Aliasy serveru",
+    "no_aliases": "Tenhle server nemá nastavené žádné aliasy.",
+    "cleared_title": "🧹 Aliasy vymazány",
+    "cleared_success": "Všechny aliasy serveru byly vymazány.",
+    "not_found": "Tento alias neexistuje.",
+    "no_spaces": "Názvy aliasů nemůžou obsahovat mezery."
+  },
+  "nightcore": {
+    "description": "Zapne/vypne efekt nightcore u hudby",
+    "errorNotQueue": "Nic se nepřehrává.",
+    "result": "<@{author}> 🎵 Efekt nightcore je teď {status}"
+  },
+  "player": {
+    "nowPlaying": "Právě hraje",
+    "paused": "Pozastaveno",
+    "live": "ŽIVĚ",
+    "requestedBy": "přidal(a) {user}",
+    "autoplayPick": "vybráno autoplayem",
+    "upNext": "Další: {title}",
+    "upNextMore": "Další: {title} (+{count} dalších)",
+    "upNextAutoplay": "Další skladbu vybere autoplay",
+    "queueEmpty": "Ve frontě už nic není. Přidej skladby přes /play",
+    "loopOff": "Opakování vypnuto",
+    "loopTrack": "Opakuje se tahle skladba",
+    "loopQueue": "Opakuje se fronta",
+    "volume": "Hlasitost {volume}%",
+    "autoplayOn": "Autoplay zapnutý",
+    "stay247On": "24/7 zapnuto",
+    "ended": "Fronta skončila. Použij /play a pusť si další hudbu.",
+    "endedAutoplayHint": "Tip: zapni autoplay a hudba nikdy nepřestane.",
+    "stopped": "Přehrávání zastaveno.",
+    "disconnected": "Opustil jsem hlasový kanál.",
+    "notInVoice": "Připoj se do mého hlasového kanálu, abys mohl(a) používat ovládání.",
+    "needDj": "Na tohle potřebuješ roli DJ.",
+    "nothingPlaying": "Právě se nic nepřehrává.",
+    "noPrevious": "Žádná předchozí skladba není.",
+    "shuffled": "Zamícháno {count} skladeb.",
+    "nothingToShuffle": "Pro zamíchání přidej aspoň dvě skladby.",
+    "dmSent": "Posláno do tvých soukromých zpráv.",
+    "dmClosed": "Máš zavřené soukromé zprávy, takže tady to je:",
+    "savedFrom": "Uloženo z {guild}",
+    "lyricsNotFound": "Pro {title} se nenašly žádné texty.",
+    "lyricsLoading": "Hledám text…",
+    "autoplayEnabled": "Autoplay zapnutý: budou hrát podobné skladby.",
+    "autoplayDisabled": "Autoplay vypnutý.",
+    "volumeLimit": "Tento server omezuje hlasitost na {max} %.",
+    "lyricsButton": "Text písně",
+    "saveButton": "Uložit"
+  },
+  "queueView": {
+    "title": "Fronta",
+    "nowPlaying": "Právě hraje",
+    "empty": "Fronta je prázdná. Přidej skladby pomocí /play",
+    "page": "Strana {page} z {pages}",
+    "summary": "Skladby: {count} · celkem {duration}",
+    "nothingPlaying": "Na tomto serveru nic nehraje."
+  },
+  "lyricsCmd": {
+    "optionQuery": "Skladba k vyhledání (výchozí je ta, co právě hraje)",
+    "needQuery": "Tady nic nehraje. Napiš mi, jakou skladbu: /lyrics query:<skladba>",
+    "source": "Text ze zdroje {source}"
+  },
+  "welcome": {
+    "title": "Díky, že sis přidal {bot}!",
+    "body": "Připoj se do hlasového kanálu a napiš **/play** s názvem skladby nebo odkazem z YouTube, Spotify, SoundCloud nebo Apple Music. Tlačítka pod každou skladbou umožní komukoli v kanálu pozastavit, přeskočit, opakovat a další.",
+    "tips": "**/help** vypíše všechny příkazy · **/settings** nastaví DJ roli, jazyk a limity · **/autoplay** pouští další podobné skladby",
+    "commands": "Příkazy",
+    "dashboard": "Nástěnka",
+    "support": "Server podpory",
+    "vote": "Hlasovat"
+  },
+  "router": {
+    "guildOnly": "Tento příkaz funguje jen na serveru.",
+    "blacklisted": "Tady nemáš povoleno používat tohoto bota.",
+    "channelNotAllowed": "V tomto kanálu nejsou příkazy bota povolené.",
+    "commandDisabled": "Admin na tomto serveru vypnul /{name}.",
+    "cooldown": "Zpomal! Zkus /{name} znovu za {time} s.",
+    "missingPermissions": "Tady mi chybí oprávnění: {permissions}",
+    "error": "Při spuštění se něco pokazilo. Chyba byla zaznamenána, zkus to prosím znovu.",
+    "expired": "Tyto ovládací prvky už nejsou aktivní."
+  },
+  "helpMenu": {
+    "title": "{bot} — příkazy",
+    "intro": "Připoj se do hlasového kanálu a použij </play:{playId}> s názvem skladby nebo odkazem. Níže vyber kategorii a uvidíš všechno ostatní.",
+    "pick": "Vyber kategorii",
+    "category": {
+      "music": "Přehrávání",
+      "queue": "Fronta",
+      "effects": "Efekty a filtry",
+      "playlists": "Playlisty",
+      "info": "Texty a info",
+      "settings": "Nastavení serveru",
+      "premium": "Premium a hlasování",
+      "other": "Ostatní"
+    },
+    "categoryDesc": {
+      "music": "Přehrát, pozastavit, přeskočit, přetočit, opakovat, autoplay",
+      "queue": "Zobrazení, přeřazení a úklid fronty",
+      "effects": "Bass boost, nightcore, 8D, hlasitost…",
+      "playlists": "Ukládej a načítej vlastní playlisty",
+      "info": "Texty, právě hraje, statistiky",
+      "settings": "DJ role, jazyk, limity, kanály",
+      "premium": "Výhody Founder, odměny za hlasování",
+      "other": "Všechno ostatní"
+    },
+    "links": "Odkazy"
+  },
+  "stay247": {
+    "enabledHere": "24/7 zapnuto: zůstanu v {channel} a po restartu se znovu připojím.",
+    "disabledNow": "24/7 vypnuto: odejdu po {minutes} min ticha nebo prázdného kanálu.",
+    "lost": "Režim 24/7 byl vypnut, protože člen, který ho zapnul, už nemá Founder ani aktivní hlas.",
+    "needVoice": "Připoj se do hlasového kanálu, ve kterém mám zůstat, a pak znovu spusť /247."
+  },
+  "language": {
+    "description": "Nastav jazyk, který bot na tomto serveru používá",
+    "optionLanguage": "Jazyk (automaticky podle jazyka Discordu každého člena)",
+    "auto": "Automaticky (jazyk Discordu každého člena)",
+    "set": "Jazyk nastaven na {language}.",
+    "needManage": "Ke změně jazyka potřebuješ oprávnění Spravovat server."
+  },
+  "links": {
+    "website": "Web",
+    "support": "Podpora",
+    "premium": "Premium",
+    "vote": "Hlasovat",
+    "addToServer": "Přidat na server",
+    "invite": "Pozvat"
+  },
+  "commanddisable": {
+    "description": "Vypni příkazy na tomto serveru"
+  },
+  "commanddisableall": {
+    "description": "Vypni všechny příkazy kromě těch nezbytných"
+  },
+  "commandenable": {
+    "description": "Zapni vypnutý příkaz"
+  },
+  "commandenableall": {
+    "description": "Zapni všechny vypnuté příkazy"
+  },
+  "effects": {
+    "description": "Spravuj zvukové efekty"
+  },
+  "info": {
+    "description": "Informace o botovi a nápověda"
+  },
+  "patreon": {
+    "description": "Zkontroluj svůj stav na Patreon a synchronizuj výhody"
+  },
+  "play_file": {
+    "description": "Přehraj zvukový soubor z přílohy"
+  },
+  "play_spotify": {
+    "description": "Vyhledej a přehraj skladbu ze Spotify"
+  },
+  "premium": {
+    "description": "Spravuj funkce premium a propojení serverů"
+  },
+  "queuemanage": {
+    "description": "Pokročilá správa fronty"
+  },
+  "settings": {
+    "description": "Nastav bota pro tento server (jen pro adminy)"
+  },
+  "stats": {
+    "description": "Zobraz statistiky bota a relace"
+  },
+  "user": {
+    "description": "Uživatelský profil a předvolby"
   }
 }

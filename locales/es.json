@@ -1,4 +1,14 @@
 {
+  "247": {
+    "description": "Activa o desactiva el modo 24/7 (el bot se queda en el canal de voz)",
+    "premiumRequired": "⭐ El modo 24/7 es una función premium. Usa `/premium` para más info.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "title": "🌙 Modo 24/7",
+    "enabled": "Modo 24/7 **activado**. El bot se quedará en el canal de voz indefinidamente.",
+    "disabled": "Modo 24/7 **desactivado**. El bot saldrá cuando esté inactivo.",
+    "footer": "Función premium"
+  },
   "clip": {
     "description": "Reproduce un sonido .mp3 dentro de la carpeta sonido",
     "usagesReply": "Cómo usarlo: {prefix}clip <nombre_clip.mp3>",
@@ -31,7 +41,11 @@
     "description": "Mueve canciones de la cola",
     "errorNotQueue": "No hay una cola.",
     "usagesReply": "Uso correcto: {prefix}move <Número en la Cola>",
-    "result": "<@{author}> 🚚 movió **{title}** al puesto {index} de la cola."
+    "result": "<@{author}> 🚚 movió **{title}** al puesto {index} de la cola.",
+    "args": {
+      "movefrom": "Posición de origen",
+      "moveto": "Posición de destino"
+    }
   },
   "nowplaying": {
     "description": "Muestra la música que se está reproduciendo actualmente",
@@ -72,7 +86,34 @@
     "stopSong": "<@{author}> ⏹ ¡Paró la música!",
     "leaveChannel": "Saliendo del chat de voz...",
     "songNotFound": "Música no encontrada",
-    "songAccessErr": "El video tiene restricción de edad, es privado o no está disponible"
+    "songAccessErr": "El video tiene restricción de edad, es privado o no está disponible",
+    "errorNoResults": "No se encontraron resultados para {url}",
+    "errorInvalidURL": "URL no válida, prueba con una búsqueda o una URL de YouTube",
+    "optionSong": "Nombre o enlace de la canción (YouTube, Spotify, SoundCloud, Apple Music…)",
+    "optionNext": "Reprodúcela justo después de la canción actual",
+    "optionSource": "Dónde buscar cuando escribes un nombre",
+    "addedTitle": "Añadida a la cola",
+    "nowPlayingTitle": "Reproduciendo ahora",
+    "playlistTitle": "Playlist añadida",
+    "playlistTracks": "{count} canciones",
+    "position": "Posición #{position}",
+    "positionNext": "Suena a continuación",
+    "notAllowedChannel": "No tengo permitido reproducir en este canal de voz.",
+    "queueFull": "La cola está llena ({max} canciones).",
+    "tooLong": "Esa canción supera el límite de este servidor ({max}).",
+    "duplicate": "**{title}** ya está en la cola.",
+    "noResults": "No se encontró nada para {query}.",
+    "initializing": "El reproductor se está iniciando, inténtalo de nuevo en unos segundos.",
+    "ageRestricted": "Ese video tiene restricción de edad.",
+    "private": "Ese video es privado.",
+    "unavailable": "Ese video no está disponible.",
+    "genericError": "No se pudo reproducir: {error}",
+    "searchSuggestion": "Buscar: {query}",
+    "botNotInChannel": "Ya estoy reproduciendo en {channel}. Únete para añadir canciones.",
+    "cantJoin": "No puedo unirme a {channel}: necesito los permisos de Conectar y Hablar ahí.",
+    "contextName": "Reproducir en canal de voz",
+    "contextNextName": "Reproducir a continuación",
+    "contextNoQuery": "Ese mensaje no tiene ningún enlace, archivo de audio ni texto que pueda reproducir."
   },
   "playlist": {
     "description": "Reproduce una lista de reproducción de YouTube",
@@ -118,7 +159,9 @@
     "errorAlreadyCollector": "Un recolector de mensajes ya está activo en el servidor actualmente.",
     "errorNotChannel": "¡Primero debes unirte a un canal de voz!",
     "resultEmbedTitle": "**Responde con el número de la música que quieras**",
-    "resultEmbedDesc": "Resultados para: {search}"
+    "resultEmbedDesc": "Resultados para: {search}",
+    "optionQuery": "Término de búsqueda",
+    "noResults": "No hay resultados para la búsqueda, prueba con otra cosa"
   },
   "shuffle": {
     "description": "Reproducción aleatoria de la cola",
@@ -144,7 +187,10 @@
     "usageReply": "Cómo usarlo: {prefix}{name} <Número en la Cola>",
     "errorNotQueue": "No hay una cola de reproducción.",
     "errorNotValid": "¡La cola solo tiene {length} canciones!",
-    "result": "<@{author}> ⏭ Saltó {arg} canciones"
+    "result": "<@{author}> ⏭ Saltó {arg} canciones",
+    "args": {
+      "number": "El número de la cola al que saltar"
+    }
   },
   "stop": {
     "description": "Para la música",
@@ -177,5 +223,921 @@
     "description": "Activa o desactiva el efecto nightcore en la música",
     "errorNotQueue": "No se está reproduciendo nada.",
     "result": "<@{author}> 🎵 El efecto nightcore ahora está {status}"
+  },
+  "seek": {
+    "description": "Ir a un momento concreto de la canción",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "errorInvalidTime": "Formato de tiempo no válido. Usa formatos como: 1:30, 90, 1m30s",
+    "errorOutOfRange": "El tiempo debe estar entre 0:00 y {duration}",
+    "result": "<@{author}> ⏩ saltó a **{time}**"
+  },
+  "forward": {
+    "description": "Adelanta la canción los segundos indicados",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "errorNearEnd": "No se puede adelantar, está demasiado cerca del final de la canción.",
+    "result": "<@{author}> ⏩ adelantó **{seconds}s** (ahora en {position})"
+  },
+  "rewind": {
+    "description": "Retrocede la canción los segundos indicados",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "result": "<@{author}> ⏪ retrocedió **{seconds}s** (ahora en {position})"
+  },
+  "replay": {
+    "description": "Reinicia la canción actual desde el principio",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "result": "<@{author}> 🔄 reinició **{title}**"
+  },
+  "clear": {
+    "description": "Vacía toda la cola",
+    "errorNotQueue": "La cola ya está vacía.",
+    "result": "<@{author}> 🗑️ eliminó **{count}** canciones de la cola"
+  },
+  "loopqueue": {
+    "description": "Activa o desactiva la repetición de la cola",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "result": "🔁 Repetición de la cola: {loop}"
+  },
+  "join": {
+    "description": "Haz que el bot se una a tu canal de voz",
+    "errorDifferentChannel": "Ya estoy en otro canal de voz.",
+    "errorCantJoin": "No pude unirme a tu canal de voz.",
+    "result": "✅ Me uní a **{channel}**"
+  },
+  "leave": {
+    "description": "Haz que el bot salga del canal de voz",
+    "errorNotInChannel": "No estoy en ningún canal de voz.",
+    "result": "👋 Salí de **{channel}**"
+  },
+  "save": {
+    "description": "Guarda la canción actual en tus MD",
+    "errorNotQueue": "No se está reproduciendo nada.",
+    "errorDMClosed": "No pude enviarte un MD. Activa los mensajes directos de miembros del servidor.",
+    "result": "💾 ¡Te envié **{title}** por MD!"
+  },
+  "autoplay": {
+    "description": "Activa o desactiva la reproducción automática (canciones similares al terminar la cola)",
+    "errorNotQueue": "No hay ninguna cola activa.",
+    "result": "🔄 Reproducción automática: {status}"
+  },
+  "history": {
+    "description": "Muestra las canciones reproducidas recientemente",
+    "errorNotQueue": "No hay ninguna cola activa.",
+    "errorEmpty": "Todavía no hay canciones en el historial.",
+    "embedTitle": "Reproducidas recientemente",
+    "footer": "Mostrando las últimas {count} canciones"
+  },
+  "previous": {
+    "description": "Reproduce la canción anterior",
+    "errorNotQueue": "No hay ninguna cola activa.",
+    "errorNoHistory": "No hay canciones anteriores en el historial.",
+    "result": "<@{author}> ⏮️ reproduciendo la canción anterior"
+  },
+  "jump": {
+    "description": "Salta a una posición concreta de la cola",
+    "errorNotQueue": "No hay cola.",
+    "errorInvalidPosition": "Posición no válida. La cola solo tiene {max} canciones.",
+    "errorNotFound": "No se encontró ninguna canción en esa posición.",
+    "result": "<@{author}> ⏭️ saltó a **{title}**"
+  },
+  "Invite me to your server!": "¡Invítame a tu servidor!",
+  "Invite": "Invitar",
+  "about": {
+    "description": "Muestra información sobre el bot",
+    "embedDescription": "Un potente bot de música para Discord con reproducción de audio de alta calidad",
+    "footer": "¡Gracias por usar el bot!"
+  },
+  "support": {
+    "description": "Obtén el enlace del servidor de soporte",
+    "embedDescription": "¿Necesitas ayuda? ¡Únete a nuestro servidor de soporte!",
+    "footer": "¡Estamos aquí para ayudarte!"
+  },
+  "dashboard": {
+    "description": "Obtén el enlace del panel",
+    "embedDescription": "¡Accede al panel web para gestionar la configuración de tu servidor, ver la cola y mucho más!",
+    "footer": "Gestiona tu experiencia musical"
+  },
+  "clean": {
+    "description": "Elimina los mensajes del bot del canal",
+    "noMessages": "No se encontraron mensajes del bot para eliminar.",
+    "success": "🗑️ Se eliminaron {count} mensaje(s) del bot.",
+    "error": "Ocurrió un error al limpiar los mensajes."
+  },
+  "upcoming": {
+    "description": "Muestra las próximas canciones de la cola",
+    "noQueue": "No hay ninguna cola activa.",
+    "noUpcoming": "No hay próximas canciones en la cola."
+  },
+  "massremove": {
+    "description": "Quita varias canciones de la cola",
+    "noQueue": "No hay ninguna cola activa.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noTracks": "La cola está vacía.",
+    "invalidIndexes": "Índices no válidos. La cola tiene {max} canciones. Usa el formato: '1 3 5' o '1-5 8'",
+    "success": "🗑️ Se quitaron {count} canciones: {tracks}"
+  },
+  "removeuser": {
+    "description": "Quita todas las canciones pedidas por un usuario",
+    "noQueue": "No hay ninguna cola activa.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noTracks": "La cola está vacía.",
+    "noUserTracks": "No hay canciones de {user} en la cola.",
+    "success": "🗑️ Se quitaron {count} canciones pedidas por {user}."
+  },
+  "pulsator": {
+    "description": "Aplica el efecto de audio pulsator (alterna entre canales)",
+    "noQueue": "No hay ninguna cola activa.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "disabled": "🔇 Efecto pulsator desactivado.",
+    "enabled": "🔊 Efecto pulsator activado a {frequency} Hz.",
+    "error": "Ocurrió un error al aplicar el efecto pulsator."
+  },
+  "rate": {
+    "description": "Cambia la velocidad de reproducción (velocidad + tono)",
+    "noQueue": "No hay ninguna cola activa.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "disabled": "🔇 Efecto de velocidad desactivado.",
+    "enabled": "⚡ Velocidad ajustada al {percentage}%.",
+    "info": "Usa `/rate percentage:150` para cambiar la velocidad.\n\n**Nota:** Esto cambia tanto la velocidad como el tono.",
+    "error": "Ocurrió un error al aplicar el efecto de velocidad."
+  },
+  "starttime": {
+    "description": "Establece la posición de inicio de la canción actual",
+    "noQueue": "No hay ninguna cola activa.",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noTrack": "No se está reproduciendo ninguna canción.",
+    "reset": "⏱️ Tiempo de inicio restablecido al principio.",
+    "invalidTime": "Formato de tiempo no válido. Usa: '30s', '1:30', '1m 30s'",
+    "tooLong": "El tiempo supera la duración de la canción ({duration}).",
+    "success": "⏱️ Saltando a {time}.",
+    "error": "Ocurrió un error al establecer el tiempo de inicio."
+  },
+  "searchlyrics": {
+    "description": "Busca una canción por su letra",
+    "noResults": "No se encontraron canciones con la letra: \"{query}\"",
+    "noLyricsFound": "La letra no está disponible para esta canción.",
+    "error": "Ocurrió un error al buscar la letra."
+  },
+  "requested": {
+    "description": "Muestra todas las canciones pedidas por un usuario",
+    "noQueue": "No hay ninguna cola activa.",
+    "noTracks": "No hay canciones de {user} en la cola.",
+    "empty": "No hay canciones para mostrar."
+  },
+  "collections": {
+    "description": "Gestiona tus colecciones de música personales",
+    "tracks": "canciones",
+    "notFound": "No se encontró la colección **{name}**.",
+    "list": {
+      "description": "Ve todas tus colecciones",
+      "title": "📁 Tus colecciones",
+      "empty": "Aún no tienes colecciones. ¡Crea una con `/collections create`!",
+      "footer": "Total: {count} colecciones"
+    },
+    "create": {
+      "description": "Crea una nueva colección",
+      "nameOption": "Nombre de la colección",
+      "descriptionOption": "Descripción de la colección",
+      "limitReached": "Has alcanzado el número máximo de colecciones (50).",
+      "exists": "Ya existe una colección llamada **{name}**.",
+      "success": "✅ ¡Colección **{name}** creada!"
+    },
+    "delete": {
+      "description": "Elimina una colección",
+      "nameOption": "Nombre de la colección a eliminar",
+      "success": "🗑️ Colección **{name}** eliminada."
+    },
+    "view": {
+      "description": "Ve las canciones de una colección",
+      "nameOption": "Nombre de la colección a ver",
+      "empty": "Esta colección está vacía.",
+      "tracksField": "Canciones",
+      "durationField": "Duración",
+      "shareCodeField": "Código para compartir",
+      "andMore": "...y {count} canciones más"
+    },
+    "save": {
+      "description": "Guarda la cola actual como colección",
+      "nameOption": "Nombre de la colección",
+      "noQueue": "No hay nada en la cola para guardar.",
+      "success": "💾 ¡Se guardaron **{count}** canciones en la colección **{name}**!"
+    },
+    "load": {
+      "description": "Carga una colección en la cola",
+      "nameOption": "Nombre de la colección a cargar",
+      "empty": "Esta colección está vacía.",
+      "success": "📂 ¡Se cargaron **{count}** canciones de la colección **{name}**!"
+    },
+    "rename": {
+      "description": "Cambia el nombre de una colección",
+      "oldNameOption": "Nombre actual de la colección",
+      "newNameOption": "Nuevo nombre para la colección",
+      "exists": "Ya existe una colección llamada **{name}**.",
+      "success": "✏️ **{oldName}** ahora se llama **{newName}**."
+    },
+    "share": {
+      "description": "Crea un código para compartir una colección",
+      "nameOption": "Nombre de la colección que quieres compartir",
+      "success": "🔗 Código para compartir **{name}**: `{code}`\n¡Otros pueden usar `/collections clone` con este código!"
+    },
+    "unshare": {
+      "description": "Quita el código para compartir de una colección",
+      "nameOption": "Nombre de la colección que quieres dejar de compartir",
+      "success": "🔒 Se quitó el código para compartir de **{name}**."
+    },
+    "clone": {
+      "description": "Clona una colección con un código para compartir",
+      "shareCodeOption": "El código para compartir que quieres clonar",
+      "nameOption": "Nombre para tu nueva colección",
+      "invalidCode": "Código para compartir inválido o caducado.",
+      "success": "📋 ¡Se clonaron **{count}** canciones en la nueva colección **{name}**!"
+    },
+    "merge": {
+      "description": "Fusiona una colección con otra",
+      "sourceOption": "Colección de origen",
+      "targetOption": "Colección de destino",
+      "sameCollection": "No puedes fusionar una colección consigo misma.",
+      "notFound": "No se encontró una o ambas colecciones.",
+      "success": "🔀 Se fusionó **{source}** con **{target}** ({count} canciones en total)."
+    },
+    "addcurrent": {
+      "description": "Añade la canción actual a una colección",
+      "nameOption": "Nombre de la colección a la que quieres añadirla",
+      "noTrack": "No se está reproduciendo ninguna canción.",
+      "success": "➕ ¡Se añadió **{track}** a la colección **{name}**!"
+    },
+    "removetrack": {
+      "description": "Quita una canción de una colección",
+      "nameOption": "Nombre de la colección",
+      "positionOption": "Posición de la canción que quieres quitar (empezando en 1)",
+      "invalidPosition": "Posición inválida. La colección tiene {max} canciones.",
+      "success": "🗑️ Se quitó **{track}** de la colección **{name}**."
+    }
+  },
+  "endtime": {
+    "description": "Define el momento en que termina la canción actual",
+    "timeOption": "Momento en que termina la canción (p. ej., 3:00, 180, 3m)",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "noTrack": "No se está reproduciendo ninguna canción.",
+    "info": "Duración de la canción: **{duration}**\nUsa `/endtime time:3:00` para que termine antes.",
+    "invalidTime": "Formato de tiempo inválido. Usa: '1:30', '90', '1m30s'",
+    "tooLong": "El tiempo supera la duración de la canción ({duration}).",
+    "tooEarly": "El final debe ser después de la posición actual ({position}).",
+    "success": "⏱️ La canción terminará en **{time}** (dentro de {remaining})."
+  },
+  "massmove": {
+    "description": "Mueve varias canciones a una nueva posición",
+    "indexesOption": "Números de las canciones que quieres mover (p. ej., 1 3 5 o 1-5)",
+    "positionOption": "Nueva posición para las canciones",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "invalidIndexes": "No se encontraron números de canción válidos. Usa números como: 1 3 5 o 1-5",
+    "invalidPosition": "La posición debe estar entre 1 y {max}.",
+    "success": "📦 Se movieron **{count}** canciones a la posición **{position}**: {tracks}"
+  },
+  "faq": {
+    "description": "Consulta las preguntas frecuentes",
+    "title": "❓ Preguntas frecuentes",
+    "q1": {
+      "question": "¿Cómo pongo música?",
+      "answer": "Usa `/play <nombre de la canción o URL>` para poner música. El bot se unirá a tu canal de voz y empezará a reproducir."
+    },
+    "q2": {
+      "question": "¿Por qué la música va con lag o se corta?",
+      "answer": "Normalmente se debe a problemas de red. Prueba a usar `/resetbitrate` o revisa la región de tu servidor."
+    },
+    "q3": {
+      "question": "¿Cómo creo una playlist?",
+      "answer": "Usa `/collections create <nombre>` para crear una colección. Luego usa `/collections save <nombre>` para guardar la cola actual."
+    },
+    "q4": {
+      "question": "¿Qué fuentes de música son compatibles?",
+      "answer": "Son compatibles YouTube, Spotify, SoundCloud y URLs directas."
+    },
+    "q5": {
+      "question": "¿Cómo salto una canción?",
+      "answer": "Usa `/skip` para saltar la canción actual, o `/skipto <número>` para ir a una canción concreta."
+    },
+    "q6": {
+      "question": "¿Cómo activo el modo 24/7?",
+      "answer": "El modo 24/7 es una función premium. Usa `/premium` para más información."
+    },
+    "footer": "¿Necesitas más ayuda? Únete a nuestro servidor de soporte con /support"
+  },
+  "next": {
+    "description": "Salta a la siguiente canción de la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola para saltar.",
+    "success": "⏭️ Saltaste a la siguiente canción."
+  },
+  "radio": {
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No se está reproduciendo ninguna canción en la que basar la radio.",
+    "success": "📻 Radio iniciada basada en **{title}**",
+    "error": "No se pudo iniciar la radio. Inténtalo de nuevo.",
+    "description": "Inicia una radio infinita a partir de una canción o artista"
+  },
+  "playrecent": {
+    "description": "Reproduce canciones escuchadas recientemente",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noHistory": "No se encontraron canciones reproducidas recientemente.",
+    "success": "📜 Se añadieron **{count}** canciones recientes a la cola.",
+    "error": "No se pudieron reproducir las canciones recientes."
+  },
+  "removeabsent": {
+    "description": "Quita las canciones de usuarios que no están en el canal de voz",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "title": "🧹 Canciones de usuarios ausentes eliminadas",
+    "noTracks": "No se encontraron canciones de usuarios ausentes.",
+    "success": "Se quitaron **{count}** canciones de usuarios que no están en el canal de voz."
+  },
+  "removekeyword": {
+    "description": "Quita las canciones que coincidan con una palabra clave",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "title": "🔍 Eliminadas por palabra clave",
+    "noMatches": "No se encontraron canciones que coincidan con: **{keyword}**",
+    "success": "Se quitaron **{count}** canciones que coinciden con **{keyword}**.",
+    "removedField": "Canciones eliminadas"
+  },
+  "removedupes": {
+    "description": "Elimina las canciones duplicadas de la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "title": "🧹 Duplicados eliminados",
+    "noDupes": "No se encontraron canciones duplicadas en la cola.",
+    "success": "Se eliminaron **{count}** canciones duplicadas.",
+    "removedField": "Duplicados eliminados"
+  },
+  "grab": {
+    "description": "Recibe por MD la info de la canción actual",
+    "noQueue": "No se está reproduciendo ninguna canción.",
+    "author": "Artista",
+    "duration": "Duración",
+    "url": "Enlace",
+    "requestedBy": "Pedida por {user}",
+    "success": "✉️ ¡Revisa tus MD para ver la info de la canción!",
+    "dmFailed": "No pude enviarte un MD. Revisa tu configuración de privacidad."
+  },
+  "length": {
+    "description": "Muestra la duración total de la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "title": "📊 Duración de la cola",
+    "totalTracks": "Total de canciones",
+    "totalDuration": "Duración total"
+  },
+  "playnow": {
+    "description": "Reproduce una canción al instante, saltando la actual",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noResults": "No se encontraron resultados para tu búsqueda.",
+    "title": "⏯️ Reproduciendo ahora",
+    "success": "Reproduciendo **{title}** de **{author}**",
+    "playing": "Empezó a sonar **{title}** de **{author}**",
+    "error": "No se pudo reproducir la canción. Inténtalo de nuevo."
+  },
+  "playnext": {
+    "description": "Añade una canción como la siguiente en la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noResults": "No se encontraron resultados para tu búsqueda.",
+    "title": "⏭️ Añadida como siguiente",
+    "success": "¡**{title}** de **{author}** sonará a continuación!",
+    "playing": "Empezó a sonar **{title}** de **{author}**",
+    "error": "No se pudo añadir la canción. Inténtalo de nuevo."
+  },
+  "reverse": {
+    "description": "Invierte el orden de la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay suficientes canciones en la cola para invertirla.",
+    "title": "🔄 Cola invertida",
+    "success": "Se invirtieron **{count}** canciones en la cola."
+  },
+  "sort": {
+    "description": "Ordena la cola según varios criterios",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay suficientes canciones en la cola para ordenarla.",
+    "title": "📋 Cola ordenada",
+    "success": "Se ordenaron **{count}** canciones por **{criteria}**."
+  },
+  "swap": {
+    "description": "Intercambia dos canciones de la cola",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay suficientes canciones en la cola para intercambiar.",
+    "samePosition": "No puedes intercambiar una canción consigo misma.",
+    "outOfRange": "Posición fuera de rango. La cola tiene {max} canciones.",
+    "title": "🔀 Canciones intercambiadas",
+    "success": "Se intercambió **#{pos1}** ({title1}) con **#{pos2}** ({title2})."
+  },
+  "voteskip": {
+    "description": "Vota para saltar la canción actual",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No se está reproduciendo ninguna canción.",
+    "alreadyVoted": "Ya votaste para saltar esta canción.",
+    "title": "🗳️ Votación para saltar",
+    "voted": "¡**{user}** votó para saltar! ({current}/{required} votos)",
+    "skippedTitle": "⏭️ Canción saltada",
+    "skipped": "Se saltó **{title}** por votación."
+  },
+  "tip": {
+    "description": "Recibe un consejo aleatorio",
+    "title": "💡 Consejo",
+    "footer": "Usa /help para ver más comandos"
+  },
+  "vote": {
+    "description": "Vota por el bot en las listas de bots",
+    "title": "🗳️ ¡Vota por nosotros!",
+    "message": "¡Tus votos nos ayudan a crecer y mejorar! Vota en las plataformas de abajo:",
+    "rewards": "Recompensas por votar",
+    "rewardsList": "• Funciones premium durante 12 horas\n• Insignia exclusiva de votante\n• Mayor calidad de audio",
+    "footer": "¡Gracias por tu apoyo!",
+    "body": "Votar ayuda a que más servidores encuentren el bot. Cada voto en top.gg te desbloquea el **modo 24/7** y la **calidad de estudio** durante 12 horas.",
+    "active": "Tus ventajas por votar siguen activas durante {time} más.",
+    "inactive": "No tienes ningún voto activo. Vota abajo y las ventajas se activan en menos de un minuto.",
+    "notListed": "Las votaciones se abrirán cuando el bot esté listado. ¡Gracias por querer ayudar!"
+  },
+  "leaderboard": {
+    "description": "Muestra la clasificación de canciones de la sesión",
+    "noQueue": "No hay ninguna cola activa.",
+    "noData": "No hay datos de canciones disponibles.",
+    "title": "🏆 Clasificación de la sesión",
+    "footer": "Total de canciones en la cola: {total}"
+  },
+  "categories": {
+    "description": "Muestra todas las categorías de comandos",
+    "title": "📚 Categorías de comandos",
+    "footer": "Usa /help para ver info detallada de los comandos"
+  },
+  "changelogs": {
+    "description": "Mira los cambios y novedades recientes",
+    "title": "📋 Novedades",
+    "footer": "¡Gracias por usar nuestro bot!"
+  },
+  "shards": {
+    "description": "Muestra información de los shards",
+    "title": "🌐 Información de shards",
+    "currentShard": "Shard actual",
+    "totalShards": "Total de shards",
+    "ping": "Ping",
+    "guilds": "Servidores",
+    "users": "Usuarios",
+    "status": "Estado",
+    "footer": "Estás conectado al shard #{shardId}"
+  },
+  "setup": {
+    "description": "Guía de configuración del bot",
+    "title": "🔧 Guía de configuración del bot",
+    "welcome": "¡Bienvenido! Sigue estos pasos para configurar el bot:",
+    "step1": {
+      "title": "Únete a un canal de voz",
+      "desc": "Únete a un canal de voz y luego usa `/play <song>` para empezar a reproducir música."
+    },
+    "step2": {
+      "title": "Configura los ajustes",
+      "desc": "Usa `/settings` para ver y personalizar el bot en tu servidor."
+    },
+    "step3": {
+      "title": "Configura los permisos",
+      "desc": "Los administradores pueden restringir comandos a roles específicos usando los permisos integrados de Discord."
+    },
+    "step4": {
+      "title": "Explora las funciones",
+      "desc": "Usa `/help` para ver todos los comandos o `/categories` para explorarlos por categoría."
+    },
+    "commands": {
+      "title": "Comandos esenciales",
+      "desc": "`/play` - Reproducir música\n`/skip` - Saltar canción\n`/queue` - Ver cola\n`/help` - Obtener ayuda"
+    },
+    "footer": "¿Necesitas ayuda? Usa /support para unirte a nuestro servidor de soporte."
+  },
+  "playleave": {
+    "description": "Reproduce una canción y sal al terminar",
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "title": "🎵 Reproduciendo (salir después)",
+    "success": "Reproduciendo **{title}** de **{author}**. Saldré al terminar esta canción.",
+    "footer": "El bot se desconectará al terminar la reproducción",
+    "error": "No se pudo reproducir la canción."
+  },
+  "lock": {
+    "description": "Bloquea o desbloquea la sesión de música",
+    "enable": {
+      "description": "Bloquea la sesión solo para ti"
+    },
+    "disable": {
+      "description": "Desbloquea la sesión"
+    },
+    "status": {
+      "description": "Consulta el estado del bloqueo"
+    },
+    "notInVoice": "Tienes que estar en un canal de voz.",
+    "noQueue": "No hay ninguna cola activa.",
+    "alreadyLocked": "La sesión ya está bloqueada por <@{userId}>.",
+    "lockedTitle": "🔒 Sesión bloqueada",
+    "locked": "**{user}** ha bloqueado esta sesión. Solo esa persona puede controlar la reproducción.",
+    "notLocked": "Esta sesión no está bloqueada.",
+    "notOwner": "Solo quien bloqueó la sesión o un administrador puede desbloquearla.",
+    "unlockedTitle": "🔓 Sesión desbloqueada",
+    "unlocked": "La sesión se ha desbloqueado. Ahora cualquiera puede controlar la reproducción.",
+    "statusTitle": "🔐 Estado del bloqueo",
+    "statusLocked": "La sesión está bloqueada por <@{userId}>.",
+    "statusUnlocked": "La sesión está desbloqueada."
+  },
+  "rebind": {
+    "description": "Cambia el canal de anuncios del bot",
+    "noQueue": "No hay ninguna cola activa.",
+    "invalidChannel": "Canal no válido. Selecciona un canal de texto.",
+    "title": "📢 Canal cambiado",
+    "success": "Ahora los anuncios se enviarán a {channel}."
+  },
+  "disabledcommands": {
+    "description": "Ver todos los comandos desactivados en este servidor",
+    "none": "No hay comandos desactivados actualmente.",
+    "title": "🚫 Comandos desactivados",
+    "footer": "{count} comandos desactivados"
+  },
+  "commandtoggle": {
+    "description": "Activa o desactiva un comando",
+    "protected": "Este comando no se puede desactivar.",
+    "enabledTitle": "✅ Comando activado",
+    "enabled": "El comando `/{command}` ha sido **activado**.",
+    "disabledTitle": "🚫 Comando desactivado",
+    "disabled": "El comando `/{command}` ha sido **desactivado**."
+  },
+  "songinfo": {
+    "description": "Obtén información detallada de una canción",
+    "noQueue": "No hay cola.",
+    "invalidPosition": "Posición no válida. La cola tiene {max} canciones.",
+    "noTrack": "No se encontró ninguna canción.",
+    "author": "Artista",
+    "duration": "Duración",
+    "source": "Fuente",
+    "views": "Reproducciones",
+    "live": "En directo",
+    "requestedBy": "Pedida por"
+  },
+  "artistinfo": {
+    "description": "Obtén información sobre un artista",
+    "noArtist": "No se especificó ningún artista y no se está reproduciendo nada.",
+    "title": "🎤 {artist}",
+    "tracksInQueue": "Canciones en la cola",
+    "footer": "Haz clic en los enlaces para descubrir más de este artista"
+  },
+  "blacklist": {
+    "description": "Gestiona los autores y títulos de la lista negra",
+    "author": {
+      "description": "Añade un autor/artista a la lista negra",
+      "title": "🚫 Autor en la lista negra",
+      "exists": "El autor **{name}** ya está en la lista negra.",
+      "added": "El autor **{name}** se ha añadido a la lista negra. No se reproducirán canciones de este artista."
+    },
+    "title": {
+      "description": "Añade una palabra clave de título a la lista negra",
+      "addedTitle": "🚫 Título en la lista negra",
+      "exists": "La palabra clave **{keyword}** ya está en la lista negra.",
+      "added": "La palabra clave **{keyword}** se ha añadido a la lista negra. No se reproducirán canciones que la tengan en el título."
+    },
+    "list": {
+      "description": "Ver todos los elementos de la lista negra",
+      "title": "📋 Lista negra",
+      "empty": "No hay elementos en la lista negra.",
+      "authors": "Autores en la lista negra",
+      "titles": "Palabras clave de título en la lista negra"
+    },
+    "removeauthor": {
+      "description": "Quita un autor de la lista negra",
+      "title": "✅ Autor quitado de la lista negra",
+      "notfound": "El autor **{name}** no está en la lista negra.",
+      "removed": "El autor **{name}** se ha quitado de la lista negra."
+    },
+    "removetitle": {
+      "description": "Quita una palabra clave de título de la lista negra",
+      "title": "✅ Título quitado de la lista negra",
+      "notfound": "La palabra clave **{keyword}** no está en la lista negra.",
+      "removed": "La palabra clave **{keyword}** se eliminó de la lista negra."
+    }
+  },
+  "profile": {
+    "description": "Ve tu perfil o el de otro usuario",
+    "title": "👤 Perfil de {user}",
+    "username": "Nombre de usuario",
+    "id": "ID de usuario",
+    "created": "Cuenta creada",
+    "premium": "Estado Premium",
+    "features": "Funciones Premium"
+  },
+  "games": {
+    "description": "Ve los juegos disponibles",
+    "title": "🎮 Juegos disponibles",
+    "info": "¡Juega a divertidos juegos musicales con tus amigos!",
+    "guessTheSong": {
+      "title": "Adivina la canción",
+      "description": "¡Intenta adivinar canciones de tu historial de reproducción!"
+    },
+    "footer": "Usa el comando indicado para empezar una partida"
+  },
+  "guesssong": {
+    "description": "Juega a Adivina la canción",
+    "start": {
+      "description": "Empieza una nueva partida"
+    },
+    "guess": {
+      "description": "Haz un intento"
+    },
+    "stop": {
+      "description": "Detén la partida actual"
+    },
+    "notInVoice": "Tienes que estar en un canal de voz para empezar una partida.",
+    "alreadyActive": "¡Ya hay una partida activa! Usa `/guesssong stop` para terminarla.",
+    "noHistory": "No hay suficientes canciones en el historial para empezar. ¡Reproduce algunas primero!",
+    "startedTitle": "🎵 ¡Adivina la canción!",
+    "started": "¡La partida ha comenzado! Intenta adivinar el título o el artista.",
+    "hint": "Pista",
+    "howToGuess": "Usa /guesssong guess <respuesta> para adivinar",
+    "noGame": "No hay ninguna partida activa. Usa `/guesssong start` para empezar una.",
+    "wrong": "❌ ¡Incorrecto! Inténtalo de nuevo.",
+    "winnerTitle": "🎉 ¡Correcto!",
+    "winner": "¡**{user}** acertó en **{time}** segundos!",
+    "answer": "La respuesta era",
+    "notHost": "Solo el anfitrión de la partida puede detenerla.",
+    "stoppedTitle": "🛑 Partida detenida",
+    "stopped": "La partida se ha detenido."
+  },
+  "permissions": {
+    "title": "⚙️ Ajustes de permisos",
+    "view_description": "Configuración de permisos actual de este servidor:",
+    "no_custom": "Sin permisos personalizados",
+    "default_message": "Todos los comandos usan los permisos predeterminados. Usa `/permissions allow` o `/permissions deny` para configurarlos.",
+    "allowed": "Permitido",
+    "denied": "Denegado",
+    "updated": "✅ Permisos actualizados",
+    "allow_success": "**{permission}** ahora está permitido para {role}",
+    "deny_success": "**{permission}** ahora está denegado para {role}",
+    "everyone": "todos",
+    "reset_title": "🔄 Permisos restablecidos",
+    "reset_success": "Todos los permisos personalizados se han restablecido a los valores predeterminados.",
+    "allowall_success": "Todos los permisos ahora están permitidos para {role}",
+    "denyall_success": "Todos los permisos ahora están denegados para {role}"
+  },
+  "setsettings": {
+    "updated": "✅ Ajustes actualizados",
+    "maxtracklen_unlimited": "La duración máxima de pista ahora es **ilimitada**.",
+    "maxtracklen_set": "La duración máxima de pista ahora es de **{seconds}** segundos.",
+    "maxqueue_set": "El tamaño máximo de la cola ahora es de **{size}** pistas.",
+    "maxvolume_set": "El volumen máximo ahora es **{volume}%**.",
+    "defaultvolume_set": "El volumen predeterminado ahora es **{volume}%**.",
+    "voteskip_enabled": "La votación para saltar ahora está **activada** al **{percentage}%**.",
+    "voteskip_disabled": "La votación para saltar ahora está **desactivada**.",
+    "announce_enabled": "Los anuncios de reproducción actual ahora están **activados**.",
+    "announce_disabled": "Los anuncios de reproducción actual ahora están **desactivados**.",
+    "autoleave_enabled": "La salida automática ahora está **activada** con un tiempo de espera de **{timeout}** segundos.",
+    "autoleave_disabled": "La salida automática ahora está **desactivada**.",
+    "duplicates_prevented": "Ahora se **evitarán** las pistas duplicadas.",
+    "duplicates_allowed": "Las pistas duplicadas ahora están **permitidas**.",
+    "language_set": "El idioma ahora es **{lang}**.",
+    "embedcolor_set": "El color del embed ahora es **{color}**.",
+    "invalid_color": "Color hexadecimal no válido. Usa un formato como #F8AA2A.",
+    "reset_title": "🔄 Ajustes restablecidos",
+    "reset_success": "Todos los ajustes se han restablecido a sus valores predeterminados."
+  },
+  "ownership": {
+    "claimed_title": "👑 Propiedad reclamada",
+    "claimed_success": "{user} ahora es el dueño de la sesión.",
+    "claimed_footer": "Como dueño, controlas la sesión de reproducción.",
+    "already_claimed": "La sesión ya pertenece a {owner}.",
+    "not_owner": "No eres el dueño de la sesión.",
+    "user_not_in_vc": "Ese usuario no está en el canal de voz.",
+    "transferred_title": "🔄 Propiedad transferida",
+    "transferred_success": "{from} transfirió la propiedad a {to}.",
+    "view_title": "👑 Dueño de la sesión",
+    "current_owner": "Dueño actual de la sesión: {owner}",
+    "no_owner": "Esta sesión no tiene dueño. Usa `/ownership claim` para reclamarla."
+  },
+  "channels": {
+    "log_title": "📝 Canal de registros",
+    "log_set": "El canal de registros se ha establecido en {channel}.",
+    "log_disabled": "El canal de registros se ha desactivado.",
+    "text_updated": "📝 Ajustes de canales de texto actualizados",
+    "text_enabled": "{channel} ahora está habilitado para comandos del bot.",
+    "text_disabled": "{channel} ahora está deshabilitado para comandos del bot.",
+    "text_enableall": "Todos los canales de texto ahora están habilitados.",
+    "text_disableall": "Todos los canales de texto ahora están deshabilitados excepto {channel}.",
+    "text_view_title": "📝 Canales de texto permitidos",
+    "all_text_enabled": "Todos los canales de texto están habilitados actualmente.",
+    "allowed_text_list": "Canales de texto permitidos:",
+    "voice_updated": "🔊 Ajustes de canales de voz actualizados",
+    "voice_enabled": "{channel} ahora está habilitado para reproducir música.",
+    "voice_disabled": "{channel} ahora está deshabilitado para reproducir música.",
+    "voice_enableall": "Todos los canales de voz están habilitados ahora.",
+    "voice_disableall_hint": "Usa `/channels voice enable` para habilitar primero canales de voz específicos.",
+    "voice_view_title": "🔊 Canales de voz permitidos",
+    "all_voice_enabled": "Todos los canales de voz están habilitados actualmente.",
+    "allowed_voice_list": "Canales de voz permitidos:",
+    "use_disableall_first": "Usa 'disableall' primero para restringir los canales y luego habilita los que quieras."
+  },
+  "perks": {
+    "title": "⭐ Ventajas Premium",
+    "how_to_get": "Cómo obtener Premium",
+    "patreon_link": "Apóyanos en Patreon: https://patreon.com/u36360623",
+    "user_title": "Tu estado Premium",
+    "user_premium": "¡Tienes premium **{tier}**! 🎉",
+    "your_perks": "Tus ventajas activas",
+    "user_free": "Estás en el nivel **Gratis**.",
+    "upgrade": "Mejora a Premium",
+    "upgrade_message": "¡Consigue funciones premium apoyándonos en Patreon!",
+    "description": "Ver las ventajas premium"
+  },
+  "boost": {
+    "no_premium_title": "❌ Sin Premium",
+    "no_premium": "Necesitas premium para potenciar servidores. ¡Consíguelo en Patreon!",
+    "already_boosted_title": "⚠️ Ya potenciado",
+    "already_boosted_self": "¡Ya potenciaste este servidor!",
+    "already_boosted_other": "Otro usuario ya potenció este servidor.",
+    "activated_title": "🚀 ¡Servidor potenciado!",
+    "activated_success": "¡Este servidor ahora está potenciado con premium **{tier}**!",
+    "not_your_boost_title": "❌ No es tu boost",
+    "not_your_boost": "Tú no potenciaste este servidor.",
+    "deactivated_title": "📤 Boost eliminado",
+    "deactivated_success": "Tu boost se eliminó de este servidor.",
+    "list_title": "📋 Tus boosts activos",
+    "no_boosts": "Aún no has potenciado ningún servidor.",
+    "active_boosts": "Tus boosts de servidor activos:",
+    "info_title": "ℹ️ Info del boost del servidor",
+    "guild_boosted": "¡Este servidor está potenciado! 🎉",
+    "tier": "Nivel",
+    "boosted_by": "Potenciado por",
+    "since": "Desde",
+    "guild_not_boosted": "Este servidor no está potenciado.",
+    "how_to_boost": "Cómo potenciar",
+    "boost_instructions": "Usa `/boost activate` para potenciar este servidor con tu premium."
+  },
+  "alias": {
+    "added_title": "✅ Alias añadido",
+    "added_success": "El alias `{alias}` ahora ejecuta `{command}`.",
+    "removed_title": "🗑️ Alias eliminado",
+    "removed_success": "Se eliminó el alias `{alias}`.",
+    "list_title": "📋 Alias del servidor",
+    "no_aliases": "No hay alias configurados en este servidor.",
+    "cleared_title": "🧹 Alias borrados",
+    "cleared_success": "Se borraron todos los alias del servidor.",
+    "not_found": "Ese alias no existe.",
+    "no_spaces": "Los alias no pueden contener espacios."
+  },
+  "player": {
+    "nowPlaying": "Reproduciendo ahora",
+    "paused": "En pausa",
+    "live": "EN VIVO",
+    "requestedBy": "pedida por {user}",
+    "autoplayPick": "elegida por autoplay",
+    "upNext": "A continuación: {title}",
+    "upNextMore": "A continuación: {title} (+{count} más)",
+    "upNextAutoplay": "Autoplay elegirá la siguiente canción",
+    "queueEmpty": "No hay nada más en cola. Añade canciones con /play",
+    "loopOff": "Repetición desactivada",
+    "loopTrack": "Repitiendo esta canción",
+    "loopQueue": "Repitiendo la cola",
+    "volume": "Volumen {volume}%",
+    "autoplayOn": "Autoplay activado",
+    "stay247On": "24/7 activado",
+    "ended": "Cola terminada. Usa /play para que siga la música.",
+    "endedAutoplayHint": "Consejo: activa autoplay y la música nunca se detendrá.",
+    "stopped": "Reproducción detenida.",
+    "disconnected": "Salí del canal de voz.",
+    "notInVoice": "Únete a mi canal de voz para usar los controles.",
+    "needDj": "Necesitas el rol de DJ para hacer eso.",
+    "nothingPlaying": "No se está reproduciendo nada ahora.",
+    "noPrevious": "No hay canción anterior.",
+    "shuffled": "Se mezclaron {count} canciones.",
+    "nothingToShuffle": "Añade al menos dos canciones para mezclar.",
+    "dmSent": "Enviado a tus MD.",
+    "dmClosed": "Tus MD están cerrados, así que aquí lo tienes:",
+    "savedFrom": "Guardado desde {guild}",
+    "lyricsNotFound": "No se encontró la letra de {title}.",
+    "lyricsLoading": "Buscando la letra…",
+    "autoplayEnabled": "Autoplay activado: seguirán sonando canciones relacionadas.",
+    "autoplayDisabled": "Autoplay desactivado.",
+    "volumeLimit": "Este servidor limita el volumen a {max}%.",
+    "lyricsButton": "Letra",
+    "saveButton": "Guardar"
+  },
+  "queueView": {
+    "title": "Cola",
+    "nowPlaying": "Reproduciendo ahora",
+    "empty": "La cola está vacía. Añade canciones con /play",
+    "page": "Página {page} de {pages}",
+    "summary": "{count} canciones · {duration} en total",
+    "nothingPlaying": "No se está reproduciendo nada en este servidor."
+  },
+  "lyricsCmd": {
+    "optionQuery": "Canción a buscar (por defecto, la que está sonando)",
+    "needQuery": "No hay nada sonando aquí. Dime qué canción: /lyrics query:<canción>",
+    "source": "Letra de {source}"
+  },
+  "welcome": {
+    "title": "¡Gracias por añadir a {bot}!",
+    "body": "Únete a un canal de voz y escribe **/play** con el nombre de una canción o un enlace de YouTube, Spotify, SoundCloud o Apple Music. Los botones debajo de cada canción permiten a cualquiera en el canal pausar, saltar, repetir y más.",
+    "tips": "**/help** muestra todos los comandos · **/settings** configura un rol de DJ, el idioma y los límites · **/autoplay** sigue poniendo canciones relacionadas",
+    "commands": "Comandos",
+    "dashboard": "Panel",
+    "support": "Servidor de soporte",
+    "vote": "Votar"
+  },
+  "router": {
+    "guildOnly": "Este comando solo funciona en un servidor.",
+    "blacklisted": "No tienes permiso para usar este bot aquí.",
+    "channelNotAllowed": "Los comandos del bot no están permitidos en este canal.",
+    "commandDisabled": "Un admin desactivó /{name} en este servidor.",
+    "cooldown": "¡Más despacio! Vuelve a probar /{name} en {time}s.",
+    "missingPermissions": "Me faltan permisos aquí: {permissions}",
+    "error": "Algo salió mal al ejecutar eso. Ya quedó registrado; inténtalo de nuevo.",
+    "expired": "Estos controles ya no están activos."
+  },
+  "helpMenu": {
+    "title": "{bot} — comandos",
+    "intro": "Únete a un canal de voz y usa </play:{playId}> con el nombre de una canción o un enlace. Elige una categoría abajo para ver todo lo demás.",
+    "pick": "Elige una categoría",
+    "category": {
+      "music": "Reproducción",
+      "queue": "Cola",
+      "effects": "Efectos y filtros",
+      "playlists": "Playlists",
+      "info": "Letras e info",
+      "settings": "Ajustes del servidor",
+      "premium": "Premium y votos",
+      "other": "Otros"
+    },
+    "categoryDesc": {
+      "music": "Reproducir, pausar, saltar, avanzar, repetir, autoplay",
+      "queue": "Ver, reordenar y limpiar la cola",
+      "effects": "Bass boost, nightcore, 8D, volumen…",
+      "playlists": "Guarda y carga tus propias playlists",
+      "info": "Letras, lo que suena ahora, estadísticas",
+      "settings": "Rol de DJ, idioma, límites, canales",
+      "premium": "Ventajas de Founder, recompensas por votar",
+      "other": "Todo lo demás"
+    },
+    "links": "Enlaces"
+  },
+  "stay247": {
+    "enabledHere": "24/7 activado: me quedaré en {channel} y volveré a entrar tras los reinicios.",
+    "disabledNow": "24/7 desactivado: me iré tras {minutes} minutos de silencio o con el canal vacío.",
+    "lost": "El modo 24/7 se desactivó porque el miembro que lo activó ya no tiene Founder ni un voto activo.",
+    "needVoice": "Únete al canal de voz en el que debo quedarme y vuelve a usar /247."
+  },
+  "language": {
+    "description": "Configura el idioma que usa el bot en este servidor",
+    "optionLanguage": "Idioma (automático sigue el idioma de Discord de cada miembro)",
+    "auto": "Automático (idioma de Discord de cada miembro)",
+    "set": "Idioma configurado: {language}.",
+    "needManage": "Necesitas el permiso Gestionar servidor para cambiar el idioma."
+  },
+  "links": {
+    "website": "Sitio web",
+    "support": "Soporte",
+    "premium": "Premium",
+    "vote": "Votar",
+    "addToServer": "Añadir al servidor",
+    "invite": "Invitar"
+  },
+  "commanddisable": {
+    "description": "Desactiva comandos en este servidor"
+  },
+  "commanddisableall": {
+    "description": "Desactiva todos los comandos excepto los esenciales"
+  },
+  "commandenable": {
+    "description": "Activa un comando desactivado"
+  },
+  "commandenableall": {
+    "description": "Activa todos los comandos desactivados"
+  },
+  "effects": {
+    "description": "Gestiona los efectos de audio"
+  },
+  "info": {
+    "description": "Información y ayuda del bot"
+  },
+  "patreon": {
+    "description": "Consulta tu estado de Patreon y sincroniza tus beneficios"
+  },
+  "play_file": {
+    "description": "Reproduce un archivo de audio adjunto"
+  },
+  "play_spotify": {
+    "description": "Busca y reproduce una canción de Spotify"
+  },
+  "premium": {
+    "description": "Gestiona las funciones premium y los servidores vinculados"
+  },
+  "queuemanage": {
+    "description": "Gestión avanzada de la cola"
+  },
+  "settings": {
+    "description": "Configura el bot en este servidor (solo admins)"
+  },
+  "stats": {
+    "description": "Ver estadísticas del bot y de la sesión"
+  },
+  "user": {
+    "description": "Perfil y preferencias de usuario"
   }
 }
