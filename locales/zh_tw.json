@@ -32,10 +32,10 @@
     "result": "重複播放已經 {loop}"
   },
   "lyrics": {
-    "description": "取得當前播放的歌曲歌詞",
     "errorNotQueue": "現在沒有任何歌曲正在播放",
     "lyricsNotFound": "沒有找到 {title} 的歌詞",
-    "embedTitle": "{title} - 歌詞"
+    "embedTitle": "{title} - 歌詞",
+    "description": "顯示目前歌曲或任何歌曲的歌詞"
   },
   "move": {
     "description": "移動歌曲到隊列的其他位置",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "顯示現在播放什麼",
     "errorNotQueue": "現在沒有任何歌曲正在播放",
     "embedTitle": "現正播放",
     "live": " ◉ 直播",
-    "timeRemaining": "剩餘時間: {time}"
+    "timeRemaining": "剩餘時間: {time}",
+    "description": "顯示目前歌曲的播放器與控制按鈕"
   },
   "pause": {
     "description": "暫停當前歌曲",
@@ -64,7 +64,6 @@
     "result": "📈 API延遲平均值: {ping} 毫秒"
   },
   "play": {
-    "description": "播放 YouTube 或 Soundcloud 的音樂",
     "errorNotChannel": "你必須先加入語音頻道!",
     "errorNotInSameChannel": "你必須跟 {user} 在同一個頻道裡",
     "usageReply": "Usage: {prefix}play <YouTube 網址 | 影片名稱 | Soundcloud 網址>",
@@ -113,7 +112,8 @@
     "cantJoin": "我無法加入 {channel}：我需要該頻道的「連接」和「說話」權限。",
     "contextName": "在語音頻道播放",
     "contextNextName": "下一首播放",
-    "contextNoQuery": "這則訊息沒有我能播放的連結、音訊檔或文字。"
+    "contextNoQuery": "這則訊息沒有我能播放的連結、音訊檔或文字。",
+    "description": "播放來自 YouTube、Spotify、SoundCloud、Apple Music 或 Deezer 的歌曲或播放清單"
   },
   "playlist": {
     "description": "播放 YouTube 的播放清單",

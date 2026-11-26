@@ -32,10 +32,10 @@
     "result": "Döngü {loop}"
   },
   "lyrics": {
-    "description": "Çalan şarkının sözlerini getir.",
     "errorNotQueue": "Hiçbir şey oynatılmıyor.",
     "lyricsNotFound": "Şarkı sözü bulunamadı {title}.",
-    "embedTitle": "{title} - Sözleri"
+    "embedTitle": "{title} - Sözleri",
+    "description": "Çalan şarkının ya da herhangi bir şarkının sözleri"
   },
   "move": {
     "description": "Şarkıyı sırada taşı",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Şimdi çalan şarkıyı göster",
     "errorNotQueue": "Hiçbir şey oynatılmıyor.",
     "embedTitle": "Şimdi oynatılıyor.",
     "live": " ◉ Canlı",
-    "timeRemaining": "Kalan süre: {time}"
+    "timeRemaining": "Kalan süre: {time}",
+    "description": "Çalan şarkı için kontrollerle birlikte oynatıcıyı göster"
   },
   "pause": {
     "description": "Oynatılan klibi durdur.",
@@ -64,7 +64,6 @@
     "result": "📈 Ortalama Ping: {ping} ms"
   },
   "play": {
-    "description": "YouTube veya Soundcloud'dan ses çalar",
     "errorNotChannel": "Bir sesli kanala girmelisiniz !",
     "errorNotInSameChannel": "Aynı kanalda olmalısınız {user}",
     "usageReply": "Kullanım: {prefix}oynat <YouTube URL | Video İsmi | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "{channel} kanalına katılamıyorum: Orada Bağlan ve Konuş izinlerine ihtiyacım var.",
     "contextName": "Ses kanalında çal",
     "contextNextName": "Sıradaki olarak çal",
-    "contextNoQuery": "Bu mesajda çalabileceğim bir link, ses dosyası veya metin yok."
+    "contextNoQuery": "Bu mesajda çalabileceğim bir link, ses dosyası veya metin yok.",
+    "description": "YouTube, Spotify, SoundCloud, Apple Music veya Deezer'dan şarkı ya da çalma listesi çal"
   },
   "playlist": {
     "description": "Youtubeden bir çalma listesi oynat",

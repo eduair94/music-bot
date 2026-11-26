@@ -32,10 +32,10 @@
     "result": "Il loop è ora {loop}"
   },
   "lyrics": {
-    "description": "Ottieni il testo per il brano attualmente in riproduzione",
     "errorNotQueue": "Non c'è niente in riproduzione.",
     "lyricsNotFound": "Nessun testo trovato per {title}.",
-    "embedTitle": "{title} - Testo"
+    "embedTitle": "{title} - Testo",
+    "description": "Testo della canzone attuale o di qualsiasi canzone"
   },
   "move": {
     "description": "Sposta il brano nella coda",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Mostra il brano in riproduzione",
     "errorNotQueue": "Non c'è niente in riproduzione.",
     "embedTitle": "Ora in riproduzione",
     "live": " ◉ IN DIRETTA",
-    "timeRemaining": "Tempo rimanente: {time}"
+    "timeRemaining": "Tempo rimanente: {time}",
+    "description": "Mostra il player con i controlli per la canzone attuale"
   },
   "pause": {
     "description": "Mette in pausa il brano attualmente in riproduzione",
@@ -64,7 +64,6 @@
     "result": "📈 Ping medio all'API: {ping} ms"
   },
   "play": {
-    "description": "Riproduce un brano da YouTube o Soundcloud",
     "errorNotChannel": "Devi prima entrare in un canale vocale!",
     "errorNotInSameChannel": "Devi essere nello stesso canale di {user}",
     "usageReply": "Utilizzo: {prefix}play <URL video di YouTube | Nome video | URL di Soundcloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "Non posso entrare in {channel}: mi servono i permessi Connettiti e Parla.",
     "contextName": "Riproduci nel canale vocale",
     "contextNextName": "Riproduci dopo",
-    "contextNoQuery": "Questo messaggio non contiene link, file audio o testo che io possa riprodurre."
+    "contextNoQuery": "Questo messaggio non contiene link, file audio o testo che io possa riprodurre.",
+    "description": "Riproduci una canzone o una playlist da YouTube, Spotify, SoundCloud, Apple Music o Deezer"
   },
   "playlist": {
     "description": "Riproduce una playlist da YouTube",

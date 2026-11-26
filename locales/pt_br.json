@@ -32,10 +32,10 @@
     "result": "Repetir está {loop}"
   },
   "lyrics": {
-    "description": "Mostra a letra da música que está reproduzindo.",
     "errorNotQueue": "Não há nada reproduzindo.",
     "lyricsNotFound": "Nenhuma letra encontrada para {title}.",
-    "embedTitle": "{title} - Letra"
+    "embedTitle": "{title} - Letra",
+    "description": "Letra da música atual ou de qualquer música"
   },
   "move": {
     "description": "Troca a música de posição na playlist.",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Mostra música em reprodução.",
     "errorNotQueue": "Não há nada reproduzindo.",
     "embedTitle": "Reproduzindo",
     "live": " ◉ AO VIVO",
-    "timeRemaining": "Tempo restante: {time}"
+    "timeRemaining": "Tempo restante: {time}",
+    "description": "Mostra o player com controles da música atual"
   },
   "pause": {
     "description": "Pausa a música reproduzindo.",
@@ -64,7 +64,6 @@
     "result": "📈 Ping médio da API: {ping} ms"
   },
   "play": {
-    "description": "Reproduz áudio do Youtube ou Soundcloud",
     "errorNotChannel": "Você precisa entrar em um canal de voz primeiro!",
     "errorNotInSameChannel": "Você precisa está no mesmo canal que {user}",
     "usageReply": "Uso: {prefix}play <URL do Youtube | Nome do Vídeo | URL do Soundcloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "Não consigo entrar em {channel}: preciso das permissões Conectar e Falar lá.",
     "contextName": "Tocar no canal de voz",
     "contextNextName": "Tocar em seguida",
-    "contextNoQuery": "Essa mensagem não tem link, arquivo de áudio ou texto que eu possa tocar."
+    "contextNoQuery": "Essa mensagem não tem link, arquivo de áudio ou texto que eu possa tocar.",
+    "description": "Toque uma música ou playlist do YouTube, Spotify, SoundCloud, Apple Music ou Deezer"
   },
   "playlist": {
     "description": "Reproduz uma playlist do youtube",

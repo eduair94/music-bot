@@ -32,10 +32,10 @@
     "result": "음악 반복 상태: {loop}"
   },
   "lyrics": {
-    "description": "현재 재생중인 음악의 가사를 가져옵니다.",
     "errorNotQueue": "재생할 음악이 없습니다.",
     "lyricsNotFound": "{title} 에 대한 가사를 찾을 수 없습니다.",
-    "embedTitle": "{title} 가사"
+    "embedTitle": "{title} 가사",
+    "description": "현재 곡 또는 원하는 곡의 가사 보기"
   },
   "move": {
     "description": "대기열에서 음악을 이동합니다.",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "현재 재생중인 음악을 표시합니다.",
     "errorNotQueue": "재생할 음악이 없습니다.",
     "embedTitle": "현재 재생중",
     "live": " ◉ 스트리밍",
-    "timeRemaining": "남은 재생시간은 {time} 입니다."
+    "timeRemaining": "남은 재생시간은 {time} 입니다.",
+    "description": "현재 곡의 플레이어와 컨트롤 표시"
   },
   "pause": {
     "description": "현재 재생중인 음악을 일시 중지합니다.",
@@ -64,7 +64,6 @@
     "result": "📈 현재 평균 핑 수치는 {ping} ms 입니다."
   },
   "play": {
-    "description": "YouTube 또는 Soundcloud 부터 음악을 재생합니다.",
     "errorNotChannel": "음성 채널에 들어와 있지 않습니다.",
     "errorNotInSameChannel": "{user} 와 같은 음성 채널에 들어와 있어야 합니다.",
     "usageReply": "사용 방법: {prefix}play <YouTube URL | Video Name | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "{channel}에 들어갈 수 없어요: 해당 채널에서 연결 및 말하기 권한이 필요해요.",
     "contextName": "음성 채널에서 재생",
     "contextNextName": "다음에 재생",
-    "contextNoQuery": "이 메시지에는 재생할 수 있는 링크, 오디오 파일 또는 텍스트가 없어요."
+    "contextNoQuery": "이 메시지에는 재생할 수 있는 링크, 오디오 파일 또는 텍스트가 없어요.",
+    "description": "YouTube, Spotify, SoundCloud, Apple Music 또는 Deezer에서 곡이나 플레이리스트 재생"
   },
   "playlist": {
     "description": "Youtube 부터 재생목록을 재생합니다.",

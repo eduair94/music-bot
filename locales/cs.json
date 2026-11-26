@@ -32,10 +32,10 @@
     "result": "Opakování je nyní {loop}"
   },
   "lyrics": {
-    "description": "Získat texty pro právě hrající skladbu",
     "errorNotQueue": "Momentálně nic nehraje.",
     "lyricsNotFound": "Pro {title} nebyly nalezeny žádné texty.",
-    "embedTitle": "{title} - Text"
+    "embedTitle": "{title} - Text",
+    "description": "Text aktuální písničky nebo jakékoli jiné"
   },
   "move": {
     "description": "Přesouvat skladby ve frontě",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Zobrazit právě hrající skladbu",
     "errorNotQueue": "Momentálně nic nehraje.",
     "embedTitle": "Právě hraje",
     "live": " ◉ ŽIVĚ",
-    "timeRemaining": "Zbývající čas: {time}"
+    "timeRemaining": "Zbývající čas: {time}",
+    "description": "Zobraz přehrávač s ovládáním aktuální písničky"
   },
   "pause": {
     "description": "Pozastavit právě hrající hudbu",
@@ -64,7 +64,6 @@
     "result": "📈 Průměrný ping na API: {ping} ms"
   },
   "play": {
-    "description": "Přehraje hudbu z YouTube nebo SoundCloudu",
     "errorNotChannel": "Nejprve se musíš připojit do hlasového kanálu!",
     "errorNotInSameChannel": "Musíš být ve stejném kanále jako {user}",
     "usageReply": "Použití: {prefix}play <YouTube URL | Název videa | SoundCloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Nemůžu se připojit do {channel}: potřebuju tam oprávnění Připojit a Mluvit.",
     "contextName": "Přehrát v hlasovém kanálu",
     "contextNextName": "Přehrát jako další",
-    "contextNoQuery": "Ta zpráva neobsahuje odkaz, zvukový soubor ani text, který bych mohl přehrát."
+    "contextNoQuery": "Ta zpráva neobsahuje odkaz, zvukový soubor ani text, který bych mohl přehrát.",
+    "description": "Pusť písničku nebo playlist z YouTube, Spotify, SoundCloud, Apple Music nebo Deezer"
   },
   "playlist": {
     "description": "Přehrát playlist z YouTube",

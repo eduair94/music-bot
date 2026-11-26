@@ -32,10 +32,10 @@
     "result": "Repetarea este acum {loop}"
   },
   "lyrics": {
-    "description": "Obține versurile pentru melodia care se redă în prezent",
     "errorNotQueue": "Nu se redă nimic.",
     "lyricsNotFound": "Nu s-au găsit versuri pentru {title}.",
-    "embedTitle": "{title} - Versuri"
+    "embedTitle": "{title} - Versuri",
+    "description": "Versurile melodiei curente sau ale oricărei melodii"
   },
   "move": {
     "description": "Mută melodiile în coadă",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Afișează melodia care se redă în prezent",
     "errorNotQueue": "Nu se redă nimic.",
     "embedTitle": "Se redă acum",
     "live": " ◉ LIVE",
-    "timeRemaining": "Timp rămas: {time}"
+    "timeRemaining": "Timp rămas: {time}",
+    "description": "Afișează playerul cu controale pentru melodia curentă"
   },
   "pause": {
     "description": "Pune în pauză melodia care se redă în prezent",
@@ -64,7 +64,6 @@
     "result": "📈 Ping mediu către API: {ping} ms"
   },
   "play": {
-    "description": "Redă audio de pe YouTube",
     "errorNotChannel": "Trebuie să te alături mai întâi unui canal vocal!",
     "errorNotInSameChannel": "Trebuie să fii în același canal cu {user}",
     "usageReply": "Utilizare: {prefix}play <URL YouTube | Nume Video>",
@@ -113,7 +112,8 @@
     "cantJoin": "Nu pot intra în {channel}: am nevoie de permisiunile Conectare și Vorbire acolo.",
     "contextName": "Redă în canalul vocal",
     "contextNextName": "Redă următoarea",
-    "contextNoQuery": "Mesajul nu are niciun link, fișier audio sau text pe care să-l pot reda."
+    "contextNoQuery": "Mesajul nu are niciun link, fișier audio sau text pe care să-l pot reda.",
+    "description": "Redă o melodie sau un playlist de pe YouTube, Spotify, SoundCloud, Apple Music sau Deezer"
   },
   "playlist": {
     "description": "Redă o listă de redare de pe YouTube",

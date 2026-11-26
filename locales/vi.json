@@ -32,10 +32,10 @@
     "result": "Lặp hiện tại là {loop}"
   },
   "lyrics": {
-    "description": "Hiển thị lời bài hát của bài nhạc đang phát",
     "errorNotQueue": "Không có bài nhạc nào đang phát.",
     "lyricsNotFound": "Không tìm thấy lời cho bài hát {title}.",
-    "embedTitle": "{title} - Lời bài hát"
+    "embedTitle": "{title} - Lời bài hát",
+    "description": "Lời bài hát đang phát, hoặc bất kỳ bài nào"
   },
   "move": {
     "description": "Di chuyển bài hát trong hàng đợi",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Hiển thị bài hát đang phát",
     "errorNotQueue": "Không có gì đang phát.",
     "embedTitle": "Đang phát",
     "live": " ◉ TRỰC TIẾP",
-    "timeRemaining": "Thời Gian Còn Lại: {time}"
+    "timeRemaining": "Thời Gian Còn Lại: {time}",
+    "description": "Hiện trình phát kèm nút điều khiển cho bài đang phát"
   },
   "pause": {
     "description": "Tạm dừng âm nhạc đang phát",
@@ -64,7 +64,6 @@
     "result": "📈 Độ trễ trung bình đến API: {ping} ms"
   },
   "play": {
-    "description": "Phát âm thanh từ YouTube",
     "errorNotChannel": "Bạn cần tham gia kênh thoại trước!",
     "errorNotInSameChannel": "Bạn phải ở trong cùng một kênh với {user}",
     "usageReply": "Sử dụng: {prefix}play <URL YouTube | Tên Video>",
@@ -113,7 +112,8 @@
     "cantJoin": "Mình không thể vào {channel}: cần quyền Kết nối và Nói ở đó.",
     "contextName": "Phát trong kênh thoại",
     "contextNextName": "Phát tiếp theo",
-    "contextNoQuery": "Tin nhắn này không có link, file âm thanh hay nội dung nào để phát."
+    "contextNoQuery": "Tin nhắn này không có link, file âm thanh hay nội dung nào để phát.",
+    "description": "Phát bài hát hoặc playlist từ YouTube, Spotify, SoundCloud, Apple Music hoặc Deezer"
   },
   "playlist": {
     "description": "Phát danh sách phát từ youtube",

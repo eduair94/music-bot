@@ -32,10 +32,10 @@
     "result": "Musikschleife ist nun auf {loop}"
   },
   "lyrics": {
-    "description": "Bekomme den Songtext(lyrics) vom jetzigem Song",
     "errorNotQueue": "Es wird gerade nichts gespielt.",
     "lyricsNotFound": "Keine Lyrics für {title} gefunden.",
-    "embedTitle": "{title} - Lyrics"
+    "embedTitle": "{title} - Lyrics",
+    "description": "Songtext des aktuellen Songs oder eines beliebigen Songs"
   },
   "move": {
     "description": "Verschiebe Songs in der Queue",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Zeigt den jetzigen Song an",
     "errorNotQueue": "Es wird gerade nichts gespielt.",
     "embedTitle": "Spiele gerade",
     "live": " ◉ LIVE",
-    "timeRemaining": "Übrige Zeit: {time}"
+    "timeRemaining": "Übrige Zeit: {time}",
+    "description": "Zeigt den Player mit Steuerung für den aktuellen Song"
   },
   "pause": {
     "description": "Pausiere den jetzigen Song",
@@ -64,7 +64,6 @@
     "result": "📈 Durchschnittlicher Ping zur API ist: {ping} ms"
   },
   "play": {
-    "description": "Spielt Audio von Youtube oder Soundcloud ab",
     "errorNotChannel": "Betrete zuerst einen Voice-Channel!",
     "errorNotInSameChannel": "Du musst im selben Voice-Channel wie {user} sein",
     "usageReply": "Nutzung: {prefix}play <YouTube URL | Video Name | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Ich kann {channel} nicht beitreten: Ich brauche dort die Berechtigungen Verbinden und Sprechen.",
     "contextName": "Im Sprachkanal abspielen",
     "contextNextName": "Als Nächstes abspielen",
-    "contextNoQuery": "Diese Nachricht enthält keinen Link, keine Audiodatei und keinen Text, den ich abspielen kann."
+    "contextNoQuery": "Diese Nachricht enthält keinen Link, keine Audiodatei und keinen Text, den ich abspielen kann.",
+    "description": "Spiele einen Song oder eine Playlist von YouTube, Spotify, SoundCloud, Apple Music oder Deezer ab"
   },
   "playlist": {
     "description": "Spielt eine Playlist von Youtube ab",

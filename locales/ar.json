@@ -32,10 +32,10 @@
     "result": "التكرار الان {loop}"
   },
   "lyrics": {
-    "description": "احصل على كلمات الأغنية التي يتم تشغيلها حاليًا",
     "errorNotQueue": "لا توجد أغنية قيد التشغيل حاليا",
     "lyricsNotFound": "{title} لم يتم العثور على كلمات لـ",
-    "embedTitle": "{title} - كلمات"
+    "embedTitle": "{title} - كلمات",
+    "description": "كلمات الأغنية الحالية، أو أي أغنية"
   },
   "move": {
     "description": "نقل الأغاني في القائمة",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "يظهر الاغنية التي تكون قيد التشغيل",
     "errorNotQueue": "لا توجد أغنية قيد التشغيل حاليا",
     "embedTitle": "تعمل الان",
     "live": " ◉ مباشر",
-    "timeRemaining": "الوقت المتبقي {time}"
+    "timeRemaining": "الوقت المتبقي {time}",
+    "description": "اعرض المشغّل مع أزرار التحكم للأغنية الحالية"
   },
   "pause": {
     "description": "إيقاف الموسيقى التي قيد التشغيل",
@@ -64,7 +64,6 @@
     "result": "`{ping}ms` متوسط السرعة هو 📈"
   },
   "play": {
-    "description": "يشغل اغنية من يوتيوب او ساوندكلود",
     "errorNotChannel": "تحتاج إلى الانضمام إلى قناة صوتية أولاً!",
     "errorNotInSameChannel": "{user} يجب أن تكون في نفس القناة مثل",
     "usageReply": "الاستعمال: {prefix}play <رابط يوتيوب | اسم مقطع | رابط سواندكلود>",
@@ -113,7 +112,8 @@
     "cantJoin": "ما أقدر أنضم إلى {channel}: أحتاج صلاحيتي الاتصال والتحدث هناك.",
     "contextName": "تشغيل في القناة الصوتية",
     "contextNextName": "تشغيل التالي",
-    "contextNoQuery": "هذه الرسالة ما فيها رابط أو ملف صوتي أو نص أقدر أشغّله."
+    "contextNoQuery": "هذه الرسالة ما فيها رابط أو ملف صوتي أو نص أقدر أشغّله.",
+    "description": "شغّل أغنية أو قائمة تشغيل من YouTube أو Spotify أو SoundCloud أو Apple Music أو Deezer"
   },
   "playlist": {
     "description": "تشغيل قائمة تشغيل من يوتيوب",

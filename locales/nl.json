@@ -32,10 +32,10 @@
     "result": "Loop is nu {loop}"
   },
   "lyrics": {
-    "description": "Haal de lyrics op voor het nummer dat momenteel wordt afgespeeld.",
     "errorNotQueue": "Er is niks aan het afspelen.",
     "lyricsNotFound": "Geen lyrics gevonden voor {title}.",
-    "embedTitle": "{title} - Lyrics"
+    "embedTitle": "{title} - Lyrics",
+    "description": "Songtekst van het huidige nummer, of van elk ander nummer"
   },
   "move": {
     "description": "Verplaats nummers in de wachtrij",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Toon het spelende nummer",
     "errorNotQueue": "Er is niks aan het afspelen.",
     "embedTitle": "Nu aan het afspelen",
     "live": " ◉ LIVE",
-    "timeRemaining": "Tijd resterend: {time}"
+    "timeRemaining": "Tijd resterend: {time}",
+    "description": "Toon de speler met bediening voor het huidige nummer"
   },
   "pause": {
     "description": "Pauzeer de muziek die aan het afspelen is",
@@ -64,7 +64,6 @@
     "result": "📈 Gemiddelde Ping naar API: {ping} ms"
   },
   "play": {
-    "description": "Speel geluid af van YouTube of Soundcloud",
     "errorNotChannel": "Je moet eerst een voice channel joinen!",
     "errorNotInSameChannel": "Je moet in dezelfde channel zitten als {user}",
     "usageReply": "Gebruik: {prefix}play <YouTube URL | Video Naam | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Ik kan {channel} niet joinen: ik heb daar de rechten Verbinden en Spreken nodig.",
     "contextName": "Afspelen in spraakkanaal",
     "contextNextName": "Hierna afspelen",
-    "contextNoQuery": "Dat bericht bevat geen link, audiobestand of tekst die ik kan afspelen."
+    "contextNoQuery": "Dat bericht bevat geen link, audiobestand of tekst die ik kan afspelen.",
+    "description": "Speel een nummer of playlist af van YouTube, Spotify, SoundCloud, Apple Music of Deezer"
   },
   "playlist": {
     "description": "Speel een playlist af van youtube",

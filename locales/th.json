@@ -32,10 +32,10 @@
     "result": "ลูปคือตอนนี้ {loop}"
   },
   "lyrics": {
-    "description": "รับเนื้อเพลงสำหรับเพลงที่กำลังเล่นอยู่ในปัจจุบัน",
     "errorNotQueue": "ไม่มีอะไรเล่น.",
     "lyricsNotFound": "ไม่พบเนื้อเพลง {title}.",
-    "embedTitle": "{title} - เนื้อเพลง"
+    "embedTitle": "{title} - เนื้อเพลง",
+    "description": "ดูเนื้อเพลงของเพลงที่กำลังเล่น หรือเพลงไหนก็ได้"
   },
   "move": {
     "description": "ย้ายเพลงไปรอบๆ ในคิว",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "แสดงเล่นเพลงตอนนี้",
     "errorNotQueue": "ไม่มีอะไรเล่น.",
     "embedTitle": "กำลังเล่น",
     "live": " ◉ LIVE",
-    "timeRemaining": "เวลาที่เหลืออยู่: {time}"
+    "timeRemaining": "เวลาที่เหลืออยู่: {time}",
+    "description": "แสดงเพลเยอร์พร้อมปุ่มควบคุมสำหรับเพลงที่กำลังเล่น"
   },
   "pause": {
     "description": "หยุดเพลงที่กำลังเล่นอยู่ในปัจจุบัน",
@@ -64,7 +64,6 @@
     "result": "📈 ปิงเฉลี่ยต่อ API: {ping} ms"
   },
   "play": {
-    "description": "เล่นเพลงจาก YouTube หรือ SoundCloud",
     "errorNotChannel": "คุณต้องเข้าร่วมช่องเสียงก่อน!",
     "errorNotInSameChannel": "คุณต้องอยู่ในช่องเดียวกันกับ {user}",
     "usageReply": "การใช้งาน: {prefix}play <ชื่อวิดีโอ หรือ ลิงค์จากYouTube | ลิงค์ SoundCloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "ฉันเข้า {channel} ไม่ได้: ต้องมีสิทธิ์ Connect และ Speak ในห้องนั้น",
     "contextName": "เล่นในห้องเสียง",
     "contextNextName": "เล่นถัดไป",
-    "contextNoQuery": "ข้อความนี้ไม่มีลิงก์ ไฟล์เสียง หรือข้อความที่ฉันเล่นได้"
+    "contextNoQuery": "ข้อความนี้ไม่มีลิงก์ ไฟล์เสียง หรือข้อความที่ฉันเล่นได้",
+    "description": "เล่นเพลงหรือเพลย์ลิสต์จาก YouTube, Spotify, SoundCloud, Apple Music หรือ Deezer"
   },
   "playlist": {
     "description": "เล่นเพลย์ลิสต์จาก YouTube",

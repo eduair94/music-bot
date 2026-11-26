@@ -32,10 +32,10 @@
     "result": "Повтор сейчас {loop}"
   },
   "lyrics": {
-    "description": "Получить текст для текущей песни",
     "errorNotQueue": "Ничего не играет.",
     "lyricsNotFound": "Тексты для {title} не найдены.",
-    "embedTitle": "{title} - Текст песни"
+    "embedTitle": "{title} - Текст песни",
+    "description": "Текст текущей песни или любой другой"
   },
   "move": {
     "description": "Переместить песни в очереди",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Показать воспроизводимую песню",
     "errorNotQueue": "Ничего не играет.",
     "embedTitle": "Сейчас играет",
     "live": " ◉ ПРЯМОЙ ЭФИР",
-    "timeRemaining": "Оставшееся время: {time}"
+    "timeRemaining": "Оставшееся время: {time}",
+    "description": "Показать плеер с управлением текущей песней"
   },
   "pause": {
     "description": "Приостановить воспроизведение текущей музыки",
@@ -64,7 +64,6 @@
     "result": "📈 Средний пинг до API: {ping} мс"
   },
   "play": {
-    "description": "Воспроизведение музыки с YouTube или Soundcloud",
     "errorNotChannel": "Сначала вам нужно присоединиться к голосовому каналу!",
     "errorNotInSameChannel": "Вы должны быть в том же канале, что и {user}",
     "usageReply": "Использование: {prefix}play <Ссылка на YouTube | Название видео | Ссылка на Soundcloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "Не могу зайти в {channel}: мне нужны права «Подключаться» и «Говорить».",
     "contextName": "Включить в голосовом канале",
     "contextNextName": "Включить следующей",
-    "contextNoQuery": "В этом сообщении нет ссылки, аудиофайла или текста, который я могу включить."
+    "contextNoQuery": "В этом сообщении нет ссылки, аудиофайла или текста, который я могу включить.",
+    "description": "Включи песню или плейлист из YouTube, Spotify, SoundCloud, Apple Music или Deezer"
   },
   "playlist": {
     "description": "Воспроизвести плейлист с YouTube",

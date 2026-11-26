@@ -32,10 +32,10 @@
     "result": "تکرار {loop}"
   },
   "lyrics": {
-    "description": "نمایش متن موسیقی در حال پخش",
     "errorNotQueue": "هیچ چیزی در حال پخش نیست.",
     "lyricsNotFound": "متن برای آهنگ یافت نشد {title}.",
-    "embedTitle": "{title} - متن"
+    "embedTitle": "{title} - متن",
+    "description": "متن آهنگ فعلی، یا هر آهنگ دیگه"
   },
   "move": {
     "description": "جابه جایی آهنگ در صف",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "نمایش آهنگ در حال پخش",
     "errorNotQueue": "هیچ چیزی در حال پخش نیست.",
     "embedTitle": "در حال پخش",
     "live": " ◉ زنده",
-    "timeRemaining": "زمان باقی مانده: {time}"
+    "timeRemaining": "زمان باقی مانده: {time}",
+    "description": "نمایش پلیر با کنترل‌ها برای آهنگ فعلی"
   },
   "pause": {
     "description": "متوقف کردن آهنگ در حال پخش",
@@ -64,7 +64,6 @@
     "result": "📈 پینگ میانگین سرور: {ping} ms"
   },
   "play": {
-    "description": "پخش آهنگ از یوتوب یا ساوندکلاود",
     "errorNotChannel": "ابتدا باید در یک چنل جوین شوید!",
     "errorNotInSameChannel": "باید در چنل این کاربر باشید {user}",
     "usageReply": "استفاده: {prefix}play <لینک یوتوب | نام فیلم | لینک ساوندکلاود>",
@@ -113,7 +112,8 @@
     "cantJoin": "نمی‌توانم به {channel} وارد شوم: آنجا به مجوزهای Connect و Speak نیاز دارم.",
     "contextName": "پخش در کانال صوتی",
     "contextNextName": "پخش بعدی",
-    "contextNoQuery": "این پیام هیچ لینک، فایل صوتی یا متنی برای پخش ندارد."
+    "contextNoQuery": "این پیام هیچ لینک، فایل صوتی یا متنی برای پخش ندارد.",
+    "description": "پخش آهنگ یا پلی‌لیست از YouTube، Spotify، SoundCloud، Apple Music یا Deezer"
   },
   "playlist": {
     "description": "پخش پلی لیست از یوتوب",

@@ -32,10 +32,10 @@
     "result": "Wab tis prompo {loop}"
   },
   "lyrics": {
-    "description": "Linda lyrics nunu ta pryers maenae amu",
     "errorNotQueue": "Bada tis secmop maenae.",
     "lyricsNotFound": "No lyrics polo nunu {title}.",
-    "embedTitle": "{title} - Lyrics"
+    "embedTitle": "{title} - Lyrics",
+    "description": "Ngā kupu o te waiata o nāianei, o tētahi waiata rānei"
   },
   "move": {
     "description": "Mova rob woeod een ta tic",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Ta daa prompo maenae amu",
     "errorNotQueue": "Bada tis secmop maenae.",
     "embedTitle": "Prompo maenae",
     "live": " ◉ VIVO",
-    "timeRemaining": "Veela Fudivy: {time}"
+    "timeRemaining": "Veela Fudivy: {time}",
+    "description": "Whakaaturia te kaipurei me ōna mana whakahaere mō te waiata o nāianei"
   },
   "pause": {
     "description": "Pause ta pryers maenae bocami",
@@ -64,7 +64,6 @@
     "result": "📈 Picmet ping da VAU: {ping} ms"
   },
   "play": {
-    "description": "Plays sow da YouTube sif Soundcloud",
     "errorNotChannel": "To mo da nut a vola fagtit prima!",
     "errorNotInSameChannel": "To miklo be een ta mismo fagtit sim {user}",
     "usageReply": "Hug: {prefix}play <YouTube URL | Hit Nomba | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Kāore e taea e au te hono ki {channel}: me whai au i ngā mana Connect me Speak ki reira.",
     "contextName": "Tākaro i te hongere reo",
     "contextNextName": "Tākaro ā muri",
-    "contextNoQuery": "Kāore he hono, kōnae ororongo, kupu rānei i taua karere e taea ana e au te tākaro."
+    "contextNoQuery": "Kāore he hono, kōnae ororongo, kupu rānei i taua karere e taea ana e au te tākaro.",
+    "description": "Purei i tētahi waiata, rārangi waiata rānei mai i YouTube, Spotify, SoundCloud, Apple Music, Deezer rānei"
   },
   "playlist": {
     "description": "Hopa a playlist da youtube",

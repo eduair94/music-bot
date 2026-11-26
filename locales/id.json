@@ -32,10 +32,10 @@
     "result": "Putaran sekarang adalah {loop}"
   },
   "lyrics": {
-    "description": "Dapatkan lirik untuk lagu yang sedang diputar",
     "errorNotQueue": "Tidak ada musik yang dimainkan.",
     "lyricsNotFound": "Tidak ada lirik yang ditemukan untuk lagu {title}.",
-    "embedTitle": "Lirik lagu - {title}"
+    "embedTitle": "Lirik lagu - {title}",
+    "description": "Lirik lagu yang sedang diputar, atau lagu apa pun"
   },
   "move": {
     "description": "Memindahkan lagu ke dalam antrian",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Menampilkan lagu yang sedang diputar",
     "errorNotQueue": "Tidak ada musik yang dimainkan.",
     "embedTitle": "Sedang memainkan",
     "live": " ◉ LANGSUNG",
-    "timeRemaining": "Waktu yang tersisa: {time}"
+    "timeRemaining": "Waktu yang tersisa: {time}",
+    "description": "Tampilkan pemutar dengan kontrol untuk lagu saat ini"
   },
   "pause": {
     "description": "Menjeda musik yang sedang diputar",
@@ -64,7 +64,6 @@
     "result": "📈 Ping rata-rata ke API: {ping} ms"
   },
   "play": {
-    "description": "Memutar audio dari YouTube atau Soundcloud",
     "errorNotChannel": "Kamu harus bergabung dengan saluran suara terlebih dahulu!",
     "errorNotInSameChannel": "Kamu harus berada di saluran yang sama dengan {user}",
     "usageReply": "Penggunaan: {prefix}play <YouTube URL | Nama Video | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Aku tidak bisa masuk ke {channel}: aku butuh izin Connect dan Speak di sana.",
     "contextName": "Putar di voice channel",
     "contextNextName": "Putar berikutnya",
-    "contextNoQuery": "Pesan itu tidak berisi link, file audio, atau teks yang bisa kuputar."
+    "contextNoQuery": "Pesan itu tidak berisi link, file audio, atau teks yang bisa kuputar.",
+    "description": "Putar lagu atau playlist dari YouTube, Spotify, SoundCloud, Apple Music, atau Deezer"
   },
   "playlist": {
     "description": "Memutar playlist dari youtube",

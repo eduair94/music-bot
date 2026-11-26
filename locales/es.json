@@ -32,10 +32,10 @@
     "result": "Reproduciendo en bucle: {loop}"
   },
   "lyrics": {
-    "description": "Obtén la letra de la música actual",
     "errorNotQueue": "No se está reproduciendo nada.",
     "lyricsNotFound": "No se encontró la letra de {title}.",
-    "embedTitle": "{title} - Letra"
+    "embedTitle": "{title} - Letra",
+    "description": "Letra de la canción actual o de cualquier canción"
   },
   "move": {
     "description": "Mueve canciones de la cola",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Muestra la música que se está reproduciendo actualmente",
     "errorNotQueue": "No se está reproduciendo nada.",
     "embedTitle": "Música actual:",
     "live": " ◉ EN DIRECTO",
-    "timeRemaining": "Tiempo Restante: {time}"
+    "timeRemaining": "Tiempo Restante: {time}",
+    "description": "Muestra el reproductor con controles para la canción actual"
   },
   "pause": {
     "description": "Pausa la música que se está reproduciendo actualmente",
@@ -64,7 +64,6 @@
     "result": "📈 Latencia media a la API: {ping} ms"
   },
   "play": {
-    "description": "Reproduce música de YouTube o SoundCloud",
     "errorNotChannel": "¡Primero debes unirte a un canal de voz!",
     "errorNotInSameChannel": "Tienes que estar en el mismo canal de voz que {user}",
     "usageReply": "Uso correcto: {prefix}play <URL de YouTube | Nombre del vídeo | URL de SoundCloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "No puedo unirme a {channel}: necesito los permisos de Conectar y Hablar ahí.",
     "contextName": "Reproducir en canal de voz",
     "contextNextName": "Reproducir a continuación",
-    "contextNoQuery": "Ese mensaje no tiene ningún enlace, archivo de audio ni texto que pueda reproducir."
+    "contextNoQuery": "Ese mensaje no tiene ningún enlace, archivo de audio ni texto que pueda reproducir.",
+    "description": "Reproduce una canción o playlist de YouTube, Spotify, SoundCloud, Apple Music o Deezer"
   },
   "playlist": {
     "description": "Reproduce una lista de reproducción de YouTube",

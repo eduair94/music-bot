@@ -32,10 +32,10 @@
     "result": "Loop er nå {loop}"
   },
   "lyrics": {
-    "description": "Få teksten til sangen som spilles for øyeblikket",
     "errorNotQueue": "Det er ingenting som spilles av.",
     "lyricsNotFound": "Ingen tekster funnet for {title}.",
-    "embedTitle": "{title} - Sangtekster"
+    "embedTitle": "{title} - Sangtekster",
+    "description": "Sangtekst for sangen som spilles nå, eller en hvilken som helst sang"
   },
   "move": {
     "description": "Flytt sanger rundt i køen",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Vis sang som spilles nå",
     "errorNotQueue": "Det er ingenting som spilles av.",
     "embedTitle": "Spilles nå",
     "live": " ◉ LIVE",
-    "timeRemaining": "Gjenstående tid: {time}"
+    "timeRemaining": "Gjenstående tid: {time}",
+    "description": "Vis spilleren med kontroller for sangen som spilles nå"
   },
   "pause": {
     "description": "Sett musikken som spilles på pause",
@@ -64,7 +64,6 @@
     "result": "📈 Gjennomsnittlig ping til API: {ping} ms"
   },
   "play": {
-    "description": "Spiller lyd fra YouTube",
     "errorNotChannel": "Du må først bli med i en talekanal!",
     "errorNotInSameChannel": "Du må være i samme kanal som {user}",
     "usageReply": "Bruk: {prefix}spill <YouTube URL | Videonavn>",
@@ -113,7 +112,8 @@
     "cantJoin": "Jeg kan ikke bli med i {channel}: Jeg trenger tillatelsene Koble til og Snakke der.",
     "contextName": "Spill i talekanal",
     "contextNextName": "Spill neste",
-    "contextNoQuery": "Den meldingen har ingen lenke, lydfil eller tekst jeg kan spille."
+    "contextNoQuery": "Den meldingen har ingen lenke, lydfil eller tekst jeg kan spille.",
+    "description": "Spill av en sang eller spilleliste fra YouTube, Spotify, SoundCloud, Apple Music eller Deezer"
   },
   "playlist": {
     "description": "Spill av en spilleliste fra youtube",

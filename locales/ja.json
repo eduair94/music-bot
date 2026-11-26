@@ -32,10 +32,10 @@
     "result": "ループが今すぐ {loop}"
   },
   "lyrics": {
-    "description": "現在再生している曲の歌詞を取得",
     "errorNotQueue": "何も再生していません。",
     "lyricsNotFound": "{title} の歌詞が見つかりません。",
-    "embedTitle": "{title} - 歌詞"
+    "embedTitle": "{title} - 歌詞",
+    "description": "再生中の曲、または好きな曲の歌詞を表示"
   },
   "move": {
     "description": "キューにある曲を移動",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "再生中の曲を表示",
     "errorNotQueue": "何も再生していません。",
     "embedTitle": "再生中",
     "live": " ◉ ライブ",
-    "timeRemaining": "残り: {time}"
+    "timeRemaining": "残り: {time}",
+    "description": "再生中の曲のプレイヤーと操作ボタンを表示"
   },
   "pause": {
     "description": "再生中の曲を一時停止",
@@ -64,7 +64,6 @@
     "result": "📈 API に対する平均 ping 値: {ping} ms"
   },
   "play": {
-    "description": "YouTube または Soundcloud から音楽を再生",
     "errorNotChannel": "先にボイスチャンネルに参加してください！",
     "errorNotInSameChannel": "{user} さんと同じチャンネルにいる必要があります",
     "usageReply": "使い方: {prefix}play <YouTube URL | 名前 | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "{channel} に参加できません：そこで「接続」と「発言」の権限が必要です。",
     "contextName": "ボイスチャンネルで再生",
     "contextNextName": "次に再生",
-    "contextNoQuery": "そのメッセージには再生できるリンク、音声ファイル、テキストがありません。"
+    "contextNoQuery": "そのメッセージには再生できるリンク、音声ファイル、テキストがありません。",
+    "description": "YouTube、Spotify、SoundCloud、Apple Music、Deezerから曲やプレイリストを再生"
   },
   "playlist": {
     "description": "YouTube プレイリストから再生",

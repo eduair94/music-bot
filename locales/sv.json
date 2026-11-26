@@ -32,10 +32,10 @@
     "result": "Musikslinga {loop}"
   },
   "lyrics": {
-    "description": "Hämta texter till den spelade låten",
     "errorNotQueue": "Det spelar ingenting.",
     "lyricsNotFound": "Inga texter hittades för {title}.",
-    "embedTitle": "{title} - Text"
+    "embedTitle": "{title} - Text",
+    "description": "Låttext för den aktuella låten eller valfri låt"
   },
   "move": {
     "description": "Flytta låtar i kön",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Visa nu spelande låt",
     "errorNotQueue": "Det finns inget i kön.",
     "embedTitle": "Nu spelas",
     "live": " ◉ LIVE",
-    "timeRemaining": "Återstående tid: {time}"
+    "timeRemaining": "Återstående tid: {time}",
+    "description": "Visa spelaren med kontroller för den aktuella låten"
   },
   "pause": {
     "description": "Pausa den musik som för närvarande spelas",
@@ -64,7 +64,6 @@
     "result": "📈 Genomsnittlig ping till API: {ping} ms"
   },
   "play": {
-    "description": "Spelar upp ljud från YouTube eller Soundcloud",
     "errorNotChannel": "Du måste gå med i en röstkanal först!",
     "errorNotInSameChannel": "Du måste vara i samma kanal som {user}",
     "usageReply": "Användning: {prefix}spela <YouTube URL | Videonamn | Soundcloud URL>",
@@ -113,7 +112,8 @@
     "cantJoin": "Jag kan inte gå med i {channel}: jag behöver behörigheterna Anslut och Tala där.",
     "contextName": "Spela i röstkanal",
     "contextNextName": "Spela härnäst",
-    "contextNoQuery": "Meddelandet har ingen länk, ljudfil eller text som jag kan spela."
+    "contextNoQuery": "Meddelandet har ingen länk, ljudfil eller text som jag kan spela.",
+    "description": "Spela en låt eller spellista från YouTube, Spotify, SoundCloud, Apple Music eller Deezer"
   },
   "playlist": {
     "description": "Spela en spellista från youtube",

@@ -33,10 +33,10 @@
     "result": "Pętla jest teraz: {loop}"
   },
   "lyrics": {
-    "description": "Wyświetla słowa dla aktualnie odtwarzanego utworu",
     "errorNotQueue": "Nie ma aktywnej kolejki na tym serwerze.",
     "lyricsNotFound": "Brak słów dla: {title}.",
-    "embedTitle": "{title} - Lyrics"
+    "embedTitle": "{title} - Lyrics",
+    "description": "Tekst aktualnego utworu lub dowolnej piosenki"
   },
   "move": {
     "description": "Przenosi utwory w kolejce",
@@ -50,11 +50,11 @@
     }
   },
   "nowplaying": {
-    "description": "Wyświetla aktualnie odtwarzany utwór",
     "errorNotQueue": "Nie ma aktywnej kolejki na tym serwerze.",
     "embedTitle": "Teraz Odtwarzane",
     "live": " ◉ LIVE",
-    "timeRemaining": "Pozostały Czas: {time}"
+    "timeRemaining": "Pozostały Czas: {time}",
+    "description": "Pokaż odtwarzacz z kontrolkami dla aktualnego utworu"
   },
   "pause": {
     "description": "Zatrzymaj aktualnie odtwarzaną muzykę",
@@ -66,7 +66,6 @@
     "result": "📈 Średni ping do API: {ping} ms"
   },
   "play": {
-    "description": "Odtwarza utwory z Youtube lub Soundcloud!",
     "errorNotChannel": "Musisz dołączyć do kanału głosowego!",
     "errorNotInSameChannel": "Musisz być na tym samym kanale co {user}",
     "SkładniaReply": "Składnia: {prefix}play <YouTube URL | Nazwa Nagrania | Soundcloud URL>",
@@ -116,7 +115,8 @@
     "cantJoin": "Nie mogę dołączyć do {channel}: potrzebuję tam uprawnień Połącz i Mów.",
     "contextName": "Odtwórz na kanale głosowym",
     "contextNextName": "Odtwórz jako następny",
-    "contextNoQuery": "Ta wiadomość nie zawiera linku, pliku audio ani tekstu, który mogę odtworzyć."
+    "contextNoQuery": "Ta wiadomość nie zawiera linku, pliku audio ani tekstu, który mogę odtworzyć.",
+    "description": "Odtwórz utwór lub playlistę z YouTube, Spotify, SoundCloud, Apple Music lub Deezer"
   },
   "playlist": {
     "description": "Odtwarza listę odtwarzania z youtuba",

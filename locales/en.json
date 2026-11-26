@@ -32,7 +32,7 @@
     "result": "Loop is now {loop}"
   },
   "lyrics": {
-    "description": "Get lyrics for the currently playing song",
+    "description": "Lyrics of the current song, or any song",
     "errorNotQueue": "There is nothing playing.",
     "lyricsNotFound": "No lyrics found for {title}.",
     "embedTitle": "{title} - Lyrics"
@@ -48,7 +48,7 @@
     }
   },
   "nowplaying": {
-    "description": "Show now playing song",
+    "description": "Show the player with controls for the current song",
     "errorNotQueue": "There is nothing playing.",
     "embedTitle": "Now playing",
     "live": " ◉ LIVE",
@@ -64,7 +64,7 @@
     "result": "📈 Average ping to API: {ping} ms"
   },
   "play": {
-    "description": "Plays audio from YouTube",
+    "description": "Play a song or playlist from YouTube, Spotify, SoundCloud, Apple Music or Deezer",
     "errorNotChannel": "You need to join a voice channel first!",
     "errorNotInSameChannel": "You must be in the same channel as {user}",
     "usageReply": "Usage: {prefix}play <YouTube URL | Video Name>",

@@ -32,10 +32,10 @@
     "result": "Ο βρόγχος τώρα είναι {loop}"
   },
   "lyrics": {
-    "description": "Στίχοι του τραγουδιού που παίζει τώρα",
     "errorNotQueue": "There is nothing playing.",
     "lyricsNotFound": "Δεν αναπαράγεται κάτι..",
-    "embedTitle": "{title} - Στίχοι"
+    "embedTitle": "{title} - Στίχοι",
+    "description": "Στίχοι του τρέχοντος τραγουδιού ή οποιουδήποτε τραγουδιού"
   },
   "move": {
     "description": "Μετακίνησε τα τραγούδια στην ουρά",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Εμφάνιση του τραγουδιού που παίζει τώρα",
     "errorNotQueue": "Δεν αναπαράγεται κάτι.",
     "embedTitle": "Τώρα παίζει",
     "live": " ◉ LIVE",
-    "timeRemaining": "Χρόνος που υπολείπεται: {time}"
+    "timeRemaining": "Χρόνος που υπολείπεται: {time}",
+    "description": "Δείξε το player με χειριστήρια για το τρέχον τραγούδι"
   },
   "pause": {
     "description": "Παύση του τραγουδιού που παίζει τώρα",
@@ -64,7 +64,6 @@
     "result": "📈 Μέσος όρος ping στο API: {ping} ms"
   },
   "play": {
-    "description": "Αναπαραγωγή ήχου από το YouTube ή το Soundcloud",
     "errorNotChannel": "Θα πρέπει να συνδεθείς σε ένα κανάλι ομιλίας πρώτα!",
     "errorNotInSameChannel": "Θα πρέπει να είσαι στο κανάλι κανάλι ομιλίας όπως ο χρήστης {user}",
     "usageReply": "Χρήση: {prefix}play <URL του YouTubeYouTube | Όνομα Video | URL του Soundcloud>",
@@ -113,7 +112,8 @@
     "cantJoin": "Δεν μπορώ να μπω στο {channel}: χρειάζομαι τα δικαιώματα Σύνδεσης και Ομιλίας εκεί.",
     "contextName": "Αναπαραγωγή σε φωνητικό κανάλι",
     "contextNextName": "Αναπαραγωγή επόμενο",
-    "contextNoQuery": "Αυτό το μήνυμα δεν έχει σύνδεσμο, αρχείο ήχου ή κείμενο που μπορώ να παίξω."
+    "contextNoQuery": "Αυτό το μήνυμα δεν έχει σύνδεσμο, αρχείο ήχου ή κείμενο που μπορώ να παίξω.",
+    "description": "Παίξε ένα τραγούδι ή playlist από YouTube, Spotify, SoundCloud, Apple Music ή Deezer"
   },
   "playlist": {
     "description": "Αναπαραγωγή playlist από το youtube",

@@ -32,10 +32,10 @@
     "result": "Цикълът сега е {loop}"
   },
   "lyrics": {
-    "description": "Получаване на текст за текущата песен",
     "errorNotQueue": "Няма нищо за възпроизвеждане.",
     "lyricsNotFound": "Не е намерен текст на песента за {title}.",
-    "embedTitle": "{title} - Текстове на песни"
+    "embedTitle": "{title} - Текстове на песни",
+    "description": "Текст на текущата песен или на която и да е песен"
   },
   "move": {
     "description": "Преместване на песни в опашката",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Покажи сегашната песен",
     "errorNotQueue": "Няма нищо за възпроизвеждане.",
     "embedTitle": "Сега се изпълнява",
     "live": " ◉ НА ЖИВО",
-    "timeRemaining": "Оставащото време: {time}"
+    "timeRemaining": "Оставащото време: {time}",
+    "description": "Покажи плейъра с контроли за текущата песен"
   },
   "pause": {
     "description": "Пауза на възпроизвежданата в момента музика",
@@ -64,7 +64,6 @@
     "result": "📈 Среден пинг към API: {ping} ms"
   },
   "play": {
-    "description": "Възпроизвежда аудио от YouTube",
     "errorNotChannel": "Първо трябва да се присъедините към гласов канал!",
     "errorNotInSameChannel": "Трябва да сте в същия канал като {user}",
     "usageReply": "Употреба: {prefix}play <YouTube URL | Video Name>",
@@ -113,7 +112,8 @@
     "cantJoin": "Не мога да вляза в {channel}: трябват ми правата Свързване и Говорене там.",
     "contextName": "Пусни в гласов канал",
     "contextNextName": "Пусни следваща",
-    "contextNoQuery": "Това съобщение няма линк, аудио файл или текст, който да пусна."
+    "contextNoQuery": "Това съобщение няма линк, аудио файл или текст, който да пусна.",
+    "description": "Пусни песен или плейлист от YouTube, Spotify, SoundCloud, Apple Music или Deezer"
   },
   "playlist": {
     "description": "Възпроизвеждане на плейлист от youtube",

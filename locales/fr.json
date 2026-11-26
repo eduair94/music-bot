@@ -32,10 +32,10 @@
     "result": "La boucle est maintenant {loop}"
   },
   "lyrics": {
-    "description": "Obtenir les paroles de la chanson en cours de lecture",
     "errorNotQueue": "Rien n'est en train de jouer.",
     "lyricsNotFound": "Aucune paroles trouvées pour {title}.",
-    "embedTitle": "{title} - Paroles"
+    "embedTitle": "{title} - Paroles",
+    "description": "Paroles de la chanson en cours, ou de n'importe quelle chanson"
   },
   "move": {
     "description": "Déplacer des chansons dans la file d'attente",
@@ -48,11 +48,11 @@
     }
   },
   "nowplaying": {
-    "description": "Afficher la chanson en cours de lecture",
     "errorNotQueue": "Rien n'est en train de jouer.",
     "embedTitle": "En train de jouer",
     "live": " ◉ EN DIRECT",
-    "timeRemaining": "Temps restant : {time}"
+    "timeRemaining": "Temps restant : {time}",
+    "description": "Affiche le lecteur avec les commandes pour la chanson en cours"
   },
   "pause": {
     "description": "Met en pause la musique en cours de lecture",
@@ -64,7 +64,6 @@
     "result": "📈 Ping moyen vers l'API : {ping} ms"
   },
   "play": {
-    "description": "Joue de l'audio depuis YouTube",
     "errorNotChannel": "Vous devez rejoindre un salon vocal d'abord !",
     "errorNotInSameChannel": "Vous devez être dans le même salon que {user}",
     "usageReply": "Utilisation : {prefix}play <URL YouTube | Nom de la vidéo>",
@@ -113,7 +112,8 @@
     "cantJoin": "Je ne peux pas rejoindre {channel} : j'ai besoin des permissions Se connecter et Parler.",
     "contextName": "Jouer dans le salon vocal",
     "contextNextName": "Jouer ensuite",
-    "contextNoQuery": "Ce message ne contient aucun lien, fichier audio ou texte que je peux jouer."
+    "contextNoQuery": "Ce message ne contient aucun lien, fichier audio ou texte que je peux jouer.",
+    "description": "Joue une chanson ou une playlist depuis YouTube, Spotify, SoundCloud, Apple Music ou Deezer"
   },
   "playlist": {
     "description": "Joue une liste de lecture depuis YouTube",
