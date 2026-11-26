@@ -270,7 +270,16 @@
     "errorNotQueue": "There is no active queue.",
     "errorEmpty": "No tracks in history yet.",
     "embedTitle": "Recently Played",
-    "footer": "Showing last {count} tracks"
+    "footer": "Showing last {count} tracks",
+    "title": "Recently played",
+    "titleUser": "Recently played · requested by {user}",
+    "empty": "Nothing has played in this server in the last 30 days.",
+    "emptyUser": "{user} hasn't requested any songs here in the last 30 days.",
+    "summary": "Last {count} plays",
+    "playAgain": "Play again…",
+    "optionUser": "Only show songs this member requested",
+    "unavailable": "The play history isn't available right now. Please try again in a minute.",
+    "gone": "That song is no longer in the history."
   },
   "previous": {
     "description": "Play the previous track",
