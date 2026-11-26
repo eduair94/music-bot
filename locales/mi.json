@@ -1024,8 +1024,9 @@
     "nowPlaying": "E pūrei ana ināianei",
     "empty": "Kei te piako te rārangi. Tāpirihia he waiata mā /play",
     "page": "Whārangi {page} o {pages}",
-    "summary": "{count} waiata · {duration} katoa",
-    "nothingPlaying": "Kāore he mea e pūrei ana i tēnei tūmau."
+    "nothingPlaying": "Kāore he mea e pūrei ana i tēnei tūmau.",
+    "summary": "Ngā waiata: {count} · Tapeke: {duration}",
+    "refresh": "Whakahou"
   },
   "lyricsCmd": {
     "optionQuery": "Te waiata hei rapu (ko te mea e pūrei ana te taunoa)",

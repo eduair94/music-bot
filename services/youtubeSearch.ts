@@ -28,7 +28,8 @@ async function getClient(): Promise<Innertube> {
     client = (async () => {
       // youtubei.js is ESM-only; a dynamic import keeps this CommonJS build working.
       const { Innertube } = await (new Function("m", "return import(m)") as (m: string) => Promise<any>)("youtubei.js");
-      return Innertube.create({ retrieve_player: false, generate_session_locally: true });
+      // generate_session_locally makes YouTube answer 400 from datacenter IPs.
+      return Innertube.create({ retrieve_player: false });
     })().catch((error) => {
       client = null;
       throw error;
@@ -53,7 +54,14 @@ export async function searchYouTube(query: string, limit = 8): Promise<VideoResu
 
   const task = (async () => {
     const yt = await getClient();
-    const response = await yt.search(query, { type: "video" });
+    let response: any;
+    try {
+      response = await yt.search(query, { type: "video" });
+    } catch (error) {
+      // A rejected session stays rejected: start a fresh one next time.
+      client = null;
+      throw error;
+    }
     const videos: any[] = (response.videos || response.results || []).filter((v: any) => v?.id && v.type === "Video");
     const results = videos.slice(0, limit).map((v: any): VideoResult => {
       const durationText: string | null = v.duration?.text ?? null;

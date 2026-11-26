@@ -1024,8 +1024,9 @@
     "nowPlaying": "Spelas nu",
     "empty": "Kön är tom. Lägg till låtar med /play",
     "page": "Sida {page} av {pages}",
-    "summary": "{count} låtar · {duration} totalt",
-    "nothingPlaying": "Inget spelas på den här servern."
+    "nothingPlaying": "Inget spelas på den här servern.",
+    "summary": "Låtar: {count} · Totalt: {duration}",
+    "refresh": "Uppdatera"
   },
   "lyricsCmd": {
     "optionQuery": "Låt att söka efter (standard är det som spelas)",

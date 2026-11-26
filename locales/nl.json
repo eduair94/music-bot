@@ -1024,8 +1024,9 @@
     "nowPlaying": "Nu aan het spelen",
     "empty": "De wachtrij is leeg. Voeg nummers toe met /play",
     "page": "Pagina {page} van {pages}",
-    "summary": "{count} nummers · {duration} totaal",
-    "nothingPlaying": "Er speelt niets in deze server."
+    "nothingPlaying": "Er speelt niets in deze server.",
+    "summary": "Nummers: {count} · Totaal: {duration}",
+    "refresh": "Vernieuwen"
   },
   "lyricsCmd": {
     "optionQuery": "Nummer om te zoeken (standaard wat er nu speelt)",

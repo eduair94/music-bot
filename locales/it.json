@@ -1024,8 +1024,9 @@
     "nowPlaying": "In riproduzione",
     "empty": "La coda è vuota. Aggiungi brani con /play",
     "page": "Pagina {page} di {pages}",
-    "summary": "{count} brani · {duration} in totale",
-    "nothingPlaying": "Non c'è niente in riproduzione in questo server."
+    "nothingPlaying": "Non c'è niente in riproduzione in questo server.",
+    "summary": "Brani: {count} · Totale: {duration}",
+    "refresh": "Aggiorna"
   },
   "lyricsCmd": {
     "optionQuery": "Brano da cercare (di default quello in riproduzione)",

@@ -1024,8 +1024,9 @@
     "nowPlaying": "Tocando agora",
     "empty": "A fila está vazia. Adicione músicas com /play",
     "page": "Página {page} de {pages}",
-    "summary": "{count} músicas · {duration} no total",
-    "nothingPlaying": "Nada está tocando neste servidor."
+    "nothingPlaying": "Nada está tocando neste servidor.",
+    "summary": "Músicas: {count} · Total: {duration}",
+    "refresh": "Atualizar"
   },
   "lyricsCmd": {
     "optionQuery": "Música para buscar (padrão: a que está tocando)",

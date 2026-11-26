@@ -1024,8 +1024,9 @@
     "nowPlaying": "Şimdi çalıyor",
     "empty": "Sıra boş. /play ile şarkı ekle",
     "page": "Sayfa {page}/{pages}",
-    "summary": "{count} şarkı · toplam {duration}",
-    "nothingPlaying": "Bu sunucuda şu an hiçbir şey çalmıyor."
+    "nothingPlaying": "Bu sunucuda şu an hiçbir şey çalmıyor.",
+    "summary": "Şarkılar: {count} · Toplam: {duration}",
+    "refresh": "Yenile"
   },
   "lyricsCmd": {
     "optionQuery": "Aranacak şarkı (varsayılan: çalan şarkı)",

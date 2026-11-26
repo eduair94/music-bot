@@ -1024,8 +1024,9 @@
     "nowPlaying": "Сейчас играет",
     "empty": "Очередь пуста. Добавь треки через /play",
     "page": "Страница {page} из {pages}",
-    "summary": "Треков: {count} · всего {duration}",
-    "nothingPlaying": "На этом сервере ничего не играет."
+    "nothingPlaying": "На этом сервере ничего не играет.",
+    "summary": "Треков: {count} · Всего: {duration}",
+    "refresh": "Обновить"
   },
   "lyricsCmd": {
     "optionQuery": "Трек для поиска (по умолчанию — текущий)",

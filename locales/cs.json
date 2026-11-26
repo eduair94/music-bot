@@ -1024,8 +1024,9 @@
     "nowPlaying": "Právě hraje",
     "empty": "Fronta je prázdná. Přidej skladby pomocí /play",
     "page": "Strana {page} z {pages}",
-    "summary": "Skladby: {count} · celkem {duration}",
-    "nothingPlaying": "Na tomto serveru nic nehraje."
+    "nothingPlaying": "Na tomto serveru nic nehraje.",
+    "summary": "Skladby: {count} · Celkem: {duration}",
+    "refresh": "Obnovit"
   },
   "lyricsCmd": {
     "optionQuery": "Skladba k vyhledání (výchozí je ta, co právě hraje)",

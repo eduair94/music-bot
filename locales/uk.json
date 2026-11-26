@@ -1024,8 +1024,9 @@
     "nowPlaying": "Зараз грає",
     "empty": "Черга порожня. Додай пісні через /play",
     "page": "Сторінка {page} з {pages}",
-    "summary": "Пісень: {count} · загалом {duration}",
-    "nothingPlaying": "На цьому сервері нічого не грає."
+    "nothingPlaying": "На цьому сервері нічого не грає.",
+    "summary": "Пісень: {count} · Загалом: {duration}",
+    "refresh": "Оновити"
   },
   "lyricsCmd": {
     "optionQuery": "Пісня для пошуку (типово — та, що грає)",

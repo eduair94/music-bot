@@ -1025,8 +1025,9 @@
     "nowPlaying": "Se redă acum",
     "empty": "Coada e goală. Adaugă melodii cu /play",
     "page": "Pagina {page} din {pages}",
-    "summary": "{count} melodii · {duration} în total",
-    "nothingPlaying": "Nu se redă nimic pe acest server."
+    "nothingPlaying": "Nu se redă nimic pe acest server.",
+    "summary": "Melodii: {count} · Total: {duration}",
+    "refresh": "Reîmprospătează"
   },
   "lyricsCmd": {
     "optionQuery": "Melodia căutată (implicit cea care se redă)",

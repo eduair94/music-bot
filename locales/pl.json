@@ -1031,8 +1031,9 @@
     "nowPlaying": "Teraz gra",
     "empty": "Kolejka jest pusta. Dodaj utwory przez /play",
     "page": "Strona {page} z {pages}",
-    "summary": "Utwory: {count} · łącznie {duration}",
-    "nothingPlaying": "Na tym serwerze nic teraz nie gra."
+    "nothingPlaying": "Na tym serwerze nic teraz nie gra.",
+    "summary": "Utwory: {count} · Łącznie: {duration}",
+    "refresh": "Odśwież"
   },
   "lyricsCmd": {
     "optionQuery": "Utwór do wyszukania (domyślnie ten, który gra)",

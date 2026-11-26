@@ -1024,8 +1024,9 @@
     "nowPlaying": "در حال پخش",
     "empty": "صف خالیه. با /play آهنگ اضافه کن",
     "page": "صفحه {page} از {pages}",
-    "summary": "{count} آهنگ · مجموعاً {duration}",
-    "nothingPlaying": "الان چیزی تو این سرور پخش نمی‌شه."
+    "nothingPlaying": "الان چیزی تو این سرور پخش نمی‌شه.",
+    "summary": "آهنگ‌ها: {count} · مجموع: {duration}",
+    "refresh": "به‌روزرسانی"
   },
   "lyricsCmd": {
     "optionQuery": "آهنگ برای جستجو (پیش‌فرض: آهنگ در حال پخش)",

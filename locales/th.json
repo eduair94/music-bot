@@ -1024,8 +1024,9 @@
     "nowPlaying": "กำลังเล่น",
     "empty": "คิวว่างอยู่ เพิ่มเพลงได้ด้วย /play",
     "page": "หน้า {page} จาก {pages}",
-    "summary": "{count} เพลง · รวม {duration}",
-    "nothingPlaying": "ตอนนี้ไม่มีเพลงเล่นอยู่ในเซิร์ฟเวอร์นี้"
+    "nothingPlaying": "ตอนนี้ไม่มีเพลงเล่นอยู่ในเซิร์ฟเวอร์นี้",
+    "summary": "เพลง: {count} · รวม: {duration}",
+    "refresh": "รีเฟรช"
   },
   "lyricsCmd": {
     "optionQuery": "เพลงที่จะค้นหา (ค่าเริ่มต้นคือเพลงที่กำลังเล่น)",

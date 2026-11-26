@@ -1024,8 +1024,9 @@
     "nowPlaying": "Παίζει τώρα",
     "empty": "Η ουρά είναι άδεια. Πρόσθεσε τραγούδια με /play",
     "page": "Σελίδα {page} από {pages}",
-    "summary": "{count} τραγούδια · {duration} συνολικά",
-    "nothingPlaying": "Δεν παίζει τίποτα σε αυτόν τον server."
+    "nothingPlaying": "Δεν παίζει τίποτα σε αυτόν τον server.",
+    "summary": "Τραγούδια: {count} · Συνολικά: {duration}",
+    "refresh": "Ανανέωση"
   },
   "lyricsCmd": {
     "optionQuery": "Τραγούδι για αναζήτηση (προεπιλογή: αυτό που παίζει)",

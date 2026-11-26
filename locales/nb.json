@@ -1024,8 +1024,9 @@
     "nowPlaying": "Spilles nå",
     "empty": "Køen er tom. Legg til sanger med /play",
     "page": "Side {page} av {pages}",
-    "summary": "{count} sanger · {duration} totalt",
-    "nothingPlaying": "Ingenting spilles på denne serveren."
+    "nothingPlaying": "Ingenting spilles på denne serveren.",
+    "summary": "Sanger: {count} · Totalt: {duration}",
+    "refresh": "Oppdater"
   },
   "lyricsCmd": {
     "optionQuery": "Sang å søke etter (standard er det som spilles)",

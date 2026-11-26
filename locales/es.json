@@ -1024,8 +1024,9 @@
     "nowPlaying": "Reproduciendo ahora",
     "empty": "La cola está vacía. Añade canciones con /play",
     "page": "Página {page} de {pages}",
-    "summary": "{count} canciones · {duration} en total",
-    "nothingPlaying": "No se está reproduciendo nada en este servidor."
+    "nothingPlaying": "No se está reproduciendo nada en este servidor.",
+    "summary": "Canciones: {count} · Total: {duration}",
+    "refresh": "Actualizar"
   },
   "lyricsCmd": {
     "optionQuery": "Canción a buscar (por defecto, la que está sonando)",

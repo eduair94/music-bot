@@ -1024,8 +1024,9 @@
     "nowPlaying": "Đang phát",
     "empty": "Hàng chờ trống. Thêm bài bằng /play",
     "page": "Trang {page}/{pages}",
-    "summary": "{count} bài · tổng {duration}",
-    "nothingPlaying": "Không có gì đang phát trong server này."
+    "nothingPlaying": "Không có gì đang phát trong server này.",
+    "summary": "Bài hát: {count} · Tổng: {duration}",
+    "refresh": "Làm mới"
   },
   "lyricsCmd": {
     "optionQuery": "Bài hát cần tìm (mặc định là bài đang phát)",

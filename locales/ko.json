@@ -1024,8 +1024,9 @@
     "nowPlaying": "지금 재생 중",
     "empty": "대기열이 비어 있어요. /play로 노래를 추가해 보세요",
     "page": "{page}/{pages} 페이지",
-    "summary": "{count}곡 · 총 {duration}",
-    "nothingPlaying": "이 서버에서 재생 중인 곡이 없어요."
+    "nothingPlaying": "이 서버에서 재생 중인 곡이 없어요.",
+    "summary": "곡 수: {count} · 총 재생 시간: {duration}",
+    "refresh": "새로고침"
   },
   "lyricsCmd": {
     "optionQuery": "검색할 노래 (기본값: 지금 재생 중인 곡)",

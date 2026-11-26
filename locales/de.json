@@ -1024,8 +1024,9 @@
     "nowPlaying": "Läuft gerade",
     "empty": "Die Warteschlange ist leer. Füge Songs mit /play hinzu",
     "page": "Seite {page} von {pages}",
-    "summary": "{count} Songs · {duration} insgesamt",
-    "nothingPlaying": "Auf diesem Server läuft gerade nichts."
+    "nothingPlaying": "Auf diesem Server läuft gerade nichts.",
+    "summary": "Songs: {count} · Gesamt: {duration}",
+    "refresh": "Aktualisieren"
   },
   "lyricsCmd": {
     "optionQuery": "Song zum Suchen (standardmäßig der aktuelle Song)",

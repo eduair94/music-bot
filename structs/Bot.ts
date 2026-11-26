@@ -213,6 +213,9 @@ export class Bot {
       const { PlayerPanelService } = await import("../services/playerPanel");
       PlayerPanelService.getInstance().attach();
 
+      const { warmYouTubeSearch } = await import("../services/youtubeSearch");
+      warmYouTubeSearch();
+
       const { Stay247Service } = await import("../services/stay247");
       void Stay247Service.getInstance().start(this.client);
     } catch (error) {

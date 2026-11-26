@@ -66,6 +66,7 @@ export async function buildQueueView(queue: GuildQueue, page: number): Promise<{
         new ButtonBuilder()
           .setCustomId(`queue:page:${current}:refresh`)
           .setEmoji("🔄")
+          .setLabel(i18n.__("queueView.refresh"))
           .setStyle(ButtonStyle.Secondary),
         new ButtonBuilder()
           .setCustomId(`queue:page:${current + 1}`)
@@ -77,7 +78,7 @@ export async function buildQueueView(queue: GuildQueue, page: number): Promise<{
   } else {
     container.addActionRowComponents((row) =>
       row.setComponents(
-        new ButtonBuilder().setCustomId(`queue:page:0:refresh`).setEmoji("🔄").setStyle(ButtonStyle.Secondary)
+        new ButtonBuilder().setCustomId(`queue:page:0:refresh`).setEmoji("🔄").setLabel(i18n.__("queueView.refresh")).setStyle(ButtonStyle.Secondary)
       )
     );
   }

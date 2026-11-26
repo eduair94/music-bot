@@ -1024,8 +1024,9 @@
     "nowPlaying": "Now playing",
     "empty": "The queue is empty. Add songs with /play",
     "page": "Page {page} of {pages}",
-    "summary": "{count} songs · {duration} total",
-    "nothingPlaying": "Nothing is playing in this server."
+    "summary": "Songs: {count} · Total: {duration}",
+    "nothingPlaying": "Nothing is playing in this server.",
+    "refresh": "Refresh"
   },
   "lyricsCmd": {
     "optionQuery": "Song to search (defaults to what's playing)",

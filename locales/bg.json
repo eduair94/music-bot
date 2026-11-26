@@ -1024,8 +1024,9 @@
     "nowPlaying": "Сега свири",
     "empty": "Опашката е празна. Добави песни с /play",
     "page": "Страница {page} от {pages}",
-    "summary": "{count} песни · {duration} общо",
-    "nothingPlaying": "Нищо не свири в този сървър."
+    "nothingPlaying": "Нищо не свири в този сървър.",
+    "summary": "Песни: {count} · Общо: {duration}",
+    "refresh": "Обнови"
   },
   "lyricsCmd": {
     "optionQuery": "Песен за търсене (по подразбиране тази, която свири)",

@@ -1024,8 +1024,9 @@
     "nowPlaying": "Sedang diputar",
     "empty": "Antrean kosong. Tambahkan lagu dengan /play",
     "page": "Halaman {page} dari {pages}",
-    "summary": "{count} lagu · total {duration}",
-    "nothingPlaying": "Tidak ada yang diputar di server ini."
+    "nothingPlaying": "Tidak ada yang diputar di server ini.",
+    "summary": "Lagu: {count} · Total: {duration}",
+    "refresh": "Muat ulang"
   },
   "lyricsCmd": {
     "optionQuery": "Lagu yang dicari (default: lagu yang sedang diputar)",

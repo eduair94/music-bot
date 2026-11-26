@@ -1024,8 +1024,9 @@
     "nowPlaying": "正在播放",
     "empty": "播放佇列是空的。用 /play 加入歌曲吧",
     "page": "第 {page} 頁，共 {pages} 頁",
-    "summary": "{count} 首歌 · 總長 {duration}",
-    "nothingPlaying": "這個伺服器目前沒有在播放任何東西。"
+    "nothingPlaying": "這個伺服器目前沒有在播放任何東西。",
+    "summary": "歌曲：{count} · 總長度：{duration}",
+    "refresh": "重新整理"
   },
   "lyricsCmd": {
     "optionQuery": "要搜尋的歌曲（預設為正在播放的歌曲）",

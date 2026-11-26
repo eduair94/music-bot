@@ -1024,8 +1024,9 @@
     "nowPlaying": "再生中",
     "empty": "キューは空です。/play で曲を追加しよう",
     "page": "{page} / {pages} ページ",
-    "summary": "{count}曲 · 合計 {duration}",
-    "nothingPlaying": "このサーバーでは何も再生されていません。"
+    "nothingPlaying": "このサーバーでは何も再生されていません。",
+    "summary": "曲数: {count} · 合計: {duration}",
+    "refresh": "更新"
   },
   "lyricsCmd": {
     "optionQuery": "検索する曲（省略すると再生中の曲）",

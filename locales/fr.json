@@ -1026,8 +1026,9 @@
     "nowPlaying": "En cours de lecture",
     "empty": "La file est vide. Ajoute des titres avec /play",
     "page": "Page {page} sur {pages}",
-    "summary": "{count} titres · {duration} au total",
-    "nothingPlaying": "Rien n'est en lecture sur ce serveur."
+    "nothingPlaying": "Rien n'est en lecture sur ce serveur.",
+    "summary": "Titres : {count} · Durée totale : {duration}",
+    "refresh": "Actualiser"
   },
   "lyricsCmd": {
     "optionQuery": "Chanson à rechercher (par défaut, celle en cours)",
