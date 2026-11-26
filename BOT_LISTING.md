@@ -84,7 +84,7 @@ Slash commands only. To test: join a voice channel, run `/play song:never gonna 
 | radarcord.net | Submitted, "Not Approved" (pending review). Owner joined their server | Token after approval |
 | bots.ondiscord.xyz | Closed: "Submissions are currently closed, you may only resubmit bots" | — |
 | discords.com | Broken on their side: `/bots/api/bot/<id>/actions/check` answers `no_matches` for every unlisted bot (tested with other well-known bots) | Retry when they fix it |
-| discord.place | Not listed: Cloudflare challenge, then a blank page in the automated browser | Owner can submit by hand |
+| discord.place | Submitted 2026-11-26 from the owner's Chrome (POST → 200; average approval ~5.5 h). Owner joined their server (required) | API key after approval; the bot posts at most once per 6 h |
 
 ## Where to list it
 
