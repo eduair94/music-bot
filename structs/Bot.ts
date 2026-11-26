@@ -297,6 +297,14 @@ export class Bot {
       console.error("⚠️ Bot list service failed to start:", error);
     }
 
+    // Status, changelog, votes, roles and logs in the official support server
+    try {
+      const { SupportServerService } = await import("../services/supportServer");
+      SupportServerService.getInstance().start(this.client);
+    } catch (error) {
+      console.error("⚠️ Support server link failed to start:", error);
+    }
+
     // Start debug panel (requires DEBUG_TOKEN env var)
     try {
       DebugPanel.getInstance().start(this.client);

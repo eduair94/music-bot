@@ -84,12 +84,26 @@ export class TelemetryService {
   }
 
   /** Remember the last error so the next heartbeat surfaces it. */
+  private errorListeners: ((scope: ErrorScope, error: unknown) => void)[] = [];
+
+  /** Subscribe to every noted error (used to mirror errors to the support server). */
+  public onError(listener: (scope: ErrorScope, error: unknown) => void): void {
+    this.errorListeners.push(listener);
+  }
+
   public noteError(scope: ErrorScope, error: unknown): void {
     this.lastError = {
       ts: new Date().toISOString(),
       scope,
       message: (errorMessage(error) ?? "Unknown error").slice(0, 200)
     };
+    for (const listener of this.errorListeners) {
+      try {
+        listener(scope, error);
+      } catch {
+        // listeners must never break error handling
+      }
+    }
   }
 
   /** Fire-and-forget event write. Drops silently when Mongo is not ready. */

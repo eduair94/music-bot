@@ -40,6 +40,13 @@ async function shutdown(signal: string) {
   TelemetryService.getInstance().stop();
 
   try {
+    const { SupportServerService } = await import("./services/supportServer");
+    await SupportServerService.getInstance().markRestarting();
+  } catch {
+    // best effort
+  }
+
+  try {
     const { DiscordPlayerService } = await import("./services/discordPlayer");
     const player = DiscordPlayerService.getInstance().getPlayer();
     // Voice channel statuses ("♪ Song") outlive the bot unless cleared.
