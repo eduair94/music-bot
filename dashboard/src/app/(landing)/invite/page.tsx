@@ -9,11 +9,13 @@
  */
 
 import { redirect } from "next/navigation";
+import { INVITE_PERMISSIONS } from "../../../../../shared/links";
 
 export const dynamic = "force-dynamic";
 
-// Permissions: View Channels, Connect, Speak, Use Voice Activity
-const PERMISSIONS = "36700160";
+// View/send in text channels (player panel), connect + speak in voice and
+// stage channels, and set the voice channel status. See shared/links.ts.
+const PERMISSIONS = INVITE_PERMISSIONS;
 const SCOPES = "bot applications.commands";
 
 export default function InvitePage() {
@@ -33,6 +35,7 @@ export default function InvitePage() {
     client_id: clientId,
     permissions: PERMISSIONS,
     scope: SCOPES,
+    integration_type: "0",
   });
 
   redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);

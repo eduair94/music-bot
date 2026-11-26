@@ -1,4 +1,5 @@
 import { DiscordChannel, DiscordGuild, DiscordRole, GuildWithBot } from "@/types/discord";
+import { INVITE_PERMISSIONS } from "../../../shared/links";
 
 const DISCORD_API_BASE = "https://discord.com/api/v10";
 const MANAGE_GUILD_PERMISSION = 0x20; // MANAGE_GUILD permission bit
@@ -227,7 +228,7 @@ export async function isBotInGuild(guildId: string): Promise<boolean> {
  * @param guildId - Optional guild ID to pre-select
  */
 export function getBotInviteUrl(clientId: string, guildId?: string): string {
-  const permissions = "3147776"; // Required permissions for music bot
+  const permissions = INVITE_PERMISSIONS; // see shared/links.ts
   const scopes = "bot%20applications.commands";
   
   let url = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=${permissions}&scope=${scopes}`;
