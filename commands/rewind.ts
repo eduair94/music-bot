@@ -48,7 +48,8 @@ export default {
     }
 
     const seconds = interaction.options.getInteger("seconds") || 10;
-    const currentPosition = queue.node.streamTime;
+    // streamTime resets on every seek/filter change; the timestamp is the real position.
+    const currentPosition = queue.node.getTimestamp()?.current.value ?? queue.node.playbackTime;
     const newPosition = Math.max(currentPosition - (seconds * 1000), 0);
 
     await queue.node.seek(newPosition);

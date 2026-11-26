@@ -3,28 +3,29 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChatInputCommandInteraction,
-  EmbedBuilder,
+  ContainerBuilder,
+  MessageFlags,
   SlashCommandBuilder
 } from "discord.js";
+import { botInviteUrl, SITE_URL, SUPPORT_INVITE_URL } from "../shared/links";
 import { i18n } from "../utils/i18n";
 
+/** /invite — add the bot to another server (works anywhere, also user-installed). */
 export default {
   data: new SlashCommandBuilder().setName("invite").setDescription(i18n.__("invite.description")),
+  category: "other",
+  userInstallable: true,
   execute(interaction: ChatInputCommandInteraction) {
-    const inviteEmbed = new EmbedBuilder().setTitle(i18n.__mf("Invite me to your server!"));
-
-    // return interaction with embed and button to invite the bot
-    const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setLabel(i18n.__mf("Invite"))
-        .setStyle(ButtonStyle.Link)
-        .setURL(
-          `https://discord.com/api/oauth2/authorize?client_id=${
-            interaction.client.user!.id
-          }&permissions=8&scope=bot%20applications.commands`
+    const container = new ContainerBuilder()
+      .setAccentColor(0xf8aa2a)
+      .addTextDisplayComponents((t) => t.setContent(`### ➕ ${i18n.__mf("Invite me to your server!")}`))
+      .addActionRowComponents((row) =>
+        row.setComponents(
+          new ButtonBuilder().setLabel(i18n.__mf("Invite")).setStyle(ButtonStyle.Link).setURL(botInviteUrl(interaction.client.user!.id)),
+          new ButtonBuilder().setLabel("Website").setStyle(ButtonStyle.Link).setURL(SITE_URL),
+          new ButtonBuilder().setLabel("Support").setStyle(ButtonStyle.Link).setURL(SUPPORT_INVITE_URL)
         )
-    );
-
-    return interaction.reply({ embeds: [inviteEmbed], components: [actionRow] }).catch(console.error);
+      );
+    return interaction.reply({ components: [container], flags: MessageFlags.IsComponentsV2 }).catch(console.error);
   }
 };

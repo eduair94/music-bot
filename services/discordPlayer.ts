@@ -1,8 +1,10 @@
 import { AttachmentExtractor, SoundCloudExtractor, SpotifyExtractor } from "@discord-player/extractor";
 import { spawn } from "child_process";
-import { GuildQueue, Player, Playlist, QueryType, SearchResult, Track, TrackSkipReason } from "discord-player";
+import { GuildQueue, Player, Playlist, QueryType, SearchQueryType, SearchResult, Track, TrackSkipReason } from "discord-player";
+import { bridgeLink, BridgedSong, ytSearchUrl } from "./linkBridge";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { ChannelType, Client, GuildMember, TextChannel, User } from "discord.js";
+import type { IGuildSettings } from "../models/GuildSettings";
 import fs from "fs";
 import { PassThrough, Readable } from "stream";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
@@ -38,6 +40,62 @@ export interface QueueMetadata {
   currentTrack?: Track;
   /** Audio bitrate in kbps (e.g., 128, 192, 320) */
   audioBitrate?: number;
+  /** Queue related tracks when the queue runs out */
+  autoplay?: boolean;
+  /** YouTube ids autoplay already used in this session (no repeats) */
+  autoplaySeen?: Set<string>;
+  /** 24/7: never leave on empty/end/stop */
+  stay247?: boolean;
+}
+
+export type PlayErrorCode = "noResults" | "tooLong" | "duplicate" | "queueFull";
+
+/** A user-facing refusal from the play pipeline (mapped to a localized message). */
+export class PlayError extends Error {
+  constructor(public readonly code: PlayErrorCode, public readonly detail: Record<string, string | number> = {}) {
+    super(code);
+    this.name = "PlayError";
+  }
+}
+
+export interface PlayOptions {
+  /** Who asked; shown on the player panel and in the queue. */
+  requestedBy?: User | null;
+  /** Insert at the front of the queue instead of the end. */
+  next?: boolean;
+  /** Search engine for plain-text queries (default: YouTube). */
+  searchEngine?: SearchQueryType;
+  /** Skip the per-server max song duration (premium). */
+  ignoreDurationLimit?: boolean;
+}
+
+export interface PlayResult {
+  track: Track;
+  queue: GuildQueue;
+  searchResult: SearchResult;
+  playlist: Playlist | null;
+  /** Tracks actually added (playlists may be trimmed by duration/size limits). */
+  added: number;
+  /** 1-based queue position of the first added track; 0 = playing now. */
+  position: number;
+}
+
+/** Extract the 11-char YouTube video id from a URL, if any. */
+export function youTubeVideoId(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "youtu.be") return parsed.pathname.slice(1, 12) || null;
+    if (parsed.hostname.endsWith("youtube.com")) {
+      const v = parsed.searchParams.get("v");
+      if (v) return v.slice(0, 11);
+      const shorts = parsed.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]{11})/);
+      if (shorts) return shorts[1];
+    }
+  } catch {
+    /* not a URL */
+  }
+  return null;
 }
 
 /**
@@ -312,12 +370,7 @@ export class DiscordPlayerService {
 
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title} (${track.source}, ${track.duration})`);
       debug("url:", track.url);
-
-      const channel = await this.getLogChannel(queue);
-      if (channel) {
-        const emoji = this.getPlatformEmoji(track.source);
-        channel.send(`${emoji} Now playing: **${track.title}** by ${track.author}`).catch(console.error);
-      }
+      // The player panel (services/playerPanel.ts) announces the song.
     });
 
     // Player finish - track finished playing
@@ -340,6 +393,7 @@ export class DiscordPlayerService {
       if (reason === TrackSkipReason.NoStream) {
         console.error(`[DiscordPlayer] ❌ Stream extraction failed for: ${track.title}`);
         console.error(`[DiscordPlayer] ❌ Reason: ${description}`);
+        void this.notifyTrackFailed(queue, track);
       }
     });
 
@@ -349,12 +403,8 @@ export class DiscordPlayerService {
     });
 
     // Queue ended
-    this.player.events.on("emptyQueue", async (queue: GuildQueue) => {
+    this.player.events.on("emptyQueue", (queue: GuildQueue) => {
       console.log("[DiscordPlayer] 🏁 Queue ended");
-      const channel = await this.getLogChannel(queue);
-      if (channel) {
-        channel.send("🏁 Queue finished! Add more songs to keep the music going.").catch(console.error);
-      }
     });
 
     // Empty channel (everyone left)
@@ -379,10 +429,7 @@ export class DiscordPlayerService {
       TelemetryService.getInstance().record(
         errorEvent({ scope: "player", error, guildId: queue.guild?.id, track: track?.title })
       );
-      const channel = await this.getLogChannel(queue);
-      if (channel) {
-        channel.send(`❌ Error playing **${track?.title || 'track'}**: ${error.message}`).catch(console.error);
-      }
+      if (track) void this.notifyTrackFailed(queue, track);
     });
 
     // Connection events
@@ -410,6 +457,25 @@ export class DiscordPlayerService {
     this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
       debug(`trigger: ${track.title} (${reason}, ${queue.tracks.size} remaining)`);
     });
+  }
+
+  /**
+   * Tell the channel a song could not be played (and was skipped). The note
+   * removes itself after 30 s so it doesn't bury the player panel.
+   */
+  private async notifyTrackFailed(queue: GuildQueue, track: Track): Promise<void> {
+    const channel = ((queue.metadata || {}) as QueueMetadata).channel;
+    if (!channel || !("send" in channel)) return;
+    try {
+      const title = track.title.replace(/[*_`~|]/g, "").slice(0, 80);
+      const message = await channel.send({
+        content: `⚠️ Couldn't play **${title}**, skipping it. Try another link or search.`,
+        allowedMentions: { parse: [] },
+      });
+      setTimeout(() => void message.delete().catch(() => undefined), 30_000).unref();
+    } catch {
+      /* no permission to post: nothing else to do */
+    }
   }
 
   /** Shape a track lifecycle event for telemetry (never throws). */
@@ -516,7 +582,7 @@ export class DiscordPlayerService {
    * streams every track we play and now self-updates on boot, so it is the
    * more durable source for the track list too.
    */
-  private expandYouTubePlaylist(
+  public listYouTubePlaylist(
     url: string,
     limit: number
   ): Promise<{ title: string; entries: PlaylistEntry[] } | null> {
@@ -577,6 +643,33 @@ export class DiscordPlayerService {
   }
 
   /**
+   * A Track for a yt-dlp listing entry that streams through the same yt-dlp
+   * createStream hook as searched tracks.
+   */
+  public buildYouTubeTrack(entry: PlaylistEntry, requestedBy: User | null, extractor: Track["extractor"]): Track {
+    const track = new Track(this.player!, {
+      title: entry.title,
+      description: "",
+      author: entry.uploader || "Unknown",
+      url: `https://www.youtube.com/watch?v=${entry.id}`,
+      thumbnail: `https://i.ytimg.com/vi/${entry.id}/hqdefault.jpg`,
+      duration: DiscordPlayerService.formatDuration(entry.duration),
+      views: 0,
+      requestedBy: requestedBy ?? undefined,
+      source: "youtube",
+      queryType: QueryType.YOUTUBE_VIDEO,
+      raw: entry,
+    });
+    track.extractor = extractor;
+    return track;
+  }
+
+  /** The registered YouTube extractor (used for tracks we build ourselves). */
+  public getYouTubeExtractor(): Track["extractor"] {
+    return (this.player?.extractors.get(YoutubeiExtractor.identifier) as Track["extractor"]) ?? null;
+  }
+
+  /**
    * Start the first entry through the normal path, then attach the rest of the
    * playlist to the queue as tracks that stream via the same yt-dlp hook.
    */
@@ -598,23 +691,7 @@ export class DiscordPlayerService {
     // remaining ones stream through our yt-dlp createStream hook too.
     const extractor = result.track.extractor;
 
-    const queued = rest.map((entry) => {
-      const track = new Track(player, {
-        title: entry.title,
-        description: "",
-        author: entry.uploader || "Unknown",
-        url: `https://www.youtube.com/watch?v=${entry.id}`,
-        thumbnail: `https://i.ytimg.com/vi/${entry.id}/hqdefault.jpg`,
-        duration: DiscordPlayerService.formatDuration(entry.duration),
-        views: 0,
-        requestedBy: requestedBy ?? undefined,
-        source: "youtube",
-        queryType: QueryType.YOUTUBE_VIDEO,
-        raw: entry,
-      });
-      track.extractor = extractor;
-      return track;
-    });
+    const queued = rest.map((entry) => this.buildYouTubeTrack(entry, requestedBy, extractor));
 
     if (queued.length > 0) result.queue.addTrack(queued);
 
@@ -643,6 +720,117 @@ export class DiscordPlayerService {
   }
 
   /**
+   * Queue options derived from the server's settings: default volume, the
+   * leave timers and 24/7. Only applied when a new queue is created.
+   */
+  private async buildNodeOptions(settings: IGuildSettings | null, metadata: QueueMetadata) {
+    const stay247 = Boolean(settings?.stay247?.enabled);
+    const leaveCooldownMs = Math.max(30, settings?.autoLeaveTimeout ?? 300) * 1000;
+    metadata.stay247 = stay247;
+    metadata.autoplay = metadata.autoplay ?? Boolean(settings?.autoplay);
+
+    return {
+      metadata,
+      leaveOnEmpty: !stay247 && (settings?.autoLeaveEmpty ?? true),
+      leaveOnEmptyCooldown: leaveCooldownMs,
+      leaveOnEnd: !stay247,
+      leaveOnEndCooldown: leaveCooldownMs,
+      leaveOnStop: !stay247,
+      pauseOnEmpty: true,
+      selfDeaf: true,
+      volume: Math.min(settings?.maxVolume ?? 100, settings?.defaultVolume ?? 80),
+      bufferingTimeout: 3_000, // 3s — start with headroom in the buffer, not on the first bytes
+      connectionTimeout: 120_000, // 120s — default; voice DAVE handshake needs time
+    };
+  }
+
+  /**
+   * Create (or reuse) the guild queue with the server's settings applied,
+   * without playing anything (/join, 24/7).
+   */
+  public async createQueue(guild: import("discord.js").Guild, textChannel: TextChannel | null) {
+    if (!this.player) throw new Error("Player not initialized");
+    const existing = this.player.nodes.get(guild.id);
+    if (existing && !existing.deleted) return existing;
+    const settings = await this.settingsFor(guild.id);
+    const metadata: QueueMetadata = { channel: textChannel ?? undefined, audioBitrate: 128 };
+    return this.player.nodes.create(guild, await this.buildNodeOptions(settings, metadata));
+  }
+
+  /** A lazily-resolved YouTube track for a bridged (Apple Music / Deezer) song. */
+  private buildBridgedTrack(song: BridgedSong, requestedBy: User | null): Track {
+    const track = new Track(this.player!, {
+      title: song.title,
+      description: "",
+      author: song.artist || "Unknown",
+      url: ytSearchUrl(song),
+      thumbnail: song.thumbnail ?? "",
+      duration: DiscordPlayerService.formatDuration(song.durationSec),
+      views: 0,
+      requestedBy: requestedBy ?? undefined,
+      source: "youtube",
+      queryType: QueryType.YOUTUBE_SEARCH,
+      raw: song,
+    });
+    track.extractor = this.getYouTubeExtractor();
+    return track;
+  }
+
+  private async playBridgedCollection(
+    voiceChannel: NonNullable<GuildMember["voice"]["channel"]>,
+    collection: Extract<Awaited<ReturnType<typeof bridgeLink>>, { kind: "collection" }>,
+    playOptions: Parameters<Player["play"]>[2],
+    requestedBy: User | null,
+    maxDurationMs: number,
+    insertInto: GuildQueue | null
+  ): Promise<Omit<PlayResult, "position">> {
+    const player = this.player!;
+    let songs = collection.songs;
+    if (maxDurationMs > 0) songs = songs.filter((s) => !s.durationSec || s.durationSec * 1000 <= maxDurationMs);
+    if (songs.length === 0) throw new PlayError("tooLong", { max: maxDurationMs });
+
+    const tracks = songs.map((song) => this.buildBridgedTrack(song, requestedBy));
+    const playlist = new Playlist(player, {
+      title: collection.title,
+      description: "",
+      thumbnail: collection.thumbnail ?? tracks[0].thumbnail,
+      type: "playlist",
+      source: "arbitrary",
+      author: { name: tracks[0].author, url: "" },
+      tracks,
+      id: collection.url,
+      url: collection.url,
+      rawPlaylist: collection,
+    });
+    for (const t of tracks) t.playlist = playlist;
+    const searchResult = new SearchResult(player, {
+      query: collection.url,
+      queryType: QueryType.AUTO,
+      tracks,
+      playlist,
+      extractor: this.getYouTubeExtractor(),
+      requestedBy: requestedBy ?? undefined,
+    } as any);
+
+    if (insertInto) {
+      tracks.forEach((track, index) => insertInto.insertTrack(track, index));
+      return { track: tracks[0], queue: insertInto, searchResult, playlist, added: tracks.length };
+    }
+    const result = await player.play(voiceChannel, searchResult, playOptions);
+    console.log(`[DiscordPlayer] ⚡ Bridged collection: ${collection.title} (${tracks.length} songs)`);
+    return { track: result.track, queue: result.queue, searchResult, playlist, added: tracks.length };
+  }
+
+  /** Settings for a guild, or null when the database is unavailable. */
+  private async settingsFor(guildId: string): Promise<IGuildSettings | null> {
+    try {
+      return await GuildSettingsService.getInstance().getSettings(guildId);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
    * Play a track in a voice channel
    * This is the main method for instant playback
    */
@@ -651,8 +839,9 @@ export class DiscordPlayerService {
     query: string,
     textChannel: TextChannel,
     audioBitrate: number = 128, // Default 128kbps for free users
-    playlistLimit: number = 100 // Cap on how many playlist entries to enqueue
-  ): Promise<{ track: Track; queue: GuildQueue; searchResult: SearchResult; playlist: Playlist | null } | null> {
+    playlistLimit: number = 100, // Cap on how many playlist entries to enqueue
+    options: PlayOptions = {}
+  ): Promise<PlayResult | null> {
     if (!this.player || !voiceChannel) {
       console.error("[DiscordPlayer] Player not initialized or no voice channel");
       return null;
@@ -663,87 +852,130 @@ export class DiscordPlayerService {
       throw new Error("No extractors registered. Please restart the bot.");
     }
 
-    try {
-      // Drop share/tracking params (YouTube Music always adds &si=).
-      // QueryResolver rebuilds any multi-param YouTube link as /watch, which
-      // without a video id resolves to nothing — playlists silently vanish.
-      query = normalizeYouTubeQuery(query);
+    const guildId = voiceChannel.guild.id;
+    const requestedBy = options.requestedBy ?? textChannel.client.user;
 
-      console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
-      const startTime = Date.now();
+    // Drop share/tracking params (YouTube Music always adds &si=).
+    // QueryResolver rebuilds any multi-param YouTube link as /watch, which
+    // without a video id resolves to nothing — playlists silently vanish.
+    query = normalizeYouTubeQuery(query.trim());
 
-      // Determine if query is a URL, a local audio file (e.g. generated TTS), or a search term
-      const isUrl = query.startsWith('http://') || query.startsWith('https://');
-      const isLocalFile = !isUrl && fs.existsSync(query) && fs.statSync(query).isFile();
+    console.log(`[DiscordPlayer] 🔍 Searching: ${query}`);
+    const startTime = Date.now();
 
-      // Create metadata object with audio quality info
-      const queueMetadata: QueueMetadata = {
-        channel: textChannel,
-        audioBitrate: audioBitrate,
-      };
+    // Apple Music / Deezer: read real metadata and match on YouTube.
+    const bridged = await bridgeLink(query, playlistLimit);
+    if (bridged?.kind === "song") query = bridged.query;
 
-      // discord-player handles voice connection internally via player.play().
-      // With a proper connectionTimeout (120s) there is no need to pre-connect.
-      const playOptions: Parameters<Player["play"]>[2] = {
-        nodeOptions: {
-          metadata: queueMetadata,
-          leaveOnEmpty: true,
-          leaveOnEmptyCooldown: 300000, // 5 minutes
-          leaveOnEnd: false,
-          leaveOnEndCooldown: 300000, // 5 minutes
-          selfDeaf: true,
-          volume: 80,
-          bufferingTimeout: 3_000,     // 3s — start with headroom in the buffer, not on the first bytes
-          connectionTimeout: 120_000,  // 120s — default; voice DAVE handshake needs time
-        },
-        requestedBy: textChannel.client.user,
-        connectionOptions: {
-          deaf: true,
-        },
-        // Local files go to AttachmentExtractor; non-URL queries are YouTube searches
-        searchEngine: isUrl ? undefined : isLocalFile ? QueryType.FILE : "youtube",
-      };
+    // Determine if query is a URL, a local audio file (e.g. generated TTS), or a search term
+    const isUrl = query.startsWith("http://") || query.startsWith("https://");
+    const isLocalFile = !isUrl && fs.existsSync(query) && fs.statSync(query).isFile();
 
-      // YouTube playlists never reach the extractor: youtubei.js can no longer
-      // parse them, so yt-dlp supplies the track list instead.
-      if (DiscordPlayerService.isYouTubePlaylistUrl(query)) {
-        const expanded = await this.expandYouTubePlaylist(query, playlistLimit);
-        if (expanded && expanded.entries.length > 0) {
-          return await this.playExpandedPlaylist(
-            voiceChannel,
-            query,
-            expanded,
-            playOptions,
-            textChannel.client.user,
-            audioBitrate,
-            startTime
-          );
+    const settings = await this.settingsFor(guildId);
+    const maxDurationMs = options.ignoreDurationLimit ? 0 : (settings?.maxSongDuration ?? 0) * 1000;
+
+    const existing = this.getQueue(guildId);
+    const live = existing && !existing.deleted ? existing : null;
+    const existingSize = live ? live.tracks.size : 0;
+    const isActive = Boolean(live && (live.currentTrack || live.node.isPlaying()));
+
+    const queueMetadata: QueueMetadata = {
+      channel: textChannel,
+      audioBitrate,
+    };
+
+    const playOptions: Parameters<Player["play"]>[2] = {
+      nodeOptions: await this.buildNodeOptions(settings, queueMetadata),
+      requestedBy: requestedBy ?? undefined,
+      connectionOptions: {
+        deaf: true,
+      },
+    };
+
+    // YouTube playlists never reach the extractor: youtubei.js can no longer
+    // parse them, so yt-dlp supplies the track list instead.
+    if (DiscordPlayerService.isYouTubePlaylistUrl(query)) {
+      const expanded = await this.listYouTubePlaylist(query, playlistLimit);
+      if (expanded && expanded.entries.length > 0) {
+        if (maxDurationMs > 0) {
+          expanded.entries = expanded.entries.filter((e) => !e.duration || e.duration * 1000 <= maxDurationMs);
+          if (expanded.entries.length === 0) throw new PlayError("tooLong", { max: maxDurationMs });
         }
-        console.warn("[DiscordPlayer] ⚠️ yt-dlp found no playlist entries, falling back to the extractor");
+        const result = await this.playExpandedPlaylist(
+          voiceChannel,
+          query,
+          expanded,
+          playOptions,
+          requestedBy,
+          audioBitrate,
+          startTime
+        );
+        return {
+          ...result,
+          added: result.searchResult.tracks.length,
+          position: isActive ? existingSize + 1 : 0,
+        };
       }
-
-      const result = await this.player.play(voiceChannel, query, playOptions);
-
-      const loadTime = Date.now() - startTime;
-      const isPlaylist = result.searchResult.hasPlaylist();
-      const playlist = result.searchResult.playlist;
-      
-      if (isPlaylist && playlist) {
-        console.log(`[DiscordPlayer] ⚡ Loaded playlist in ${loadTime}ms: ${playlist.title} (${result.searchResult.tracks.length} tracks) @ ${audioBitrate}kbps`);
-      } else {
-        console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title} @ ${audioBitrate}kbps`);
-      }
-
-      return {
-        track: result.track,
-        queue: result.queue,
-        searchResult: result.searchResult,
-        playlist: playlist || null,
-      };
-    } catch (error) {
-      console.error("[DiscordPlayer] Play error:", error);
-      throw error;
+      console.warn("[DiscordPlayer] ⚠️ yt-dlp found no playlist entries, falling back to the extractor");
     }
+
+    if (bridged?.kind === "collection") {
+      const result = await this.playBridgedCollection(voiceChannel, bridged, playOptions, requestedBy, maxDurationMs, options.next && isActive ? live : null);
+      return { ...result, position: options.next && isActive ? 1 : isActive ? existingSize + 1 : 0 };
+    }
+
+    const searchResult = await this.player.search(query, {
+      requestedBy: requestedBy ?? undefined,
+      // Local files go to AttachmentExtractor; non-URL queries are YouTube searches
+      searchEngine: isUrl ? QueryType.AUTO : isLocalFile ? QueryType.FILE : options.searchEngine ?? QueryType.YOUTUBE_SEARCH,
+    });
+
+    if (!searchResult || searchResult.isEmpty()) {
+      throw new PlayError("noResults", { query });
+    }
+
+    const playlist = searchResult.playlist ?? null;
+    let tracks = playlist ? [...searchResult.tracks] : [searchResult.tracks[0]];
+
+    if (maxDurationMs > 0) {
+      const allowed = tracks.filter((t) => !t.durationMS || t.durationMS <= maxDurationMs);
+      if (allowed.length === 0) throw new PlayError("tooLong", { max: maxDurationMs });
+      tracks = allowed;
+    }
+
+    if (!playlist && settings?.preventDuplicates && live) {
+      const url = tracks[0].url;
+      const already = live.currentTrack?.url === url || live.tracks.some((t) => t.url === url);
+      if (already) throw new PlayError("duplicate", { title: tracks[0].title });
+    }
+
+    tracks = tracks.slice(0, Math.max(1, playlistLimit));
+    searchResult.setTracks(tracks);
+
+    // "Play next": put the tracks at the front of an active queue.
+    if (options.next && isActive && live) {
+      tracks.forEach((track, index) => live.insertTrack(track, index));
+      console.log(`[DiscordPlayer] ⏭️ Queued next (${tracks.length}) in ${Date.now() - startTime}ms`);
+      return { track: tracks[0], queue: live, searchResult, playlist, added: tracks.length, position: 1 };
+    }
+
+    const result = await this.player.play(voiceChannel, searchResult, playOptions);
+
+    const loadTime = Date.now() - startTime;
+    if (playlist) {
+      console.log(`[DiscordPlayer] ⚡ Loaded playlist in ${loadTime}ms: ${playlist.title} (${tracks.length} tracks) @ ${audioBitrate}kbps`);
+    } else {
+      console.log(`[DiscordPlayer] ⚡ Loaded in ${loadTime}ms: ${result.track.title} @ ${audioBitrate}kbps`);
+    }
+
+    return {
+      track: result.track,
+      queue: result.queue,
+      searchResult: result.searchResult,
+      playlist,
+      added: tracks.length,
+      position: isActive ? existingSize + 1 : 0,
+    };
   }
 
   /**

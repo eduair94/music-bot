@@ -44,6 +44,8 @@ export class GuildSettingsService {
       autoLeaveTimeout: 300,
       preventDuplicates: false,
       voteSkipPercentage: 50,
+      autoplay: false,
+      stay247: { enabled: false, voiceChannelId: null, textChannelId: null, enabledBy: null, enabledAt: null },
       premium: {
         enabled: false,
         tier: "free",
@@ -55,7 +57,7 @@ export class GuildSettingsService {
       },
       blacklistedUsers: [],
       blacklistedSongs: [],
-      language: "en",
+      language: "auto",
       embedColor: "#F8AA2A",
       totalSongsPlayed: 0,
       totalPlaytime: 0,
@@ -351,6 +353,46 @@ export class GuildSettingsService {
     } catch (error) {
       console.error("[GuildSettings] Error fetching premium guilds:", error);
       return [];
+    }
+  }
+
+  /**
+   * Guilds with 24/7 mode on (rejoined on startup).
+   */
+  public async getStay247Guilds(): Promise<IGuildSettings[]> {
+    if (!DatabaseService.getInstance().isConnected()) {
+      return [];
+    }
+
+    try {
+      const guilds = await GuildSettings.find({ "stay247.enabled": true }).lean();
+      return guilds as IGuildSettings[];
+    } catch (error) {
+      console.error("[GuildSettings] Error fetching 24/7 guilds:", error);
+      return [];
+    }
+  }
+
+  /**
+   * One-time migration: before 2026-11 the stored language was never applied,
+   * and every new guild was saved with "en". Those guilds now follow each
+   * user's Discord language instead. Idempotent.
+   */
+  public async migrateUnusedLanguage(): Promise<number> {
+    if (!DatabaseService.getInstance().isConnected()) return 0;
+    try {
+      const res = await GuildSettings.updateMany(
+        // Only documents created before "auto" existed; the flag stops a later,
+        // deliberate choice of English from being flipped on the next boot.
+        { language: "en", languageMigrated: { $ne: true }, createdAt: { $lt: new Date("2026-11-27T00:00:00Z") } },
+        { $set: { language: "auto", languageMigrated: true } },
+        { strict: false }
+      );
+      this.cache.clear();
+      return res.modifiedCount ?? 0;
+    } catch (error) {
+      console.error("[GuildSettings] Language migration failed:", error);
+      return 0;
     }
   }
 }

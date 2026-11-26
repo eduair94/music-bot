@@ -27,6 +27,12 @@ export default {
       return interaction.editReply({ content: i18n.__("leave.errorNotInChannel") }).catch(console.error);
     }
 
+    // Only people listening (or server managers) can make the bot leave.
+    const listening = guildMember.voice.channelId === queue.channel?.id;
+    if (!listening && !guildMember.permissions.has("ManageGuild")) {
+      return interaction.editReply({ content: `🔇 ${i18n.__("player.notInVoice")}` }).catch(console.error);
+    }
+
     const channelName = queue.channel?.name || "voice channel";
     
     // Destroy the queue which disconnects the bot

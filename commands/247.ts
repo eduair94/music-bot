@@ -1,71 +1,60 @@
-import { useQueue } from "discord-player";
 import {
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    GuildMember,
-    PermissionFlagsBits,
-    SlashCommandBuilder
+  ChannelType,
+  ChatInputCommandInteraction,
+  GuildMember,
+  MessageFlags,
+  PermissionFlagsBits,
+  SlashCommandBuilder,
+  TextChannel
 } from "discord.js";
+import { GuildSettingsService } from "../services/guildSettings";
+import { PlayerPanelService } from "../services/playerPanel";
+import { Stay247Service } from "../services/stay247";
+import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 import { requirePremiumFeature } from "../utils/premiumCheck";
 
-// Track 24/7 mode per guild
-const twentyFourSevenMode = new Map<string, boolean>();
-
+/**
+ * /247 — keep the bot in its voice channel (also through restarts).
+ * Founder perk, or 12 h with a vote. Turning it off is always allowed.
+ */
 export default {
   data: new SlashCommandBuilder()
     .setName("247")
     .setDescription(i18n.__("247.description"))
+    .addBooleanOption((option) => option.setName("enabled").setDescription("On or off (default: toggle)"))
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
-  
-  async execute(interaction: ChatInputCommandInteraction) {
-    const member = interaction.member as GuildMember;
-    const guildId = interaction.guildId!;
+  category: "music",
 
-    // Premium gate: replies with the Founder offer when the user lacks it
+  async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    const member = interaction.member as GuildMember;
+    const settings = await GuildSettingsService.getInstance().getSettings(interaction.guildId);
+    const enabled = interaction.options.getBoolean("enabled") ?? !settings.stay247?.enabled;
+    const service = Stay247Service.getInstance();
+
+    if (!enabled) {
+      await service.disable(interaction.guild);
+      const queue = DiscordPlayerService.getInstance().getQueue(interaction.guildId);
+      if (queue && !queue.deleted) PlayerPanelService.getInstance().refresh(queue, true);
+      return interaction.reply({
+        content: `🌙 ${i18n.__mf("stay247.disabledNow", { minutes: Math.round((settings.autoLeaveTimeout ?? 300) / 60) })}`
+      });
+    }
+
+    // Premium gate: replies with the Founder/vote offer when the user lacks it
     if (!(await requirePremiumFeature(interaction, "stay_24_7"))) return;
 
-    if (!member.voice.channel) {
-      return interaction.reply({
-        content: i18n.__("247.notInVoice"),
-        ephemeral: true
-      });
+    const voice = member.voice.channel ?? interaction.guild.members.me?.voice.channel ?? null;
+    if (!voice) {
+      return interaction.reply({ content: `🔇 ${i18n.__("stay247.needVoice")}`, flags: MessageFlags.Ephemeral });
     }
 
-    const queue = useQueue(guildId);
-    
-    if (!queue) {
-      return interaction.reply({
-        content: i18n.__("247.noQueue"),
-        ephemeral: true
-      });
-    }
-
-    // Toggle 24/7 mode
-    const currentMode = twentyFourSevenMode.get(guildId) || false;
-    const newMode = !currentMode;
-    twentyFourSevenMode.set(guildId, newMode);
-
-    // Update queue settings
-    if (newMode) {
-      queue.node.setVolume(queue.node.volume); // Keep current volume
-      // Disable leave on empty/end
-    }
-
-    const embed = new EmbedBuilder()
-      .setTitle(i18n.__("247.title"))
-      .setDescription(newMode 
-        ? i18n.__("247.enabled") 
-        : i18n.__("247.disabled")
-      )
-      .setColor(newMode ? "#00FF00" : "#F8AA2A")
-      .setFooter({ text: i18n.__("247.footer") });
-
-    return interaction.reply({ embeds: [embed] });
+    const channel = interaction.channel;
+    const text = channel && channel.type === ChannelType.GuildText ? (channel as TextChannel) : null;
+    await interaction.deferReply();
+    await service.enable(interaction.guild, voice, text, interaction.user.id);
+    const queue = DiscordPlayerService.getInstance().getQueue(interaction.guildId);
+    if (queue && !queue.deleted) PlayerPanelService.getInstance().refresh(queue, true);
+    return interaction.editReply({ content: `🌙 ${i18n.__mf("stay247.enabledHere", { channel: `<#${voice.id}>` })}` });
   }
 };
-
-// Export for use in event handlers
-export function is247Mode(guildId: string): boolean {
-  return twentyFourSevenMode.get(guildId) || false;
-}

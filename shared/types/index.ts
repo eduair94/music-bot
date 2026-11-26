@@ -110,6 +110,18 @@ export interface GuildPremiumSettings {
  * Guild settings interface
  * Defines all customizable settings per Discord server
  */
+/** 24/7 mode state for a guild. */
+export interface IStay247Settings {
+  enabled: boolean;
+  /** Voice channel the bot keeps (re)joining */
+  voiceChannelId: string | null;
+  /** Text channel for the player panel after a rejoin */
+  textChannelId: string | null;
+  /** Who turned it on; their entitlement keeps it running */
+  enabledBy: string | null;
+  enabledAt: Date | null;
+}
+
 export interface IGuildSettings {
   /** Discord guild ID */
   guildId: string;
@@ -149,6 +161,10 @@ export interface IGuildSettings {
   preventDuplicates: boolean;
   /** Vote skip percentage (0-100) */
   voteSkipPercentage: number;
+  /** Keep queuing related tracks when the queue runs out */
+  autoplay?: boolean;
+  /** 24/7: stay connected and rejoin after restarts */
+  stay247?: IStay247Settings;
 
   // Premium Features
   /** Premium configuration */
@@ -176,7 +192,7 @@ export interface IGuildSettings {
   mappings?: Record<string, string>;
 
   // Customization
-  /** Locale override for this guild */
+  /** Server language ("auto" = each user's Discord language) */
   language: string;
   /** Custom embed color (hex) */
   embedColor: string;

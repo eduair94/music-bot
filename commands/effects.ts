@@ -164,21 +164,21 @@ export default {
       return interaction.editReply({ content: "❌ Unknown effect." }).catch(console.error);
     }
 
-    // Handle bassboost with levels
+    // Bass boost levels map to discord-player presets; only one is active at a time.
     if (subcommand === "bassboost") {
       const level = interaction.options.getString("level") || "medium";
-      const isEnabled = currentFilters.includes("bassboost");
-      
-      if (level === "off" && isEnabled) {
-        await queue.filters.ffmpeg.toggle(["bassboost"]);
+      const presets: Record<string, FilterName> = { low: "bassboost_low" as FilterName, medium: "bassboost" as FilterName, high: "bassboost_high" as FilterName };
+      const active = (["bassboost_low", "bassboost", "bassboost_high"] as FilterName[]).filter((f) => currentFilters.includes(f));
+      const target = presets[level];
+
+      if (active.length) await queue.filters.ffmpeg.toggle(active);
+      if (level === "off" || !target) {
         await logAction(interaction.guild!, interaction.user, "setting_change", "Bass boost Off");
-        return interaction.editReply({ content: `🔊 Bass boost disabled by <@${interaction.user.id}>` }).catch(console.error);
-      } else if (level !== "off") {
-        if (!isEnabled) await queue.filters.ffmpeg.toggle(["bassboost"]);
-        await logAction(interaction.guild!, interaction.user, "setting_change", `Bass boost ${level}`);
-        return interaction.editReply({ content: `🔊 Bass boost set to **${level}** by <@${interaction.user.id}>` }).catch(console.error);
+        return interaction.editReply({ content: active.length ? `🔊 Bass boost disabled by <@${interaction.user.id}>` : "🔊 Bass boost is already off." }).catch(console.error);
       }
-      return interaction.editReply({ content: "🔊 Bass boost is already off." }).catch(console.error);
+      await queue.filters.ffmpeg.toggle([target]);
+      await logAction(interaction.guild!, interaction.user, "setting_change", `Bass boost ${level}`);
+      return interaction.editReply({ content: `🔊 Bass boost set to **${level}** by <@${interaction.user.id}>` }).catch(console.error);
     }
 
     // Handle nightcore (mutually exclusive with vaporwave)

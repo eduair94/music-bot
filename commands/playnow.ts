@@ -1,101 +1,39 @@
-import { useQueue } from "discord-player";
-import {
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    GuildMember,
-    SlashCommandBuilder,
-    TextChannel
-} from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, MessageFlags, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { i18n } from "../utils/i18n";
+import { hasDJPermission } from "../utils/djPermission";
+import { descriptionLocalizations, i18n } from "../utils/i18n";
+import { runPlay } from "../utils/playFlow";
+import play from "./play";
 
+/** /playnow — play a song immediately, skipping the current one (DJ only). */
 export default {
   data: new SlashCommandBuilder()
     .setName("playnow")
     .setDescription(i18n.__("playnow.description"))
-    .addStringOption(option =>
+    .addStringOption((option) =>
       option
-        .setName("query")
-        .setDescription("Song name or URL")
+        .setName("song")
+        .setDescription(i18n.__("play.optionSong"))
+        .setDescriptionLocalizations(descriptionLocalizations("play.optionSong") ?? {})
         .setRequired(true)
+        .setAutocomplete(true)
     ),
-  
-  async execute(interaction: ChatInputCommandInteraction) {
-    const member = interaction.member as GuildMember;
-    
-    if (!member.voice.channel) {
-      return interaction.reply({
-        content: i18n.__("playnow.notInVoice"),
-        ephemeral: true
-      });
+  cooldown: 3,
+  category: "music",
+  permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
+  autocomplete: play.autocomplete,
+
+  async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    const queue = DiscordPlayerService.getInstance().getQueue(interaction.guildId);
+    const replacing = Boolean(queue && !queue.deleted && queue.currentTrack);
+
+    if (replacing && !(await hasDJPermission(interaction.member as GuildMember))) {
+      return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: MessageFlags.Ephemeral });
     }
 
-    await interaction.deferReply();
-
-    const query = interaction.options.getString("query", true);
-    const playerService = DiscordPlayerService.getInstance();
-    const textChannel = interaction.channel as TextChannel;
-    
-    try {
-      const queue = useQueue(interaction.guildId!);
-      
-      // First search for the track
-      const searchResult = await playerService.search(query);
-      
-      if (!searchResult || searchResult.tracks.length === 0) {
-        return interaction.editReply({
-          content: i18n.__("playnow.noResults")
-        });
-      }
-
-      const track = searchResult.tracks[0];
-      
-      if (queue && queue.currentTrack) {
-        // Insert at position 0 and skip to it
-        queue.insertTrack(track, 0);
-        queue.node.skip();
-        
-        const embed = new EmbedBuilder()
-          .setTitle(i18n.__("playnow.title"))
-          .setDescription(i18n.__mf("playnow.success", { 
-            title: track.title,
-            author: track.author
-          }))
-          .setThumbnail(track.thumbnail)
-          .setColor("#F8AA2A");
-
-        return interaction.editReply({ embeds: [embed] });
-      } else {
-        // No queue, just play normally
-        const result = await playerService.play(
-          member.voice.channel,
-          query,
-          textChannel,
-          128 // Default bitrate
-        );
-
-        if (!result) {
-          return interaction.editReply({
-            content: i18n.__("playnow.error")
-          });
-        }
-
-        const embed = new EmbedBuilder()
-          .setTitle(i18n.__("playnow.title"))
-          .setDescription(i18n.__mf("playnow.playing", { 
-            title: result.track.title,
-            author: result.track.author
-          }))
-          .setThumbnail(result.track.thumbnail)
-          .setColor("#F8AA2A");
-
-        return interaction.editReply({ embeds: [embed] });
-      }
-    } catch (error) {
-      console.error("Error in playnow:", error);
-      return interaction.editReply({
-        content: i18n.__("playnow.error")
-      });
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true });
+    if (result && replacing && result.position === 1) {
+      result.queue.node.skip();
     }
   }
 };

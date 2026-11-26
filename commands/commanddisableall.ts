@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, EmbedBuilder, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
-import { bot } from "../index";
+import { commands as registeredCommands } from "../structs/commandRegistry";
 import { Command } from "../interfaces/Command";
 import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
@@ -17,7 +17,7 @@ const commanddisableall: Command = {
         }
 
         const protectedCommands = ["commanddisable", "commanddisableall", "commandenable", "commandenableall", "help", "settings", "setup"];
-        const allCommands = Array.from(bot.slashCommandsMap.keys());
+        const allCommands = Array.from(registeredCommands.keys());
         const toDisable = allCommands.filter(cmd => !protectedCommands.includes(cmd));
 
         const svc = GuildSettingsService.getInstance();

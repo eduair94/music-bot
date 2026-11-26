@@ -1,69 +1,34 @@
-import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder } from "discord.js";
-import { useQueue } from "discord-player";
-import { DiscordPlayerService } from "../services/discordPlayer";
+import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { ensureAutoplayNext } from "../services/autoplay";
+import { QueueMetadata } from "../services/discordPlayer";
+import { PlayerPanelService } from "../services/playerPanel";
 import { i18n } from "../utils/i18n";
+import { runPlay } from "../utils/playFlow";
+import play from "./play";
 
+/**
+ * /radio <song> — start an endless station from one song: plays it, then
+ * keeps going with related songs (autoplay on).
+ */
 export default {
   data: new SlashCommandBuilder()
     .setName("radio")
-    .setDescription(i18n.__("radio.description")),
-  
-  async execute(interaction: ChatInputCommandInteraction) {
-    const member = interaction.member as GuildMember;
-    const voiceChannel = member.voice.channel;
+    .setDescription("Start an endless radio from a song or artist")
+    .addStringOption((option) =>
+      option.setName("song").setDescription(i18n.__("play.optionSong")).setRequired(true).setAutocomplete(true)
+    ),
+  cooldown: 5,
+  category: "music",
+  permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
+  autocomplete: play.autocomplete,
 
-    if (!voiceChannel) {
-      return interaction.reply({
-        content: i18n.__("radio.notInVoice"),
-        ephemeral: true
-      });
-    }
-
-    const queue = useQueue(interaction.guildId!);
-    
-    if (!queue || !queue.currentTrack) {
-      return interaction.reply({
-        content: i18n.__("radio.noTrack"),
-        ephemeral: true
-      });
-    }
-
-    await interaction.deferReply();
-
-    const currentTrack = queue.currentTrack;
-    const searchQuery = `${currentTrack.title} ${currentTrack.author} similar songs`;
-
-    try {
-      const playerService = DiscordPlayerService.getInstance();
-      const textChannel = interaction.channel as any;
-      
-      // Search for similar songs
-      const result = await playerService.play(voiceChannel, searchQuery, textChannel);
-      
-      if (!result) {
-        return interaction.editReply({
-          content: i18n.__("radio.noResults")
-        });
-      }
-
-      const embed = new EmbedBuilder()
-        .setTitle(i18n.__("radio.title"))
-        .setDescription(i18n.__mf("radio.started", { 
-          track: currentTrack.title,
-          added: result.track.title
-        }))
-        .setColor("#F8AA2A")
-        .setThumbnail(result.track.thumbnail || null);
-
-      // Enable autoplay for radio mode
-      queue.setRepeatMode(0); // Disable repeat
-      
-      return interaction.editReply({ embeds: [embed] });
-    } catch (error) {
-      console.error("[radio] Error:", error);
-      return interaction.editReply({
-        content: i18n.__("radio.error")
-      });
-    }
+  async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true) });
+    if (!result) return;
+    const metadata = (result.queue.metadata || {}) as QueueMetadata;
+    metadata.autoplay = true;
+    result.queue.metadata = metadata;
+    void ensureAutoplayNext(result.queue).then((added) => added && PlayerPanelService.getInstance().refresh(result.queue));
+    await interaction.followUp({ content: `📻 ${i18n.__("player.autoplayEnabled")}` }).catch(() => undefined);
   }
 };

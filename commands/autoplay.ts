@@ -1,56 +1,61 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
-import { DiscordPlayerService } from "../services/discordPlayer";
+import { ChatInputCommandInteraction, GuildMember, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { ensureAutoplayNext, isAutoplayTrack } from "../services/autoplay";
+import { DiscordPlayerService, QueueMetadata } from "../services/discordPlayer";
+import { GuildSettingsService } from "../services/guildSettings";
+import { PlayerPanelService } from "../services/playerPanel";
 import { logAction } from "../utils/actionLog";
 import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
-import { canModifyQueue } from "../utils/queue";
 
+/**
+ * /autoplay — when the queue runs out, keep playing related songs (from the
+ * YouTube mix of the last one). `default:true` makes it the server default.
+ */
 export default {
   data: new SlashCommandBuilder()
     .setName("autoplay")
-    .setDescription(i18n.__("autoplay.description")),
-  async execute(interaction: ChatInputCommandInteraction) {
-    await interaction.deferReply().catch(console.error);
-    
-    const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
-
-    if (!guildMember || !canModifyQueue(guildMember)) {
-      return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
+    .setDescription(i18n.__("autoplay.description"))
+    .addBooleanOption((option) => option.setName("enabled").setDescription("On or off (default: toggle)"))
+    .addBooleanOption((option) =>
+      option.setName("default").setDescription("Also make this the default for this server (Manage Server)")
+    ),
+  category: "music",
+  async execute(interaction: ChatInputCommandInteraction<"cached">) {
+    const member = interaction.member as GuildMember;
+    if (!(await hasDJPermission(member))) {
+      return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: MessageFlags.Ephemeral });
     }
 
-    const hasDJ = await hasDJPermission(guildMember as GuildMember);
-    if (!hasDJ) {
-      return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
-      }).catch(console.error);
+    const queue = DiscordPlayerService.getInstance().getQueue(interaction.guildId);
+    const metadata = (queue?.metadata || {}) as QueueMetadata;
+    const settingsService = GuildSettingsService.getInstance();
+    const settings = await settingsService.getSettings(interaction.guildId);
+
+    const current = queue && !queue.deleted ? Boolean(metadata.autoplay) : Boolean(settings.autoplay);
+    const enabled = interaction.options.getBoolean("enabled") ?? !current;
+    const makeDefault = interaction.options.getBoolean("default") ?? false;
+
+    if (makeDefault) {
+      if (!member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+        return interaction.reply({ content: `🔒 ${i18n.__("language.needManage")}`, flags: MessageFlags.Ephemeral });
+      }
+      await settingsService.updateSettings(interaction.guildId, { autoplay: enabled });
     }
 
-    const playerService = DiscordPlayerService.getInstance();
-    const queue = playerService.getQueue(interaction.guild!.id);
-    
-    if (!queue) {
-      return interaction.editReply({ content: i18n.__("autoplay.errorNotQueue") }).catch(console.error);
+    if (queue && !queue.deleted) {
+      metadata.autoplay = enabled;
+      queue.metadata = metadata;
+      if (enabled) {
+        void ensureAutoplayNext(queue).then((added) => added && PlayerPanelService.getInstance().refresh(queue));
+      } else {
+        for (const t of queue.tracks.toArray().filter(isAutoplayTrack)) queue.removeTrack(t);
+      }
+      PlayerPanelService.getInstance().refresh(queue, true);
     }
 
-    // Toggle autoplay
-    const wasEnabled = queue.options?.leaveOnEnd === false;
-    
-    // Enable/disable autoplay by toggling the leaveOnEnd option and setting enableAutoplay
-    if (wasEnabled) {
-      queue.options.leaveOnEnd = true;
-    } else {
-      queue.options.leaveOnEnd = false;
-    }
-    
-    // discord-player v6 uses queue.setRepeatMode() for autoplay functionality
-    // or we can use the queue's autoplay feature if available
-    const isEnabled = !wasEnabled;
-    
-    await logAction(interaction.guild!, interaction.user, "autoplay", isEnabled ? "On" : "Off");
-    
-    const content = i18n.__mf("autoplay.result", { 
-      status: isEnabled ? i18n.__("common.enabled") : i18n.__("common.disabled") 
+    await logAction(interaction.guild, interaction.user, "autoplay", enabled ? "On" : "Off");
+    return interaction.reply({
+      content: enabled ? `♾️ ${i18n.__("player.autoplayEnabled")}` : `⏹️ ${i18n.__("player.autoplayDisabled")}`
     });
-    return interaction.editReply({ content }).catch(console.error);
   }
 };

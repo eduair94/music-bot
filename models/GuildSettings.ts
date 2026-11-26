@@ -92,6 +92,17 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
       min: 0, 
       max: 100 
     },
+    autoplay: {
+      type: Boolean,
+      default: false
+    },
+    stay247: {
+      enabled: { type: Boolean, default: false },
+      voiceChannelId: { type: String, default: null },
+      textChannelId: { type: String, default: null },
+      enabledBy: { type: String, default: null },
+      enabledAt: { type: Date, default: null }
+    },
     
     // Premium Features
     premium: {
@@ -163,7 +174,7 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
     // Customization
     language: { 
       type: String, 
-      default: "en" 
+      default: "auto" 
     },
     embedColor: { 
       type: String, 
@@ -188,5 +199,6 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
 // Indexes for faster queries
 guildSettingsSchema.index({ "premium.enabled": 1, "premium.tier": 1 });
 guildSettingsSchema.index({ "premium.expiresAt": 1 });
+guildSettingsSchema.index({ "stay247.enabled": 1 });
 
 export const GuildSettings = model<IGuildSettings>("GuildSettings", guildSettingsSchema);

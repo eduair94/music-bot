@@ -5,6 +5,7 @@ import {
   SlashCommandBuilder 
 } from "discord.js";
 import { useQueue } from "discord-player";
+import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
 
 // Track voteskip votes per guild
@@ -34,9 +35,16 @@ export default {
       });
     }
 
-    const voiceChannel = member.voice.channel;
+    // Votes count among the people listening in the bot's channel, at the
+    // server's configured share (default 50%).
+    const voiceChannel = queue.channel;
+    if (!voiceChannel || member.voice.channelId !== voiceChannel.id) {
+      return interaction.reply({ content: i18n.__("player.notInVoice"), ephemeral: true });
+    }
     const listeners = voiceChannel.members.filter(m => !m.user.bot).size;
-    const requiredVotes = Math.ceil(listeners / 2);
+    const settings = await GuildSettingsService.getInstance().getSettings(interaction.guildId!);
+    const share = Math.min(100, Math.max(1, settings.voteSkipPercentage ?? 50)) / 100;
+    const requiredVotes = Math.max(1, Math.ceil(listeners * share));
 
     // Get or create vote set for this guild
     const guildId = interaction.guildId!;

@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction } from "discord.js";
 import { PatreonService } from "../services/patreon";
 import { PremiumFeature } from "./premiumFeatures";
 import { premiumUpsell } from "./upsell";
+import { hasActiveVote, isVotePerk } from "../services/votes";
 
 export { PREMIUM_FEATURES, type PremiumFeature } from "./premiumFeatures";
 
@@ -14,7 +15,9 @@ export async function hasPremiumFeature(
 ): Promise<boolean> {
   const patreonService = PatreonService.getInstance();
   const premiumInfo = await patreonService.getPremiumFeatures(userId);
-  return premiumInfo.features.includes(feature);
+  if (premiumInfo.features.includes(feature)) return true;
+  // A recent vote on a listing site unlocks some perks for 12 hours.
+  return isVotePerk(feature) && (await hasActiveVote(userId));
 }
 
 /**
@@ -27,7 +30,8 @@ export async function requirePremiumFeature(
 ): Promise<boolean> {
   if (await hasPremiumFeature(interaction.user.id, feature)) return true;
 
-  await interaction.reply(premiumUpsell(feature));
+  if (interaction.deferred || interaction.replied) await interaction.editReply(premiumUpsell(feature) as any);
+  else await interaction.reply(premiumUpsell(feature));
   return false;
 }
 

@@ -324,14 +324,9 @@ async function startBot(): Promise<void> {
 
     // Create Discord client
     client = new Client({
-        intents: [
-            GatewayIntentBits.Guilds,
-            GatewayIntentBits.GuildVoiceStates,
-            GatewayIntentBits.GuildMessages,
-            GatewayIntentBits.GuildMessageReactions,
-            GatewayIntentBits.MessageContent,
-            GatewayIntentBits.DirectMessages
-        ]
+        // Interactions only. MessageContent is privileged: a linked bot that
+        // hasn't enabled it in the Developer Portal is refused (close 4014).
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
     });
 
     // Handle ready event

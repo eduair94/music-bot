@@ -1,42 +1,55 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import { i18n } from "../utils/i18n";
-import { isSameSong, lyricsQueries, parseTrackForLyrics } from "../utils/lyricsQuery";
+import { ChatInputCommandInteraction, ContainerBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { SpotifyService } from "../services/spotify";
+import { findLyrics } from "../services/lyrics";
+import { safeText, truncate } from "../utils/format";
+import { descriptionLocalizations, i18n } from "../utils/i18n";
 
+/**
+ * /lyrics [query] — lyrics of what's playing, or of any song by name.
+ * Installable on a user account too, so it works in DMs and other servers.
+ */
 export default {
-  data: new SlashCommandBuilder().setName("lyrics").setDescription(i18n.__("lyrics.description")),
+  data: new SlashCommandBuilder()
+    .setName("lyrics")
+    .setDescription(i18n.__("lyrics.description"))
+    .addStringOption((option) =>
+      option
+        .setName("query")
+        .setDescription(i18n.__("lyricsCmd.optionQuery"))
+        .setDescriptionLocalizations(descriptionLocalizations("lyricsCmd.optionQuery") ?? {})
+        .setMaxLength(200)
+    )
+    .addBooleanOption((option) => option.setName("private").setDescription("Only you see the lyrics")),
+  cooldown: 4,
+  category: "info",
+  userInstallable: true,
+
   async execute(interaction: ChatInputCommandInteraction) {
-    const playerService = DiscordPlayerService.getInstance();
-    const queue = playerService.getQueue(interaction.guild!.id);
+    const query = interaction.options.getString("query")?.trim();
+    const queue = interaction.guildId ? DiscordPlayerService.getInstance().getQueue(interaction.guildId) : null;
+    const track = queue && !queue.deleted ? queue.currentTrack : null;
 
-    if (!queue || !queue.currentTrack) {
-      return interaction.reply(i18n.__("lyrics.errorNotQueue")).catch(console.error);
+    if (!query && !track) {
+      return interaction.reply({ content: `🎤 ${i18n.__("lyricsCmd.needQuery")}`, flags: MessageFlags.Ephemeral });
     }
 
-    await interaction.reply("⏳ Loading...").catch(console.error);
+    const ephemeral = interaction.options.getBoolean("private") ?? false;
+    await interaction.deferReply(ephemeral ? { flags: MessageFlags.Ephemeral } : {});
 
-    let lyrics: string | null = null;
-    const track = queue.currentTrack;
-    const title = track.title;
-    const lookup = parseTrackForLyrics(title, track.author || "");
+    const title = query ?? track!.title;
+    const author = query ? "" : track!.author || "";
+    const result = await findLyrics(title, author);
 
-    for (const query of lyricsQueries(lookup)) {
-      const found = await SpotifyService.getInstance().searchLyrics(query);
-      // search_lyrics answers for its top search hit; another song's lyrics are worse than none
-      if (found && isSameSong(lookup.title, found.trackName)) {
-        lyrics = found.lines.join("\n");
-        break;
-      }
+    if (!result) {
+      return interaction.editReply({ content: `🎤 ${i18n.__mf("lyrics.lyricsNotFound", { title: safeText(title, 80) })}` });
     }
-    if (!lyrics) lyrics = i18n.__mf("lyrics.lyricsNotFound", { title: title });
 
-    const lyricsEmbed = new EmbedBuilder()
-      .setTitle(i18n.__mf("lyrics.embedTitle", { title: title }))
-      .setDescription(lyrics.length >= 4096 ? `${lyrics.substring(0, 4093)}...` : lyrics)
-      .setColor("#F8AA2A")
-      .setTimestamp();
+    const container = new ContainerBuilder()
+      .setAccentColor(0xf8aa2a)
+      .addTextDisplayComponents((t) => t.setContent(`### 🎤 ${safeText(result.title, 80)} — ${safeText(result.artist, 60)}`))
+      .addTextDisplayComponents((t) => t.setContent(truncate(result.text, 3700)))
+      .addTextDisplayComponents((t) => t.setContent(`-# ${i18n.__mf("lyricsCmd.source", { source: result.source })}`));
 
-    return interaction.editReply({ content: "", embeds: [lyricsEmbed] }).catch(console.error);
+    return interaction.editReply({ components: [container], flags: MessageFlags.IsComponentsV2 } as any);
   }
 };

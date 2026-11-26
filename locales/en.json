@@ -1,4 +1,14 @@
 {
+  "247": {
+    "description": "Toggle 24/7 mode (bot stays in voice channel)",
+    "premiumRequired": "⭐ 24/7 mode is a premium feature. Use `/premium` for more info.",
+    "notInVoice": "You need to be in a voice channel.",
+    "noQueue": "There is no active queue.",
+    "title": "🌙 24/7 Mode",
+    "enabled": "24/7 mode **enabled**. Bot will stay in the voice channel indefinitely.",
+    "disabled": "24/7 mode **disabled**. Bot will leave when idle.",
+    "footer": "Premium feature"
+  },
   "clip": {
     "description": "Plays a clip sound",
     "usagesReply": "Usage: {prefix}clip <name>",
@@ -78,7 +88,32 @@
     "songNotFound": "Audio Not Found",
     "songAccessErr": "Video is age restricted, private or unavailable",
     "errorNoResults": "No results found for {url}",
-    "errorInvalidURL": "Invalid URL, please try a search or youtube url"
+    "errorInvalidURL": "Invalid URL, please try a search or youtube url",
+    "optionSong": "Song name or link (YouTube, Spotify, SoundCloud, Apple Music…)",
+    "optionNext": "Play it right after the current song",
+    "optionSource": "Where to search when you type a name",
+    "addedTitle": "Added to the queue",
+    "nowPlayingTitle": "Now playing",
+    "playlistTitle": "Playlist added",
+    "playlistTracks": "{count} songs",
+    "position": "Position #{position}",
+    "positionNext": "Plays next",
+    "notAllowedChannel": "I'm not allowed to play in this voice channel.",
+    "queueFull": "The queue is full ({max} songs).",
+    "tooLong": "That song is longer than this server's limit ({max}).",
+    "duplicate": "**{title}** is already in the queue.",
+    "noResults": "Nothing found for {query}.",
+    "initializing": "The player is starting up, try again in a few seconds.",
+    "ageRestricted": "That video is age-restricted.",
+    "private": "That video is private.",
+    "unavailable": "That video isn't available.",
+    "genericError": "Couldn't play that: {error}",
+    "searchSuggestion": "Search: {query}",
+    "botNotInChannel": "I'm already playing in {channel}. Join it to add songs.",
+    "cantJoin": "I can't join {channel}: I need the Connect and Speak permissions there.",
+    "contextName": "Play in voice channel",
+    "contextNextName": "Play next",
+    "contextNoQuery": "That message has no link, audio file or text I can play."
   },
   "playlist": {
     "description": "Play a playlist from youtube",
@@ -610,7 +645,11 @@
     "message": "Your votes help us grow and improve! Vote on the platforms below:",
     "rewards": "Voting Rewards",
     "rewardsList": "• Premium features for 12 hours\n• Exclusive voter badge\n• Higher audio quality",
-    "footer": "Thank you for your support!"
+    "footer": "Thank you for your support!",
+    "body": "Voting helps more servers find the bot. Each vote on top.gg unlocks **24/7 mode** and **studio quality** for you for 12 hours.",
+    "active": "Your vote perks are active for {time} more.",
+    "inactive": "No active vote. Vote below, perks start within a minute.",
+    "notListed": "Voting opens once the bot is listed. Thanks for wanting to help!"
   },
   "leaderboard": {
     "description": "View the session track leaderboard",
@@ -704,16 +743,6 @@
     "invalidChannel": "Invalid channel. Please select a text channel.",
     "title": "📢 Channel Rebound",
     "success": "Now sending announcements to {channel}."
-  },
-  "247": {
-    "description": "Toggle 24/7 mode (bot stays in voice channel)",
-    "premiumRequired": "⭐ 24/7 mode is a premium feature. Use `/premium` for more info.",
-    "notInVoice": "You need to be in a voice channel.",
-    "noQueue": "There is no active queue.",
-    "title": "🌙 24/7 Mode",
-    "enabled": "24/7 mode **enabled**. Bot will stay in the voice channel indefinitely.",
-    "disabled": "24/7 mode **disabled**. Bot will leave when idle.",
-    "footer": "Premium feature"
   },
   "disabledcommands": {
     "description": "View all disabled commands in this server",
@@ -952,5 +981,111 @@
     "description": "Toggle nightcore effect on the music",
     "errorNotQueue": "There is nothing playing.",
     "result": "<@{author}> 🎵 Nightcore effect is now {status}"
+  },
+  "player": {
+    "nowPlaying": "Now playing",
+    "paused": "Paused",
+    "live": "LIVE",
+    "requestedBy": "requested by {user}",
+    "autoplayPick": "picked by autoplay",
+    "upNext": "Up next: {title}",
+    "upNextMore": "Up next: {title} (+{count} more)",
+    "upNextAutoplay": "Autoplay will pick the next song",
+    "queueEmpty": "Nothing else queued. Add songs with /play",
+    "loopOff": "Loop off",
+    "loopTrack": "Looping this song",
+    "loopQueue": "Looping the queue",
+    "volume": "Volume {volume}%",
+    "autoplayOn": "Autoplay on",
+    "stay247On": "24/7 on",
+    "ended": "Queue finished. Use /play to keep the music going.",
+    "endedAutoplayHint": "Tip: turn on autoplay and the music never stops.",
+    "stopped": "Playback stopped.",
+    "disconnected": "Left the voice channel.",
+    "notInVoice": "Join my voice channel to use the controls.",
+    "needDj": "You need the DJ role to do that.",
+    "nothingPlaying": "Nothing is playing right now.",
+    "noPrevious": "There is no previous song.",
+    "shuffled": "Shuffled {count} songs.",
+    "nothingToShuffle": "Add at least two songs to shuffle.",
+    "dmSent": "Sent to your DMs.",
+    "dmClosed": "Your DMs are closed, so here it is:",
+    "savedFrom": "Saved from {guild}",
+    "lyricsNotFound": "No lyrics found for {title}.",
+    "lyricsLoading": "Looking for lyrics…",
+    "autoplayEnabled": "Autoplay on: related songs will keep playing.",
+    "autoplayDisabled": "Autoplay off.",
+    "volumeLimit": "This server caps the volume at {max}%."
+  },
+  "queueView": {
+    "title": "Queue",
+    "nowPlaying": "Now playing",
+    "empty": "The queue is empty. Add songs with /play",
+    "page": "Page {page} of {pages}",
+    "summary": "{count} songs · {duration} total",
+    "nothingPlaying": "Nothing is playing in this server."
+  },
+  "lyricsCmd": {
+    "optionQuery": "Song to search (defaults to what's playing)",
+    "needQuery": "Nothing is playing here. Tell me which song: /lyrics query:<song>",
+    "source": "Lyrics from {source}"
+  },
+  "welcome": {
+    "title": "Thanks for adding {bot}!",
+    "body": "Join a voice channel and type **/play** with a song name or a link from YouTube, Spotify, SoundCloud or Apple Music. Buttons under each song let anyone in the channel pause, skip, loop and more.",
+    "tips": "**/help** lists every command · **/settings** sets a DJ role, language and limits · **/autoplay** keeps related songs going",
+    "commands": "Commands",
+    "dashboard": "Dashboard",
+    "support": "Support server",
+    "vote": "Vote"
+  },
+  "router": {
+    "guildOnly": "This command only works in a server.",
+    "blacklisted": "You're not allowed to use this bot here.",
+    "channelNotAllowed": "Bot commands aren't allowed in this channel.",
+    "commandDisabled": "An admin turned off /{name} in this server.",
+    "cooldown": "Slow down! Try /{name} again in {time}s.",
+    "missingPermissions": "I'm missing permissions here: {permissions}",
+    "error": "Something went wrong running that. It's been logged; please try again.",
+    "expired": "These controls are no longer active."
+  },
+  "helpMenu": {
+    "title": "{bot} — commands",
+    "intro": "Join a voice channel and use </play:{playId}> with a song name or link. Pick a category below to see everything else.",
+    "pick": "Pick a category",
+    "category": {
+      "music": "Playback",
+      "queue": "Queue",
+      "effects": "Effects & filters",
+      "playlists": "Playlists",
+      "info": "Lyrics & info",
+      "settings": "Server settings",
+      "premium": "Premium & voting",
+      "other": "Other"
+    },
+    "categoryDesc": {
+      "music": "Play, pause, skip, seek, loop, autoplay",
+      "queue": "See, reorder and clean up the queue",
+      "effects": "Bass boost, nightcore, 8D, volume…",
+      "playlists": "Save and load your own playlists",
+      "info": "Lyrics, now playing, stats",
+      "settings": "DJ role, language, limits, channels",
+      "premium": "Founder perks, voting rewards",
+      "other": "Everything else"
+    },
+    "links": "Links"
+  },
+  "stay247": {
+    "enabledHere": "24/7 on: I'll stay in {channel} and rejoin it after restarts.",
+    "disabledNow": "24/7 off: I'll leave after {minutes} minutes of silence or an empty channel.",
+    "lost": "24/7 mode was turned off because the member who enabled it no longer has Founder or an active vote.",
+    "needVoice": "Join the voice channel I should stay in, then run /247 again."
+  },
+  "language": {
+    "description": "Set the language the bot uses in this server",
+    "optionLanguage": "Language (auto follows each member's Discord language)",
+    "auto": "Automatic (each member's Discord language)",
+    "set": "Language set to {language}.",
+    "needManage": "You need the Manage Server permission to change the language."
   }
 }

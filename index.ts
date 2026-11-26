@@ -73,12 +73,8 @@ process.on("message", (msg) => {
 
 export const bot = new Bot(
   new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildVoiceStates,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.GuildMessageReactions,
-      GatewayIntentBits.DirectMessages
-    ]
+    // Slash commands and buttons arrive as interactions; nothing reads
+    // messages or reactions, so only guild and voice state events are needed.
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]
   })
 );

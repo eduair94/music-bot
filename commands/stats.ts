@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import os from "os";
-import { bot } from "../index";
+
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
@@ -99,7 +99,7 @@ export default {
       }
 
       case "uptime": {
-        let seconds = Math.floor(bot.client.uptime! / 1000);
+        let seconds = Math.floor((interaction.client.uptime ?? 0) / 1000);
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);
         let days = Math.floor(hours / 24);

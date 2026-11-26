@@ -37,7 +37,7 @@ export default {
       return interaction.editReply({ content: i18n.__("volume.errorNotQueue") }).catch(console.error);
     }
 
-    if (!volumeArg) {
+    if (volumeArg === null || volumeArg === undefined) {
       return interaction.editReply({ content: i18n.__mf("volume.currentVolume", { volume: queue.node.volume }) }).catch(console.error);
     }
 

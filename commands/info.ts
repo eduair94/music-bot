@@ -5,7 +5,7 @@ import {
   version as djsVersion
 } from "discord.js";
 import { useQueue } from "discord-player";
-import { bot } from "../index";
+import { commands as registeredCommands } from "../structs/commandRegistry";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { SUPPORT_INVITE_URL } from "../shared/links";
 import { i18n } from "../utils/i18n";
@@ -69,7 +69,7 @@ export default {
               name: "📊 Statistics",
               value: [
                 `**Servers:** ${client.guilds.cache.size.toLocaleString()}`,
-                `**Commands:** ${bot.slashCommandsMap.size}`,
+                `**Commands:** ${registeredCommands.size}`,
                 `**Uptime:** ${uptimeString}`
               ].join("\n"),
               inline: true

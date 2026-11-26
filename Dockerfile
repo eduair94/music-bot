@@ -16,6 +16,7 @@ FROM deps AS build
 COPY tsconfig.json ./
 COPY index.ts ./
 COPY commands ./commands
+COPY contextMenus ./contextMenus
 COPY interfaces ./interfaces
 COPY locales ./locales
 COPY models ./models

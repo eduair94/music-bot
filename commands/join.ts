@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { i18n } from "../utils/i18n";
 
@@ -35,17 +35,8 @@ export default {
       }
       
       // Connect to the voice channel using the player
-      const queue = player.nodes.create(interaction.guild!, {
-        metadata: {
-          channel: interaction.channel,
-        },
-        selfDeaf: true,
-        volume: 80,
-        leaveOnEmpty: true,
-        leaveOnEmptyCooldown: 300000,
-        leaveOnEnd: true,
-        leaveOnEndCooldown: 300000,
-      });
+      // Server settings decide volume, leave timers and 24/7.
+      const queue = await playerService.createQueue(interaction.guild!, interaction.channel as TextChannel);
       
       if (!queue.connection) {
         await queue.connect(voiceChannel);

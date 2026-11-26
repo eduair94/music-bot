@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Permiss
 import { Command } from "../interfaces/Command";
 import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
-import { bot } from "../index";
+import { commands as registeredCommands } from "../structs/commandRegistry";
 
 const commanddisable: Command = {
     data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ const commanddisable: Command = {
     
     async autocomplete(interaction: AutocompleteInteraction) {
         const focused = interaction.options.getFocused().toLowerCase();
-        const commands = Array.from(bot.slashCommandsMap.keys())
+        const commands = Array.from(registeredCommands.keys())
             .filter(cmd => !["commanddisable", "commandenable", "help", "settings"].includes(cmd))
             .filter(cmd => cmd.toLowerCase().includes(focused))
             .slice(0, 25);
@@ -37,7 +37,7 @@ const commanddisable: Command = {
         }
 
         // Check if command exists
-        if (!bot.slashCommandsMap.has(commandName)) {
+        if (!registeredCommands.has(commandName)) {
             await interaction.reply({ content: `Command not found: \`${commandName}\``, ephemeral: true });
             return;
         }
@@ -55,7 +55,7 @@ const commanddisable: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: disabled });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("íº« Command Disabled")
+            .setTitle("ï¿½ï¿½ï¿½ Command Disabled")
             .setColor(0xe74c3c)
             .setDescription(`Command \`/${commandName}\` has been disabled in this server.\n\nUse \`/commandenable\` to re-enable it.`)] });
     }

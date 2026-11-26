@@ -1,17 +1,27 @@
 import {
-  ApplicationCommandDataResolvable,
+  ActivityType,
+  ApplicationIntegrationType,
+  AutocompleteInteraction,
+  ButtonBuilder,
+  ButtonStyle,
   ChatInputCommandInteraction,
   Client,
   Collection,
+  ContextMenuCommandInteraction,
   Events,
+  GuildMember,
   Interaction,
+  InteractionContextType,
+  MessageFlags,
+  PermissionFlagsBits,
   REST,
   Routes,
-  Snowflake
+  Snowflake,
+  ActionRowBuilder
 } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
-import { Command } from "../interfaces/Command";
+import { Command, ContextMenuCommand } from "../interfaces/Command";
 import { DashboardSyncService } from "../services/dashboardSync";
 import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
@@ -22,6 +32,7 @@ import { PatreonService } from "../services/patreon";
 import { collectGuildData, TelemetryService } from "../services/telemetry";
 import { commandEvent, errorEvent, guildEvent } from "../services/telemetry/events";
 import { ttsService } from "../services/tts";
+import { botInviteUrl } from "../shared/links";
 import {
   isRedisAvailable,
   removeBotFromGuild,
@@ -30,20 +41,31 @@ import {
 } from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
-import { i18n } from "../utils/i18n";
+import { localeForInteraction } from "../utils/guildLocale";
+import { descriptionLocalizations, i18n, runWithLocale } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
-import { safeReply } from "../utils/safeReply";
+import { commands as commandRegistry, contextMenus, setCommandId } from "./commandRegistry";
+import { getComponentHandler } from "./componentRouter";
+
+const EPHEMERAL = MessageFlags.Ephemeral;
 
 export class Bot {
   public readonly prefix = "/";
-  public commands = new Collection<string, Command>();
-  public slashCommands = new Array<ApplicationCommandDataResolvable>();
-  public slashCommandsMap = new Collection<string, Command>();
+  /** Loaded slash commands by name (same object as the shared registry). */
+  public readonly slashCommandsMap = commandRegistry;
   public cooldowns = new Collection<string, Collection<Snowflake, number>>();
+  private readonly loaded: Promise<void>;
 
   public constructor(public readonly client: Client) {
     // Install log buffer FIRST so every subsequent console.log is captured
     logBuffer.install();
+
+    // Load command modules before the gateway is ready, so interactions that
+    // arrive right after READY (commands stay registered across restarts)
+    // find their handler.
+    this.loaded = this.loadModules().catch((error) => {
+      console.error("[Bot] ❌ Failed to load commands:", error);
+    });
 
     this.client.login(config.TOKEN).catch((error) => {
       console.error("[Bot] ❌ Discord login failed:", error);
@@ -70,140 +92,7 @@ export class Bot {
     }, 5 * 60 * 1000);
     tokenWatchdog.unref();
 
-    this.client.once(Events.ClientReady, async () => {
-      console.log(`${this.client.user!.username} ready!`);
-
-      // Initialize Redis and sync guilds with detailed data
-      try {
-        if (await isRedisAvailable()) {
-          await syncBotGuildsWithData(collectGuildData(this.client));
-          console.log("✅ Redis sync completed");
-
-          // Periodic guild refresh (every 3 minutes to prevent key expiration).
-          // The online status itself is the TelemetryService heartbeat.
-          setInterval(async () => {
-            try {
-              await syncBotGuildsWithData(collectGuildData(this.client));
-            } catch (error) {
-              console.error("[Redis] Periodic guild sync failed:", error);
-            }
-          }, 3 * 60 * 1000);
-        } else {
-          console.log("⚠️ Redis not available, skipping guild sync");
-        }
-      } catch (error) {
-        console.error("⚠️ Redis initialization skipped:", error);
-      }
-
-      // Initialize database connection
-      try {
-        const dbService = DatabaseService.getInstance();
-        await dbService.connect(config.MONGODB_URI || "");
-        if (dbService.isReady()) {
-          console.log("✅ Database service initialized");
-        } else {
-          console.log("⚠️ Database service initialized but not ready - commands may fail initially");
-        }
-      } catch (error) {
-        console.error("⚠️ Database initialization skipped:", error);
-      }
-
-      // Initialize the discord-player service
-      try {
-        const playerService = DiscordPlayerService.getInstance();
-        await playerService.initialize(this.client);
-        console.log("✅ Discord Player service initialized");
-      } catch (error) {
-        console.error("❌ Failed to initialize Discord Player service:", error);
-      }
-
-      // Heartbeat + event telemetry (powers the owner admin console)
-      try {
-        TelemetryService.getInstance().start(this.client);
-      } catch (error) {
-        console.error("⚠️ Telemetry failed to start:", error);
-      }
-
-      // Initialize Dashboard Sync service (for web dashboard communication)
-      try {
-        const dashboardSync = DashboardSyncService.getInstance();
-        await dashboardSync.initialize(this.client);
-        console.log("✅ Dashboard Sync service initialized");
-      } catch (error) {
-        console.error("⚠️ Dashboard Sync initialization skipped:", error);
-      }
-
-      // Initialize Bot Manager service (for linked user bots)
-      try {
-        const { BotManagerService } = await import("../services/botManager");
-        const botManager = BotManagerService.getInstance();
-        await botManager.initialize();
-        console.log("✅ Bot Manager service initialized");
-      } catch (error) {
-        console.error("⚠️ Bot Manager initialization skipped:", error);
-      }
-
-      // Initialize Patreon service and sync patrons
-      try {
-        const patreonService = PatreonService.getInstance();
-        if (patreonService.isConfigured()) {
-          const syncedCount = await patreonService.syncAllPatrons();
-          console.log(`✅ Patreon service initialized (${syncedCount} patrons synced)`);
-          
-          // Set up periodic sync (every 30 minutes)
-          setInterval(async () => {
-            try {
-              await patreonService.syncAllPatrons();
-            } catch (error) {
-              console.error("[Patreon] Periodic sync failed:", error);
-            }
-          }, 30 * 60 * 1000);
-
-          // Note: Patreon webhooks are now handled by the Next.js dashboard
-          // Configure your Patreon webhooks to point to: {DASHBOARD_URL}/api/webhooks/patreon
-          console.log("✅ Patreon webhooks are handled by the dashboard at /api/webhooks/patreon");
-        } else {
-          console.log("⚠️ Patreon integration not configured (missing CAMPAIGN_ID or ACCESS_TOKEN)");
-        }
-      } catch (error) {
-        console.error("⚠️ Patreon initialization failed:", error);
-      }
-
-      // Initialize TTS service (for /say command)
-      try {
-        ttsService.initialize();
-      } catch (error) {
-        console.error("⚠️ TTS service initialization failed:", error);
-      }
-
-      // Start daily metrics snapshots (powers the dashboard growth analytics)
-      try {
-        const { MetricsSnapshotService } = await import("../services/metricsSnapshot");
-        MetricsSnapshotService.getInstance().start(this.client);
-        console.log("✅ Metrics snapshot service started");
-      } catch (error) {
-        console.error("⚠️ Metrics snapshot service failed to start:", error);
-      }
-
-      // Start debug panel (requires DEBUG_TOKEN env var)
-      try {
-        DebugPanel.getInstance().start(this.client);
-      } catch (error) {
-        console.error("⚠️ Debug panel failed to start:", error);
-      }
-
-      // Generate and display bot invite link
-      const clientId = this.client.user!.id;
-      const inviteLink = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&permissions=36700160&scope=bot%20applications.commands`;
-      console.log('\n=================================================');
-      console.log('Bot Invite Link:');
-      console.log(inviteLink);
-      console.log('=================================================\n');
-
-      this.registerSlashCommands().catch((error) => {
-        console.error("[Bot] ❌ Failed to register slash commands:", error);
-      });
-    });
+    this.client.once(Events.ClientReady, () => void this.onReady());
 
     this.client.on("warn", (info) => console.log(info));
     this.client.on("error", console.error);
@@ -215,6 +104,7 @@ export class Bot {
     });
     this.client.on(Events.ShardResume, (shardId, replayedEvents) => {
       console.log(`[Bot] ✅ Discord shard ${shardId} resumed (${replayedEvents} replayed events)`);
+      this.setPresence();
     });
     this.client.on(Events.ShardDisconnect, (event, shardId) => {
       console.warn(`[Bot] ⚠️ Discord shard ${shardId} disconnected (code ${event.code})`);
@@ -234,7 +124,7 @@ export class Bot {
     });
 
     // Guild join/leave events for Redis sync
-    this.client.on("guildCreate", async (guild) => {
+    this.client.on(Events.GuildCreate, async (guild) => {
       console.log(`[Bot] Joined guild: ${guild.name} (${guild.id})`);
       try {
         await setBotInGuild(guild.id, {
@@ -249,9 +139,12 @@ export class Bot {
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "join", name: guild.name, memberCount: guild.memberCount })
       );
+      const { sendWelcome } = await import("../services/welcome");
+      await sendWelcome(guild);
+      await this.notifyListsSoon();
     });
 
-    this.client.on("guildDelete", async (guild) => {
+    this.client.on(Events.GuildDelete, async (guild) => {
       console.log(`[Bot] Left guild: ${guild.name} (${guild.id})`);
       try {
         await removeBotFromGuild(guild.id);
@@ -261,154 +154,459 @@ export class Bot {
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "leave", name: guild.name, memberCount: guild.memberCount })
       );
+      await this.notifyListsSoon();
     });
 
-    this.onInteractionCreate();
+    this.client.on(Events.InteractionCreate, (interaction) => void this.handleInteraction(interaction));
+  }
+
+  // ------------------------------------------------------------------ startup
+
+  private async onReady(): Promise<void> {
+    console.log(`${this.client.user!.username} ready!`);
+    this.setPresence();
+    setInterval(() => this.setPresence(), 30 * 60 * 1000).unref();
+
+    // Initialize Redis and sync guilds with detailed data
+    try {
+      if (await isRedisAvailable()) {
+        await syncBotGuildsWithData(collectGuildData(this.client));
+        console.log("✅ Redis sync completed");
+
+        // Periodic guild refresh (every 3 minutes to prevent key expiration).
+        // The online status itself is the TelemetryService heartbeat.
+        setInterval(async () => {
+          try {
+            await syncBotGuildsWithData(collectGuildData(this.client));
+          } catch (error) {
+            console.error("[Redis] Periodic guild sync failed:", error);
+          }
+        }, 3 * 60 * 1000);
+      } else {
+        console.log("⚠️ Redis not available, skipping guild sync");
+      }
+    } catch (error) {
+      console.error("⚠️ Redis initialization skipped:", error);
+    }
+
+    // Initialize database connection
+    try {
+      const dbService = DatabaseService.getInstance();
+      await dbService.connect(config.MONGODB_URI || "");
+      if (dbService.isReady()) {
+        console.log("✅ Database service initialized");
+        const migrated = await GuildSettingsService.getInstance().migrateUnusedLanguage();
+        if (migrated) console.log(`✅ ${migrated} servers now follow each member's Discord language`);
+      } else {
+        console.log("⚠️ Database service initialized but not ready - commands may fail initially");
+      }
+    } catch (error) {
+      console.error("⚠️ Database initialization skipped:", error);
+    }
+
+    // Initialize the discord-player service, then the player panel and 24/7
+    try {
+      const playerService = DiscordPlayerService.getInstance();
+      await playerService.initialize(this.client);
+      console.log("✅ Discord Player service initialized");
+
+      const { PlayerPanelService } = await import("../services/playerPanel");
+      PlayerPanelService.getInstance().attach();
+
+      const { Stay247Service } = await import("../services/stay247");
+      void Stay247Service.getInstance().start(this.client);
+    } catch (error) {
+      console.error("❌ Failed to initialize Discord Player service:", error);
+    }
+
+    // Heartbeat + event telemetry (powers the owner admin console)
+    try {
+      TelemetryService.getInstance().start(this.client);
+    } catch (error) {
+      console.error("⚠️ Telemetry failed to start:", error);
+    }
+
+    // Initialize Dashboard Sync service (for web dashboard communication)
+    try {
+      const dashboardSync = DashboardSyncService.getInstance();
+      await dashboardSync.initialize(this.client);
+      console.log("✅ Dashboard Sync service initialized");
+    } catch (error) {
+      console.error("⚠️ Dashboard Sync initialization skipped:", error);
+    }
+
+    // Initialize Bot Manager service (for linked user bots)
+    try {
+      const { BotManagerService } = await import("../services/botManager");
+      const botManager = BotManagerService.getInstance();
+      await botManager.initialize();
+      console.log("✅ Bot Manager service initialized");
+    } catch (error) {
+      console.error("⚠️ Bot Manager initialization skipped:", error);
+    }
+
+    // Initialize Patreon service and sync patrons
+    try {
+      const patreonService = PatreonService.getInstance();
+      if (patreonService.isConfigured()) {
+        const syncedCount = await patreonService.syncAllPatrons();
+        console.log(`✅ Patreon service initialized (${syncedCount} patrons synced)`);
+
+        // Set up periodic sync (every 30 minutes)
+        setInterval(async () => {
+          try {
+            await patreonService.syncAllPatrons();
+          } catch (error) {
+            console.error("[Patreon] Periodic sync failed:", error);
+          }
+        }, 30 * 60 * 1000);
+
+        // Note: Patreon webhooks are handled by the Next.js dashboard at /api/webhooks/patreon
+        console.log("✅ Patreon webhooks are handled by the dashboard at /api/webhooks/patreon");
+      } else {
+        console.log("⚠️ Patreon integration not configured (missing CAMPAIGN_ID or ACCESS_TOKEN)");
+      }
+    } catch (error) {
+      console.error("⚠️ Patreon initialization failed:", error);
+    }
+
+    // Initialize TTS service (for /say command)
+    try {
+      ttsService.initialize();
+    } catch (error) {
+      console.error("⚠️ TTS service initialization failed:", error);
+    }
+
+    // Start daily metrics snapshots (powers the dashboard growth analytics)
+    try {
+      const { MetricsSnapshotService } = await import("../services/metricsSnapshot");
+      MetricsSnapshotService.getInstance().start(this.client);
+      console.log("✅ Metrics snapshot service started");
+    } catch (error) {
+      console.error("⚠️ Metrics snapshot service failed to start:", error);
+    }
+
+    // Server counts and command lists for bot listing sites (top.gg, …)
+    try {
+      const { BotListService } = await import("../services/botLists");
+      BotListService.getInstance().start(this.client);
+    } catch (error) {
+      console.error("⚠️ Bot list service failed to start:", error);
+    }
+
+    // Start debug panel (requires DEBUG_TOKEN env var)
+    try {
+      DebugPanel.getInstance().start(this.client);
+    } catch (error) {
+      console.error("⚠️ Debug panel failed to start:", error);
+    }
+
+    console.log("\n=================================================");
+    console.log("Bot Invite Link:");
+    console.log(botInviteUrl(this.client.user!.id));
+    console.log("=================================================\n");
+
+    this.registerSlashCommands().catch((error) => {
+      console.error("[Bot] ❌ Failed to register slash commands:", error);
+    });
+  }
+
+  private setPresence(): void {
+    try {
+      this.client.user?.setPresence({
+        status: "online",
+        activities: [{ name: "custom", type: ActivityType.Custom, state: "🎶 /play · /help · music-bot.checkleaked.com" }]
+      });
+    } catch (error) {
+      console.warn("[Bot] Could not set presence:", error);
+    }
+  }
+
+  private listTimer: NodeJS.Timeout | null = null;
+  /** Debounced server-count update for listing sites after joins/leaves. */
+  private async notifyListsSoon(): Promise<void> {
+    if (this.listTimer) return;
+    this.listTimer = setTimeout(async () => {
+      this.listTimer = null;
+      try {
+        const { BotListService } = await import("../services/botLists");
+        await BotListService.getInstance().postStats(this.client);
+      } catch (error) {
+        console.warn("[Bot] Listing stats update failed:", error);
+      }
+    }, 60_000);
+    this.listTimer.unref();
+  }
+
+  private async loadModules(): Promise<void> {
+    const isModule = (file: string) =>
+      (file.endsWith(".ts") || file.endsWith(".js")) && !file.endsWith(".d.ts") && !file.endsWith(".map");
+
+    const commandsPath = join(__dirname, "..", "commands");
+    for (const file of readdirSync(commandsPath).filter(isModule)) {
+      const mod = await import(join(commandsPath, file));
+      const command: Command | undefined = mod.default;
+      if (command?.data) commandRegistry.set(command.data.name, command);
+    }
+
+    const contextPath = join(__dirname, "..", "contextMenus");
+    try {
+      for (const file of readdirSync(contextPath).filter(isModule)) {
+        const mod = await import(join(contextPath, file));
+        const menu: ContextMenuCommand | undefined = mod.default;
+        if (menu?.data) contextMenus.set(menu.data.name, menu);
+      }
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    }
+
+    // Persistent component handlers register themselves on import.
+    await import("../services/helpMenu");
+    await import("../services/queueView");
+    await import("../services/playerPanel").then((m) => m.PlayerPanelService.getInstance());
+    console.log(`[Bot] Loaded ${commandRegistry.size} commands and ${contextMenus.size} context menus`);
+  }
+
+  /** Every command as Discord JSON, with install contexts and localized descriptions. */
+  public buildCommandPayload(): any[] {
+    const guildOnly = {
+      contexts: [InteractionContextType.Guild],
+      integration_types: [ApplicationIntegrationType.GuildInstall]
+    };
+    const everywhere = {
+      contexts: [InteractionContextType.Guild, InteractionContextType.BotDM, InteractionContextType.PrivateChannel],
+      integration_types: [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall]
+    };
+
+    const slash = [...commandRegistry.values()].map((command) => {
+      const json = command.data.toJSON() as any;
+      Object.assign(json, command.userInstallable ? everywhere : guildOnly);
+      json.description_localizations ??= descriptionLocalizations(`${json.name}.description`);
+      return json;
+    });
+    const menus = [...contextMenus.values()].map((menu) => {
+      const json = menu.data.toJSON() as any;
+      Object.assign(json, menu.userInstallable ? everywhere : guildOnly);
+      return json;
+    });
+    if (slash.length > 100) {
+      console.error(`[Bot] ❌ ${slash.length} slash commands exceed Discord's limit of 100; extra ones are dropped`);
+    }
+    return [...slash.slice(0, 100), ...menus];
   }
 
   private async registerSlashCommands() {
-    const rest = new REST({ version: "9" }).setToken(config.TOKEN);
+    await this.loaded;
+    const rest = new REST({ version: "10" }).setToken(config.TOKEN);
+    const body = this.buildCommandPayload();
+    const registered = (await rest.put(Routes.applicationCommands(this.client.user!.id), { body })) as {
+      id: string;
+      name: string;
+    }[];
+    for (const command of registered) setCommandId(command.name, command.id);
+    console.log(`[Bot] ✅ Registered ${registered.length} application commands`);
+  }
 
-    const commandsPath = join(__dirname, "..", "commands");
-    const commandFiles = readdirSync(commandsPath).filter((file) => {
-      // Only include .ts or .js files, exclude .map files and directories
-      const isValidExtension = file.endsWith(".ts") || file.endsWith(".js");
-      const isNotMapFile = !file.endsWith(".map") && !file.endsWith(".d.ts");
-      return isValidExtension && isNotMapFile;
-    });
+  // ------------------------------------------------------------ interactions
 
-    for (const file of commandFiles) {
-      const command = await import(join(commandsPath, file));
+  private async handleInteraction(interaction: Interaction): Promise<void> {
+    await this.loaded;
+    let locale;
+    try {
+      locale = await localeForInteraction(interaction);
+    } catch {
+      locale = undefined;
+    }
 
-      if (command.default?.data) {
-        this.slashCommands.push(command.default.data);
-        this.slashCommandsMap.set(command.default.data.name, command.default);
+    const run = async () => {
+      if (interaction.isChatInputCommand()) return this.handleChatInput(interaction);
+      if (interaction.isAutocomplete()) return this.handleAutocomplete(interaction);
+      if (interaction.isContextMenuCommand()) return this.handleContextMenu(interaction);
+      if (interaction.isMessageComponent() || interaction.isModalSubmit()) return this.handleComponent(interaction);
+    };
+
+    try {
+      await (locale ? runWithLocale(locale, run) : run());
+    } catch (error) {
+      console.error("[Bot] Unhandled interaction error:", error);
+    }
+  }
+
+  private async replyEphemeral(interaction: Interaction | ContextMenuCommandInteraction, content: string, components?: ActionRowBuilder<any>[]) {
+    if (!interaction.isRepliable()) return;
+    const payload = { content, flags: EPHEMERAL, components: components ?? [] } as const;
+    try {
+      if (interaction.deferred || interaction.replied) await interaction.followUp(payload);
+      else await interaction.reply(payload);
+    } catch (error) {
+      console.error("[Bot] Could not send reply:", (error as Error)?.message ?? error);
+    }
+  }
+
+  /** Blacklist, allowed channels and disabled commands. Returns an error message or null. */
+  private async guildGate(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, name: string): Promise<string | null> {
+    if (!interaction.inCachedGuild()) return null;
+    const settingsService = GuildSettingsService.getInstance();
+    const settings = await settingsService.getSettings(interaction.guildId);
+
+    if (settings.blacklistedUsers?.includes(interaction.user.id)) return `❌ ${i18n.__("router.blacklisted")}`;
+
+    const member = interaction.member as GuildMember;
+    const isManager = member.permissions.has(PermissionFlagsBits.ManageGuild);
+
+    if (!isManager && interaction.channelId && settings.allowedTextChannels?.length) {
+      // Threads inherit their parent's permission.
+      const channel = interaction.channel;
+      const parentId = channel && "parentId" in channel && channel.isThread() ? channel.parentId : null;
+      const allowed = settings.allowedTextChannels.includes(interaction.channelId) || (parentId && settings.allowedTextChannels.includes(parentId));
+      if (!allowed) return `❌ ${i18n.__("router.channelNotAllowed")}`;
+    }
+
+    if (!isManager && settings.disabledCommands?.includes(name)) {
+      return `🚫 ${i18n.__mf("router.commandDisabled", { name })}`;
+    }
+    return null;
+  }
+
+  private checkCooldown(name: string, userId: string, seconds: number): number {
+    if (!this.cooldowns.has(name)) this.cooldowns.set(name, new Collection());
+    const timestamps = this.cooldowns.get(name)!;
+    const now = Date.now();
+    const cooldownAmount = seconds * 1000;
+    const timestamp = timestamps.get(userId);
+    if (timestamp && now < timestamp + cooldownAmount) return (timestamp + cooldownAmount - now) / 1000;
+    timestamps.set(userId, now);
+    setTimeout(() => timestamps.delete(userId), cooldownAmount).unref();
+    return 0;
+  }
+
+  private async handleChatInput(interaction: ChatInputCommandInteraction): Promise<unknown> {
+    const command = commandRegistry.get(interaction.commandName);
+    if (!command) return this.replyEphemeral(interaction, `⚠️ ${i18n.__("router.expired")}`);
+
+    // A guild command used where the bot user isn't a member (user-installed,
+    // or invited without the bot scope): offer to add it there.
+    if (!command.userInstallable && !interaction.inCachedGuild()) {
+      const invite = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setURL(botInviteUrl(this.client.user!.id, interaction.guildId ?? undefined))
+          .setLabel("Add to server")
+          .setEmoji("➕")
+          .setStyle(ButtonStyle.Link)
+      );
+      return this.replyEphemeral(interaction, `🎵 ${i18n.__("router.guildOnly")}`, [invite]);
+    }
+
+    const blocked = await this.guildGate(interaction, interaction.commandName);
+    if (blocked) return this.replyEphemeral(interaction, blocked);
+
+    const wait = this.checkCooldown(interaction.commandName, interaction.user.id, command.cooldown || 1);
+    if (wait > 0) {
+      return this.replyEphemeral(interaction, `⏳ ${i18n.__mf("router.cooldown", { name: interaction.commandName, time: wait.toFixed(1) })}`);
+    }
+
+    const telemetry = TelemetryService.getInstance();
+    const startedAt = Date.now();
+    const subcommand = interaction.options.getSubcommand(false);
+    const guildIdForEvent = interaction.guildId ?? "dm";
+
+    try {
+      if (interaction.inCachedGuild()) {
+        const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
+        if (!permissionsCheck.result) throw new MissingPermissionsException(permissionsCheck.missing);
+      }
+
+      await command.execute(interaction);
+
+      telemetry.record(
+        commandEvent({
+          guildId: guildIdForEvent,
+          userId: interaction.user.id,
+          command: interaction.commandName,
+          subcommand,
+          ok: true,
+          durationMs: Date.now() - startedAt
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+
+      telemetry.record(
+        commandEvent({
+          guildId: guildIdForEvent,
+          userId: interaction.user.id,
+          command: interaction.commandName,
+          subcommand,
+          ok: false,
+          durationMs: Date.now() - startedAt,
+          error
+        })
+      );
+
+      if (error instanceof MissingPermissionsException) {
+        return this.replyEphemeral(
+          interaction,
+          `🔒 ${i18n.__mf("router.missingPermissions", { permissions: error.permissions.join(", ") })}`
+        );
+      }
+
+      telemetry.noteError("command", error);
+      telemetry.record(errorEvent({ scope: "command", error, guildId: guildIdForEvent, command: interaction.commandName }));
+      return this.replyEphemeral(interaction, `⚠️ ${i18n.__("router.error")}`);
+    }
+  }
+
+  private async handleAutocomplete(interaction: AutocompleteInteraction): Promise<void> {
+    const command = commandRegistry.get(interaction.commandName);
+    try {
+      if (command?.autocomplete) await command.autocomplete(interaction);
+      else await interaction.respond([]);
+    } catch (error) {
+      console.warn(`[Bot] Autocomplete for /${interaction.commandName} failed:`, (error as Error)?.message ?? error);
+      if (!interaction.responded) await interaction.respond([]).catch(() => undefined);
+    }
+  }
+
+  private async handleContextMenu(interaction: ContextMenuCommandInteraction): Promise<unknown> {
+    const menu = contextMenus.get(interaction.commandName);
+    if (!menu) return this.replyEphemeral(interaction, `⚠️ ${i18n.__("router.expired")}`);
+
+    const blocked = await this.guildGate(interaction, interaction.commandName);
+    if (blocked) return this.replyEphemeral(interaction, blocked);
+
+    const wait = this.checkCooldown(interaction.commandName, interaction.user.id, menu.cooldown || 2);
+    if (wait > 0) {
+      return this.replyEphemeral(interaction, `⏳ ${i18n.__mf("router.cooldown", { name: interaction.commandName, time: wait.toFixed(1) })}`);
+    }
+
+    try {
+      await menu.execute(interaction as any);
+    } catch (error) {
+      console.error(`[Bot] Context menu "${interaction.commandName}" failed:`, error);
+      TelemetryService.getInstance().noteError("command", error);
+      return this.replyEphemeral(interaction, `⚠️ ${i18n.__("router.error")}`);
+    }
+  }
+
+  private async handleComponent(interaction: Interaction): Promise<unknown> {
+    if (!interaction.isMessageComponent() && !interaction.isModalSubmit()) return;
+    const found = getComponentHandler(interaction.customId);
+    // Not ours: a command's own collector is handling it.
+    if (!found) return;
+
+    if (interaction.inCachedGuild()) {
+      const settings = await GuildSettingsService.getInstance().getSettings(interaction.guildId);
+      if (settings.blacklistedUsers?.includes(interaction.user.id)) {
+        return this.replyEphemeral(interaction, `❌ ${i18n.__("router.blacklisted")}`);
       }
     }
 
-    await rest.put(Routes.applicationCommands(this.client.user!.id), { body: this.slashCommands });
-  }
-
-  private async onInteractionCreate() {
-    this.client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<any> => {
-      if (!interaction.isChatInputCommand()) return;
-
-      const command = this.slashCommandsMap.get(interaction.commandName);
-
-      if (!command) return;
-
-      // Commands assume a guild context (interaction.guild!.id, voice channels, etc.)
-      if (!interaction.guild) {
-        return interaction.reply({
-          content: "❌ Commands can only be used in a server.",
-          ephemeral: true
-        }).catch(console.error);
-      }
-
-      // Check guild settings for blacklisted users and allowed channels
-      const guildId = interaction.guild?.id;
-      if (guildId) {
-        const settingsService = GuildSettingsService.getInstance();
-        const channelId = interaction.channel?.id;
-        
-        // Run both checks in parallel for faster response
-        const [isBlacklisted, isChannelAllowed] = await Promise.all([
-          settingsService.isUserBlacklisted(guildId, interaction.user.id),
-          channelId ? settingsService.isTextChannelAllowed(guildId, channelId) : Promise.resolve(true)
-        ]);
-
-        if (isBlacklisted) {
-          return interaction.reply({
-            content: "❌ You are not allowed to use this bot.",
-            ephemeral: true
-          });
-        }
-
-        if (!isChannelAllowed) {
-          return interaction.reply({
-            content: "❌ Bot commands are not allowed in this channel.",
-            ephemeral: true
-          });
-        }
-      }
-
-      if (!this.cooldowns.has(interaction.commandName)) {
-        this.cooldowns.set(interaction.commandName, new Collection());
-      }
-
-      const now = Date.now();
-      const timestamps = this.cooldowns.get(interaction.commandName)!;
-      const cooldownAmount = (command.cooldown || 1) * 1000;
-
-      const timestamp = timestamps.get(interaction.user.id);
-
-      if (timestamp) {
-        const expirationTime = timestamp + cooldownAmount;
-
-        if (now < expirationTime) {
-          const timeLeft = (expirationTime - now) / 1000;
-          return interaction.reply({
-            content: i18n.__mf("common.cooldownMessage", {
-              time: timeLeft.toFixed(1),
-              name: interaction.commandName
-            }),
-            ephemeral: true
-          });
-        }
-      }
-
-      timestamps.set(interaction.user.id, now);
-      setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
-
-      const telemetry = TelemetryService.getInstance();
-      const startedAt = Date.now();
-      const subcommand = interaction.options.getSubcommand(false);
-      const guildIdForEvent = interaction.guild.id;
-
-      try {
-        const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
-
-        if (permissionsCheck.result) {
-          await command.execute(interaction as ChatInputCommandInteraction);
-        } else {
-          throw new MissingPermissionsException(permissionsCheck.missing);
-        }
-
-        telemetry.record(
-          commandEvent({
-            guildId: guildIdForEvent,
-            userId: interaction.user.id,
-            command: interaction.commandName,
-            subcommand,
-            ok: true,
-            durationMs: Date.now() - startedAt
-          })
-        );
-      } catch (error: any) {
-        console.error(error);
-
-        telemetry.record(
-          commandEvent({
-            guildId: guildIdForEvent,
-            userId: interaction.user.id,
-            command: interaction.commandName,
-            subcommand,
-            ok: false,
-            durationMs: Date.now() - startedAt,
-            error
-          })
-        );
-        if (!(error instanceof MissingPermissionsException)) {
-          telemetry.noteError("command", error);
-          telemetry.record(errorEvent({ scope: "command", error, guildId: guildIdForEvent, command: interaction.commandName }));
-        }
-
-        const message = typeof error?.message === "string" && error.message.includes("permissions")
-          ? error.toString()
-          : i18n.__("common.errorCommand");
-
-        await safeReply(interaction, { content: message, ephemeral: true });
-      }
-    });
+    try {
+      await found.handler(interaction, found.args);
+    } catch (error) {
+      console.error(`[Bot] Component "${interaction.customId}" failed:`, error);
+      TelemetryService.getInstance().noteError("command", error);
+      return this.replyEphemeral(interaction, `⚠️ ${i18n.__("router.error")}`);
+    }
   }
 }

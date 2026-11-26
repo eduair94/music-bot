@@ -1,5 +1,6 @@
 import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";
+import { hasActiveVote } from "../services/votes";
 import { config } from "./config";
 
 /**
@@ -86,6 +87,10 @@ export async function getAudioQuality(userId: string, guildId: string): Promise<
   } else if (guildBitrate > 128) {
     bitrate = guildBitrate;
     source = "guild";
+  } else if (await hasActiveVote(userId)) {
+    // Vote perk: studio quality for 12 hours
+    bitrate = 320;
+    source = "user";
   } else {
     bitrate = 128;
     source = "default";
