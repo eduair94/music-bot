@@ -29,6 +29,7 @@ export async function setVoiceStatus(client: Client, channelId: string | null | 
     const code = error instanceof DiscordAPIError ? error.code : undefined;
     // 50013 Missing Permissions, 50001 Missing Access, 10003 Unknown Channel
     if (code === 50013 || code === 50001 || code === 10003) {
+      if (!denied.has(channelId)) console.log(`[VoiceStatus] No permission to set status in ${channelId} (${code}); skipping for 1 h`);
       denied.set(channelId, Date.now());
       return;
     }

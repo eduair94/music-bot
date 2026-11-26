@@ -181,11 +181,14 @@ export class DashboardSyncService {
       }
 
       // Upsert the state to MongoDB (backup/persistence)
-      await PlaybackState.findOneAndUpdate(
-        { guildId },
-        state,
-        { upsert: true, new: true }
-      );
+      // Two events in the same tick (trackAdd + playerStart) can both try to
+      // insert; the loser hits E11000 and just updates the winner's document.
+      try {
+        await PlaybackState.findOneAndUpdate({ guildId }, state, { upsert: true, new: true });
+      } catch (error: any) {
+        if (error?.code !== 11000) throw error;
+        await PlaybackState.findOneAndUpdate({ guildId }, state, { new: true });
+      }
 
       console.log(`[DashboardSync] 📤 Updated playback state for guild ${guildId}`);
     } catch (error) {
