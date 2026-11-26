@@ -10,19 +10,13 @@ export default {
     const dashboardUrl = process.env.DASHBOARD_URL || "https://music-bot.checkleaked.com";
     
     const embed = new EmbedBuilder()
-      .setTitle("🎛️ Bot Dashboard")
+      .setTitle(`🎛️ ${i18n.__("dashboard.title")}`)
       .setDescription(i18n.__("dashboard.embedDescription"))
       .setColor("#F8AA2A")
       .addFields(
         {
-          name: "✨ Features",
-          value: [
-            "• Configure server settings",
-            "• View queue and playback controls",
-            "• Manage playlists and collections",
-            "• View listening statistics",
-            "• Premium features management"
-          ].join("\n"),
+          name: `✨ ${i18n.__("dashboard.features")}`,
+          value: i18n.__("dashboard.featuresList"),
           inline: false
         }
       )
@@ -31,7 +25,7 @@ export default {
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
-        .setLabel("Open Dashboard")
+        .setLabel(i18n.__("dashboard.open"))
         .setStyle(ButtonStyle.Link)
         .setURL(dashboardUrl)
         .setEmoji("🌐")

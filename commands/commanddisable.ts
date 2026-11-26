@@ -7,8 +7,8 @@ import { commands as registeredCommands } from "../structs/commandRegistry";
 const commanddisable: Command = {
     data: new SlashCommandBuilder()
         .setName("commanddisable")
-        .setDescription("Disable commands in this server")
-        .addStringOption(opt => opt.setName("command").setDescription("Command to disable").setRequired(true).setAutocomplete(true))
+        .setDescription(i18n.__("commanddisable.description"))
+        .addStringOption(opt => opt.setName("command").setDescription(i18n.__("commanddisable.optionCommand")).setRequired(true).setAutocomplete(true))
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild) as SlashCommandBuilder,
     
     async autocomplete(interaction: AutocompleteInteraction) {
@@ -32,13 +32,13 @@ const commanddisable: Command = {
         // Prevent disabling essential commands
         const protectedCommands = ["commanddisable", "commandenable", "help", "settings", "setup"];
         if (protectedCommands.includes(commandName)) {
-            await interaction.reply({ content: `Cannot disable essential command: \`${commandName}\``, ephemeral: true });
+            await interaction.reply({ content: i18n.__mf("commanddisable.protected", { command: `\`${commandName}\`` }), ephemeral: true });
             return;
         }
 
         // Check if command exists
         if (!registeredCommands.has(commandName)) {
-            await interaction.reply({ content: `Command not found: \`${commandName}\``, ephemeral: true });
+            await interaction.reply({ content: i18n.__mf("commanddisable.notFound", { command: `\`${commandName}\`` }), ephemeral: true });
             return;
         }
 
@@ -47,7 +47,7 @@ const commanddisable: Command = {
         const disabled = settings.disabledCommands || [];
         
         if (disabled.includes(commandName)) {
-            await interaction.reply({ content: `Command \`${commandName}\` is already disabled.`, ephemeral: true });
+            await interaction.reply({ content: i18n.__mf("commanddisable.alreadyDisabled", { command: `\`${commandName}\`` }), ephemeral: true });
             return;
         }
 
@@ -55,9 +55,9 @@ const commanddisable: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: disabled });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("��� Command Disabled")
+            .setTitle(`🚫 ${i18n.__("commanddisable.title")}`)
             .setColor(0xe74c3c)
-            .setDescription(`Command \`/${commandName}\` has been disabled in this server.\n\nUse \`/commandenable\` to re-enable it.`)] });
+            .setDescription(i18n.__mf("commanddisable.done", { command: `\`/${commandName}\`` }))] });
     }
 };
 

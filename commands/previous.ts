@@ -21,7 +21,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -42,7 +42,7 @@ export default {
       await history.previous();
       const previousTrack = queue.currentTrack;
       
-      await logAction(interaction.guild!, interaction.user, "previous", previousTrack?.title || "previous track");
+      await logAction(interaction.guild!, interaction.user, "previous", () => previousTrack?.title || i18n.__("actionLog.detail.previousTrack"));
       
       return interaction.editReply({ 
         content: i18n.__mf("previous.result", { author: interaction.user.id })

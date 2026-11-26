@@ -19,7 +19,7 @@ export default {
     .addIntegerOption((option) =>
       option
         .setName("seconds")
-        .setDescription("Number of seconds to rewind")
+        .setDescription(i18n.__("rewind.optionSeconds"))
         .setRequired(false)
         .setMinValue(1)
         .setMaxValue(300)
@@ -36,7 +36,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 

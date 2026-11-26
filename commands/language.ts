@@ -36,7 +36,7 @@ export default {
     const value = interaction.options.getString("language", true);
     const valid = value === "auto" || (BOT_LOCALES as readonly string[]).includes(value);
     if (!valid) {
-      return interaction.reply({ content: "❌ Unknown language.", flags: MessageFlags.Ephemeral });
+      return interaction.reply({ content: `❌ ${i18n.__("language.unknown")}`, flags: MessageFlags.Ephemeral });
     }
     await GuildSettingsService.getInstance().updateSettings(interaction.guildId, { language: value });
 

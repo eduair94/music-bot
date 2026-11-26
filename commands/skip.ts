@@ -21,7 +21,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -55,7 +55,7 @@ export default {
     console.log(`[skip] Queue is idle after skip: ${queue.node.isIdle()}`);
     
     // Log the action
-    await logAction(interaction.guild!, interaction.user, "skip", trackTitle);
+    await logAction(interaction.guild!, interaction.user, "skip", () => currentTrack?.title || i18n.__("actionLog.detail.currentTrack"));
     
     return interaction.editReply({ content: i18n.__mf("skip.result", { author: interaction.user.id }) }).catch(console.error);
   }

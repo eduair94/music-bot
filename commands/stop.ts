@@ -21,7 +21,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -32,10 +32,10 @@ export default {
       return interaction.editReply({ content: i18n.__("stop.errorNotQueue") }).catch(console.error);
     }
 
-    const trackTitle = queue.currentTrack?.title || "Queue";
+    const trackTitle = queue.currentTrack?.title;
     
     // Log the action before deleting
-    await logAction(interaction.guild!, interaction.user, "stop", trackTitle);
+    await logAction(interaction.guild!, interaction.user, "stop", () => trackTitle || i18n.__("actionLog.detail.queue"));
     
     queue.delete();
     return interaction.editReply({ content: i18n.__mf("stop.result", { author: interaction.user.id }) }).catch(console.error);

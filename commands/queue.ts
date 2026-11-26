@@ -8,7 +8,7 @@ export default {
   data: new SlashCommandBuilder()
     .setName("queue")
     .setDescription(i18n.__("queue.description"))
-    .addIntegerOption((option) => option.setName("page").setDescription("Page number").setMinValue(1)),
+    .addIntegerOption((option) => option.setName("page").setDescription(i18n.__("queue.optionPage")).setMinValue(1)),
   cooldown: 3,
   category: "queue",
   async execute(interaction: ChatInputCommandInteraction<"cached">) {

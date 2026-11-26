@@ -21,21 +21,21 @@ export default {
     .addStringOption((option) =>
       option
         .setName("text")
-        .setDescription("Text to convert to speech")
+        .setDescription(i18n.__("say.optionText"))
         .setRequired(true)
         .setMaxLength(500)
     )
     .addStringOption((option) =>
       option
         .setName("language")
-        .setDescription("Language for speech (uses saved config if not specified)")
+        .setDescription(i18n.__("say.optionLanguage"))
         .setRequired(false)
         .addChoices(...TTS_LANGUAGES.map(lang => ({ name: lang, value: lang })))
     )
     .addStringOption((option) =>
       option
         .setName("voice")
-        .setDescription("Voice to use (uses saved config if not specified)")
+        .setDescription(i18n.__("say.optionVoice"))
         .setRequired(false)
         .addChoices(...TTS_SPEAKERS.map(speaker => ({ name: speaker, value: speaker })))
     ),
@@ -72,7 +72,7 @@ export default {
 
     if (!playerService.isInitialized()) {
       return interaction.reply({
-        content: "❌ Music player is still initializing. Please try again in a few seconds.",
+        content: `❌ ${i18n.__("common.playerInitializing")}`,
         ephemeral: true,
       }).catch(console.error);
     }
@@ -87,7 +87,7 @@ export default {
         const isVoiceChannelAllowed = await settingsService.isVoiceChannelAllowed(guildId, voiceChannel.id);
         if (!isVoiceChannelAllowed) {
           return interaction.editReply({
-            content: "❌ The bot is not allowed to play in this voice channel. Please use an allowed channel."
+            content: `❌ ${i18n.__("common.voiceChannelNotAllowed")}`
           }).catch(console.error);
         }
       }

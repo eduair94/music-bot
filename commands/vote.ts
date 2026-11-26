@@ -24,7 +24,7 @@ export default {
 
     const container = new ContainerBuilder()
       .setAccentColor(0xf8aa2a)
-      .addTextDisplayComponents((t) => t.setContent(`## 🗳️ ${i18n.__mf("vote.title", { bot })}`));
+      .addTextDisplayComponents((t) => t.setContent(`## 🗳️ ${i18n.__mf("vote.heading", { bot })}`));
 
     if (listed.length === 0) {
       container.addTextDisplayComponents((t) => t.setContent(i18n.__("vote.notListed")));

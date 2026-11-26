@@ -29,7 +29,13 @@
   "loop": {
     "description": "Toggle music loop",
     "errorNotQueue": "There is nothing playing.",
-    "result": "Loop is now {loop}"
+    "result": "Loop is now {loop}",
+    "optionMode": "What to repeat",
+    "mode": {
+      "off": "Off",
+      "track": "This song",
+      "queue": "Whole queue"
+    }
   },
   "lyrics": {
     "description": "Lyrics of the current song, or any song",
@@ -139,7 +145,8 @@
     "errorNotQueue": "❌ **Nothing playing in this server**",
     "currentPage": "Current Page - ",
     "embedTitle": "Song Queue\n",
-    "embedCurrentSong": "**Current Song - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Current Song - [{title}]({url})**\n\n{info}",
+    "optionPage": "Page number"
   },
   "remove": {
     "description": "Remove song from the queue",
@@ -199,7 +206,8 @@
     "currentVolume": "🔊 The current volume is: **{volume}%**",
     "errorNotNumber": "Please use a number to set volume.",
     "errorNotValid": "Please use a number between 0 - 100.",
-    "result": "Volume set to: **{arg}%**"
+    "result": "Volume set to: **{arg}%**",
+    "errorRange": "Volume must be between 0 and {max}."
   },
   "common": {
     "on": "**on**",
@@ -208,14 +216,49 @@
     "disabled": "**disabled**",
     "errorNotChannel": "You need to join a voice channel first!",
     "cooldownMessage": "please wait {time} more second(s) before reusing the `{name}` command.",
-    "errorCommand": "There was an error executing that command."
+    "errorCommand": "There was an error executing that command.",
+    "djRequired": "You need the DJ role to use this command.",
+    "guild_only": "This command only works in a server.",
+    "unknown": "Unknown",
+    "unknownError": "Unknown error",
+    "unknownSubcommand": "Unknown subcommand.",
+    "voiceChannel": "voice channel",
+    "playerInitializing": "Music player is still initializing. Please try again in a few seconds.",
+    "voiceChannelNotAllowed": "The bot is not allowed to play in this voice channel. Please use an allowed channel.",
+    "queueFull": "Queue is full! Maximum {max} songs allowed.",
+    "invalidFileType": "Invalid file type. Supported formats: {formats}",
+    "fileTooLarge": "File is too large ({size}MB). Maximum size is {max}MB.",
+    "optionToggle": "On or off (default: toggle)",
+    "requestedBy": "Requested by {user}",
+    "yes": "Yes",
+    "no": "No",
+    "loop": {
+      "off": "Off",
+      "track": "Track",
+      "queue": "Queue"
+    },
+    "field": {
+      "title": "Title",
+      "artist": "Artist",
+      "duration": "Duration",
+      "tracks": "Tracks",
+      "source": "Source",
+      "requestedBy": "Requested by",
+      "loopMode": "Loop Mode",
+      "volume": "Volume",
+      "loadTime": "Load Time",
+      "positionInQueue": "Position in Queue",
+      "status": "Status",
+      "tier": "Tier"
+    }
   },
   "seek": {
     "description": "Seek to a specific time in the track",
     "errorNotQueue": "There is nothing playing.",
     "errorInvalidTime": "Invalid time format. Use formats like: 1:30, 90, 1m30s",
     "errorOutOfRange": "Time must be between 0:00 and {duration}",
-    "result": "<@{author}> ⏩ seeked to **{time}**"
+    "result": "<@{author}> ⏩ seeked to **{time}**",
+    "optionTime": "Time to seek to (e.g., 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Fast forward the track by specified seconds",
@@ -226,7 +269,8 @@
   "rewind": {
     "description": "Rewind the track by specified seconds",
     "errorNotQueue": "There is nothing playing.",
-    "result": "<@{author}> ⏪ rewound **{seconds}s** (now at {position})"
+    "result": "<@{author}> ⏪ rewound **{seconds}s** (now at {position})",
+    "optionSeconds": "Number of seconds to rewind"
   },
   "replay": {
     "description": "Restart the current track from the beginning",
@@ -263,7 +307,8 @@
   "autoplay": {
     "description": "Toggle autoplay mode (play similar songs when queue ends)",
     "errorNotQueue": "There is no active queue.",
-    "result": "🔄 Autoplay is now {status}"
+    "result": "🔄 Autoplay is now {status}",
+    "optionDefault": "Also make this the default for this server (Manage Server)"
   },
   "history": {
     "description": "Show recently played tracks",
@@ -283,7 +328,8 @@
     "errorNotQueue": "There is no queue.",
     "errorInvalidPosition": "Invalid position. Queue only has {max} tracks.",
     "errorNotFound": "Track not found at that position.",
-    "result": "<@{author}> ⏭️ jumped to **{title}**"
+    "result": "<@{author}> ⏭️ jumped to **{title}**",
+    "optionPosition": "Queue position to jump to"
   },
   "Invite me to your server!": "Invite me to your server!",
   "Invite": "Invite",
@@ -300,7 +346,11 @@
   "dashboard": {
     "description": "Get the dashboard link",
     "embedDescription": "Access the web dashboard to manage your server settings, view queue, and more!",
-    "footer": "Manage your music experience"
+    "footer": "Manage your music experience",
+    "title": "Bot Dashboard",
+    "features": "Features",
+    "featuresList": "• Configure server settings\n• View queue and playback controls\n• Manage playlists and collections\n• View listening statistics\n• Premium features management",
+    "open": "Open Dashboard"
   },
   "clean": {
     "description": "Delete bot messages from the channel",
@@ -520,10 +570,67 @@
     "description": "Convert text to speech and play it in voice channel",
     "errorNotAvailable": "❌ TTS service is not available. Please contact the bot administrator.",
     "errorGenerate": "❌ Failed to generate speech. Please try again.",
-    "success": "🎤 Playing: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Playing: \"{text}\" ({language}, {voice})",
+    "optionText": "Text to convert to speech",
+    "optionLanguage": "Language for speech (uses saved config if not specified)",
+    "optionVoice": "Voice to use (uses saved config if not specified)"
   },
   "sayconfig": {
-    "description": "Configure your TTS (Text-to-Speech) settings"
+    "description": "Configure your TTS (Text-to-Speech) settings",
+    "view": {
+      "description": "View your current TTS configuration",
+      "title": "TTS Configuration",
+      "noConfig": "No custom configuration set. Using defaults.",
+      "mode": "Mode",
+      "language": "Language",
+      "voice": "Voice",
+      "voiceDescription": "Voice Description",
+      "styleInstruction": "Style Instruction",
+      "referenceAudio": "Reference Audio",
+      "referenceAudioSet": "Set",
+      "referenceText": "Reference Text"
+    },
+    "mode": {
+      "description": "Set TTS mode (custom_voice or voice_clone)",
+      "option": "TTS mode",
+      "customVoice": "Custom Voice (default)",
+      "voiceClone": "Voice Clone",
+      "set": "TTS mode set to **{mode}**"
+    },
+    "language": {
+      "description": "Set default language",
+      "option": "Language for speech",
+      "set": "Default language set to **{language}**"
+    },
+    "voice": {
+      "description": "Set default voice/speaker",
+      "option": "Voice to use",
+      "set": "Default voice set to **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Set voice description for custom voice generation",
+      "option": "Voice description (e.g., 'deep male voice with calm tone')",
+      "set": "Voice description set to: \"{text}\""
+    },
+    "style": {
+      "description": "Set style instruction for voice generation",
+      "option": "Style instruction (e.g., 'speak slowly and clearly')",
+      "set": "Style instruction set to: \"{text}\""
+    },
+    "reference": {
+      "description": "Set reference audio and text for voice cloning",
+      "optionAudio": "Reference audio file (MP3, WAV, etc.)",
+      "optionText": "Transcript of the reference audio",
+      "saved": "Reference audio uploaded and saved!",
+      "text": "Reference text: \"{text}\"",
+      "modeSet": "Mode automatically set to **{mode}**",
+      "failed": "Failed to upload reference audio. Please try again."
+    },
+    "reset": {
+      "description": "Reset your TTS configuration to defaults",
+      "done": "TTS configuration reset to defaults.",
+      "none": "No custom configuration found to reset."
+    }
   },
   "radio": {
     "description": "Start an endless radio from a song or artist",
@@ -649,7 +756,8 @@
     "body": "Voting helps more servers find the bot. Each vote on top.gg unlocks **24/7 mode** and **studio quality** for you for 12 hours.",
     "active": "Your vote perks are active for {time} more.",
     "inactive": "No active vote. Vote below, perks start within a minute.",
-    "notListed": "Voting opens once the bot is listed. Thanks for wanting to help!"
+    "notListed": "Voting opens once the bot is listed. Thanks for wanting to help!",
+    "heading": "Vote for {bot}"
   },
   "leaderboard": {
     "description": "View the session track leaderboard",
@@ -742,7 +850,8 @@
     "noQueue": "There is no active queue.",
     "invalidChannel": "Invalid channel. Please select a text channel.",
     "title": "📢 Channel Rebound",
-    "success": "Now sending announcements to {channel}."
+    "success": "Now sending announcements to {channel}.",
+    "optionChannel": "Channel to rebind to (defaults to current)"
   },
   "disabledcommands": {
     "description": "View all disabled commands in this server",
@@ -939,7 +1048,28 @@
     "your_perks": "Your Active Perks",
     "user_free": "You are on the **Free** tier.",
     "upgrade": "Upgrade to Premium",
-    "upgrade_message": "Get premium features by supporting us on Patreon!"
+    "upgrade_message": "Get premium features by supporting us on Patreon!",
+    "view": {
+      "description": "View available perks"
+    },
+    "user": {
+      "description": "View your current perks",
+      "title": "Your Perks",
+      "premium": "You have **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Audio: {bitrate}kbps",
+      "audioFilters": "Audio filters",
+      "stay247": "24/7 mode",
+      "free": "You are on the **Free** tier. Get premium on Patreon!"
+    },
+    "overview": {
+      "title": "Premium perks",
+      "intro": "Founder is limited to {spots} spots and the price is locked in.",
+      "freeName": "Free — {price}",
+      "freePerks": "128kbps audio\nQueue, playlists and lyrics\nEvery command",
+      "founderName": "Founder / Beta Tester — {price}/month",
+      "founderPerks": "320kbps audio\nAudio filters\n24/7 mode\nPriority queue\nFounder role and direct support"
+    }
   },
   "boost": {
     "no_premium_title": "❌ No Premium",
@@ -1089,7 +1219,8 @@
     "optionLanguage": "Language (auto follows each member's Discord language)",
     "auto": "Automatic (each member's Discord language)",
     "set": "Language set to {language}.",
-    "needManage": "You need the Manage Server permission to change the language."
+    "needManage": "You need the Manage Server permission to change the language.",
+    "unknown": "Unknown language."
   },
   "links": {
     "website": "Website",
@@ -1100,45 +1231,501 @@
     "invite": "Invite"
   },
   "commanddisable": {
-    "description": "Disable commands in this server"
+    "description": "Disable commands in this server",
+    "optionCommand": "Command to disable",
+    "protected": "Cannot disable essential command: {command}",
+    "notFound": "Command not found: {command}",
+    "alreadyDisabled": "Command {command} is already disabled.",
+    "title": "Command Disabled",
+    "done": "Command {command} has been disabled in this server.\n\nUse `/commandenable` to re-enable it."
   },
   "commanddisableall": {
-    "description": "Disable all commands except essential ones"
+    "description": "Disable all commands except essential ones",
+    "title": "All Commands Disabled",
+    "done": "Disabled **{count}** commands.\n\nProtected commands still available:\n{commands}\n\nUse `/commandenableall` to restore all commands."
   },
   "commandenable": {
-    "description": "Enable a disabled command"
+    "description": "Enable a disabled command",
+    "optionCommand": "Command to enable",
+    "notDisabled": "Command {command} is not disabled.",
+    "title": "Command Enabled",
+    "done": "Command {command} has been re-enabled in this server."
   },
   "commandenableall": {
-    "description": "Enable all disabled commands"
+    "description": "Enable all disabled commands",
+    "title": "All Commands Enabled",
+    "done": "Re-enabled **{count}** commands.\n\nAll commands are now available.",
+    "none": "No commands were disabled."
   },
   "effects": {
-    "description": "Manage audio effects"
+    "description": "Manage audio effects",
+    "optionEnabled": "Enable or disable",
+    "nothingPlaying": "No music is currently playing.",
+    "unknown": "Unknown effect.",
+    "enabledBy": "{effect} effect enabled by {user}",
+    "disabledBy": "{effect} effect disabled by {user}",
+    "8d": {
+      "description": "Apply 8D audio effect (rotates sound)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Apply bass boost effect",
+      "optionLevel": "Bass level",
+      "level": {
+        "off": "Off",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "disabledBy": "Bass boost disabled by {user}",
+      "alreadyOff": "Bass boost is already off.",
+      "setBy": "Bass boost set to **{level}** by {user}"
+    },
+    "distortion": {
+      "description": "Apply distortion effect",
+      "name": "Distortion"
+    },
+    "haas": {
+      "description": "Apply haas effect (spatial audio)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Reduce vocals (karaoke mode)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Apply nightcore effect (higher pitch + speed)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Apply vaporwave effect (lower pitch + speed)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Apply pulsator effect",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Reverse audio playback",
+      "name": "Reverse"
+    },
+    "tremolo": {
+      "description": "Apply tremolo effect",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Apply vibrato effect",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Apply lofi effect",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Apply surrounding sound effect",
+      "name": "Surrounding"
+    },
+    "list": {
+      "description": "Show active effects",
+      "title": "Active Effects",
+      "empty": "No effects active"
+    },
+    "clear": {
+      "description": "Clear all effects",
+      "done": "All effects cleared."
+    }
   },
   "info": {
-    "description": "Bot information and help"
+    "description": "Bot information and help",
+    "about": {
+      "description": "About this bot",
+      "statistics": "Statistics",
+      "servers": "Servers",
+      "commands": "Commands",
+      "uptime": "Uptime",
+      "system": "System",
+      "memory": "Memory"
+    },
+    "faq": {
+      "description": "Frequently asked questions"
+    },
+    "support": {
+      "description": "Get support server link",
+      "title": "Support",
+      "body": "Need help? Join our support server:",
+      "join": "Click to Join",
+      "reportIssues": "Report Issues",
+      "reportIssuesValue": "Use `/info faq` first, then ask in support",
+      "suggestions": "Suggestions",
+      "suggestionsValue": "Share ideas in our suggestions channel"
+    },
+    "queue": {
+      "description": "Detailed queue information",
+      "noQueue": "No active queue.",
+      "title": "Queue Information",
+      "contributors": "Contributors"
+    },
+    "song": {
+      "description": "Current song details",
+      "noTrack": "No track playing.",
+      "title": "Now Playing"
+    },
+    "nextup": {
+      "description": "Show next track in queue",
+      "empty": "No tracks in queue.",
+      "title": "Coming Up",
+      "footer": "{count} tracks in queue"
+    },
+    "changelogs": {
+      "description": "Recent updates and changes",
+      "title": "Recent Updates",
+      "intro": "Latest changes and improvements:",
+      "newFeatures": "New Features",
+      "newFeaturesList": "• Consolidated commands for better organization\n• Improved audio effects system\n• Enhanced queue management",
+      "improvements": "Improvements",
+      "improvementsList": "• Faster command response times\n• Better error handling\n• Reduced memory usage",
+      "bugFixes": "Bug Fixes",
+      "bugFixesList": "• Fixed playback issues\n• Resolved queue sync problems"
+    }
   },
   "patreon": {
-    "description": "Check your Patreon status and sync benefits"
+    "description": "Check your Patreon status and sync benefits",
+    "notConfigured": "Patreon integration is not configured for this bot.",
+    "howToLink": "How to Link",
+    "premiumActive": "Premium Active",
+    "patronStatus": {
+      "active": "Active Patron",
+      "declined": "Payment Declined",
+      "former": "Former Patron",
+      "none": "Not a Patron"
+    },
+    "status": {
+      "description": "Check your current Patreon status and benefits",
+      "title": "Patreon Status",
+      "yourTitle": "Your Patreon Status",
+      "notLinked": "You are not currently linked to a Patreon account.",
+      "howToLinkSteps": "1. Go to [Patreon]({patreon})\n2. Connect your Discord account in Settings → Connections\n3. Subscribe to our Patreon page\n4. Use `/patreon sync` to update your benefits",
+      "pledgeAmount": "Pledge Amount",
+      "perMonth": "{amount}/month",
+      "lifetimeSupport": "Lifetime Support",
+      "lastCharge": "Last Charge",
+      "thanks": "Thank you for your support! You have access to premium features.",
+      "declined": "Your last payment was declined. Please update your payment method on Patreon to restore benefits.",
+      "former": "Your pledge has ended. Renew on Patreon to restore your benefits!",
+      "error": "An error occurred while checking your Patreon status. Please try again later."
+    },
+    "sync": {
+      "description": "Sync your Patreon data to update your benefits",
+      "completeTitle": "Patreon Sync Complete",
+      "success": "Successfully synced your Patreon data!",
+      "title": "Patreon Sync",
+      "notFound": "No Patreon account found linked to your Discord.",
+      "howToLinkSteps": "1. Go to [Patreon Settings]({settings})\n2. Click on **Connections**\n3. Connect your **Discord** account\n4. Make sure you're pledging to our campaign\n5. Run `/patreon sync` again",
+      "error": "An error occurred while syncing your Patreon data. Please try again later."
+    },
+    "info": {
+      "description": "Learn about Patreon benefits and how to link your account",
+      "title": "Patreon Benefits",
+      "intro": "Support us on Patreon to unlock exclusive benefits!",
+      "benefits": "Premium Benefits",
+      "benefitsList": "• Higher quality audio\n• Longer playlists\n• Priority queue\n• Exclusive commands\n• Early access to new features",
+      "howToGet": "How to Get Premium",
+      "howToGetSteps": "1. Visit our [Patreon page]({patreon})\n2. Choose a tier that suits you\n3. Link your Discord in Patreon Settings → Connections\n4. Use `/patreon sync` to activate benefits",
+      "troubleshooting": "Troubleshooting",
+      "troubleshootingList": "• Make sure Discord is linked in your Patreon settings\n• Your payment must be successful (not declined)\n• Try `/patreon sync` after linking\n• Benefits update automatically every 30 minutes"
+    }
   },
   "play_file": {
-    "description": "Play an audio file from attachment"
+    "description": "Play an audio file from attachment",
+    "optionFile": "Audio file to play (MP3, WAV, FLAC, M4A, OGG, etc.)",
+    "optionTitle": "Optional custom title for the track",
+    "cantPlay": "Could not play the file: {name}",
+    "nowPlayingTitle": "Now Playing File",
+    "addedTitle": "File Added to Queue",
+    "format": "Format",
+    "size": "Size",
+    "error": {
+      "load": "Could not load the file: {name}\n\nPossible reasons:\n• File format not supported\n• File is corrupted\n• File URL expired",
+      "timeout": "File download timed out. The file might be too large or the connection is slow.",
+      "forbidden": "Access denied to the file. Please re-upload and try again.",
+      "notFound": "File not found. The attachment URL may have expired.",
+      "generic": "An error occurred while playing the file."
+    }
   },
   "play_spotify": {
-    "description": "Search and play a song from Spotify"
+    "description": "Search and play a song from Spotify",
+    "optionQuery": "Song name, artist, or Spotify URL to search for",
+    "cantPlayLink": "Could not play the Spotify link: {query}",
+    "playlistFallback": "Spotify Playlist",
+    "playlistAdded": "Spotify Playlist Added",
+    "songs": "{count} songs",
+    "nowPlaying": "Now Playing",
+    "trackBy": "{title} by {author}",
+    "nowPlayingTitle": "Now Playing from Spotify",
+    "addedTitle": "Added to Queue from Spotify",
+    "noResults": "No results found on Spotify for: {query}\n\nTry:\n• Different keywords\n• Adding the artist name\n• Using a direct Spotify link",
+    "notOnYoutube": "Could not find on YouTube: {title} by {artist}",
+    "error": {
+      "auth": "This Spotify track requires authentication. Try a different track.",
+      "premium": "This track requires Spotify Premium.",
+      "private": "This Spotify track is private and cannot be played.",
+      "region": "This track is unavailable in your region.",
+      "generic": "An error occurred while playing the Spotify track."
+    }
   },
   "premium": {
-    "description": "Manage premium features and server links"
+    "description": "Manage premium features and server links",
+    "audioQuality": "Audio Quality",
+    "botIdentity": "Bot Identity",
+    "serverSlots": "Server Slots",
+    "patreonTier": "Patreon Tier",
+    "supporter": "Supporter",
+    "dbUnavailable": "**Database Temporarily Unavailable**\n\nThe bot is having trouble connecting to the database. Please try again in a few moments.\n\nIf this issue persists, the bot administrator has been notified.",
+    "error": "An error occurred: {error}",
+    "link": {
+      "description": "Link this server to your Patreon account",
+      "successTitle": "Server Linked",
+      "failTitle": "Link Failed"
+    },
+    "unlink": {
+      "description": "Unlink this server from your Patreon account",
+      "successTitle": "Server Unlinked",
+      "failTitle": "Unlink Failed"
+    },
+    "list": {
+      "description": "List all servers linked to your Patreon account",
+      "title": "Your Linked Servers",
+      "empty": "You haven't linked any servers yet.\n\nUse `/premium link` to link this server!",
+      "linkedAt": "Linked: {time}",
+      "slotsUsed": "{used}/{max} used",
+      "noMembership": "You don't have an active Patreon membership.\n\nSupport us on Patreon to unlock premium features!"
+    },
+    "status": {
+      "description": "Show premium status for this server",
+      "premiumTitle": "Premium Server",
+      "freeTitle": "Free Server",
+      "premiumBody": "This server has premium features enabled!",
+      "freeBody": "This server is using free tier.\n\nUse `/premium link` to enable premium features.",
+      "linked": "Linked",
+      "lastUsed": "Last Used",
+      "ownFooter": "You own this premium link",
+      "otherFooter": "Premium provided by another user",
+      "freeQuality": "128kbps (Free)"
+    },
+    "config": {
+      "description": "Configure premium settings for this server",
+      "optionBitrate": "Audio bitrate in kbps",
+      "optionIdentity": "Custom bot identity for this server",
+      "nothing": "Please specify at least one setting to configure.\n\nExample: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Settings Updated",
+      "failTitle": "Update Failed"
+    },
+    "service": {
+      "needMembership": "You need an active Patreon membership to link servers.\n\nSupport us on Patreon to unlock premium features!",
+      "limitReached": "You've reached your server limit ({max} servers).\n\nCurrent tier: **{tier}**\nLinked servers: **{current}/{max}**\n\nUpgrade your tier to link more servers!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "This server is already linked to your account.",
+      "alreadyLinkedOther": "This server is already linked to another Patreon account.\n\nOnly one Patreon account can have premium features active per server.",
+      "linked": "Server linked successfully!",
+      "servers": "Servers",
+      "linkedActive": "Premium features are now active in this server!",
+      "linkError": "Error linking server: {error}",
+      "notLinked": "This server is not linked to your account.",
+      "unlinked": "Server unlinked successfully!",
+      "unlinkedBody": "Premium features have been disabled for this server.\nYou can link another server with your available slots.",
+      "unlinkError": "Error unlinking server: {error}",
+      "invalidBitrate": "Invalid bitrate. Choose: 128, 192, 256, or 320 kbps",
+      "updated": "Server settings updated successfully!",
+      "updateError": "Error updating settings: {error}"
+    },
+    "feature": {
+      "audio_filters": "Audio Filters",
+      "stay_24_7": "24/7 Mode",
+      "max_quality": "Maximum Quality",
+      "priority_queue": "Priority Queue",
+      "unlimited_playlists": "Unlimited Playlists",
+      "longer_songs": "No Duration Limit",
+      "vote_features": "Vote on Features",
+      "founder_role": "Founder Role",
+      "direct_support": "Direct Support"
+    }
   },
   "queuemanage": {
-    "description": "Advanced queue management"
+    "description": "Advanced queue management",
+    "empty": "The queue is empty.",
+    "invalidPosition": "Invalid position. Queue has {count} tracks.",
+    "removedupes": {
+      "description": "Remove duplicate tracks from queue",
+      "none": "No duplicates found!",
+      "title": "Duplicates Removed",
+      "result": "Removed **{count}** duplicate tracks"
+    },
+    "sort": {
+      "description": "Sort the queue",
+      "optionBy": "Sort by",
+      "choice": {
+        "title_asc": "Title (A-Z)",
+        "title_desc": "Title (Z-A)",
+        "duration_asc": "Duration (Short)",
+        "duration_desc": "Duration (Long)"
+      },
+      "label": {
+        "title_asc": "Title (A-Z)",
+        "title_desc": "Title (Z-A)",
+        "duration_asc": "Duration (Shortest)",
+        "duration_desc": "Duration (Longest)"
+      },
+      "result": "Queue sorted by **{label}**"
+    },
+    "swap": {
+      "description": "Swap two tracks in the queue",
+      "optionPosition1": "First position",
+      "optionPosition2": "Second position",
+      "samePosition": "Positions must be different.",
+      "result": "Swapped tracks at positions **{pos1}** and **{pos2}**"
+    },
+    "removeuser": {
+      "description": "Remove all tracks from a user",
+      "optionUser": "User to remove tracks from",
+      "none": "No tracks found from {user}.",
+      "result": "Removed **{count}** tracks from {user}"
+    },
+    "removeabsent": {
+      "description": "Remove tracks from users not in voice",
+      "notInVoice": "You must be in a voice channel.",
+      "none": "All track requesters are in the voice channel.",
+      "result": "Removed **{count}** tracks from absent users"
+    },
+    "removelast": {
+      "description": "Remove last N tracks",
+      "optionCount": "Number to remove",
+      "result": "Removed last **{count}** tracks"
+    },
+    "removerange": {
+      "description": "Remove tracks in a range",
+      "optionStart": "Start position",
+      "optionEnd": "End position",
+      "startAfterEnd": "Start must be less than or equal to end.",
+      "startTooHigh": "Start position exceeds queue length ({count}).",
+      "result": "Removed **{count}** tracks (positions {start}-{end})"
+    },
+    "reverse": {
+      "description": "Reverse the queue order",
+      "result": "Queue order reversed"
+    }
   },
   "settings": {
     "description": "Configure bot settings for this server (Admin only)"
   },
   "stats": {
-    "description": "View bot and session statistics"
+    "description": "View bot and session statistics",
+    "bot": {
+      "description": "Show bot statistics",
+      "title": "Bot Statistics",
+      "servers": "Servers",
+      "users": "Users",
+      "channels": "Channels",
+      "activeQueues": "Active Queues",
+      "tracksPlaying": "Tracks Playing",
+      "uptime": "Uptime",
+      "memory": "Memory",
+      "platform": "Platform"
+    },
+    "uptime": {
+      "description": "Show bot uptime"
+    },
+    "leaderboard": {
+      "description": "Show queue leaderboard",
+      "line": "{user} - {count} tracks"
+    },
+    "history": {
+      "description": "Show recently played tracks"
+    },
+    "session": {
+      "description": "Show current session info",
+      "noSession": "No active session in this server.",
+      "title": "Session Info",
+      "nowPlaying": "Now Playing",
+      "nothing": "Nothing",
+      "tracksInQueue": "Tracks in Queue",
+      "totalDuration": "Total Duration"
+    }
   },
   "user": {
-    "description": "User profile and preferences"
+    "description": "User profile and preferences",
+    "profile": {
+      "description": "View user profile",
+      "optionTarget": "User to view",
+      "free": "Free"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Started playing",
+      "pause": "Paused playback",
+      "resume": "Resumed playback",
+      "stop": "Stopped playback",
+      "skip": "Skipped track",
+      "seek": "Seeked to position",
+      "seek_forward": "Seeked forward",
+      "seek_backward": "Seeked backward",
+      "forward": "Fast forwarded",
+      "rewind": "Rewound",
+      "backward": "Rewound",
+      "replay": "Restarted track",
+      "restart": "Restarted queue",
+      "volume_change": "Changed volume",
+      "shuffle": "Shuffled queue",
+      "loop": "Changed loop mode",
+      "loopqueue": "Changed queue loop mode",
+      "setting_change": "Updated settings",
+      "queue_clear": "Cleared queue",
+      "clear": "Cleared queue",
+      "join": "Joined channel",
+      "leave": "Left channel",
+      "autoplay": "Toggled autoplay",
+      "previous": "Played previous track",
+      "jump": "Jumped to track",
+      "swap": "Swapped tracks",
+      "reverse": "Reversed queue",
+      "sort": "Sorted queue",
+      "removerange": "Removed range",
+      "removeduplicates": "Removed duplicates",
+      "removelast": "Removed last track",
+      "voteskip": "Vote skipped",
+      "grab": "Grabbed track",
+      "insert": "Inserted track",
+      "removecurrent": "Removed current track"
+    },
+    "detail": {
+      "on": "On",
+      "off": "Off",
+      "tracks": "{count} tracks",
+      "effectsCleared": "Effects cleared",
+      "bassBoost": "Bass boost {level}",
+      "effectOn": "{effect} enabled",
+      "effectOff": "{effect} disabled",
+      "previousTrack": "previous track",
+      "currentTrack": "current track",
+      "queue": "Queue"
+    },
+    "settings": {
+      "title": "Settings Updated",
+      "changed": "{user} changed {setting}",
+      "before": "Before",
+      "after": "After",
+      "notSet": "Not set",
+      "userId": "User ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} is a Founder perk",
+    "description": "Founder is {price}/month, limited to {spots} spots, and unlocks 320kbps audio, 24/7 mode, no song-length limit and the Founder role.",
+    "afterJoin": "After you join",
+    "afterJoinSteps": "1. link your Discord account in your Patreon settings\n2. run `/premium link` in this server",
+    "becomeFounder": "Become a Founder",
+    "voteTitle": "Or vote for free",
+    "voteBody": "A vote on top.gg unlocks this for 12 hours. Use `/vote`.",
+    "voteButton": "Vote on top.gg"
   }
 }

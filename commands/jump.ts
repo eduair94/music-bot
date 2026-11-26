@@ -12,7 +12,7 @@ export default {
     .addIntegerOption((option) =>
       option
         .setName("position")
-        .setDescription("Queue position to jump to")
+        .setDescription(i18n.__("jump.optionPosition"))
         .setRequired(true)
         .setMinValue(1)
     ),
@@ -28,7 +28,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 

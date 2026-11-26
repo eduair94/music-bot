@@ -16,7 +16,7 @@ export default {
     .addChannelOption(option =>
       option
         .setName("channel")
-        .setDescription("Channel to rebind to (defaults to current)")
+        .setDescription(i18n.__("rebind.optionChannel"))
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   

@@ -15,9 +15,9 @@ export default {
   data: new SlashCommandBuilder()
     .setName("autoplay")
     .setDescription(i18n.__("autoplay.description"))
-    .addBooleanOption((option) => option.setName("enabled").setDescription("On or off (default: toggle)"))
+    .addBooleanOption((option) => option.setName("enabled").setDescription(i18n.__("common.optionToggle")))
     .addBooleanOption((option) =>
-      option.setName("default").setDescription("Also make this the default for this server (Manage Server)")
+      option.setName("default").setDescription(i18n.__("autoplay.optionDefault"))
     ),
   category: "music",
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
@@ -53,7 +53,7 @@ export default {
       PlayerPanelService.getInstance().refresh(queue, true);
     }
 
-    await logAction(interaction.guild, interaction.user, "autoplay", enabled ? "On" : "Off");
+    await logAction(interaction.guild, interaction.user, "autoplay", () => i18n.__(enabled ? "actionLog.detail.on" : "actionLog.detail.off"));
     return interaction.reply({
       content: enabled ? `♾️ ${i18n.__("player.autoplayEnabled")}` : `⏹️ ${i18n.__("player.autoplayDisabled")}`
     });

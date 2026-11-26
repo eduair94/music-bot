@@ -1,6 +1,6 @@
-import { 
-  ChatInputCommandInteraction, 
-  EmbedBuilder, 
+import {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
   SlashCommandBuilder,
   version as djsVersion
 } from "discord.js";
@@ -11,38 +11,43 @@ import { SUPPORT_INVITE_URL } from "../shared/links";
 import { i18n } from "../utils/i18n";
 import { safeReply } from "../utils/safeReply";
 
+/** "Off" / "Track" / "Queue" for a discord-player repeat mode. */
+function loopModeLabel(repeatMode: number): string {
+  return repeatMode === 0 ? i18n.__("common.loop.off") : repeatMode === 1 ? i18n.__("common.loop.track") : i18n.__("common.loop.queue");
+}
+
 export default {
   data: new SlashCommandBuilder()
     .setName("info")
-    .setDescription("Bot information and help")
+    .setDescription(i18n.__("info.description"))
     // About
     .addSubcommand(sub => sub
       .setName("about")
-      .setDescription("About this bot"))
+      .setDescription(i18n.__("info.about.description")))
     // FAQ
     .addSubcommand(sub => sub
       .setName("faq")
-      .setDescription("Frequently asked questions"))
+      .setDescription(i18n.__("info.faq.description")))
     // Support
     .addSubcommand(sub => sub
       .setName("support")
-      .setDescription("Get support server link"))
+      .setDescription(i18n.__("info.support.description")))
     // Queue info
     .addSubcommand(sub => sub
       .setName("queue")
-      .setDescription("Detailed queue information"))
+      .setDescription(i18n.__("info.queue.description")))
     // Current song info
     .addSubcommand(sub => sub
       .setName("song")
-      .setDescription("Current song details"))
+      .setDescription(i18n.__("info.song.description")))
     // Next up
     .addSubcommand(sub => sub
       .setName("nextup")
-      .setDescription("Show next track in queue"))
+      .setDescription(i18n.__("info.nextup.description")))
     // Changelogs
     .addSubcommand(sub => sub
       .setName("changelogs")
-      .setDescription("Recent updates and changes")),
+      .setDescription(i18n.__("info.changelogs.description"))),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
@@ -66,20 +71,20 @@ export default {
           .setThumbnail(client.user?.displayAvatarURL() || null)
           .addFields(
             {
-              name: "📊 Statistics",
+              name: `📊 ${i18n.__("info.about.statistics")}`,
               value: [
-                `**Servers:** ${client.guilds.cache.size.toLocaleString()}`,
-                `**Commands:** ${registeredCommands.size}`,
-                `**Uptime:** ${uptimeString}`
+                `**${i18n.__("info.about.servers")}:** ${client.guilds.cache.size.toLocaleString()}`,
+                `**${i18n.__("info.about.commands")}:** ${registeredCommands.size}`,
+                `**${i18n.__("info.about.uptime")}:** ${uptimeString}`
               ].join("\n"),
               inline: true
             },
             {
-              name: "💻 System",
+              name: `💻 ${i18n.__("info.about.system")}`,
               value: [
                 `**Node.js:** ${process.version}`,
                 `**Discord.js:** v${djsVersion}`,
-                `**Memory:** ${memoryUsed}MB`
+                `**${i18n.__("info.about.memory")}:** ${memoryUsed}MB`
               ].join("\n"),
               inline: true
             }
@@ -107,12 +112,12 @@ export default {
       case "support": {
         const supportUrl = process.env.SUPPORT_SERVER || SUPPORT_INVITE_URL;
         const embed = new EmbedBuilder()
-          .setTitle("🆘 Support")
+          .setTitle(`🆘 ${i18n.__("info.support.title")}`)
           .setColor("#5865F2")
-          .setDescription(`Need help? Join our support server:\n\n**[Click to Join](${supportUrl})**`)
+          .setDescription(`${i18n.__("info.support.body")}\n\n**[${i18n.__("info.support.join")}](${supportUrl})**`)
           .addFields(
-            { name: "📝 Report Issues", value: "Use `/info faq` first, then ask in support", inline: true },
-            { name: "💡 Suggestions", value: "Share ideas in our suggestions channel", inline: true }
+            { name: `📝 ${i18n.__("info.support.reportIssues")}`, value: i18n.__("info.support.reportIssuesValue"), inline: true },
+            { name: `💡 ${i18n.__("info.support.suggestions")}`, value: i18n.__("info.support.suggestionsValue"), inline: true }
           );
 
         return interaction.reply({ embeds: [embed] });
@@ -120,14 +125,14 @@ export default {
 
       case "queue": {
         const queue = useQueue(interaction.guildId!);
-        
+
         if (!queue) {
-          return interaction.reply({ content: "❌ No active queue.", ephemeral: true });
+          return interaction.reply({ content: `❌ ${i18n.__("info.queue.noQueue")}`, ephemeral: true });
         }
 
         const tracks = queue.tracks.toArray();
         const currentTrack = queue.currentTrack;
-        
+
         let totalDuration = currentTrack?.durationMS || 0;
         tracks.forEach(t => totalDuration += t.durationMS || 0);
 
@@ -139,14 +144,14 @@ export default {
         tracks.forEach(t => { if (t.requestedBy) uniqueUsers.add(t.requestedBy.id); });
 
         const embed = new EmbedBuilder()
-          .setTitle("📋 Queue Information")
+          .setTitle(`📋 ${i18n.__("info.queue.title")}`)
           .setColor("#9b59b6")
           .addFields(
-            { name: "Tracks", value: `${tracks.length + (currentTrack ? 1 : 0)}`, inline: true },
-            { name: "Duration", value: `${hours}h ${mins}m`, inline: true },
-            { name: "Contributors", value: `${uniqueUsers.size}`, inline: true },
-            { name: "Loop Mode", value: queue.repeatMode === 0 ? "Off" : queue.repeatMode === 1 ? "Track" : "Queue", inline: true },
-            { name: "Volume", value: `${queue.node.volume}%`, inline: true }
+            { name: i18n.__("common.field.tracks"), value: `${tracks.length + (currentTrack ? 1 : 0)}`, inline: true },
+            { name: i18n.__("common.field.duration"), value: `${hours}h ${mins}m`, inline: true },
+            { name: i18n.__("info.queue.contributors"), value: `${uniqueUsers.size}`, inline: true },
+            { name: i18n.__("common.field.loopMode"), value: loopModeLabel(queue.repeatMode), inline: true },
+            { name: i18n.__("common.field.volume"), value: `${queue.node.volume}%`, inline: true }
           );
 
         return interaction.reply({ embeds: [embed] });
@@ -155,22 +160,22 @@ export default {
       case "song": {
         const playerService = DiscordPlayerService.getInstance();
         const queue = playerService.getQueue(interaction.guild!.id);
-        
+
         if (!queue || !queue.currentTrack) {
-          return interaction.reply({ content: "❌ No track playing.", ephemeral: true });
+          return interaction.reply({ content: `❌ ${i18n.__("info.song.noTrack")}`, ephemeral: true });
         }
 
         const track = queue.currentTrack;
         const embed = new EmbedBuilder()
-          .setTitle("🎵 Now Playing")
+          .setTitle(`🎵 ${i18n.__("info.song.title")}`)
           .setColor("#1DB954")
           .setThumbnail(track.thumbnail || null)
           .addFields(
-            { name: "Title", value: track.title, inline: false },
-            { name: "Artist", value: track.author || "Unknown", inline: true },
-            { name: "Duration", value: track.duration, inline: true },
-            { name: "Requested by", value: track.requestedBy ? `<@${track.requestedBy.id}>` : "Unknown", inline: true },
-            { name: "Source", value: track.source || "Unknown", inline: true }
+            { name: i18n.__("common.field.title"), value: track.title, inline: false },
+            { name: i18n.__("common.field.artist"), value: track.author || i18n.__("common.unknown"), inline: true },
+            { name: i18n.__("common.field.duration"), value: track.duration, inline: true },
+            { name: i18n.__("common.field.requestedBy"), value: track.requestedBy ? `<@${track.requestedBy.id}>` : i18n.__("common.unknown"), inline: true },
+            { name: i18n.__("common.field.source"), value: track.source || i18n.__("common.unknown"), inline: true }
           )
           .setURL(track.url);
 
@@ -179,34 +184,34 @@ export default {
 
       case "nextup": {
         const queue = useQueue(interaction.guildId!);
-        
+
         if (!queue || queue.tracks.size === 0) {
-          return interaction.reply({ content: "❌ No tracks in queue.", ephemeral: true });
+          return interaction.reply({ content: `❌ ${i18n.__("info.nextup.empty")}`, ephemeral: true });
         }
 
         const nextTracks = queue.tracks.toArray().slice(0, 5);
-        const description = nextTracks.map((t, i) => 
+        const description = nextTracks.map((t, i) =>
           `**${i + 1}.** [${t.title}](${t.url}) - \`${t.duration}\``
         ).join("\n");
 
         const embed = new EmbedBuilder()
-          .setTitle("⏭️ Coming Up")
+          .setTitle(`⏭️ ${i18n.__("info.nextup.title")}`)
           .setColor("#3498db")
           .setDescription(description)
-          .setFooter({ text: `${queue.tracks.size} tracks in queue` });
+          .setFooter({ text: i18n.__mf("info.nextup.footer", { count: queue.tracks.size }) });
 
         return interaction.reply({ embeds: [embed] });
       }
 
       case "changelogs": {
         const embed = new EmbedBuilder()
-          .setTitle("📝 Recent Updates")
+          .setTitle(`📝 ${i18n.__("info.changelogs.title")}`)
           .setColor("#f39c12")
-          .setDescription("Latest changes and improvements:")
+          .setDescription(i18n.__("info.changelogs.intro"))
           .addFields(
-            { name: "🆕 New Features", value: "• Consolidated commands for better organization\n• Improved audio effects system\n• Enhanced queue management", inline: false },
-            { name: "🔧 Improvements", value: "• Faster command response times\n• Better error handling\n• Reduced memory usage", inline: false },
-            { name: "🐛 Bug Fixes", value: "• Fixed playback issues\n• Resolved queue sync problems", inline: false }
+            { name: `🆕 ${i18n.__("info.changelogs.newFeatures")}`, value: i18n.__("info.changelogs.newFeaturesList"), inline: false },
+            { name: `🔧 ${i18n.__("info.changelogs.improvements")}`, value: i18n.__("info.changelogs.improvementsList"), inline: false },
+            { name: `🐛 ${i18n.__("info.changelogs.bugFixes")}`, value: i18n.__("info.changelogs.bugFixesList"), inline: false }
           )
           .setTimestamp();
 
@@ -214,7 +219,7 @@ export default {
       }
 
       default:
-        return interaction.reply({ content: "❌ Unknown subcommand.", ephemeral: true });
+        return interaction.reply({ content: `❌ ${i18n.__("common.unknownSubcommand")}`, ephemeral: true });
     }
   }
 };

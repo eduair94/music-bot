@@ -4,7 +4,7 @@ import { i18n } from "../utils/i18n";
 
 /**
  * /sayconfig command - Configure TTS settings
- * 
+ *
  * Features:
  * - Set default language and voice
  * - Configure voice cloning settings
@@ -19,31 +19,31 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("view")
-        .setDescription("View your current TTS configuration")
+        .setDescription(i18n.__("sayconfig.view.description"))
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("mode")
-        .setDescription("Set TTS mode (custom_voice or voice_clone)")
+        .setDescription(i18n.__("sayconfig.mode.description"))
         .addStringOption((option) =>
           option
             .setName("mode")
-            .setDescription("TTS mode")
+            .setDescription(i18n.__("sayconfig.mode.option"))
             .setRequired(true)
             .addChoices(
-              { name: "Custom Voice (default)", value: "custom_voice" },
-              { name: "Voice Clone", value: "voice_clone" }
+              { name: i18n.__("sayconfig.mode.customVoice"), value: "custom_voice" },
+              { name: i18n.__("sayconfig.mode.voiceClone"), value: "voice_clone" }
             )
         )
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("language")
-        .setDescription("Set default language")
+        .setDescription(i18n.__("sayconfig.language.description"))
         .addStringOption((option) =>
           option
             .setName("language")
-            .setDescription("Language for speech")
+            .setDescription(i18n.__("sayconfig.language.option"))
             .setRequired(true)
             .addChoices(...TTS_LANGUAGES.map(lang => ({ name: lang, value: lang })))
         )
@@ -51,11 +51,11 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("voice")
-        .setDescription("Set default voice/speaker")
+        .setDescription(i18n.__("sayconfig.voice.description"))
         .addStringOption((option) =>
           option
             .setName("voice")
-            .setDescription("Voice to use")
+            .setDescription(i18n.__("sayconfig.voice.option"))
             .setRequired(true)
             .addChoices(...TTS_SPEAKERS.map(speaker => ({ name: speaker, value: speaker })))
         )
@@ -63,11 +63,13 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("description")
-        .setDescription("Set voice description for custom voice generation")
+        // "sayconfig.description" is the command's own description, so this
+        // subcommand's strings live under sayconfig.voiceDescription.
+        .setDescription(i18n.__("sayconfig.voiceDescription.description"))
         .addStringOption((option) =>
           option
             .setName("text")
-            .setDescription("Voice description (e.g., 'deep male voice with calm tone')")
+            .setDescription(i18n.__("sayconfig.voiceDescription.option"))
             .setRequired(true)
             .setMaxLength(500)
         )
@@ -75,11 +77,11 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("style")
-        .setDescription("Set style instruction for voice generation")
+        .setDescription(i18n.__("sayconfig.style.description"))
         .addStringOption((option) =>
           option
             .setName("text")
-            .setDescription("Style instruction (e.g., 'speak slowly and clearly')")
+            .setDescription(i18n.__("sayconfig.style.option"))
             .setRequired(true)
             .setMaxLength(500)
         )
@@ -87,17 +89,17 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("reference")
-        .setDescription("Set reference audio and text for voice cloning")
+        .setDescription(i18n.__("sayconfig.reference.description"))
         .addAttachmentOption((option) =>
           option
             .setName("audio")
-            .setDescription("Reference audio file (MP3, WAV, etc.)")
+            .setDescription(i18n.__("sayconfig.reference.optionAudio"))
             .setRequired(true)
         )
         .addStringOption((option) =>
           option
             .setName("text")
-            .setDescription("Transcript of the reference audio")
+            .setDescription(i18n.__("sayconfig.reference.optionText"))
             .setRequired(true)
             .setMaxLength(500)
         )
@@ -105,7 +107,7 @@ export default {
     .addSubcommand((subcommand) =>
       subcommand
         .setName("reset")
-        .setDescription("Reset your TTS configuration to defaults")
+        .setDescription(i18n.__("sayconfig.reset.description"))
     ),
   cooldown: 3,
   isAvailable: () => ttsService.isAvailable(),
@@ -142,7 +144,7 @@ export default {
         return this.handleReset(interaction, userId, guildId);
       default:
         return interaction.reply({
-          content: "Unknown subcommand",
+          content: i18n.__("common.unknownSubcommand"),
           ephemeral: true,
         });
     }
@@ -150,37 +152,37 @@ export default {
 
   async handleView(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const config = await ttsService.getConfig(userId, guildId || undefined);
-    
+
     const embed = new EmbedBuilder()
-      .setTitle("🎤 TTS Configuration")
+      .setTitle(`🎤 ${i18n.__("sayconfig.view.title")}`)
       .setColor(0x5865F2)
       .setTimestamp();
 
     if (!config) {
-      embed.setDescription("No custom configuration set. Using defaults.");
+      embed.setDescription(i18n.__("sayconfig.view.noConfig"));
       embed.addFields(
-        { name: "Mode", value: "custom_voice", inline: true },
-        { name: "Language", value: "Spanish", inline: true },
-        { name: "Voice", value: "Aiden", inline: true }
+        { name: i18n.__("sayconfig.view.mode"), value: "custom_voice", inline: true },
+        { name: i18n.__("sayconfig.view.language"), value: "Spanish", inline: true },
+        { name: i18n.__("sayconfig.view.voice"), value: "Aiden", inline: true }
       );
     } else {
       embed.addFields(
-        { name: "Mode", value: config.mode, inline: true },
-        { name: "Language", value: config.language, inline: true },
-        { name: "Voice", value: config.speaker, inline: true }
+        { name: i18n.__("sayconfig.view.mode"), value: config.mode, inline: true },
+        { name: i18n.__("sayconfig.view.language"), value: config.language, inline: true },
+        { name: i18n.__("sayconfig.view.voice"), value: config.speaker, inline: true }
       );
 
       if (config.voiceDescription) {
-        embed.addFields({ name: "Voice Description", value: config.voiceDescription, inline: false });
+        embed.addFields({ name: i18n.__("sayconfig.view.voiceDescription"), value: config.voiceDescription, inline: false });
       }
       if (config.styleInstruction) {
-        embed.addFields({ name: "Style Instruction", value: config.styleInstruction, inline: false });
+        embed.addFields({ name: i18n.__("sayconfig.view.styleInstruction"), value: config.styleInstruction, inline: false });
       }
       if (config.referenceAudioUrl) {
-        embed.addFields({ name: "Reference Audio", value: "✅ Set", inline: true });
+        embed.addFields({ name: i18n.__("sayconfig.view.referenceAudio"), value: `✅ ${i18n.__("sayconfig.view.referenceAudioSet")}`, inline: true });
       }
       if (config.referenceText) {
-        embed.addFields({ name: "Reference Text", value: config.referenceText.substring(0, 100) + (config.referenceText.length > 100 ? "..." : ""), inline: false });
+        embed.addFields({ name: i18n.__("sayconfig.view.referenceText"), value: config.referenceText.substring(0, 100) + (config.referenceText.length > 100 ? "..." : ""), inline: false });
       }
     }
 
@@ -189,55 +191,55 @@ export default {
 
   async handleMode(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const mode = interaction.options.getString("mode", true) as TTSMode;
-    
+
     await ttsService.saveConfig(userId, guildId, { mode });
-    
+
     return interaction.reply({
-      content: `✅ TTS mode set to **${mode}**`,
+      content: `✅ ${i18n.__mf("sayconfig.mode.set", { mode })}`,
       ephemeral: true,
     });
   },
 
   async handleLanguage(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const language = interaction.options.getString("language", true);
-    
+
     await ttsService.saveConfig(userId, guildId, { language });
-    
+
     return interaction.reply({
-      content: `✅ Default language set to **${language}**`,
+      content: `✅ ${i18n.__mf("sayconfig.language.set", { language })}`,
       ephemeral: true,
     });
   },
 
   async handleVoice(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const speaker = interaction.options.getString("voice", true);
-    
+
     await ttsService.saveConfig(userId, guildId, { speaker });
-    
+
     return interaction.reply({
-      content: `✅ Default voice set to **${speaker}**`,
+      content: `✅ ${i18n.__mf("sayconfig.voice.set", { voice: speaker })}`,
       ephemeral: true,
     });
   },
 
   async handleDescription(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const voiceDescription = interaction.options.getString("text", true);
-    
+
     await ttsService.saveConfig(userId, guildId, { voiceDescription });
-    
+
     return interaction.reply({
-      content: `✅ Voice description set to: "${voiceDescription}"`,
+      content: `✅ ${i18n.__mf("sayconfig.voiceDescription.set", { text: voiceDescription })}`,
       ephemeral: true,
     });
   },
 
   async handleStyle(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const styleInstruction = interaction.options.getString("text", true);
-    
+
     await ttsService.saveConfig(userId, guildId, { styleInstruction });
-    
+
     return interaction.reply({
-      content: `✅ Style instruction set to: "${styleInstruction}"`,
+      content: `✅ ${i18n.__mf("sayconfig.style.set", { text: styleInstruction })}`,
       ephemeral: true,
     });
   },
@@ -255,7 +257,7 @@ export default {
 
     if (!isAudioFile) {
       return interaction.editReply({
-        content: `❌ Invalid file type. Supported formats: ${audioExtensions.join(', ')}`,
+        content: `❌ ${i18n.__mf("common.invalidFileType", { formats: audioExtensions.join(', ') })}`,
       });
     }
 
@@ -263,7 +265,7 @@ export default {
     const maxSize = 10 * 1024 * 1024;
     if (attachment.size > maxSize) {
       return interaction.editReply({
-        content: `❌ File is too large (${(attachment.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB.`,
+        content: `❌ ${i18n.__mf("common.fileTooLarge", { size: (attachment.size / 1024 / 1024).toFixed(2), max: 10 })}`,
       });
     }
 
@@ -283,27 +285,31 @@ export default {
       });
 
       return interaction.editReply({
-        content: `✅ Reference audio uploaded and saved!\n📝 Reference text: "${referenceText}"\n🎤 Mode automatically set to **voice_clone**`,
+        content: [
+          `✅ ${i18n.__("sayconfig.reference.saved")}`,
+          `📝 ${i18n.__mf("sayconfig.reference.text", { text: referenceText })}`,
+          `🎤 ${i18n.__mf("sayconfig.reference.modeSet", { mode: "voice_clone" })}`
+        ].join("\n"),
       });
     } catch (error) {
       console.error("[sayconfig] Error uploading reference audio:", error);
       return interaction.editReply({
-        content: "❌ Failed to upload reference audio. Please try again.",
+        content: `❌ ${i18n.__("sayconfig.reference.failed")}`,
       });
     }
   },
 
   async handleReset(interaction: ChatInputCommandInteraction, userId: string, guildId: string | null) {
     const deleted = await ttsService.deleteConfig(userId, guildId || undefined);
-    
+
     if (deleted) {
       return interaction.reply({
-        content: "✅ TTS configuration reset to defaults.",
+        content: `✅ ${i18n.__("sayconfig.reset.done")}`,
         ephemeral: true,
       });
     } else {
       return interaction.reply({
-        content: "ℹ️ No custom configuration found to reset.",
+        content: `ℹ️ ${i18n.__("sayconfig.reset.none")}`,
         ephemeral: true,
       });
     }

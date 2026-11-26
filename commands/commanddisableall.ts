@@ -7,7 +7,7 @@ import { i18n } from "../utils/i18n";
 const commanddisableall: Command = {
     data: new SlashCommandBuilder()
         .setName("commanddisableall")
-        .setDescription("Disable all commands except essential ones")
+        .setDescription(i18n.__("commanddisableall.description"))
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator) as SlashCommandBuilder,
     
     async execute(interaction: ChatInputCommandInteraction) {
@@ -24,9 +24,9 @@ const commanddisableall: Command = {
         await svc.updateSettings(interaction.guildId, { disabledCommands: toDisable });
 
         await interaction.reply({ embeds: [new EmbedBuilder()
-            .setTitle("��� All Commands Disabled")
+            .setTitle(`🚫 ${i18n.__("commanddisableall.title")}`)
             .setColor(0xe74c3c)
-            .setDescription(`Disabled **${toDisable.length}** commands.\n\nProtected commands still available:\n${protectedCommands.map(c => `\`/${c}\``).join(", ")}\n\nUse \`/commandenableall\` to restore all commands.`)] });
+            .setDescription(i18n.__mf("commanddisableall.done", { count: toDisable.length, commands: protectedCommands.map(c => `\`/${c}\``).join(", ") }))] });
     }
 };
 

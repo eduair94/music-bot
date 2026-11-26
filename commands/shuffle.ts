@@ -21,7 +21,7 @@ export default {
     const hasDJ = await hasDJPermission(guildMember as GuildMember);
     if (!hasDJ) {
       return interaction.editReply({ 
-        content: "❌ You need the DJ role to use this command."
+        content: `❌ ${i18n.__("common.djRequired")}`
       }).catch(console.error);
     }
 
@@ -35,7 +35,8 @@ export default {
     queue.tracks.shuffle();
     
     // Log the action
-    await logAction(interaction.guild!, interaction.user, "shuffle", `${queue.tracks.size} tracks`);
+    const trackCount = queue.tracks.size;
+    await logAction(interaction.guild!, interaction.user, "shuffle", () => i18n.__mf("actionLog.detail.tracks", { count: trackCount }));
     
     return interaction.editReply({ content: i18n.__mf("shuffle.result", { author: interaction.user.id }) }).catch(console.error);
   }
