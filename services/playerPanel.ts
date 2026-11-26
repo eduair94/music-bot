@@ -26,6 +26,7 @@ import { clearVoiceStatus, nowPlayingStatus, setVoiceStatus } from "./voiceStatu
 const DEFAULT_ACCENT = 0xf8aa2a;
 const V2 = MessageFlags.IsComponentsV2;
 const NO_MENTIONS = { parse: [] as never[] };
+const FROZEN_PANEL_TTL_MS = 3 * 60 * 1000;
 
 interface PanelRef {
   channelId: string;
@@ -318,7 +319,9 @@ export class PlayerPanelService {
         if (reason === "disconnected") return `👋 ${i18n.__("player.disconnected")}`;
         return `🏁 ${i18n.__("player.ended")}\n-# ${i18n.__("player.endedAutoplayHint")}`;
       });
-      await message.edit({ components: [this.finalContainer(text)], flags: V2, allowedMentions: NO_MENTIONS }).catch(() => undefined);
+      const edited = await message.edit({ components: [this.finalContainer(text)], flags: V2, allowedMentions: NO_MENTIONS }).catch(() => null);
+      // The summary is only useful for a moment; don't let finished sessions pile up in the channel.
+      if (edited) setTimeout(() => void edited.delete().catch(() => undefined), FROZEN_PANEL_TTL_MS).unref();
     });
   }
 
