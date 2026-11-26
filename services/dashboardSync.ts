@@ -1,5 +1,15 @@
 import { GuildQueue, Player, Track } from "discord-player";
-import { ChannelType, Client, VoiceChannel } from "discord.js";
+import {
+    ChannelType,
+    Client,
+    Guild,
+    GuildMember,
+    PermissionFlagsBits,
+    TextChannel,
+    VoiceBasedChannel,
+    VoiceChannel
+} from "discord.js";
+import { Types } from "mongoose";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
 import { ITrack, PlaybackState } from "../models/PlaybackState";
 import {
@@ -7,7 +17,34 @@ import {
     isRedisAvailable,
     setPlaybackState as setRedisPlaybackState
 } from "../shared/services/redis";
-import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
+import { truncate } from "../utils/format";
+import { localeForGuild } from "../utils/guildLocale";
+import { i18n, runWithLocale } from "../utils/i18n";
+import {
+    ChannelLabel,
+    enqueue,
+    EnqueueResult,
+    playErrorMessage,
+    playGate,
+    PlayRejection,
+    playRejectionMessage
+} from "../utils/playFlow";
+import { DiscordPlayerService, PlayError, QueueMetadata } from "./discordPlayer";
+import { GuildSettingsService } from "./guildSettings";
+
+/** Outcome of a dashboard play request, already in the server's language. */
+type DashboardPlayOutcome = { ok: true; message: string; queue: GuildQueue } | { ok: false; message: string };
+
+/** The dashboard shows plain text: drop Discord markdown from bot messages. */
+function plainText(text: string): string {
+  return text
+    .replace(/(?<!\\)\*\*|(?<!\\)`/g, "")
+    .replace(/\\([\\*_~`|])/g, "$1")
+    .trim();
+}
+
+/** Channels are named, not mentioned, outside Discord. */
+const channelName: ChannelLabel = (_id, name) => `#${name}`;
 
 /**
  * DashboardSyncService - Syncs bot state with the dashboard via MongoDB
@@ -313,6 +350,20 @@ export class DashboardSyncService {
   }
 
   /**
+   * Take a pending command and mark it processing. Poll ticks overlap when a
+   * command is slow (a play can take seconds), so two ticks can load the same
+   * command; only the one that flips it from "pending" runs it.
+   */
+  private async claim(_id: Types.ObjectId): Promise<boolean> {
+    const claimed = await BotCommand.findOneAndUpdate(
+      { _id, status: "pending" },
+      { status: "processing" },
+      { projection: { _id: 1 } }
+    ).lean();
+    return Boolean(claimed);
+  }
+
+  /**
    * Execute a linked bot command (start/stop/restart)
    */
   private async executeLinkedBotCommand(command: IBotCommand): Promise<void> {
@@ -327,10 +378,7 @@ export class DashboardSyncService {
 
     try {
       // Mark as processing
-      await BotCommand.updateOne(
-        { _id },
-        { status: "processing" }
-      );
+      if (!(await this.claim(_id))) return;
 
       console.log(`[DashboardSync] 🤖 Executing linked bot command: ${type} for bot ${botId}`);
 
@@ -393,8 +441,9 @@ export class DashboardSyncService {
   /** Owner action from the dashboard: republish guild data + heartbeat. */
   private async executeAdminCommand(command: IBotCommand): Promise<void> {
     const { _id, type } = command;
+    if (!_id) return;
     try {
-      await BotCommand.updateOne({ _id }, { status: "processing" });
+      if (!(await this.claim(_id))) return;
       const { TelemetryService } = await import("./telemetry");
       const { guilds } = await TelemetryService.getInstance().resyncNow();
       const result = `Resynced ${guilds} guilds`;
@@ -417,16 +466,19 @@ export class DashboardSyncService {
 
     try {
       // Mark as processing
-      await BotCommand.updateOne(
-        { _id },
-        { status: "processing" }
-      );
+      if (!(await this.claim(_id))) return;
 
       console.log(`[DashboardSync] 🎵 Executing command: ${cmd} for guild ${guildId}`);
 
       const guild = this.client?.guilds.cache.get(guildId);
       if (!guild) {
         throw new Error("Guild not found");
+      }
+
+      // Same pipeline, limits and requester as /play.
+      if (cmd === "play") {
+        await this.executePlay(command, guild);
+        return;
       }
 
       const player = this.playerService?.getPlayer();
@@ -437,46 +489,6 @@ export class DashboardSyncService {
       let result: string = "Command executed";
 
       switch (cmd) {
-        case "play": {
-          if (!params?.query) throw new Error("No query provided");
-          
-          let voiceChannel: VoiceChannel | null = null;
-          
-          if (params?.voiceChannelId) {
-            const channel = guild.channels.cache.get(params.voiceChannelId);
-            if (channel?.type === ChannelType.GuildVoice) {
-              voiceChannel = channel as VoiceChannel;
-            }
-          }
-          
-          if (!voiceChannel) {
-            voiceChannel = guild.channels.cache.find(
-              c => c.type === ChannelType.GuildVoice
-            ) as VoiceChannel | undefined || null;
-          }
-          
-          if (!voiceChannel) {
-            throw new Error("No voice channel available");
-          }
-
-          const searchResult = await player.search(params!.query!, {
-            requestedBy: undefined,
-          });
-
-          if (!searchResult.hasTracks()) {
-            throw new Error("No tracks found");
-          }
-
-          await player.play(voiceChannel, searchResult, {
-            nodeOptions: {
-              metadata: {} as QueueMetadata,
-            },
-          });
-
-          result = `Added: ${searchResult.tracks[0].title}`;
-          break;
-        }
-
         case "pause": {
           const queue = player.nodes.get(guildId);
           if (queue) {
@@ -635,6 +647,126 @@ export class DashboardSyncService {
         { status: "failed", error: errorMessage, processedAt: new Date() }
       );
     }
+  }
+
+  /**
+   * "play" from the dashboard: the same pipeline as /play (limits, quality,
+   * requester), with the outcome written back in the server's language.
+   */
+  private async executePlay(command: IBotCommand, guild: Guild): Promise<void> {
+    const locale = await localeForGuild(guild);
+    const outcome = await runWithLocale(locale, () => this.dashboardPlay(command, guild));
+
+    if (outcome.ok) {
+      await BotCommand.updateOne(
+        { _id: command._id },
+        { status: "completed", result: outcome.message, processedAt: new Date() }
+      );
+      await this.updatePlaybackState(outcome.queue);
+      console.log(`[DashboardSync] ✅ Command completed: play - ${outcome.message}`);
+    } else {
+      await BotCommand.updateOne(
+        { _id: command._id },
+        { status: "failed", error: outcome.message, processedAt: new Date() }
+      );
+      console.log(`[DashboardSync] ⛔ play refused in guild ${guild.id}: ${outcome.message}`);
+    }
+  }
+
+  private async dashboardPlay(command: IBotCommand, guild: Guild): Promise<DashboardPlayOutcome> {
+    const query = command.params?.query?.trim() ?? "";
+    const fail = (message: string): DashboardPlayOutcome => ({ ok: false, message: plainText(message) });
+
+    try {
+      if (!query) return fail(i18n.__("dashboardPlay.noQuery"));
+
+      const userId = command.userId ?? "";
+      const member = /^\d{15,25}$/.test(userId) ? await guild.members.fetch(userId).catch(() => null) : null;
+      if (!member) return fail(i18n.__("dashboardPlay.notMember"));
+
+      const gate = await playGate(guild.id, member);
+      if (gate) return fail(playRejectionMessage(gate, query, channelName));
+
+      const target = await this.dashboardVoiceChannel(guild, member, command.params?.voiceChannelId);
+      if (typeof target === "string") return fail(target);
+
+      const result = await enqueue({
+        guild,
+        member,
+        voiceChannel: target,
+        textChannel: await this.panelChannel(guild),
+        query
+      });
+      return { ok: true, message: this.describePlay(result), queue: result.queue };
+    } catch (error) {
+      if (error instanceof PlayRejection) return fail(playRejectionMessage(error, query, channelName));
+      if (!(error instanceof PlayError)) console.error("[DashboardSync] ❌ Dashboard play failed:", error);
+      return fail(playErrorMessage(error, query));
+    }
+  }
+
+  /**
+   * Where a dashboard play goes: the requester's own voice channel, else the
+   * channel picked in the dashboard, else the channel the bot is already
+   * playing in. Never some other channel. Returns the channel or a message.
+   */
+  private async dashboardVoiceChannel(
+    guild: Guild,
+    member: GuildMember,
+    requestedId: string | undefined
+  ): Promise<VoiceBasedChannel | string> {
+    if (member.voice.channel) return member.voice.channel;
+
+    const queue = this.playerService?.getQueue(guild.id);
+    const sessionId = (queue && !queue.deleted ? queue.channel?.id : null) ?? guild.members.me?.voice.channelId ?? null;
+    const channelId = requestedId || sessionId;
+    if (!channelId) return i18n.__("dashboardPlay.noVoiceChannel");
+
+    const channel = guild.channels.cache.get(channelId) ?? (await guild.channels.fetch(channelId).catch(() => null));
+    if (!channel || !channel.isVoiceBased()) return i18n.__("dashboardPlay.channelGone");
+
+    // A dashboard manager can only send music where they could listen to it.
+    if (!channel.permissionsFor(member).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
+      return i18n.__mf("dashboardPlay.memberCantJoin", { channel: channelName(channel.id, channel.name) });
+    }
+    return channel;
+  }
+
+  /**
+   * Text channel for the player panel when this starts a session: the
+   * running session's channel, else the 24/7 or first allowed text channel
+   * from the server settings, else the system channel.
+   */
+  private async panelChannel(guild: Guild): Promise<TextChannel | null> {
+    const queue = this.playerService?.getQueue(guild.id);
+    const current = queue && !queue.deleted ? ((queue.metadata || {}) as QueueMetadata).channel : undefined;
+    if (current) return current;
+
+    const me = guild.members.me;
+    const usable = (id: string | null | undefined): TextChannel | null => {
+      const channel = id ? guild.channels.cache.get(id) : null;
+      if (!channel || (channel.type !== ChannelType.GuildText && channel.type !== ChannelType.GuildAnnouncement)) return null;
+      if (me && !channel.permissionsFor(me).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) return null;
+      return channel as TextChannel;
+    };
+
+    const settings = await GuildSettingsService.getInstance().getSettings(guild.id).catch(() => null);
+    for (const id of [settings?.stay247?.textChannelId, ...(settings?.allowedTextChannels ?? [])]) {
+      const channel = usable(id);
+      if (channel) return channel;
+    }
+    return usable(guild.systemChannelId);
+  }
+
+  /** "Now playing: …" / "Added to the queue (#3): …" in plain text. */
+  private describePlay(result: EnqueueResult): string {
+    const { track, playlist, added, position } = result;
+    if (playlist && added > 1) {
+      return i18n.__mf("dashboardPlay.playlist", { count: added, title: truncate(playlist.title || "Playlist", 100) });
+    }
+    const title = truncate(track.author ? `${track.title} — ${track.author}` : track.title, 140);
+    if (position === 0) return i18n.__mf("dashboardPlay.nowPlaying", { title });
+    return i18n.__mf("dashboardPlay.added", { title, position });
   }
 
   /**

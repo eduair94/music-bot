@@ -75,15 +75,28 @@ export function CollectionPanel({
 
     setLoadingCollection(collectionId);
     try {
-      // Play each track in the collection
+      // Play each track in the collection; the bot explains any refusal.
+      let added = 0;
+      let lastError: string | null = null;
       for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i];
         const result = await sendCommand("play", { query: track.url || track.title });
-        if (!result.success) {
-          setActionMessage({ type: "error", message: `Failed to add track: ${track.title}` });
+        if (result.success) {
+          added++;
+        } else {
+          lastError = result.error || `Failed to add track: ${track.title}`;
+          // Nothing got in on the first try: the reason (no voice channel,
+          // missing permissions…) applies to the rest too.
+          if (added === 0) break;
         }
       }
-      setActionMessage({ type: "success", message: `Loaded ${tracks.length} tracks from collection` });
+      if (lastError === null) {
+        setActionMessage({ type: "success", message: `Loaded ${tracks.length} tracks from collection` });
+      } else if (added === 0) {
+        setActionMessage({ type: "error", message: lastError });
+      } else {
+        setActionMessage({ type: "error", message: `Loaded ${added} of ${tracks.length} tracks. ${lastError}` });
+      }
       setLoadDialogOpen(false);
     } catch (err) {
       setActionMessage({ type: "error", message: "Failed to load collection" });

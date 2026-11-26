@@ -302,6 +302,16 @@
     "embedDescription": "Access the web dashboard to manage your server settings, view queue, and more!",
     "footer": "Manage your music experience"
   },
+  "dashboardPlay": {
+    "noQuery": "Enter a song name or link first.",
+    "notMember": "You need to be a member of this server to play music in it.",
+    "noVoiceChannel": "Join a voice channel in Discord, or pick one here, then try again.",
+    "channelGone": "That voice channel no longer exists. Pick another one.",
+    "memberCantJoin": "You don't have access to {channel}. Pick a voice channel you can join.",
+    "nowPlaying": "Now playing: {title}",
+    "added": "Added to the queue (#{position}): {title}",
+    "playlist": "Added {count} songs from {title}"
+  },
   "clean": {
     "description": "Delete bot messages from the channel",
     "noMessages": "No bot messages found to delete.",

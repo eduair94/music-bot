@@ -74,9 +74,10 @@ export async function POST(request: Request, { params }: RouteContext) {
       userId: session.user.discordId || session.user.id || "unknown",
     });
 
-    // Wait for up to 5 seconds for the command to be processed
+    // Wait for the command to be processed. "play" runs the full bot pipeline
+    // (search, playlists), so give it longer to report its result or refusal.
     const startTime = Date.now();
-    const timeout = 5000;
+    const timeout = command === "play" ? 20000 : 5000;
     
     while (Date.now() - startTime < timeout) {
       const updatedCommand = await BotCommand.findById(botCommand._id).lean() as IBotCommand | null;
