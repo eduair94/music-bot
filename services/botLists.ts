@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Client } from "discord.js";
+import { Client, Routes } from "discord.js";
 
 /**
  * Posts the server count (and, where supported, the command list) to bot
@@ -176,8 +176,8 @@ export class BotListService {
     if (!id) return;
     let registered: unknown[] = [];
     try {
-      const fetched = await client.application?.commands.fetch();
-      registered = fetched ? [...fetched.values()].map((c) => c.toJSON()) : [];
+      // Raw API JSON: discord.js objects carry BigInt permission fields that JSON can't serialize.
+      registered = (await client.rest.get(Routes.applicationCommands(id))) as unknown[];
     } catch {
       return;
     }
