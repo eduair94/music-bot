@@ -71,6 +71,17 @@ Bypass is a music bot that plays YouTube, Spotify, SoundCloud, Apple Music and D
 
 Slash commands only. To test: join a voice channel, run `/play song:never gonna give you up`, then use the buttons on the player card. `/help` lists every command. Premium is not needed for review; to try 24/7, vote once on this site, then run `/247`.
 
+## Status (2026-11-26)
+
+| Site | State | Wired |
+|---|---|---|
+| top.gg | Listed; copy, tags, 18 languages, support invite and repo updated | v1 token (stats + command sync), signed vote webhook verified (200 signed / 401 forged) |
+| discordbotlist.com | Listed; copy, tags, invite and support updated | Vote webhook + secret set. API token still missing (the "Generate token" link on the bot page didn't respond to automation; one click by the owner) |
+| discord.bots.gg | Listed; copy updated | API key set, stats posting (200) |
+| botlist.me | Submitted 2026-11-26, in review queue (~1 day). Owner joined their server (required) | Token after approval |
+| discords.com | Not listed: their "Add bot" lookup answers "not found" for our public ID | Retry later |
+| discordlist.gg, voidbots.net, discord.place, radarcord.net, bots.ondiscord.xyz | Not submitted yet | — |
+
 ## Where to list it
 
 Approval needs an owner login on each site. Order by reach:
