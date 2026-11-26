@@ -96,6 +96,22 @@ export class DebugPanel {
       });
     });
 
+    // ── Self-test (loopback only) ──────────────────────────
+    // Drives the real play pipeline without a user, for verifying a deploy:
+    //   docker exec music-bot node -e "fetch('http://127.0.0.1:9090/api/selftest?token=…&action=play&guild=…&voice=…&text=…&query=…',{method:'POST'}).then(r=>r.text()).then(console.log)"
+    this.app.post("/api/selftest", async (req: Request, res: Response) => {
+      const ip = req.socket.remoteAddress ?? "";
+      if (!["127.0.0.1", "::1", "::ffff:127.0.0.1"].includes(ip)) {
+        res.status(403).json({ error: "loopback only" });
+        return;
+      }
+      try {
+        res.json(await this.selfTest(req.query as Record<string, string>));
+      } catch (error) {
+        res.status(500).json({ error: (error as Error)?.message ?? String(error) });
+      }
+    });
+
     // ── HTML UI ────────────────────────────────────────────
     this.app.get("/", (req: Request, res: Response) => {
       res.type("html").send(this.renderHTML(this.token));
@@ -112,6 +128,61 @@ export class DebugPanel {
   }
 
   // ── Self-contained HTML page ─────────────────────────────
+  /** action=play|state|stop|skip; guild, voice, text, query, autoplay=1. */
+  private async selfTest(q: Record<string, string>): Promise<unknown> {
+    const { DiscordPlayerService } = await import("./discordPlayer");
+    const service = DiscordPlayerService.getInstance();
+    const guild = this.client?.guilds.cache.get(q.guild);
+    if (!guild) throw new Error("unknown guild");
+    const queue = () => service.getQueue(guild.id);
+
+    const state = () => {
+      const current = queue();
+      const meta = (current?.metadata || {}) as any;
+      const voice = guild.members.me?.voice.channel;
+      return {
+        connected: Boolean(voice),
+        voiceChannel: voice?.name ?? null,
+        voiceStatus: (voice as any)?.status ?? null,
+        playing: current?.node.isPlaying() ?? false,
+        position: current?.node.getTimestamp()?.current.label ?? null,
+        current: current?.currentTrack ? `${current.currentTrack.title} — ${current.currentTrack.author}` : null,
+        requestedBy: current?.currentTrack?.requestedBy?.username ?? null,
+        upNext: current?.tracks.toArray().slice(0, 3).map((t) => `${t.title}${(t.metadata as any)?.autoplay ? " [autoplay]" : ""}`) ?? [],
+        autoplay: Boolean(meta.autoplay),
+        stay247: Boolean(meta.stay247),
+        volume: current?.node.volume ?? null
+      };
+    };
+
+    if (q.action === "state") return state();
+    if (q.action === "stop") {
+      queue()?.delete();
+      return { stopped: true };
+    }
+    if (q.action === "skip") {
+      queue()?.node.skip();
+      return { skipped: true };
+    }
+    if (q.action === "play") {
+      const voice = guild.channels.cache.get(q.voice);
+      const text = guild.channels.cache.get(q.text);
+      if (!voice?.isVoiceBased() || !text?.isTextBased()) throw new Error("voice/text channel not found");
+      const result = await service.play(voice, q.query || "never gonna give you up", text as any, 128, 25, {
+        requestedBy: this.client!.user
+      });
+      if (result && q.autoplay === "1") {
+        const meta = (result.queue.metadata || {}) as any;
+        meta.autoplay = true;
+        result.queue.metadata = meta;
+        const { ensureAutoplayNext } = await import("./autoplay");
+        void ensureAutoplayNext(result.queue);
+      }
+      return { started: result?.track.title ?? null, added: result?.added, queuePosition: result?.position, ...state() };
+    }
+    throw new Error("unknown action");
+  }
+
   private renderHTML(token: string): string {
     return /* html */ `<!DOCTYPE html>
 <html lang="en">
