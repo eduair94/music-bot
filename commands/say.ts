@@ -41,6 +41,7 @@ export default {
     ),
   cooldown: 5,
   permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
+  isAvailable: () => ttsService.isAvailable(),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const text = interaction.options.getString("text", true);

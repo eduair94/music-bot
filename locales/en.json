@@ -1015,7 +1015,9 @@
     "lyricsLoading": "Looking for lyrics…",
     "autoplayEnabled": "Autoplay on: related songs will keep playing.",
     "autoplayDisabled": "Autoplay off.",
-    "volumeLimit": "This server caps the volume at {max}%."
+    "volumeLimit": "This server caps the volume at {max}%.",
+    "lyricsButton": "Lyrics",
+    "saveButton": "Save"
   },
   "queueView": {
     "title": "Queue",
@@ -1087,5 +1089,13 @@
     "auto": "Automatic (each member's Discord language)",
     "set": "Language set to {language}.",
     "needManage": "You need the Manage Server permission to change the language."
+  },
+  "links": {
+    "website": "Website",
+    "support": "Support",
+    "premium": "Premium",
+    "vote": "Vote",
+    "addToServer": "Add to server",
+    "invite": "Invite"
   }
 }

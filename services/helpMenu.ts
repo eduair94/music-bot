@@ -93,13 +93,13 @@ export function buildHelp(botName: string, category?: CommandCategory): { compon
     );
   container.addActionRowComponents((row) => row.setComponents(select));
   const links = [
-    new ButtonBuilder().setURL(SITE_URL).setLabel("Website").setStyle(ButtonStyle.Link),
-    new ButtonBuilder().setURL(SUPPORT_INVITE_URL).setLabel("Support").setStyle(ButtonStyle.Link),
-    new ButtonBuilder().setURL(PATREON_URL).setLabel("Premium").setStyle(ButtonStyle.Link)
+    new ButtonBuilder().setURL(SITE_URL).setLabel(i18n.__("links.website")).setStyle(ButtonStyle.Link),
+    new ButtonBuilder().setURL(SUPPORT_INVITE_URL).setLabel(i18n.__("links.support")).setStyle(ButtonStyle.Link),
+    new ButtonBuilder().setURL(PATREON_URL).setLabel(i18n.__("links.premium")).setStyle(ButtonStyle.Link)
   ];
   // The top.gg page 404s until the listing is approved (TOPGG_TOKEN is issued then).
   if (process.env.TOPGG_TOKEN) {
-    links.splice(2, 0, new ButtonBuilder().setURL(TOPGG_VOTE_URL).setLabel("Vote").setStyle(ButtonStyle.Link));
+    links.splice(2, 0, new ButtonBuilder().setURL(TOPGG_VOTE_URL).setLabel(i18n.__("links.vote")).setStyle(ButtonStyle.Link));
   }
   container.addActionRowComponents((row) => row.setComponents(...links));
 

@@ -378,7 +378,7 @@ export class Bot {
       integration_types: [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall]
     };
 
-    const slash = [...commandRegistry.values()].map((command) => {
+    const slash = [...commandRegistry.values()].filter((command) => command.isAvailable?.() ?? true).map((command) => {
       const json = command.data.toJSON() as any;
       Object.assign(json, command.userInstallable ? everywhere : guildOnly);
       json.description_localizations ??= descriptionLocalizations(`${json.name}.description`);
@@ -490,7 +490,7 @@ export class Bot {
       const invite = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
           .setURL(botInviteUrl(this.client.user!.id, interaction.guildId ?? undefined))
-          .setLabel("Add to server")
+          .setLabel(i18n.__("links.addToServer"))
           .setEmoji("➕")
           .setStyle(ButtonStyle.Link)
       );

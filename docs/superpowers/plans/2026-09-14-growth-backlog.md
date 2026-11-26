@@ -10,6 +10,12 @@ Living list behind `docs/superpowers/specs/2026-09-14-growth-program-design.md`.
   - Support invite `hjJQKp5zDU` replaces the expired `5w6PErKpyK` in the bot, the dashboard and `BOT_LISTING.md`; both now read it from `shared/links.ts`.
   - `PREMIUM_TIERS.basic` is the real Founder tier (320kbps, filters, 24/7) and `/perks view` shows only the two plans Patreon sells; the landing's structured data stopped quoting $1.50.
   - `/247`, `/importplaylist` and `requirePremiumFeature` all reply with one upsell: the feature hit, $3, 50 spots, a button to the campaign, and the two linking steps.
+- **Competitive upgrade** (2026-11-26, commits 35f1fb1 and after)
+  - Product: Components V2 player panel with persistent buttons, live /play autocomplete, real autoplay and /radio, real 24/7, Apple Music and Deezer links, context menus, voice channel status, 28 languages, server settings applied; 25 fake or duplicate commands removed.
+  - #5 prepared: `BOT_LISTING.md` has true copy, per-site notes and the token and webhook wiring. Submitting needs the owner's Discord login.
+  - #6 done in code: `/vote` and 12 h vote perks (24/7, studio quality); vote webhooks in the dashboard. Each site activates once its token is set.
+  - #7 and #8 done: `BOT_LISTING.md` rewritten; welcome card on guild join.
+  - Funnel fix: Discord's "Add App" installed only `applications.commands` (no bot user); it now installs the bot with the right permissions.
 
 ## Next
 

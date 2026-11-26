@@ -8,6 +8,7 @@ import { SettingsHandlerContext } from "./types";
 
 export async function handleLanguage({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
   const languages = [
+    { label: "Automatic (each member's Discord language)", value: "auto" },
     { label: "English", value: "en" },
     { label: "Spanish", value: "es" },
     { label: "French", value: "fr" },

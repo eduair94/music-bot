@@ -32,6 +32,8 @@ export interface Command {
    * Such a command must not assume `interaction.guild`.
    */
   userInstallable?: boolean;
+  /** Hide the command when its backing service isn't configured (checked at registration). */
+  isAvailable?(): boolean;
 }
 
 export interface ContextMenuCommand {

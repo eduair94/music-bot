@@ -22,8 +22,8 @@ export default {
       .addActionRowComponents((row) =>
         row.setComponents(
           new ButtonBuilder().setLabel(i18n.__mf("Invite")).setStyle(ButtonStyle.Link).setURL(botInviteUrl(interaction.client.user!.id)),
-          new ButtonBuilder().setLabel("Website").setStyle(ButtonStyle.Link).setURL(SITE_URL),
-          new ButtonBuilder().setLabel("Support").setStyle(ButtonStyle.Link).setURL(SUPPORT_INVITE_URL)
+          new ButtonBuilder().setLabel(i18n.__("links.website")).setStyle(ButtonStyle.Link).setURL(SITE_URL),
+          new ButtonBuilder().setLabel(i18n.__("links.support")).setStyle(ButtonStyle.Link).setURL(SUPPORT_INVITE_URL)
         )
       );
     return interaction.reply({ components: [container], flags: MessageFlags.IsComponentsV2 }).catch(console.error);

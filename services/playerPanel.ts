@@ -191,8 +191,8 @@ export class PlayerPanelService {
     );
     container.addActionRowComponents((row) =>
       row.setComponents(
-        new ButtonBuilder().setCustomId("player:lyrics").setEmoji("🎤").setLabel("Lyrics").setStyle(ButtonStyle.Secondary),
-        new ButtonBuilder().setCustomId("player:save").setEmoji("💾").setLabel("Save").setStyle(ButtonStyle.Secondary)
+        new ButtonBuilder().setCustomId("player:lyrics").setEmoji("🎤").setLabel(i18n.__("player.lyricsButton")).setStyle(ButtonStyle.Secondary),
+        new ButtonBuilder().setCustomId("player:save").setEmoji("💾").setLabel(i18n.__("player.saveButton")).setStyle(ButtonStyle.Secondary)
       )
     );
 

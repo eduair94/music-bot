@@ -108,6 +108,7 @@ export default {
         .setDescription("Reset your TTS configuration to defaults")
     ),
   cooldown: 3,
+  isAvailable: () => ttsService.isAvailable(),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();

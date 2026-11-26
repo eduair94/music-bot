@@ -19,33 +19,12 @@ export default {
   data: new SlashCommandBuilder()
     .setName("user")
     .setDescription("User profile and preferences")
-    // View profile
+    // Visibility/leaderboard/settings/reset were in-memory only (lost on
+    // restart, read by nothing) and were removed 2026-11.
     .addSubcommand(sub => sub
       .setName("profile")
       .setDescription("View user profile")
-      .addUserOption(opt => opt.setName("target").setDescription("User to view")))
-    // Set visibility
-    .addSubcommand(sub => sub
-      .setName("visibility")
-      .setDescription("Set profile visibility")
-      .addStringOption(opt => opt.setName("level").setDescription("Visibility").setRequired(true)
-        .addChoices(
-          { name: "Public", value: "public" },
-          { name: "Private", value: "private" }
-        )))
-    // Leaderboard visibility
-    .addSubcommand(sub => sub
-      .setName("leaderboard")
-      .setDescription("Show on server leaderboards")
-      .addBooleanOption(opt => opt.setName("visible").setDescription("Show on leaderboards").setRequired(true)))
-    // View settings
-    .addSubcommand(sub => sub
-      .setName("settings")
-      .setDescription("View your current settings"))
-    // Reset
-    .addSubcommand(sub => sub
-      .setName("reset")
-      .setDescription("Reset profile to defaults")),
+      .addUserOption(opt => opt.setName("target").setDescription("User to view"))),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
