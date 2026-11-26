@@ -81,9 +81,9 @@ Slash commands only. To test: join a voice channel, run `/play song:never gonna 
 | botlist.me | Submitted 2026-11-26, in review queue (~1 day). Owner joined their server (required) | Token after approval |
 | voidbots.net | Submitted, pending review. Owner joined their server (required; leaving removes the bot) | Token + webhook after approval |
 | discordlist.gg | Submitted (API answered 200); the page appears after approval | Token after approval |
-| radarcord.net | Form filled but not submitted: they require joining their server, and the owner account stopped accepting invites (Discord's 100-server cap) | — |
-| bots.ondiscord.xyz | Not submitted: also requires joining their server (same cap) | — |
-| discords.com | Not listed: their "Add bot" lookup answers "not found" for our public ID | Retry later |
+| radarcord.net | Submitted, "Not Approved" (pending review). Owner joined their server | Token after approval |
+| bots.ondiscord.xyz | Closed: "Submissions are currently closed, you may only resubmit bots" | — |
+| discords.com | Broken on their side: `/bots/api/bot/<id>/actions/check` answers `no_matches` for every unlisted bot (tested with other well-known bots) | Retry when they fix it |
 | discord.place | Not listed: Cloudflare challenge, then a blank page in the automated browser | Owner can submit by hand |
 
 ## Where to list it
