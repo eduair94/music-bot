@@ -27,7 +27,7 @@ import type { DiscordChannel, BotCommandType, BotCommandParams } from "@/types/d
 interface AddSongProps {
   voiceChannels: DiscordChannel[];
   currentVoiceChannelId: string | null;
-  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<{ success: boolean; error?: string }>;
+  sendCommand: (command: BotCommandType, params?: BotCommandParams) => Promise<{ success: boolean; error?: string; result?: string; queued?: boolean }>;
   sendingCommand: boolean;
 }
 
@@ -67,7 +67,7 @@ export function AddSong({
     const result = await sendCommand("play", params);
 
     if (result.success) {
-      setSuccess("Song added to queue!");
+      setSuccess(result.result || (result.queued ? "Sent to the bot. It's still working on it." : "Song added to queue!"));
       setQuery("");
       setTimeout(() => setSuccess(null), 3000);
     } else {
