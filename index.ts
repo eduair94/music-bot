@@ -41,7 +41,13 @@ async function shutdown(signal: string) {
 
   try {
     const { DiscordPlayerService } = await import("./services/discordPlayer");
-    await DiscordPlayerService.getInstance().getPlayer()?.destroy();
+    const player = DiscordPlayerService.getInstance().getPlayer();
+    // Voice channel statuses ("♪ Song") outlive the bot unless cleared.
+    if (player) {
+      const { clearVoiceStatus } = await import("./services/voiceStatus");
+      await Promise.allSettled(player.nodes.cache.map((queue) => clearVoiceStatus(bot.client, queue.channel?.id)));
+    }
+    await player?.destroy();
   } catch (error) {
     console.error("[Process] Player teardown failed:", error);
   }
