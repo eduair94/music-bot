@@ -36,7 +36,7 @@ const BUTTON_STYLES: Record<ButtonStyle, string> = {
 const FIELDS = [
   { name: "🎤 Artist", value: "M83" },
   { name: "🎵 Source", value: "youtube" },
-  { name: "🔊 Quality", value: "🔊 HQ 320kbps" },
+  { name: "🔊 Quality", value: "🔊 Opus 320 kbps" },
 ];
 
 const DESCRIPTION =

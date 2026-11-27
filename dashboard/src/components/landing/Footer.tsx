@@ -26,7 +26,7 @@ export default function Footer() {
             </div>
             <p className="text-dune mb-6 max-w-md leading-relaxed">
               The studio-grade Discord music bot. Powerful queue management,
-              320kbps audio, and a full web dashboard. Free to use, forever.
+              audio up to 320kbps, and a full web dashboard. Free to use, forever.
             </p>
             <ul className="flex gap-3" role="list" aria-label="Community links">
               <li>
