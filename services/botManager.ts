@@ -49,10 +49,10 @@ const SWEEP_MS = 30 * 60 * 1000;
 /** Env vars a private bot must not inherit: other bots' tokens and Bypass-only secrets. */
 const PRIVATE_ENV = [/^TOKEN_\d+$/, /^BOT_ENCRYPTION_KEY$/, /^DEBUG_TOKEN$/, /PATREON/i, /WEBHOOK/i, /^BOT_INSTANCE$/];
 
-/** Each private bot is a full bot process (~150-250 MB); cap them per host. */
+/** Each private bot is a full bot process (~250-400 MB at start); cap them per host (LINKED_BOTS_MAX, default 3). */
 function maxRunning(): number {
   const n = Number(process.env.LINKED_BOTS_MAX);
-  return Number.isInteger(n) && n >= 0 ? n : 5;
+  return Number.isInteger(n) && n >= 0 ? n : 3;
 }
 
 /** The entry point a child runs: dist/index.js in production, index.ts under ts-node. */
