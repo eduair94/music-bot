@@ -24,7 +24,6 @@ COPY services ./services
 COPY shared ./shared
 COPY structs ./structs
 COPY utils ./utils
-COPY workers ./workers
 
 RUN npm run build
 
