@@ -95,7 +95,12 @@ export function DailyChart({ daily, byInstance }: { daily: Activity["daily"]; by
       { threshold: 0.35 },
     );
     io.observe(el);
-    return () => io.disconnect();
+    // Never leave the chart empty: if it hasn't been seen soon, show it anyway.
+    const fallback = setTimeout(() => setRisen(true), 1200);
+    return () => {
+      io.disconnect();
+      clearTimeout(fallback);
+    };
   }, []);
 
   const { active, setActive, focusProps } = useRoving(n, () => (today >= 0 ? today : n - 1));
@@ -257,7 +262,8 @@ export function DailyChart({ daily, byInstance }: { daily: Activity["daily"]; by
         </p>
       </div>
 
-      <table className="sr-only">
+      <div className="sr-only">
+<table>
         <caption>Plays per day{multi ? ", by stage" : ""}</caption>
         <thead>
           <tr>
@@ -284,6 +290,7 @@ export function DailyChart({ daily, byInstance }: { daily: Activity["daily"]; by
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

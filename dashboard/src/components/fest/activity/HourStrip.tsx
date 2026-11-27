@@ -102,7 +102,8 @@ export function HourStrip({ hours }: { hours: number[] }) {
         <span>More plays</span>
       </div>
 
-      <table className="sr-only">
+      <div className="sr-only">
+<table>
         <caption>Plays by hour of day</caption>
         <tbody>
           {cells.map((v, h) => (
@@ -113,6 +114,7 @@ export function HourStrip({ hours }: { hours: number[] }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
