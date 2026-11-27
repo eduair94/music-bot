@@ -1936,7 +1936,10 @@
     "becomeFounder": "Γίνε Founder",
     "voteTitle": "Ή ψήφισε δωρεάν",
     "voteBody": "Μια ψήφος στο top.gg το ξεκλειδώνει για 12 ώρες. Χρησιμοποίησε `/vote`.",
-    "voteButton": "Ψήφισε στο top.gg"
+    "voteButton": "Ψήφισε στο top.gg",
+    "boostTitle": "Ή κάνε boost στον server υποστήριξής μας",
+    "boostBody": "Όσοι κάνουν boost παίρνουν αυτό και τα υπόλοιπα προνόμια Founder για όσο διάστημα συνεχίζουν το boost. Δεν χρειάζεται σύνδεση λογαριασμού.",
+    "boostButton": "Μπες και κάνε boost"
   },
   "dashboardPlay": {
     "noQuery": "Γράψε πρώτα όνομα τραγουδιού ή σύνδεσμο.",

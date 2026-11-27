@@ -1936,7 +1936,10 @@
     "becomeFounder": "Hazte Founder",
     "voteTitle": "O vota gratis",
     "voteBody": "Un voto en top.gg desbloquea esto durante 12 horas. Usa `/vote`.",
-    "voteButton": "Votar en top.gg"
+    "voteButton": "Votar en top.gg",
+    "boostTitle": "O mejora nuestro servidor de soporte",
+    "boostBody": "Quienes mejoran el servidor obtienen esto y las demás ventajas Founder mientras mantengan la mejora. No hace falta vincular nada.",
+    "boostButton": "Únete y mejora"
   },
   "dashboardPlay": {
     "noQuery": "Primero escribe el nombre de una canción o un enlace.",

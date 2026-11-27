@@ -1936,7 +1936,10 @@
     "becomeFounder": "Founder شو",
     "voteTitle": "یا رایگان رأی بده",
     "voteBody": "یک رأی در top.gg این قابلیت را برای ۱۲ ساعت باز می‌کند. از `/vote` استفاده کن.",
-    "voteButton": "رأی در top.gg"
+    "voteButton": "رأی در top.gg",
+    "boostTitle": "یا سرور پشتیبانی ما رو بوست کن",
+    "boostBody": "بوست‌کننده‌ها تا وقتی بوست می‌کنن، این و بقیه‌ی مزایای Founder رو می‌گیرن. نیازی به لینک کردن چیزی نیست.",
+    "boostButton": "عضو شو و بوست کن"
   },
   "dashboardPlay": {
     "noQuery": "اول اسم آهنگ یا لینک را وارد کن.",

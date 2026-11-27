@@ -1936,7 +1936,10 @@
     "becomeFounder": "Word Founder",
     "voteTitle": "Of stem gratis",
     "voteBody": "Een stem op top.gg ontgrendelt dit voor 12 uur. Gebruik `/vote`.",
-    "voteButton": "Stem op top.gg"
+    "voteButton": "Stem op top.gg",
+    "boostTitle": "Of boost onze supportserver",
+    "boostBody": "Boosters krijgen dit en de andere Founder-voordelen zolang ze boosten. Je hoeft niets te koppelen.",
+    "boostButton": "Join en boost"
   },
   "dashboardPlay": {
     "noQuery": "Voer eerst een nummer of link in.",

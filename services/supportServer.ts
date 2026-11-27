@@ -9,6 +9,8 @@ import {
   GuildTextBasedChannel,
   Message,
   MessageFlags,
+  OverwriteType,
+  Role,
   PermissionFlagsBits,
   SeparatorSpacingSize,
   TextChannel,
@@ -21,6 +23,7 @@ import { SUPPORT_INVITE_URL } from "../shared/links";
 import { TICKET_TOPICS, TicketTopic } from "../shared/tickets";
 import { ComponentInteraction, isButton, isStringSelect, registerComponentHandler } from "../structs/componentRouter";
 import { formatDuration, truncate } from "../utils/format";
+import { SUPPORT_GUILD_ID, setBoosterClient } from "./boosters";
 import { DatabaseService } from "./database";
 import { TelemetryService } from "./telemetry";
 
@@ -33,11 +36,13 @@ import { TelemetryService } from "./telemetry";
  *  - staff #guild-join / #guild-leave / #bot-errors logs
  *  - an automatic first reply on every new #help post
  *  - private tickets: the #tickets panel (posted by scripts/setupSupportServer.ts)
- *    opens a private thread per member, closed with a button
+ *    opens a private thread per member, closed with a button; boosters get priority
+ *  - boosts: Discord creates the "Server Booster" role on the first boost; the bot
+ *    then styles it and opens the private booster lounge (Bypass perks for
+ *    boosters live in services/boosters.ts)
  * Channels and roles are found by name, so the server layout can change
  * without a deploy. Every action is best-effort and never throws.
  */
-const SUPPORT_GUILD_ID = process.env.SUPPORT_GUILD_ID || "1458199268564406487";
 const STATUS_MARKER = "Bypass status";
 /** The logo's violet. */
 const ACCENT = 0x8b5cf6;
@@ -76,6 +81,7 @@ export class SupportServerService {
   public start(client: Client): void {
     if (this.client) return;
     this.client = client;
+    setBoosterClient(client);
     if (!this.guild()) {
       console.log(`[Support] Bot is not in the support server (${SUPPORT_GUILD_ID}); skipping`);
       return;
@@ -97,6 +103,12 @@ export class SupportServerService {
       if (newlyCreated) void this.welcomeHelpPost(thread).catch(() => undefined);
     });
     registerComponentHandler("ticket", (interaction, args) => this.handleTicket(interaction, args));
+    setTimeout(safe("boosters", () => this.ensureBoosterSetup()), 30_000).unref();
+    const onBoosterRole = (role: Role) => {
+      if (role.guild.id === SUPPORT_GUILD_ID && role.tags?.premiumSubscriberRole) void safe("boosters", () => this.ensureBoosterSetup())();
+    };
+    client.on("roleCreate", onBoosterRole);
+    client.on("roleUpdate", (_old, role) => onBoosterRole(role));
     TelemetryService.getInstance().onError((scope, error) => void this.logError(scope, error).catch(() => undefined));
     console.log("[Support] ✅ Linked to the support server");
   }
@@ -310,6 +322,46 @@ export class SupportServerService {
     await thread.send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } } as any);
   }
 
+  // ----------------------------------------------------------- boosters
+
+  /**
+   * Once the server has a booster role: pink, hoisted right above Founders, and
+   * a private lounge for boosters and staff. Idempotent.
+   */
+  private async ensureBoosterSetup(): Promise<void> {
+    const guild = this.guild();
+    if (!guild) return;
+    const booster = guild.roles.cache.find((r) => r.tags?.premiumSubscriberRole);
+    if (!booster) return;
+
+    const founders = this.role("Founders");
+    const wanted = { name: "💎 Server Booster", color: 0xf47fff, hoist: true };
+    if (booster.name !== wanted.name || booster.color !== wanted.color || !booster.hoist) {
+      await booster.edit({ ...wanted, reason: "Style the booster role" });
+    }
+    if (founders && booster.position !== founders.position + 1 && booster.position < guild.members.me!.roles.highest.position) {
+      await booster.setPosition(founders.position + 1, { reason: "Boosters sit with the supporters" }).catch(() => undefined);
+    }
+
+    if (this.channel("booster-lounge")) return;
+    const community = guild.channels.cache.find((c) => c.type === ChannelType.GuildCategory && /community/i.test(c.name));
+    const staff = ["Administrators", "Developers", "Moderators", "Support"].map((n) => this.role(n)).filter(Boolean) as Role[];
+    const can = ["ViewChannel", "SendMessages", "SendMessagesInThreads", "ReadMessageHistory", "EmbedLinks", "AttachFiles", "AddReactions", "UseExternalEmojis", "UseExternalStickers"] as const;
+    await guild.channels.create({
+      name: "💎・booster-lounge",
+      type: ChannelType.GuildText,
+      parent: community?.id,
+      topic: "Thanks for boosting! While you boost: Founder perks in Bypass (24/7, studio quality, no song-length limit, filters), priority tickets and this lounge.",
+      permissionOverwrites: [
+        { id: guild.id, type: OverwriteType.Role, deny: ["ViewChannel"] },
+        { id: booster.id, type: OverwriteType.Role, allow: [...can] },
+        ...staff.map((r) => ({ id: r.id, type: OverwriteType.Role, allow: [...can] }))
+      ],
+      reason: "Private lounge for server boosters"
+    });
+    console.log("[Support] Booster role styled and lounge created");
+  }
+
   // ----------------------------------------------------------- tickets
 
   private async handleTicket(interaction: ComponentInteraction, args: string[]): Promise<void> {
@@ -336,8 +388,11 @@ export class SupportServerService {
       return;
     }
 
+    // Boosters of this server get priority: a 💎 in the name and a note to staff.
+    const member = interaction.member as { premiumSinceTimestamp?: number | null; premium_since?: string | null } | null;
+    const booster = Boolean(member?.premiumSinceTimestamp ?? member?.premium_since);
     const thread = await (channel as TextChannel).threads.create({
-      name: truncate(`${topic.emoji} ${topic.label.toLowerCase()}${suffix}`, 100),
+      name: truncate(`${booster ? "💎 " : ""}${topic.emoji} ${topic.label.toLowerCase()}${suffix}`, 100),
       type: ChannelType.PrivateThread,
       invitable: false,
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
@@ -355,6 +410,7 @@ export class SupportServerService {
         t.setContent(
           [
             `Hi <@${user.id}>, thanks for reaching out. Only you and staff can see this thread.`,
+            ...(booster ? ["💎 **Priority ticket:** thanks for boosting the server. Staff answer these first."] : []),
             "",
             `**To help us answer fast:** ${topic.hint}`,
             "",
@@ -371,7 +427,7 @@ export class SupportServerService {
       await thread.send({ content: `-# ${staff.map((r) => `<@&${r!.id}>`).join(" ")}`, allowedMentions: { roles: staff.map((r) => r!.id) } }).catch(() => undefined);
     }
     await interaction.editReply(`Your ticket is open: <#${thread.id}>`);
-    console.log(`[Support] Ticket opened (${topicKey}) by ${user.id}`);
+    console.log(`[Support] Ticket opened (${topicKey}${booster ? ", booster" : ""}) by ${user.id}`);
   }
 
   /** The member who opened the ticket or anyone who can manage threads may close it. */

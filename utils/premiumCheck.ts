@@ -3,6 +3,7 @@ import { PatreonService } from "../services/patreon";
 import { PremiumFeature } from "./premiumFeatures";
 import { premiumUpsell } from "./upsell";
 import { hasActiveVote, isVotePerk } from "../services/votes";
+import { isBoosterPerk, isSupportBooster } from "../services/boosters";
 
 export { PREMIUM_FEATURES, type PremiumFeature } from "./premiumFeatures";
 
@@ -17,7 +18,9 @@ export async function hasPremiumFeature(
   const premiumInfo = await patreonService.getPremiumFeatures(userId);
   if (premiumInfo.features.includes(feature)) return true;
   // A recent vote on a listing site unlocks some perks for 12 hours.
-  return isVotePerk(feature) && (await hasActiveVote(userId));
+  if (isVotePerk(feature) && (await hasActiveVote(userId))) return true;
+  // Boosting the support server unlocks Founder perks while the boost lasts.
+  return isBoosterPerk(feature) && (await isSupportBooster(userId));
 }
 
 /**

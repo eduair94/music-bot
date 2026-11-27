@@ -1936,7 +1936,10 @@
     "becomeFounder": "Founder 되기",
     "voteTitle": "또는 무료로 투표하기",
     "voteBody": "top.gg에서 투표하면 12시간 동안 이용할 수 있어요. `/vote`를 사용하세요.",
-    "voteButton": "top.gg에서 투표"
+    "voteButton": "top.gg에서 투표",
+    "boostTitle": "또는 서포트 서버를 부스트해 줘",
+    "boostBody": "부스터는 부스트하는 동안 이 혜택과 다른 Founder 혜택을 모두 받을 수 있어. 따로 연동할 필요 없어.",
+    "boostButton": "참가하고 부스트하기"
   },
   "dashboardPlay": {
     "noQuery": "먼저 노래 제목이나 링크를 입력하세요.",

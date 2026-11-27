@@ -1936,7 +1936,10 @@
     "becomeFounder": "Hei Founder",
     "voteTitle": "Pōti utukore rānei",
     "voteBody": "Mā te pōti ki top.gg ka huakina tēnei mō ngā hāora 12. Whakamahia te `/vote`.",
-    "voteButton": "Pōti ki top.gg"
+    "voteButton": "Pōti ki top.gg",
+    "boostTitle": "Ka taea hoki te boost i tō mātou tūmau tautoko",
+    "boostBody": "Ka whiwhi ngā kaiboost i tēnei me ētahi atu painga Founder mō te wā e boost ana rātou. Kāore he mea hei hono.",
+    "boostButton": "Hono mai ka boost"
   },
   "dashboardPlay": {
     "noQuery": "Tāurua tētahi ingoa waiata, hono rānei i te tuatahi.",

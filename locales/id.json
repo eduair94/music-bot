@@ -1936,7 +1936,10 @@
     "becomeFounder": "Jadi Founder",
     "voteTitle": "Atau vote gratis",
     "voteBody": "Satu vote di top.gg membuka fitur ini selama 12 jam. Gunakan `/vote`.",
-    "voteButton": "Vote di top.gg"
+    "voteButton": "Vote di top.gg",
+    "boostTitle": "Atau boost server support kami",
+    "boostBody": "Booster mendapatkan ini dan keuntungan Founder lainnya selama mereka nge-boost. Nggak perlu menautkan apa pun.",
+    "boostButton": "Gabung dan boost"
   },
   "dashboardPlay": {
     "noQuery": "Masukkan judul lagu atau link dulu.",

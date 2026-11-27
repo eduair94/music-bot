@@ -1936,7 +1936,10 @@
     "becomeFounder": "Werde Founder",
     "voteTitle": "Oder stimme kostenlos ab",
     "voteBody": "Eine Stimme auf top.gg schaltet das für 12 Stunden frei. Nutze `/vote`.",
-    "voteButton": "Auf top.gg abstimmen"
+    "voteButton": "Auf top.gg abstimmen",
+    "boostTitle": "Oder booste unseren Support-Server",
+    "boostBody": "Booster bekommen das und die anderen Founder-Vorteile, solange sie boosten. Du musst nichts verknüpfen.",
+    "boostButton": "Beitreten und boosten"
   },
   "dashboardPlay": {
     "noQuery": "Gib zuerst einen Songnamen oder Link ein.",

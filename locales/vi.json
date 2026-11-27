@@ -1936,7 +1936,10 @@
     "becomeFounder": "Trở thành Founder",
     "voteTitle": "Hoặc bỏ phiếu miễn phí",
     "voteBody": "Một lượt bỏ phiếu trên top.gg sẽ mở khóa tính năng này trong 12 giờ. Dùng `/vote`.",
-    "voteButton": "Bỏ phiếu trên top.gg"
+    "voteButton": "Bỏ phiếu trên top.gg",
+    "boostTitle": "Hoặc boost server hỗ trợ của tụi mình",
+    "boostBody": "Người boost sẽ nhận được tính năng này cùng các đặc quyền Founder khác trong suốt thời gian boost. Không cần liên kết gì cả.",
+    "boostButton": "Tham gia và boost"
   },
   "dashboardPlay": {
     "noQuery": "Hãy nhập tên bài hát hoặc liên kết trước.",

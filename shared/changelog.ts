@@ -29,5 +29,15 @@ export const CHANGELOG: ChangelogEntry[] = [
       "`/search`, `/rewind`, `/voteskip` and bass boost levels fixed; 25 broken or duplicate commands removed.",
       "Vote on top.gg to unlock 24/7 and studio quality for 12 hours: `/vote`."
     ]
+  },
+  {
+    version: "3.1.0",
+    date: "2026-11-26",
+    title: "Boost perks and private tickets",
+    items: [
+      "**Boost this server to get Founder perks in Bypass** for as long as you boost: 24/7 mode, studio quality, no song-length limit and audio filters. Boosters also get priority tickets and the 💎 booster lounge.",
+      "**Private tickets:** pick a topic in #tickets and Bypass opens a thread only you and staff can see.",
+      "New server guide, rules screening and cleaner channels. Invite link: discord.gg/KwKwtasGZE"
+    ]
   }
 ];

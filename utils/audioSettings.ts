@@ -1,6 +1,7 @@
 import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";
 import { hasActiveVote } from "../services/votes";
+import { isSupportBooster } from "../services/boosters";
 import { config } from "./config";
 
 /**
@@ -87,8 +88,8 @@ export async function getAudioQuality(userId: string, guildId: string): Promise<
   } else if (guildBitrate > 128) {
     bitrate = guildBitrate;
     source = "guild";
-  } else if (await hasActiveVote(userId)) {
-    // Vote perk: studio quality for 12 hours
+  } else if ((await hasActiveVote(userId)) || (await isSupportBooster(userId))) {
+    // Vote perk (12 hours) or support-server boost: studio quality
     bitrate = 320;
     source = "user";
   } else {

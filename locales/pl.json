@@ -1943,7 +1943,10 @@
     "becomeFounder": "Zostań Founderem",
     "voteTitle": "Albo zagłosuj za darmo",
     "voteBody": "Głos na top.gg odblokowuje to na 12 godzin. Użyj `/vote`.",
-    "voteButton": "Zagłosuj na top.gg"
+    "voteButton": "Zagłosuj na top.gg",
+    "boostTitle": "Albo zboostuj nasz serwer wsparcia",
+    "boostBody": "Boosterzy dostają to i inne korzyści Founder, dopóki boostują. Nic nie musisz łączyć.",
+    "boostButton": "Dołącz i zboostuj"
   },
   "dashboardPlay": {
     "noQuery": "Najpierw wpisz nazwę utworu lub link.",

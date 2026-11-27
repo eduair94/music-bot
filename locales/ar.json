@@ -1936,7 +1936,10 @@
     "becomeFounder": "كن Founder",
     "voteTitle": "أو صوّت مجانًا",
     "voteBody": "التصويت على top.gg يفتح هذه الميزة لمدة 12 ساعة. استخدم `/vote`.",
-    "voteButton": "صوّت على top.gg"
+    "voteButton": "صوّت على top.gg",
+    "boostTitle": "أو عزّز سيرفر الدعم الخاص بنا",
+    "boostBody": "المعزّزون يحصلون على هذه الميزة وباقي مزايا Founder طوال فترة التعزيز. لا حاجة لربط أي شيء.",
+    "boostButton": "انضم وعزّز"
   },
   "dashboardPlay": {
     "noQuery": "أدخل اسم أغنية أو رابطًا أولًا.",

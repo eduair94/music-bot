@@ -1936,7 +1936,10 @@
     "becomeFounder": "Founder ol",
     "voteTitle": "Ya da ücretsiz oy ver",
     "voteBody": "top.gg'de vereceğin bir oy bunu 12 saatliğine açar. `/vote` komutunu kullan.",
-    "voteButton": "top.gg'de oy ver"
+    "voteButton": "top.gg'de oy ver",
+    "boostTitle": "Ya da destek sunucumuzu boostla",
+    "boostBody": "Boost yapanlar, boost yaptıkları sürece bunu ve diğer Founder avantajlarını alır. Bağlaman gereken hiçbir şey yok.",
+    "boostButton": "Katıl ve boostla"
   },
   "dashboardPlay": {
     "noQuery": "Önce bir şarkı adı veya bağlantı gir.",

@@ -1936,7 +1936,10 @@
     "becomeFounder": "成為 Founder",
     "voteTitle": "或免費投票",
     "voteBody": "在 top.gg 投票即可解鎖此功能 12 小時。使用 `/vote`。",
-    "voteButton": "在 top.gg 投票"
+    "voteButton": "在 top.gg 投票",
+    "boostTitle": "或是加成我們的支援伺服器",
+    "boostBody": "只要持續加成，加成者就能享有這項功能和其他 Founder 福利。不需要連結任何帳號。",
+    "boostButton": "加入並加成"
   },
   "dashboardPlay": {
     "noQuery": "請先輸入歌曲名稱或連結。",

@@ -1936,7 +1936,10 @@
     "becomeFounder": "Bli Founder",
     "voteTitle": "Eller stem gratis",
     "voteBody": "En stemme på top.gg låser opp dette i 12 timer. Bruk `/vote`.",
-    "voteButton": "Stem på top.gg"
+    "voteButton": "Stem på top.gg",
+    "boostTitle": "Eller boost support-serveren vår",
+    "boostBody": "Boostere får dette og de andre Founder-fordelene så lenge de booster. Ingenting å koble til.",
+    "boostButton": "Bli med og boost"
   },
   "dashboardPlay": {
     "noQuery": "Skriv inn et låtnavn eller en lenke først.",

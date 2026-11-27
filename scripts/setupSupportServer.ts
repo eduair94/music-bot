@@ -597,6 +597,8 @@ async function main() {
     const r = roleByName(name);
     return r ? `<@&${r.id}>` : `**${name}**`;
   };
+  const boosterRole = roles.find((r) => r.tags && "premium_subscriber" in r.tags);
+  const boosterMention = boosterRole ? `<@&${boosterRole.id}>` : "**💎 Server Booster**";
   const rolesCard = new ContainerBuilder()
     .setAccentColor(accent)
     .addTextDisplayComponents((t) =>
@@ -607,6 +609,7 @@ async function main() {
           `${roleMention("Moderators")} — keep the server safe`,
           `${roleMention("Support")} — answer questions in ${ch(ID.help)} and tickets`,
           `${roleMention("Founders")} — support Bypass on Patreon (synced automatically)`,
+          `${boosterMention} — boosts this server (Discord adds the role)`,
           `${roleMention("Partners")} — communities we work with`,
           `${roleMention("Server Owners")} — you own a server that uses Bypass (synced every hour)`,
           `${roleMention("Voter")} — voted on top.gg in the last 12 hours`,
@@ -622,6 +625,23 @@ async function main() {
           "Staff will never DM you first, ask for your password or token, or ask you to pay anywhere except Patreon.",
           "Bypass never needs Administrator in your server.",
           `If someone DMs you claiming to be staff, don't click anything and report them in ${ch(ID.tickets)}.`
+        ].join("\n")
+      )
+    );
+
+  const boostCard = new ContainerBuilder()
+    .setAccentColor(0xf47fff)
+    .addTextDisplayComponents((t) =>
+      t.setContent(
+        [
+          "## 💎 Boost perks",
+          "Boosting this server helps us grow and unlocks, for as long as your boost lasts:",
+          "• **Founder perks in Bypass, in every server you use it:** 24/7 mode, studio quality (320 kbps), no song-length limit and audio filters",
+          `• **Priority tickets** in ${ch(ID.tickets)}`,
+          `• The ${boosterMention} role, shown separately in the member list`,
+          "• The private 💎 booster lounge",
+          "",
+          "-# Perks switch on within 10 minutes of boosting and end when the boost ends. Nothing to link."
         ].join("\n")
       )
     );
@@ -674,7 +694,7 @@ async function main() {
           "Press 🎤 on the player, or `/lyrics` (also works in DMs if you install Bypass to your account).",
           "",
           "**Premium**",
-          "Founder is $3/month on Patreon: 24/7, studio quality and no song-length limit. Link your Discord in Patreon, then run `/premium link`.",
+          "Founder is $3/month on Patreon: 24/7, studio quality and no song-length limit. Link your Discord in Patreon, then run `/premium link`. Boosting this server gives the same perks while the boost lasts.",
           "",
           `-# Still stuck? Open a post in ${ch(ID.help)} with what you ran, your server ID and the time it happened.`
         ].join("\n")
@@ -710,7 +730,7 @@ async function main() {
     }
   }
 
-  await replaceBotMessages(ID.welcome, [welcome, rolesCard], "#welcome cards");
+  await replaceBotMessages(ID.welcome, [welcome, rolesCard, boostCard], "#welcome cards");
   await replaceBotMessages(ID.tickets, [ticketsCard], "#tickets panel");
   await replaceBotMessages(ID.rules, [rulesCard], "#rules card");
   await replaceBotMessages(ID.faq, [faqCard], "#faq card");

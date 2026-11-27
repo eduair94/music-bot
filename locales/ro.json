@@ -1937,7 +1937,10 @@
     "becomeFounder": "Devino Founder",
     "voteTitle": "Sau votează gratuit",
     "voteBody": "Un vot pe top.gg deblochează asta pentru 12 ore. Folosește `/vote`.",
-    "voteButton": "Votează pe top.gg"
+    "voteButton": "Votează pe top.gg",
+    "boostTitle": "Sau dă boost serverului nostru de suport",
+    "boostBody": "Cei care dau boost primesc asta și celelalte beneficii Founder cât timp dau boost. Nu trebuie să conectezi nimic.",
+    "boostButton": "Intră și dă boost"
   },
   "dashboardPlay": {
     "noQuery": "Introdu mai întâi numele unei piese sau un link.",

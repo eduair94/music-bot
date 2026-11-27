@@ -1936,7 +1936,10 @@
     "becomeFounder": "Become a Founder",
     "voteTitle": "Or vote for free",
     "voteBody": "A vote on top.gg unlocks this for 12 hours. Use `/vote`.",
-    "voteButton": "Vote on top.gg"
+    "voteButton": "Vote on top.gg",
+    "boostTitle": "Or boost our support server",
+    "boostBody": "Boosters get this and the other Founder perks for as long as they boost. Nothing to link.",
+    "boostButton": "Join and boost"
   },
   "dashboardPlay": {
     "noQuery": "Enter a song name or link first.",

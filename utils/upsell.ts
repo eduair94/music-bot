@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from "discord.js";
-import { FOUNDER_PRICE_USD, FOUNDER_SPOTS, PATREON_URL, TOPGG_VOTE_URL } from "../shared/links";
+import { BOOSTER_PERK_FEATURES } from "../services/boosters";
+import { FOUNDER_PRICE_USD, FOUNDER_SPOTS, PATREON_URL, SUPPORT_INVITE_URL, TOPGG_VOTE_URL } from "../shared/links";
 import { i18n } from "./i18n";
 import { PremiumFeature, premiumFeatureName } from "./premiumFeatures";
 
@@ -26,6 +27,12 @@ export function premiumUpsell(feature: PremiumFeature) {
   if (process.env.TOPGG_TOKEN && (feature === "stay_24_7" || feature === "max_quality")) {
     embed.addFields({ name: i18n.__("upsell.voteTitle"), value: i18n.__("upsell.voteBody") });
     row.addComponents(new ButtonBuilder().setLabel(i18n.__("upsell.voteButton")).setStyle(ButtonStyle.Link).setURL(TOPGG_VOTE_URL));
+  }
+
+  // Boosting the support server unlocks Founder perks while the boost lasts.
+  if ((BOOSTER_PERK_FEATURES as readonly string[]).includes(feature)) {
+    embed.addFields({ name: i18n.__("upsell.boostTitle"), value: i18n.__("upsell.boostBody") });
+    row.addComponents(new ButtonBuilder().setLabel(i18n.__("upsell.boostButton")).setStyle(ButtonStyle.Link).setURL(SUPPORT_INVITE_URL));
   }
 
   return { embeds: [embed], components: [row], ephemeral: true as const };

@@ -1936,7 +1936,10 @@
     "becomeFounder": "Staň se Founderem",
     "voteTitle": "Nebo hlasuj zdarma",
     "voteBody": "Hlas na top.gg tohle odemkne na 12 hodin. Použij `/vote`.",
-    "voteButton": "Hlasovat na top.gg"
+    "voteButton": "Hlasovat na top.gg",
+    "boostTitle": "Nebo boostni náš support server",
+    "boostBody": "Boosteři získají tohle i další Founder výhody po celou dobu, co boostují. Nic není potřeba propojovat.",
+    "boostButton": "Připojit se a boostnout"
   },
   "dashboardPlay": {
     "noQuery": "Nejdřív zadej název skladby nebo odkaz.",
