@@ -24,7 +24,8 @@
     "embedDescription": "Elenco di tutti i comandi"
   },
   "invite": {
-    "description": "Invia link di invito del bot"
+    "description": "Invia link di invito del bot",
+    "fleet": "Player extra: Bypass 2, 3 e 4 suonano in altri canali vocali contemporaneamente, con lo stesso /play."
   },
   "loop": {
     "description": "Attiva / disattiva loop brano",
@@ -263,7 +264,8 @@
       "positionInQueue": "Posizione in coda",
       "status": "Stato",
       "tier": "Livello"
-    }
+    },
+    "poweredBy": "⚡ Offerto da {provider}"
   },
   "seek": {
     "description": "Vai a un punto specifico della traccia",
@@ -1164,8 +1166,8 @@
       "title": "Vantaggi premium",
       "intro": "Founder è limitato a {spots} posti e il prezzo resta bloccato.",
       "freeName": "Free — {price}",
-      "founderName": "Founder / Beta Tester — {price}/mese",
       "freePerks": "Audio a 128kbps\nCoda, playlist e testi\nProva di AI DJ: 3 richieste al giorno per server\nTutti i comandi",
+      "founderName": "Founder / Beta Tester — {price}/mese",
       "founderPerks": "Audio a 256kbps\nAI DJ: 50 playlist o radio al giorno per server, radio AI più lunga\nFiltri audio\nModalità 24/7\nRuolo Founder e supporto diretto"
     }
   },
@@ -1271,7 +1273,8 @@
     "dashboard": "Dashboard",
     "support": "Server di supporto",
     "vote": "Vota",
-    "voiceStatusHint": "Vuoi vedere il brano in riproduzione sotto il nome del canale vocale? [Autorizzami di nuovo]({url}) per concedere il permesso Imposta stato canale vocale."
+    "voiceStatusHint": "Vuoi vedere il brano in riproduzione sotto il nome del canale vocale? [Autorizzami di nuovo]({url}) per concedere il permesso Imposta stato canale vocale.",
+    "fleet": "Vuoi la musica in più canali vocali contemporaneamente? Aggiungi anche {bots}. Sono gratis e gestiscono /play quando Bypass è occupato in un altro canale."
   },
   "router": {
     "guildOnly": "Questo comando funziona solo in un server.",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass da 5 a 8 sono inclusi con Premium.",
       "servedHere": "{bot} sta già suonando in {channel}. Usa /play e i controlli lì, oppure entra in un altro canale vocale.",
       "stay247On": "24/7 attivo per {bot}: resta in {channel} e ci rientra dopo i riavvii.",
-      "stay247Off": "24/7 disattivato per {bot}."
+      "stay247Off": "24/7 disattivato per {bot}.",
+      "inviteFree": "Aggiungi {bots} per suonare qui contemporaneamente. Sono gratis, basta un clic ciascuno:",
+      "askAdmin": "Chiedi a qualcuno con il permesso **Gestisci server** di aggiungere {bots}. Sono gratis e permettono a Bypass di suonare in più canali vocali contemporaneamente.",
+      "publicNotice": "{user} voleva la musica in {channel}, ma tutti i bot Bypass in questo server sono occupati. Qualcuno con il permesso **Gestisci server** può aggiungere {bots} gratis, così più canali vocali potranno avere musica contemporaneamente.",
+      "addAll": "Aggiungili tutti"
     },
     "info": {
       "header": "{bot} in {channel}",
@@ -2128,6 +2135,9 @@
       "more": "e altri {count}",
       "card": "La scheda del player con i pulsanti è in {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Questo bot privato non è attivo in questo server. Il proprietario può cambiarlo dalla dashboard di Bypass."
   },
   "ai": {
     "description": "AI DJ: playlist e radio create da una descrizione",

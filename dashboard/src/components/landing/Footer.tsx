@@ -1,5 +1,5 @@
 import BrandMark from "@/components/common/BrandMark";
-import { GITHUB_ISSUES_URL, GITHUB_URL, PATREON_URL } from "@/lib/site";
+import { GITHUB_ISSUES_URL, GITHUB_URL, PATREON_URL, SPOTIFY_PROVIDER_HOST, SPOTIFY_PROVIDER_URL } from "@/lib/site";
 import { Github } from "lucide-react";
 import Link from "next/link";
 import { FaDiscord, FaPatreon } from "react-icons/fa";
@@ -27,6 +27,17 @@ export default function Footer() {
             <p className="text-dune mb-6 max-w-md leading-relaxed">
               The studio-grade Discord music bot. Powerful queue management,
               audio up to 256kbps, and a full web dashboard. Free to use, forever.
+            </p>
+            <p className="text-sm text-dust mb-6">
+              Spotify search &amp; YouTube downloads powered by{" "}
+              <a
+                href={SPOTIFY_PROVIDER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-amber hover:text-amber-hot underline underline-offset-2 transition-colors"
+              >
+                {SPOTIFY_PROVIDER_HOST}<span className="sr-only"> (opens in a new tab)</span>
+              </a>
             </p>
             <ul className="flex gap-3" role="list" aria-label="Community links">
               <li>

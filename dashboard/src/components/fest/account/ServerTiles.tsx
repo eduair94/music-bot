@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight, Pause, Plus, ShieldCheck, User, Volume2 } fro
 import { stage } from "@/lib/dash/stages";
 import type { StageLane, StagePresence } from "@/lib/stage-presence";
 import { GuildBadge } from "../TopBar";
+import { SetupInviteLink } from "./SetupInviteLink";
 import { cx } from "./styles";
 
 export interface ServerTile {
@@ -125,13 +126,16 @@ function UnknownLane() {
   );
 }
 
-/** A server you manage where Bypass is missing: dashed, because it's absent. */
+/**
+ * A server you manage where Bypass is missing: dashed, because it's absent.
+ * Discord opens in a new tab; this tab goes to the server's page to wait for
+ * Bypass and offer the extra stages.
+ */
 export function InviteTile({ guild, href }: { guild: ServerTile; href: string }) {
   return (
-    <a
+    <SetupInviteLink
+      guildId={guild.id}
       href={href}
-      target="_blank"
-      rel="noreferrer"
       aria-label={`Add Bypass to ${guild.name} (opens Discord)`}
       className="group flex min-w-0 items-center gap-3.5 rounded-[4px] border-[1.5px] border-dashed border-ink/45 px-3 py-3 transition-colors duration-150 hover:border-ink hover:bg-ink hover:text-stock focus-visible:bg-ink focus-visible:text-stock"
     >
@@ -144,6 +148,6 @@ export function InviteTile({ guild, href }: { guild: ServerTile; href: string })
         Add Bypass
         <ArrowUpRight size={14} aria-hidden className="opacity-60" />
       </span>
-    </a>
+    </SetupInviteLink>
   );
 }

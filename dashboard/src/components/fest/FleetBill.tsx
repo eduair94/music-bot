@@ -14,6 +14,7 @@ import { useGuildLive, useTicker } from "@/lib/dash/live";
 import { fmtClock, fmtCount, fmtListening, fmtMs, livePosition, trackMs } from "@/lib/dash/format";
 import { stage } from "@/lib/dash/stages";
 import type { FleetInstance, PlaybackState, Track } from "@/lib/dash/types";
+import { StageInvites, useStageInvites } from "./StageInvites";
 import { useToast } from "./Toast";
 import { Button, cx, IconButton, Menu, MenuItem } from "./ui";
 import { useTransitionNav } from "./vt";
@@ -43,6 +44,7 @@ export function FleetBill() {
   const scroller = useRef<HTMLDivElement>(null);
   const [follow, setFollow] = useState(true);
   const lastUserScroll = useRef(0);
+  const invites = useStageInvites();
 
   const instances = useMemo(() => fleet?.instances ?? [], [fleet]);
   const live = instances.filter((i) => i.playback?.currentTrack);
@@ -120,6 +122,10 @@ export function FleetBill() {
   const configured = instances.length;
   const showMore = configured < (fleet.limits.free ?? 4);
 
+  // Managers add a missing stage through the guided run (it notices when the bot arrives); others keep the plain link.
+  const invitable = new Set(invites.invitable.map((i) => i.instance));
+  const onInvite = me?.isAdmin ? (inst: number) => (invitable.has(inst) ? () => invites.start([inst]) : undefined) : () => undefined;
+
   const control = async (inst: number, cmd: Parameters<typeof send>[1], params?: Record<string, unknown>, label?: string) => {
     const r = await send(inst, cmd, params);
     if (!r.success) toast.push({ tone: "error", title: label ? `Couldn't ${label}` : "That didn't work", detail: r.reason || r.error });
@@ -160,6 +166,9 @@ export function FleetBill() {
         </div>
       </div>
 
+      {/* Free stages that aren't in the server yet, and the run that adds them. */}
+      <StageInvites flow={invites} />
+
       {/* Phones: one compact bill row per stage. */}
       <CompactFleet
         instances={instances}
@@ -168,6 +177,7 @@ export function FleetBill() {
         guildName={fleet.guild.name}
         guildId={fleet.guild.id}
         myChannel={me?.voiceChannelId ?? null}
+        onInvite={onInvite}
       />
 
       {/* The bill */}
@@ -220,6 +230,7 @@ export function FleetBill() {
               control={control}
               guildName={fleet.guild.name}
               mine={Boolean(me?.voiceChannelId && i.playback?.voiceChannelId === me.voiceChannelId)}
+              onInvite={onInvite(i.instance)}
             />
           ))}
           {showMore ? <MoreColumn height={height} /> : null}
@@ -308,6 +319,16 @@ function MoreHeader() {
 
 type Control = (inst: number, cmd: Parameters<ReturnType<typeof useGuildLive>["send"]>[1], params?: Record<string, unknown>, label?: string) => Promise<unknown>;
 
+/** A plain click on an invite link starts the guided run instead; modified clicks (new tab) keep the link. */
+function inviteClick(onInvite?: () => void) {
+  if (!onInvite) return undefined;
+  return (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    onInvite();
+  };
+}
+
 function StageColumn({
   inst,
   origin,
@@ -317,6 +338,7 @@ function StageColumn({
   control,
   guildName,
   mine,
+  onInvite,
 }: {
   inst: FleetInstance;
   origin: number;
@@ -326,6 +348,8 @@ function StageColumn({
   control: Control;
   guildName: string;
   mine: boolean;
+  /** Start the guided invite for this stage (managers); without it the link just opens Discord. */
+  onInvite?: () => void;
 }) {
   const s = stage(inst.instance);
   const p = inst.playback;
@@ -356,7 +380,13 @@ function StageColumn({
           <p className="mt-2 text-[14px] leading-snug text-ink-2">
             Invite {inst.name} to run another voice channel at the same time. One <code className="font-semibold">/play</code> still covers every stage.
           </p>
-          <a href={inst.inviteUrl} target="_blank" rel="noreferrer" className="mt-3 inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-ink px-3.5 text-[13px] font-semibold text-stock hover:bg-ink-2">
+          <a
+            href={inst.inviteUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={inviteClick(onInvite)}
+            className="mt-3 inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-ink px-3.5 text-[13px] font-semibold text-stock hover:bg-ink-2"
+          >
             Invite {inst.name} <ArrowUpRight size={14} />
           </a>
         </div>
@@ -690,6 +720,7 @@ function CompactFleet({
   guildName,
   guildId,
   myChannel,
+  onInvite,
 }: {
   instances: FleetInstance[];
   now: number;
@@ -697,6 +728,7 @@ function CompactFleet({
   guildName: string;
   guildId: string;
   myChannel: string | null;
+  onInvite: (instance: number) => (() => void) | undefined;
 }) {
   return (
     <div className="space-y-4 border-t-2 border-ink px-4 pb-6 pt-4 md:hidden">
@@ -709,6 +741,7 @@ function CompactFleet({
           guildName={guildName}
           guildId={guildId}
           mine={Boolean(myChannel && i.playback?.voiceChannelId === myChannel)}
+          onInvite={onInvite(i.instance)}
         />
       ))}
     </div>
@@ -722,6 +755,7 @@ function CompactStage({
   guildName,
   guildId,
   mine,
+  onInvite,
 }: {
   inst: FleetInstance;
   now: number;
@@ -729,6 +763,7 @@ function CompactStage({
   guildName: string;
   guildId: string;
   mine: boolean;
+  onInvite?: () => void;
 }) {
   const s = stage(inst.instance);
   const p = inst.playback;
@@ -752,6 +787,7 @@ function CompactStage({
           href={inst.inviteUrl}
           target="_blank"
           rel="noreferrer"
+          onClick={inviteClick(onInvite)}
           className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-ink px-3.5 text-[13px] font-semibold text-stock"
         >
           Invite {inst.name} <ArrowUpRight size={14} />

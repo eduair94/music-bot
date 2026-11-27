@@ -24,7 +24,8 @@
     "embedDescription": "Lista över alla kommandon"
   },
   "invite": {
-    "description": "Skicka länk till botinbjudan"
+    "description": "Skicka länk till botinbjudan",
+    "fleet": "Extra spelare: Bypass 2, 3 och 4 spelar i andra röstkanaler samtidigt, med samma /play."
   },
   "loop": {
     "description": "Växla musikslinga",
@@ -263,7 +264,8 @@
       "positionInQueue": "Plats i kön",
       "status": "Status",
       "tier": "Nivå"
-    }
+    },
+    "poweredBy": "⚡ Drivs av {provider}"
   },
   "seek": {
     "description": "Spola till en viss tid i låten",
@@ -1164,8 +1166,8 @@
       "title": "Premiumförmåner",
       "intro": "Founder är begränsat till {spots} platser och priset är låst.",
       "freeName": "Gratis — {price}",
-      "founderName": "Founder / Betatestare — {price}/månad",
       "freePerks": "128kbps-ljud\nKö, spellistor och låttexter\nTesta AI DJ: 3 förfrågningar per dag och server\nAlla kommandon",
+      "founderName": "Founder / Betatestare — {price}/månad",
       "founderPerks": "256kbps-ljud\nAI DJ: 50 spellistor eller radiostationer per dag och server, längre AI-radio\nLjudfilter\n24/7-läge\nFounder-roll och direkt support"
     }
   },
@@ -1271,7 +1273,8 @@
     "dashboard": "Kontrollpanel",
     "support": "Supportserver",
     "vote": "Rösta",
-    "voiceStatusHint": "Vill du att låten som spelas visas under röstkanalens namn? [Auktorisera mig igen]({url}) för att ge behörigheten Ange röstkanalstatus."
+    "voiceStatusHint": "Vill du att låten som spelas visas under röstkanalens namn? [Auktorisera mig igen]({url}) för att ge behörigheten Ange röstkanalstatus.",
+    "fleet": "Vill du ha musik i mer än en röstkanal samtidigt? Lägg till {bots} också. De är gratis och tar över /play när Bypass är upptagen i en annan kanal."
   },
   "router": {
     "guildOnly": "Det här kommandot fungerar bara på en server.",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass 5 till 8 ingår i Premium.",
       "servedHere": "{bot} spelar redan i {channel}. Använd /play och kontrollerna där, eller gå med i en annan röstkanal.",
       "stay247On": "24/7 på för {bot}: den stannar i {channel} och ansluter igen efter omstarter.",
-      "stay247Off": "24/7 av för {bot}."
+      "stay247Off": "24/7 av för {bot}.",
+      "inviteFree": "Lägg till {bots} för att spela här samtidigt. De är gratis, ett klick var:",
+      "askAdmin": "Be någon med **Hantera server** att lägga till {bots}. De är gratis och låter Bypass spela i fler röstkanaler samtidigt.",
+      "publicNotice": "{user} ville ha musik i {channel}, men alla Bypass-botar på den här servern är upptagna. Någon med **Hantera server** kan lägga till {bots} gratis, så att fler röstkanaler kan ha musik samtidigt.",
+      "addAll": "Lägg till alla"
     },
     "info": {
       "header": "{bot} i {channel}",
@@ -2128,6 +2135,9 @@
       "more": "och {count} till",
       "card": "Spelarkortet med knapparna finns i {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Den här privata boten är inte aktiverad på den här servern. Ägaren kan ändra det i Bypass-dashboarden."
   },
   "ai": {
     "description": "AI DJ: spellistor och radio skapade från en beskrivning",

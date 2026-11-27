@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * Your own bots: run the Bypass player on a Discord bot you created. Same API
- * as before (/api/user/bots): list, link by token, start/stop/restart, unlink.
+ * Private bots: the full Bypass player on a Discord bot the user created
+ * (Premium). /api/user/bots lists, links by token (and starts it), and
+ * /api/user/bots/[botId] starts, stops, restarts and unlinks.
  * The token field is a password input, is cleared after every attempt, and
  * is never shown back; the API never returns it either.
  */
@@ -26,6 +27,8 @@ interface LinkedBot {
   totalGuilds: number;
   totalSongsPlayed: number;
   createdAt: string;
+  /** Discord invite for this bot (the API adds it). */
+  inviteUrl?: string;
 }
 
 interface BotsResponse {
@@ -66,6 +69,7 @@ const DEMO_DATA: BotsResponse = {
       totalGuilds: 2,
       totalSongsPlayed: 418,
       createdAt: "2026-11-02T20:00:00Z",
+      inviteUrl: "https://discord.com/oauth2/authorize?client_id=100000000000000099&scope=bot+applications.commands",
     },
   ],
 };
@@ -106,6 +110,14 @@ export function MyBots({ demo = false }: { demo?: boolean }) {
   useEffect(() => {
     void fetchBots();
   }, [fetchBots]);
+
+  // A bot that is starting turns online (or fails) within seconds: keep the row current until then.
+  const starting = data?.bots.some((b) => b.status === "starting") ?? false;
+  useEffect(() => {
+    if (demo || !starting) return;
+    const timer = setInterval(() => void fetchBots(), 4000);
+    return () => clearInterval(timer);
+  }, [demo, starting, fetchBots]);
 
   const act = async (bot: LinkedBot, action: Action) => {
     if (demo) {
@@ -184,9 +196,14 @@ export function MyBots({ demo = false }: { demo?: boolean }) {
           {linking && !demo ? (
             <LinkForm
               onCancel={() => setLinking(false)}
-              onLinked={(name) => {
+              onLinked={(name, isPublic) => {
                 setLinking(false);
-                toast.push({ title: `Linked ${name}`, detail: "Start it when you're ready." });
+                toast.push({
+                  title: `Linked ${name}: starting now`,
+                  detail: isPublic
+                    ? "Use Add to server to invite it. It's a public bot, so anyone can add it; turn off Public Bot in the Developer Portal to keep it yours."
+                    : "Use Add to server to invite it to your server.",
+                });
                 void fetchBots();
               }}
             />
@@ -218,9 +235,10 @@ export function MyBots({ demo = false }: { demo?: boolean }) {
             </div>
           ) : locked ? (
             <section className="rounded-[4px] border-[1.5px] border-dashed border-ink/45 p-5 sm:p-6">
-              <h2 className="bill text-[34px]">Linking a bot comes with Founder</h2>
+              <h2 className="bill text-[34px]">A private bot comes with Founder</h2>
               <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink-2">
-                The Founder tier on Patreon lets you link one bot of your own. Your plan today is {tier}.
+                The Founder tier on Patreon lets you run one bot of your own: the whole Bypass player under your bot&apos;s name and
+                avatar. Your plan today is {tier}.
               </p>
               <Link href="/premium" className="mt-4 inline-flex h-10 items-center gap-2 rounded-[4px] bg-ink px-4 text-sm font-semibold text-stock transition-colors hover:bg-ink-2">
                 See Premium <ArrowRight size={16} aria-hidden />
@@ -231,8 +249,8 @@ export function MyBots({ demo = false }: { demo?: boolean }) {
               <section className="rounded-[4px] border-[1.5px] border-dashed border-ink/45 p-5 sm:p-6">
                 <h2 className="bill text-[34px]">No bots linked yet</h2>
                 <p className="mt-2 max-w-[60ch] text-[15px] leading-relaxed text-ink-2">
-                  Link a bot you created in the Discord Developer Portal and Bypass runs its music player under that bot&apos;s name
-                  and avatar.
+                  Link a bot you created in the Discord Developer Portal and Bypass runs the whole player under that bot&apos;s name
+                  and avatar: every command, Hi-Fi audio and 24/7 for everyone in your servers.
                 </p>
                 <Button variant="ink" className="mt-4" onClick={() => setLinking(true)}>
                   <Plus size={16} /> Link a bot
@@ -268,8 +286,9 @@ export function MyBots({ demo = false }: { demo?: boolean }) {
               , create an application and add a bot to it.
             </li>
             <li>On the Bot page, reset the token and copy it. Discord shows it once.</li>
-            <li>Paste it here. Bypass encrypts it before storing it and never shows it again.</li>
-            <li>Invite your bot to a server and start it from this page.</li>
+            <li>On the same page, turn off Public Bot so only you can add it to servers.</li>
+            <li>Paste the token here. Bypass encrypts it before storing it, never shows it again, and starts the bot.</li>
+            <li>Press Add to server to invite it. Its slash commands appear within a minute.</li>
           </ol>
           <p className="mt-4 text-[13px] leading-relaxed text-ink-3">
             Treat a bot token like a password. Bypass staff will never ask you for it.
@@ -336,6 +355,16 @@ function BotRow({
           </div>
         </dl>
         <div className="flex items-center gap-1.5">
+          {bot.inviteUrl ? (
+            <a
+              href={bot.inviteUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-8 items-center gap-1.5 rounded-[4px] border border-ink px-3 text-[13px] font-semibold transition-colors hover:bg-ink hover:text-stock"
+            >
+              <Plus size={13} aria-hidden /> Add to server
+            </a>
+          ) : null}
           {running ? (
             <Button size="sm" variant="outline" busy={pending === `${bot.botId}-stop`} disabled={busy} onClick={() => onAction("stop")}>
               <Square size={13} /> Stop
@@ -385,7 +414,7 @@ function BotRow({
   );
 }
 
-function LinkForm({ onCancel, onLinked }: { onCancel: () => void; onLinked: (name: string) => void }) {
+function LinkForm({ onCancel, onLinked }: { onCancel: () => void; onLinked: (name: string, isPublic: boolean) => void }) {
   const id = useId();
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
@@ -415,7 +444,8 @@ function LinkForm({ onCancel, onLinked }: { onCancel: () => void; onLinked: (nam
           });
           const body = await readJson(res);
           if (!res.ok) throw new Error(body.error || "Couldn't link that bot");
-          onLinked((body as { bot?: { botUsername?: string } }).bot?.botUsername ?? "your bot");
+          const linked = body as { bot?: { botUsername?: string }; isPublic?: boolean };
+          onLinked(linked.bot?.botUsername ?? "your bot", Boolean(linked.isPublic));
         } catch (err) {
           setError(`${err instanceof Error ? err.message : "Couldn't link that bot"}. Paste the token again to retry.`);
         } finally {

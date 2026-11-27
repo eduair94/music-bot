@@ -24,7 +24,8 @@
     "embedDescription": "Vypsat všechny příkazy"
   },
   "invite": {
-    "description": "Poslat pozvánku bota"
+    "description": "Poslat pozvánku bota",
+    "fleet": "Další přehrávače: Bypass 2, 3 a 4 hrají v jiných hlasových kanálech současně, se stejným /play."
   },
   "loop": {
     "description": "Přepnout opakování hudby",
@@ -263,7 +264,8 @@
       "positionInQueue": "Pozice ve frontě",
       "status": "Stav",
       "tier": "Úroveň"
-    }
+    },
+    "poweredBy": "⚡ Běží na {provider}"
   },
   "seek": {
     "description": "Přetočit na konkrétní čas ve skladbě",
@@ -1164,8 +1166,8 @@
       "title": "Premium výhody",
       "intro": "Founder je omezen na {spots} míst a cena je zafixovaná.",
       "freeName": "Free — {price}",
-      "founderName": "Founder / Beta tester — {price}/měsíc",
       "freePerks": "Zvuk 128kbps\nFronta, playlisty a texty písní\nZkušební AI DJ: 3 požadavky denně na server\nVšechny příkazy",
+      "founderName": "Founder / Beta tester — {price}/měsíc",
       "founderPerks": "Zvuk 256kbps\nAI DJ: 50 playlistů nebo rádií denně na server, delší AI rádio\nZvukové filtry\nRežim 24/7\nRole Founder a přímá podpora"
     }
   },
@@ -1271,7 +1273,8 @@
     "dashboard": "Nástěnka",
     "support": "Server podpory",
     "vote": "Hlasovat",
-    "voiceStatusHint": "Chceš, aby se právě hraná skladba zobrazovala pod názvem hlasového kanálu? [Autorizuj mě znovu]({url}) a uděl oprávnění Nastavit stav hlasového kanálu."
+    "voiceStatusHint": "Chceš, aby se právě hraná skladba zobrazovala pod názvem hlasového kanálu? [Autorizuj mě znovu]({url}) a uděl oprávnění Nastavit stav hlasového kanálu.",
+    "fleet": "Chceš hudbu ve více hlasových kanálech najednou? Přidej taky {bots}. Jsou zdarma a převezmou /play, když je Bypass zaneprázdněný v jiném kanálu."
   },
   "router": {
     "guildOnly": "Tento příkaz funguje jen na serveru.",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass 5 až 8 jsou součástí Premium.",
       "servedHere": "{bot} už hraje v {channel}. Použij tam /play a ovládací prvky, nebo se připoj do jiného hlasového kanálu.",
       "stay247On": "24/7 zapnuto pro {bot}: zůstane v {channel} a po restartu se do něj znovu připojí.",
-      "stay247Off": "24/7 vypnuto pro {bot}."
+      "stay247Off": "24/7 vypnuto pro {bot}.",
+      "inviteFree": "Přidej {bots}, aby tu mohli hrát současně. Jsou zdarma, každý stačí jedním kliknutím:",
+      "askAdmin": "Požádej někoho s oprávněním **Spravovat server**, aby přidal {bots}. Jsou zdarma a Bypass díky nim může hrát ve více hlasových kanálech najednou.",
+      "publicNotice": "{user} chtěl hudbu v {channel}, ale všichni Bypass boti na tomto serveru jsou zaneprázdnění. Někdo s oprávněním **Spravovat server** může zdarma přidat {bots}, aby mohlo hrát víc hlasových kanálů najednou.",
+      "addAll": "Přidat všechny"
     },
     "info": {
       "header": "{bot} v {channel}",
@@ -2128,6 +2135,9 @@
       "more": "a {count} dalších",
       "card": "Karta přehrávače s tlačítky je v {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Tento soukromý bot není na tomto serveru povolený. Jeho vlastník to může změnit v dashboardu Bypass."
   },
   "ai": {
     "description": "AI DJ: playlisty a rádio podle popisu",

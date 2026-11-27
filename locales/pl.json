@@ -25,7 +25,8 @@
     "embedDescription": "Lista wszystkich komend"
   },
   "invite": {
-    "description": "Wysyła link do zaproszenia bota"
+    "description": "Wysyła link do zaproszenia bota",
+    "fleet": "Dodatkowe boty: Bypass 2, 3 i 4 grają jednocześnie na innych kanałach głosowych, przy użyciu tego samego /play."
   },
   "loop": {
     "description": "Przełączenie pętli",
@@ -270,7 +271,8 @@
       "positionInQueue": "Pozycja w kolejce",
       "status": "Status",
       "tier": "Poziom"
-    }
+    },
+    "poweredBy": "⚡ Napędzane przez {provider}"
   },
   "seek": {
     "description": "Przewiń do określonego momentu utworu",
@@ -1171,8 +1173,8 @@
       "title": "Korzyści premium",
       "intro": "Founder jest ograniczony do {spots} miejsc, a cena jest zablokowana na stałe.",
       "freeName": "Free — {price}",
-      "founderName": "Founder / Beta Tester — {price}/miesiąc",
       "freePerks": "Dźwięk 128kbps\nKolejka, playlisty i teksty piosenek\nWersja próbna AI DJ: 3 prośby dziennie na serwer\nWszystkie komendy",
+      "founderName": "Founder / Beta Tester — {price}/miesiąc",
       "founderPerks": "Dźwięk 256kbps\nAI DJ: 50 playlist lub radií dziennie na serwer, dłuższe radio AI\nFiltry audio\nTryb 24/7\nRola Founder i bezpośrednie wsparcie"
     }
   },
@@ -1278,7 +1280,8 @@
     "dashboard": "Panel",
     "support": "Serwer wsparcia",
     "vote": "Zagłosuj",
-    "voiceStatusHint": "Chcesz, aby grający utwór był widoczny pod nazwą kanału głosowego? [Autoryzuj mnie ponownie]({url}), aby nadać uprawnienie Ustawianie statusu kanału głosowego."
+    "voiceStatusHint": "Chcesz, aby grający utwór był widoczny pod nazwą kanału głosowego? [Autoryzuj mnie ponownie]({url}), aby nadać uprawnienie Ustawianie statusu kanału głosowego.",
+    "fleet": "Chcesz muzyki na kilku kanałach głosowych naraz? Dodaj też {bots}. Są darmowe i przejmują /play, gdy Bypass jest zajęty na innym kanale."
   },
   "router": {
     "guildOnly": "Ta komenda działa tylko na serwerze.",
@@ -2126,7 +2129,11 @@
       "premium": "Bypass 5 do 8 są dostępne w Premium.",
       "servedHere": "{bot} już gra na kanale {channel}. Użyj tam /play i przycisków sterowania albo dołącz do innego kanału głosowego.",
       "stay247On": "Tryb 24/7 włączony dla {bot}: zostaje na kanale {channel} i wraca na niego po restartach.",
-      "stay247Off": "Tryb 24/7 wyłączony dla {bot}."
+      "stay247Off": "Tryb 24/7 wyłączony dla {bot}.",
+      "inviteFree": "Dodaj {bots}, żeby grać tutaj w tym samym czasie. Są darmowe, wystarczy jedno kliknięcie na każdego:",
+      "askAdmin": "Poproś kogoś z uprawnieniem **Zarządzanie serwerem** o dodanie {bots}. Są darmowe i pozwalają Bypass grać na kilku kanałach głosowych naraz.",
+      "publicNotice": "{user} chciał(a) muzyki na {channel}, ale wszystkie boty Bypass na tym serwerze są zajęte. Ktoś z uprawnieniem **Zarządzanie serwerem** może za darmo dodać {bots}, żeby muzyka grała na większej liczbie kanałów głosowych naraz.",
+      "addAll": "Dodaj wszystkie"
     },
     "info": {
       "header": "{bot} na {channel}",
@@ -2135,6 +2142,9 @@
       "more": "i {count} więcej",
       "card": "Karta odtwarzacza z przyciskami jest na {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Ten prywatny bot nie jest włączony na tym serwerze. Jego właściciel może to zmienić w panelu Bypass."
   },
   "ai": {
     "description": "AI DJ: playlisty i radio tworzone na podstawie opisu",

@@ -24,7 +24,8 @@
     "embedDescription": "List of all commands"
   },
   "invite": {
-    "description": "Send bot invite link"
+    "description": "Send bot invite link",
+    "fleet": "Extra players: Bypass 2, 3 and 4 play in other voice channels at the same time, with the same /play."
   },
   "loop": {
     "description": "Toggle music loop",
@@ -263,7 +264,8 @@
       "positionInQueue": "Position in Queue",
       "status": "Status",
       "tier": "Tier"
-    }
+    },
+    "poweredBy": "⚡ Powered by {provider}"
   },
   "seek": {
     "description": "Seek to a specific time in the track",
@@ -1271,7 +1273,8 @@
     "dashboard": "Dashboard",
     "support": "Support server",
     "vote": "Vote",
-    "voiceStatusHint": "Want the song that's playing shown under the voice channel name? [Re-authorize me]({url}) to grant the Set Voice Channel Status permission."
+    "voiceStatusHint": "Want the song that's playing shown under the voice channel name? [Re-authorize me]({url}) to grant the Set Voice Channel Status permission.",
+    "fleet": "Want music in more than one voice channel at once? Add {bots} too. They are free and take over /play when Bypass is busy in another channel."
   },
   "router": {
     "guildOnly": "This command only works in a server.",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass 5 to 8 come with Premium.",
       "servedHere": "{bot} is already playing in {channel}. Use /play and the controls there, or join another voice channel.",
       "stay247On": "24/7 on for {bot}: it stays in {channel} and rejoins it after restarts.",
-      "stay247Off": "24/7 off for {bot}."
+      "stay247Off": "24/7 off for {bot}.",
+      "inviteFree": "Add {bots} to play here at the same time. They are free, one click each:",
+      "askAdmin": "Ask someone with **Manage Server** to add {bots}. They are free and let Bypass play in more voice channels at once.",
+      "publicNotice": "{user} wanted music in {channel}, but every Bypass bot in this server is busy. Someone with **Manage Server** can add {bots} for free, so more voice channels can have music at once.",
+      "addAll": "Add them all"
     },
     "info": {
       "header": "{bot} in {channel}",
@@ -2128,6 +2135,9 @@
       "more": "and {count} more",
       "card": "The player card with the buttons is in {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "This private bot isn’t enabled in this server. Its owner can change that in the Bypass dashboard."
   },
   "ai": {
     "description": "AI DJ: playlists and radio made from a description",

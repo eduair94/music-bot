@@ -24,7 +24,8 @@
     "embedDescription": "所有的指令清单"
   },
   "invite": {
-    "description": "传送邀请连结"
+    "description": "传送邀请连结",
+    "fleet": "额外播放器：Bypass 2、3 和 4 可以同时在其他语音频道播放，用的还是同一个 /play。"
   },
   "loop": {
     "description": "变更音乐重複设定",
@@ -263,7 +264,8 @@
       "positionInQueue": "队列位置",
       "status": "状态",
       "tier": "等级"
-    }
+    },
+    "poweredBy": "⚡ 由 {provider} 提供支持"
   },
   "seek": {
     "description": "跳转到歌曲的指定时间",
@@ -1164,8 +1166,8 @@
       "title": "高级版福利",
       "intro": "Founder 名额仅限 {spots} 个，价格永久锁定。",
       "freeName": "免费 — {price}",
-      "founderName": "Founder / 测试员 — {price}/月",
       "freePerks": "128kbps 音质\n播放队列、歌单和歌词\nAI DJ 试用：每个服务器每天 3 次请求\n所有指令",
+      "founderName": "Founder / 测试员 — {price}/月",
       "founderPerks": "256kbps 音质\nAI DJ：每个服务器每天 50 个歌单或电台，AI 电台播放更久\n音频滤镜\n24/7 模式\nFounder 身份组和专属支持"
     }
   },
@@ -1271,7 +1273,8 @@
     "dashboard": "控制面板",
     "support": "支持服务器",
     "vote": "投票",
-    "voiceStatusHint": "想在语音频道名称下方显示正在播放的歌曲吗？[重新授权我]({url})，并授予“设置语音频道状态”权限。"
+    "voiceStatusHint": "想在语音频道名称下方显示正在播放的歌曲吗？[重新授权我]({url})，并授予“设置语音频道状态”权限。",
+    "fleet": "想同时在多个语音频道播放音乐吗？把 {bots} 也加进来吧。它们是免费的，当 Bypass 在其他频道忙碌时，会自动接手 /play。"
   },
   "router": {
     "guildOnly": "此指令只能在服务器中使用。",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass 5 到 8 随 Premium 提供。",
       "servedHere": "{bot} 已经在 {channel} 播放中。请在那里使用 /play 和控制按钮，或者加入另一个语音频道。",
       "stay247On": "{bot} 已开启 24/7：它会一直留在 {channel}，并在重启后自动重新加入。",
-      "stay247Off": "{bot} 已关闭 24/7。"
+      "stay247Off": "{bot} 已关闭 24/7。",
+      "inviteFree": "添加 {bots}，就能同时在这里播放。它们都是免费的，每个只需点一下：",
+      "askAdmin": "请拥有 **管理服务器** 权限的人添加 {bots}。它们是免费的，能让 Bypass 同时在更多语音频道播放。",
+      "publicNotice": "{user} 想在 {channel} 播放音乐，但这个服务器里的所有 Bypass 机器人都在忙。拥有 **管理服务器** 权限的人可以免费添加 {bots}，这样就能让更多语音频道同时播放音乐。",
+      "addAll": "全部添加"
     },
     "info": {
       "header": "{bot} 在 {channel}",
@@ -2128,6 +2135,9 @@
       "more": "还有 {count} 首",
       "card": "带按钮的播放器卡片在 {channel}。"
     }
+  },
+  "linkedBot": {
+    "notHere": "这个私人机器人未在此服务器启用。它的拥有者可以在 Bypass 控制面板中更改设置。"
   },
   "ai": {
     "description": "AI DJ：根据描述生成歌单和电台",

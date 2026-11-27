@@ -3,6 +3,7 @@ import "server-only";
 import { Vote } from "@/lib/models/Vote";
 import { PatreonUserModel } from "@/lib/models/PatreonUser";
 import { connectToDatabase } from "@/lib/mongodb";
+import { SUPPORT_GUILD_ID } from "@/lib/support-guild";
 
 /**
  * What a signed-in member really has, read from the same records the bot
@@ -17,9 +18,6 @@ export interface PlanStatus {
   /** Boosting the support server (Founder perks while it lasts). */
   booster: boolean;
 }
-
-/** Same default as services/boosters.ts in the bot. */
-const SUPPORT_GUILD_ID = process.env.SUPPORT_GUILD_ID || "1458199268564406487";
 
 function timeout<T>(p: Promise<T>, ms: number): Promise<T> {
   return Promise.race([p, new Promise<T>((_, reject) => setTimeout(() => reject(new Error("timeout")), ms))]);

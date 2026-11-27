@@ -24,7 +24,8 @@
     "embedDescription": "Liste de toutes les commandes"
   },
   "invite": {
-    "description": "Envoyer le lien d'invitation du bot"
+    "description": "Envoyer le lien d'invitation du bot",
+    "fleet": "Lecteurs en plus : Bypass 2, 3 et 4 jouent dans d’autres salons vocaux en même temps, avec le même /play."
   },
   "loop": {
     "description": "Activer/désactiver la boucle de la musique",
@@ -263,7 +264,8 @@
       "positionInQueue": "Position dans la file",
       "status": "Statut",
       "tier": "Niveau"
-    }
+    },
+    "poweredBy": "⚡ Propulsé par {provider}"
   },
   "Invitez-moi sur votre serveur !": "Invitez-moi sur votre serveur !",
   "Inviter": "Inviter",
@@ -1166,8 +1168,8 @@
       "title": "Avantages premium",
       "intro": "Founder est limité à {spots} places et le prix est garanti à vie.",
       "freeName": "Gratuit — {price}",
-      "founderName": "Founder / Bêta-testeur — {price}/mois",
       "freePerks": "Audio 128 kbps\nFile d'attente, playlists et paroles\nEssai DJ IA : 3 demandes par jour par serveur\nToutes les commandes",
+      "founderName": "Founder / Bêta-testeur — {price}/mois",
       "founderPerks": "Audio 256 kbps\nDJ IA : 50 playlists ou radios par jour par serveur, radio IA plus longue\nFiltres audio\nMode 24/7\nRôle Founder et support direct"
     }
   },
@@ -1273,7 +1275,8 @@
     "dashboard": "Tableau de bord",
     "support": "Serveur d'aide",
     "vote": "Voter",
-    "voiceStatusHint": "Tu veux afficher la chanson en cours sous le nom du salon vocal ? [Réautorise-moi]({url}) pour accorder la permission Définir le statut du salon vocal."
+    "voiceStatusHint": "Tu veux afficher la chanson en cours sous le nom du salon vocal ? [Réautorise-moi]({url}) pour accorder la permission Définir le statut du salon vocal.",
+    "fleet": "Tu veux de la musique dans plusieurs salons vocaux à la fois ? Ajoute aussi {bots}. Ils sont gratuits et prennent le relais de /play quand Bypass est occupé dans un autre salon."
   },
   "router": {
     "guildOnly": "Cette commande ne fonctionne que dans un serveur.",
@@ -2121,7 +2124,11 @@
       "premium": "Bypass 5 à 8 sont inclus avec Premium.",
       "servedHere": "{bot} joue déjà dans {channel}. Utilise /play et les commandes là-bas, ou rejoins un autre salon vocal.",
       "stay247On": "24/7 activé pour {bot} : il reste dans {channel} et le rejoint après chaque redémarrage.",
-      "stay247Off": "24/7 désactivé pour {bot}."
+      "stay247Off": "24/7 désactivé pour {bot}.",
+      "inviteFree": "Ajoute {bots} pour jouer ici en même temps. Ils sont gratuits, un clic chacun :",
+      "askAdmin": "Demande à quelqu’un avec la permission **Gérer le serveur** d’ajouter {bots}. Ils sont gratuits et permettent à Bypass de jouer dans plus de salons vocaux à la fois.",
+      "publicNotice": "{user} voulait de la musique dans {channel}, mais tous les bots Bypass de ce serveur sont occupés. Quelqu’un avec la permission **Gérer le serveur** peut ajouter {bots} gratuitement, pour que plus de salons vocaux aient de la musique en même temps.",
+      "addAll": "Tous les ajouter"
     },
     "info": {
       "header": "{bot} dans {channel}",
@@ -2130,6 +2137,9 @@
       "more": "et {count} de plus",
       "card": "La carte du lecteur avec les boutons est dans {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Ce bot privé n’est pas activé sur ce serveur. Son propriétaire peut changer ça dans le tableau de bord Bypass."
   },
   "ai": {
     "description": "DJ IA : playlists et radio créées à partir d'une description",

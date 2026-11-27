@@ -224,6 +224,14 @@ export type RouteDecision =
   | { kind: "instance"; instance: number; reason: "inChannel" | "binding" | "primary" | "idle" }
   | { kind: "none" };
 
+/**
+ * Instances the server could add to cover more voice channels: configured,
+ * not in the server yet, and free (or the server is Premium). In instance order.
+ */
+export function missingInstances<T extends Pick<RouteCandidate, "instance" | "inGuild" | "premium">>(candidates: T[], premiumActive: boolean): T[] {
+  return candidates.filter((c) => c.instance !== 1 && !c.inGuild && (!c.premium || premiumActive)).sort((a, b) => a.instance - b.instance);
+}
+
 /** Playing for people in another channel: moving it would hijack their music. */
 export function isBusyElsewhere(c: RouteCandidate, voiceChannelId: string): boolean {
   return Boolean(c.voiceChannelId && c.voiceChannelId !== voiceChannelId && c.hasTrack && c.listeners > 0);

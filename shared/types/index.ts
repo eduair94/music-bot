@@ -740,6 +740,24 @@ export function getMaxLinkedBots(pledgeCents: number): number {
   return PREMIUM_TIERS[tier].maxLinkedBots;
 }
 
+/** The bot owner can run this many private bots (testing, support). */
+export const OWNER_LINKED_BOTS = 10;
+
+/**
+ * How many private bots a user may run: none without an active Premium
+ * membership, at least one with any paid tier, more on higher pledges. The
+ * bot (when it starts or sweeps them) and the dashboard (when linking) both
+ * apply this rule.
+ */
+export function linkedBotAllowance(
+  patron: Pick<IPatreonUser, "isPremium" | "pledgeAmountCents"> | null | undefined,
+  isOwner = false
+): number {
+  if (isOwner) return OWNER_LINKED_BOTS;
+  if (!patron?.isPremium) return 0;
+  return Math.max(1, getMaxLinkedBots(patron.pledgeAmountCents ?? 0));
+}
+
 /**
  * Get audio bitrate for a tier
  * @param tier - Premium tier

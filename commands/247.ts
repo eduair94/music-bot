@@ -41,7 +41,7 @@ export default {
       return handStay247(interaction, instance, on);
     }
 
-    const enabled = interaction.options.getBoolean("enabled") ?? !settings.stay247?.enabled;
+    const enabled = interaction.options.getBoolean("enabled") ?? !stay247Of(settings)?.enabled;
     const service = Stay247Service.getInstance();
 
     if (!enabled) {

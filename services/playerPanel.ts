@@ -13,6 +13,7 @@ import {
 } from "discord.js";
 import { registerComponentHandler } from "../structs/componentRouter";
 import { commandGroup } from "../shared/permissions";
+import { SPOTIFY_PROVIDER_HOST, SPOTIFY_PROVIDER_URL } from "../shared/links";
 import { formatDuration, isHttpUrl, linkLabel, progressBar, safeText, truncate } from "../utils/format";
 import { localeForGuild, localeForInteraction } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
@@ -166,6 +167,7 @@ export class PlayerPanelService {
     } else {
       lines.push("-# " + (metadata.autoplay ? i18n.__("player.upNextAutoplay") : i18n.__("player.queueEmpty")));
     }
+    lines.push(`-# ${i18n.__mf("common.poweredBy", { provider: `[${SPOTIFY_PROVIDER_HOST}](${SPOTIFY_PROVIDER_URL})` })}`);
     container.addTextDisplayComponents((t) => t.setContent(lines.join("\n")));
     container.addSeparatorComponents((s) => s.setDivider(true).setSpacing(SeparatorSpacingSize.Small));
 
@@ -512,7 +514,10 @@ export class PlayerPanelService {
       .setAccentColor(DEFAULT_ACCENT)
       .addTextDisplayComponents((t) => t.setContent(`### 🎤 ${safeText(result.title, 80)} — ${safeText(result.artist, 60)}`))
       .addTextDisplayComponents((t) => t.setContent(truncate(result.text, 3700)))
-      .addTextDisplayComponents((t) => t.setContent(`-# ${i18n.__mf("lyricsCmd.source", { source: result.source })}`));
+      .addTextDisplayComponents((t) => t.setContent(`-# ${i18n.__mf("lyricsCmd.source", { source: result.source })}`))
+      .addTextDisplayComponents((t) =>
+        t.setContent(`-# ${i18n.__mf("common.poweredBy", { provider: `[${SPOTIFY_PROVIDER_HOST}](${SPOTIFY_PROVIDER_URL})` })}`)
+      );
     return interaction.followUp({ components: [container], flags: V2 | MessageFlags.Ephemeral } as any);
   }
 
@@ -523,7 +528,8 @@ export class PlayerPanelService {
       const text = [
         `### 💾 ${isHttpUrl(track.url) ? `[${linkLabel(track.title, 90)}](${track.url})` : safeText(track.title, 90)}`,
         `${safeText(track.author, 60)} · \`${formatDuration(track.durationMS)}\``,
-        `-# ${i18n.__mf("player.savedFrom", { guild: safeText(interaction.guild?.name, 60) })}`
+        `-# ${i18n.__mf("player.savedFrom", { guild: safeText(interaction.guild?.name, 60) })}`,
+        `-# ${i18n.__mf("common.poweredBy", { provider: `[${SPOTIFY_PROVIDER_HOST}](${SPOTIFY_PROVIDER_URL})` })}`
       ].join("\n");
       if (isHttpUrl(track.thumbnail)) {
         container.addSectionComponents((s) =>

@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import { LinkedBotModel } from "@/lib/models/LinkedBot";
 import { BotCommand } from "@/lib/models/BotCommand";
+import { canRunLinkedBot } from "@/lib/linked-bots";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -130,6 +131,13 @@ export async function POST(request: Request, { params }: RouteContext) {
     }
     if (action === "stop" && bot.status !== "online" && bot.status !== "starting") {
       return NextResponse.json({ error: "Bot is not running" }, { status: 400 });
+    }
+    // Same rule the bot process applies: Premium, and within the plan's number of bots.
+    if (action !== "stop" && !(await canRunLinkedBot(session.user.discordId, botId))) {
+      return NextResponse.json(
+        { error: "Private bots run while your Premium membership is active. Renew it on Patreon to start this bot" },
+        { status: 403 }
+      );
     }
 
     // Create a command for the main bot process to handle

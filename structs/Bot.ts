@@ -35,7 +35,7 @@ import { PatreonService } from "../services/patreon";
 import { syncGuildPresence, TelemetryService } from "../services/telemetry";
 import { commandEvent, errorEvent, guildEvent } from "../services/telemetry/events";
 import { ttsService } from "../services/tts";
-import { fleetMember } from "../shared/fleet";
+import { configuredInstances, fleetMember } from "../shared/fleet";
 import { botInviteUrl } from "../shared/links";
 import {
   addInstanceGuild,
@@ -49,7 +49,7 @@ import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { localeForInteraction } from "../utils/guildLocale";
 import { i18n, localizeCommandJson, runWithLocale } from "../utils/i18n";
-import { INSTANCE, INSTANCE_NAME, isPrimary } from "../utils/instance";
+import { INSTANCE, INSTANCE_NAME, isLinked, isPrimary, LINKED_ALLOWED_GUILDS, LINKED_BOT_ID, linkedStats } from "../utils/instance";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
 import { commandGate } from "../utils/permissions";
 import { commands as commandRegistry, contextMenus, mention, setCommandId } from "./commandRegistry";
@@ -65,6 +65,21 @@ const GAME_BLOCKED_COMMANDS = new Set([
   // These end the game; /guess stop does it with the starter-or-manager rule.
   "stop", "leave"
 ]);
+
+/** What a private bot tells BotManagerService (its parent process) over IPC. */
+export type LinkedBotMessage =
+  | { type: "ready" | "stats"; botUsername?: string; botAvatar?: string | null; guilds: number; songsPlayed?: number }
+  | { type: "error"; error: string };
+
+/** Private bots only: report to the manager that spawned this process. */
+function notifyManager(message: LinkedBotMessage): void {
+  if (!isLinked || typeof process.send !== "function") return;
+  try {
+    process.send(message);
+  } catch {
+    // the manager is gone; nothing to tell
+  }
+}
 
 export class Bot {
   public readonly prefix = "/";
@@ -86,6 +101,7 @@ export class Bot {
 
     this.client.login(config.TOKEN).catch((error) => {
       console.error("[Bot] ❌ Discord login failed:", error);
+      notifyManager({ type: "error", error: `Discord login failed: ${(error as Error)?.message ?? error}` });
       process.exit(1);
     });
 
@@ -100,6 +116,7 @@ export class Bot {
 
         if (response.status === 401 || response.status === 403) {
           console.error(`[Bot] ❌ Discord token rejected (${response.status}); terminating stale session`);
+          notifyManager({ type: "error", error: "Discord rejected the bot token (it was reset or the application was deleted)" });
           process.exit(1);
         }
       } catch (error) {
@@ -130,6 +147,7 @@ export class Bot {
       // 4004 is an authentication failure and cannot recover without a valid token.
       if (event.code === 4004) {
         console.error("[Bot] ❌ Discord authentication failed; terminating stale session");
+        notifyManager({ type: "error", error: "Discord rejected the bot token (it was reset or the application was deleted)" });
         process.exit(1);
       }
     });
@@ -143,6 +161,8 @@ export class Bot {
     // Guild join/leave events for Redis sync
     this.client.on(Events.GuildCreate, async (guild) => {
       console.log(`[Bot] Joined guild: ${guild.name} (${guild.id})`);
+      // A private bot keeps no fleet state; its manager just hears the new count.
+      if (isLinked) return this.reportLinked("stats");
       try {
         // Guild metadata is the primary's; every instance tracks its own presence.
         if (isPrimary) {
@@ -170,6 +190,7 @@ export class Bot {
 
     this.client.on(Events.GuildDelete, async (guild) => {
       console.log(`[Bot] Left guild: ${guild.name} (${guild.id})`);
+      if (isLinked) return this.reportLinked("stats");
       try {
         if (isPrimary) await removeBotFromGuild(guild.id);
         await removeInstanceGuild(INSTANCE, guild.id);
@@ -190,7 +211,8 @@ export class Bot {
   // ------------------------------------------------------------------ startup
 
   private async onReady(): Promise<void> {
-    console.log(`${this.client.user!.username} ready!${isPrimary ? "" : ` (fleet instance ${INSTANCE}: ${INSTANCE_NAME})`}`);
+    const role = isPrimary ? "" : isLinked ? ` (private bot ${LINKED_BOT_ID})` : ` (fleet instance ${INSTANCE}: ${INSTANCE_NAME})`;
+    console.log(`${this.client.user!.username} ready!${role}`);
     if (!isPrimary) this.checkInstanceToken();
     this.setPresence();
     setInterval(() => this.setPresence(), 30 * 60 * 1000).unref();
@@ -263,18 +285,39 @@ export class Bot {
       console.error("⚠️ Telemetry failed to start:", error);
     }
 
-    // Initialize Dashboard Sync service (for web dashboard communication)
-    try {
-      const dashboardSync = DashboardSyncService.getInstance();
-      await dashboardSync.initialize(this.client);
-      console.log("✅ Dashboard Sync service initialized");
-    } catch (error) {
-      console.error("⚠️ Dashboard Sync initialization skipped:", error);
+    // Initialize Dashboard Sync service (for web dashboard communication).
+    // Private bots stay off the bus: its commands are addressed to Bypass's instances.
+    if (!isLinked) {
+      try {
+        const dashboardSync = DashboardSyncService.getInstance();
+        await dashboardSync.initialize(this.client);
+        console.log("✅ Dashboard Sync service initialized");
+      } catch (error) {
+        console.error("⚠️ Dashboard Sync initialization skipped:", error);
+      }
     }
 
     // Support-server boosters get their perks (audio quality, longer songs,
     // 24/7) on every instance, not just the primary that runs the support server.
     setBoosterClient(this.client);
+
+    if (isLinked) {
+      // A premium user's private bot: its own slash commands and /say, none of
+      // Bypass's global services (Patreon, metrics, listings, support server).
+      try {
+        ttsService.initialize();
+      } catch (error) {
+        console.error("⚠️ TTS service initialization failed:", error);
+      }
+      this.registerSlashCommands().catch((error) => {
+        console.error("[Bot] ❌ Failed to register slash commands:", error);
+        notifyManager({ type: "error", error: `Could not register slash commands: ${(error as Error)?.message ?? error}` });
+      });
+      this.reportLinked("ready");
+      setInterval(() => this.reportLinked("stats"), 5 * 60 * 1000).unref();
+      console.log(`[Bot] ✅ Private bot ${INSTANCE_NAME} ready`);
+      return;
+    }
 
     if (!isPrimary) {
       // Secondaries play music and run their own player cards; slash commands,
@@ -380,6 +423,18 @@ export class Bot {
    */
   private checkInstanceToken(): void {
     const me = this.client.user!.id;
+    if (isLinked) {
+      // A Bypass token pasted as a "private bot" would answer as Bypass twice.
+      if (configuredInstances().some((m) => m.applicationId === me)) {
+        console.error("[Bot] ❌ A private bot cannot run on a Bypass application's token");
+        notifyManager({ type: "error", error: "This token belongs to a Bypass bot; use your own application's token" });
+        process.exit(1);
+      }
+      if (LINKED_BOT_ID && LINKED_BOT_ID !== me) {
+        console.warn(`[Bot] ⚠️ Private bot record ${LINKED_BOT_ID} is running on application ${me}`);
+      }
+      return;
+    }
     if (me === fleetMember(1)?.applicationId) {
       console.error(`[Bot] ❌ BOT_INSTANCE=${INSTANCE} is running with the primary's token; set TOKEN_${INSTANCE} to the ${INSTANCE_NAME} token`);
       process.exit(1);
@@ -392,9 +447,22 @@ export class Bot {
 
   /** Tell live dashboards this instance is up in each of its servers. */
   private async publishFleetPresence(online = true): Promise<void> {
+    if (isLinked) return;
     for (const guild of this.client.guilds.cache.values()) {
       await publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online, inGuild: true }).catch(() => undefined);
     }
+  }
+
+  /** Private bots: who this bot is and how many servers it is in, for the owner's dashboard. */
+  private reportLinked(type: "ready" | "stats"): void {
+    const user = this.client.user;
+    notifyManager({
+      type,
+      botUsername: user?.username,
+      botAvatar: user?.avatar ?? null,
+      guilds: this.client.guilds.cache.size,
+      songsPlayed: linkedStats.songsPlayed
+    });
   }
 
   private setPresence(): void {
@@ -402,7 +470,9 @@ export class Bot {
     // sends one of them when it is already busy in another channel.
     const state = isPrimary
       ? "🎶 /play · /help · music-bot.checkleaked.com"
-      : "🎶 Extra stage: /play with Bypass in another voice channel";
+      : isLinked
+        ? "🎶 /play · /help"
+        : "🎶 Extra stage: /play with Bypass in another voice channel";
     try {
       this.client.user?.setPresence({
         status: "online",
@@ -501,6 +571,11 @@ export class Bot {
 
   private async handleInteraction(interaction: Interaction): Promise<void> {
     await this.loaded;
+    // A private bot limited to some servers (dashboard setting) stays quiet elsewhere.
+    if (isLinked && LINKED_ALLOWED_GUILDS.size > 0 && interaction.guildId && !LINKED_ALLOWED_GUILDS.has(interaction.guildId)) {
+      if (interaction.isAutocomplete()) return void interaction.respond([]).catch(() => undefined);
+      return this.replyEphemeral(interaction, `🔒 ${i18n.__("linkedBot.notHere")}`);
+    }
     let locale;
     try {
       locale = await localeForInteraction(interaction);

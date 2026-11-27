@@ -48,6 +48,15 @@ export default function PrivacyPolicyPage() {
                 <li><strong>Music playback history:</strong> stored temporarily to power history and recently played</li>
                 <li><strong>User playlists and collections:</strong> created and saved by users voluntarily</li>
                 <li><strong>Premium status:</strong> information about Patreon subscriptions for premium features</li>
+                <li>
+                  <strong>Support server join:</strong> when you sign in to the dashboard, Discord&apos;s &ldquo;Join servers for
+                  you&rdquo; permission lets us add you to the Bypass support server once; we record that we did so we never add
+                  you again after you leave
+                </li>
+                <li>
+                  <strong>Private bot tokens:</strong> if you link your own bot (Premium), its token is stored encrypted and used
+                  only to run that bot; unlinking deletes it
+                </li>
               </ul>
             </section>
 

@@ -9,7 +9,7 @@ import fs from "fs";
 import { PassThrough, Readable } from "stream";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
-import { stay247Of } from "../utils/instance";
+import { linkedStats, stay247Of } from "../utils/instance";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { applyAudioProfile } from "./audioEncoder";
 import { GuildSettingsService } from "./guildSettings";
@@ -398,6 +398,7 @@ export class DiscordPlayerService {
 
       this.recordTrack(queue, track, "start");
       if (queue.guild?.id) void GuildSettingsService.getInstance().incrementSongPlayed(queue.guild.id);
+      linkedStats.songsPlayed++;
 
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title} (${track.source}, ${track.duration})`);
       debug("url:", track.url);

@@ -24,7 +24,8 @@
     "embedDescription": "Zeigt alle Commands an"
   },
   "invite": {
-    "description": "Schickt einen Boteinladungslink"
+    "description": "Schickt einen Boteinladungslink",
+    "fleet": "Zusätzliche Player: Bypass 2, 3 und 4 spielen gleichzeitig in anderen Sprachkanälen, mit demselben /play."
   },
   "loop": {
     "description": "Musikschleife umschalten",
@@ -263,7 +264,8 @@
       "positionInQueue": "Position in der Warteschlange",
       "status": "Status",
       "tier": "Stufe"
-    }
+    },
+    "poweredBy": "⚡ Bereitgestellt von {provider}"
   },
   "seek": {
     "description": "Zu einer bestimmten Stelle im Track springen",
@@ -1164,8 +1166,8 @@
       "title": "Premium-Vorteile",
       "intro": "Founder ist auf {spots} Plätze begrenzt und der Preis bleibt fest.",
       "freeName": "Free — {price}",
-      "founderName": "Founder / Beta-Tester — {price}/Monat",
       "freePerks": "128kbps Audio\nWarteschlange, Playlists und Songtexte\nAI-DJ-Testversion: 3 Anfragen pro Tag pro Server\nAlle Befehle",
+      "founderName": "Founder / Beta-Tester — {price}/Monat",
       "founderPerks": "256kbps Audio\nAI DJ: 50 Playlists oder Radios pro Tag pro Server, längeres AI-Radio\nAudiofilter\n24/7-Modus\nFounder-Rolle und direkter Support"
     }
   },
@@ -1271,7 +1273,8 @@
     "dashboard": "Dashboard",
     "support": "Support-Server",
     "vote": "Voten",
-    "voiceStatusHint": "Soll der aktuelle Song unter dem Namen des Sprachkanals angezeigt werden? [Autorisiere mich erneut]({url}), um die Berechtigung „Sprachkanalstatus festlegen“ zu erteilen."
+    "voiceStatusHint": "Soll der aktuelle Song unter dem Namen des Sprachkanals angezeigt werden? [Autorisiere mich erneut]({url}), um die Berechtigung „Sprachkanalstatus festlegen“ zu erteilen.",
+    "fleet": "Willst du Musik in mehreren Sprachkanälen gleichzeitig? Füge auch {bots} hinzu. Sie sind kostenlos und übernehmen /play, wenn Bypass in einem anderen Kanal beschäftigt ist."
   },
   "router": {
     "guildOnly": "Dieser Befehl funktioniert nur auf einem Server.",
@@ -2119,7 +2122,11 @@
       "premium": "Bypass 5 bis 8 gibt es mit Premium.",
       "servedHere": "{bot} spielt bereits in {channel}. Nutze dort /play und die Steuerung oder tritt einem anderen Sprachkanal bei.",
       "stay247On": "24/7 für {bot} aktiviert: Der Bot bleibt in {channel} und tritt nach Neustarts automatisch wieder bei.",
-      "stay247Off": "24/7 für {bot} deaktiviert."
+      "stay247Off": "24/7 für {bot} deaktiviert.",
+      "inviteFree": "Füge {bots} hinzu, um hier gleichzeitig Musik abzuspielen. Sie sind kostenlos, jeweils nur ein Klick:",
+      "askAdmin": "Bitte jemanden mit **Server verwalten**, {bots} hinzuzufügen. Sie sind kostenlos und lassen Bypass in mehreren Sprachkanälen gleichzeitig spielen.",
+      "publicNotice": "{user} wollte Musik in {channel}, aber alle Bypass-Bots auf diesem Server sind beschäftigt. Jemand mit **Server verwalten** kann {bots} kostenlos hinzufügen, damit mehr Sprachkanäle gleichzeitig Musik haben können.",
+      "addAll": "Alle hinzufügen"
     },
     "info": {
       "header": "{bot} in {channel}",
@@ -2128,6 +2135,9 @@
       "more": "und {count} weitere",
       "card": "Die Player-Karte mit den Buttons ist in {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Dieser private Bot ist auf diesem Server nicht aktiviert. Sein Besitzer kann das im Bypass-Dashboard ändern."
   },
   "ai": {
     "description": "KI-DJ: Playlists und Radio aus einer Beschreibung",
