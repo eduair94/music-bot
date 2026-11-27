@@ -438,7 +438,8 @@ process.on('message', async (message: any) => {
     if (message.type === 'start' && message.config) {
         config = message.config;
         await startBot();
-    } else if (message.type === 'stop') {
+    } else if (message.type === 'stop' || message.type === 'shutdown') {
+        // botManager sends "shutdown"; "stop" kept for older managers.
         await shutdown();
     } else if (message.type === 'getStats') {
         if (client) {
