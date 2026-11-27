@@ -31,7 +31,7 @@ export default {
       return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: MessageFlags.Ephemeral });
     }
 
-    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true });
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true, now: true });
     if (result && replacing && result.position === 1) {
       result.queue.node.skip();
     }

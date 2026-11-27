@@ -26,6 +26,7 @@ import { DashboardSyncService } from "../services/dashboardSync";
 import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { forwardSlash, routesAwayFromPrimary } from "../services/fleet/dispatcher";
 import { GuildSettingsService } from "../services/guildSettings";
 import { isGuessGameRunning } from "../services/guessGame";
 import { logBuffer } from "../services/logBuffer";
@@ -540,8 +541,13 @@ export class Bot {
     }
 
     // A guess-the-song round owns the player: skipping, seeking or queueing
-    // music mid-round would break it (or reveal the answer).
-    if ((interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) && isGuessGameRunning(interaction.guildId)) {
+    // music mid-round would break it (or reveal the answer). Members in
+    // another voice channel are served by another fleet instance.
+    if (
+      (interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) &&
+      isGuessGameRunning(interaction.guildId) &&
+      !routesAwayFromPrimary(interaction, name)
+    ) {
       return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
     }
     return null;
@@ -590,12 +596,16 @@ export class Bot {
     const guildIdForEvent = interaction.guildId ?? "dm";
 
     try {
-      if (interaction.inCachedGuild()) {
-        const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
-        if (!permissionsCheck.result) throw new MissingPermissionsException(permissionsCheck.missing);
-      }
+      // Fleet: controls for a channel another Bypass instance serves run there.
+      const forwarded = interaction.inCachedGuild() && (await forwardSlash(interaction));
+      if (!forwarded) {
+        if (interaction.inCachedGuild()) {
+          const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
+          if (!permissionsCheck.result) throw new MissingPermissionsException(permissionsCheck.missing);
+        }
 
-      await command.execute(interaction);
+        await command.execute(interaction);
+      }
 
       telemetry.record(
         commandEvent({

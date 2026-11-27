@@ -2052,6 +2052,25 @@
       "searchResults": "{count} results.",
       "searchFailed": "Search didn't work. Try again.",
       "unknownCommand": "Unknown command: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} is joining {channel}",
+      "slow": "{bot} is still loading it. The song starts as soon as it's ready.",
+      "noAnswer": "{bot} didn't answer. Try again in a moment.",
+      "noneFree": "No Bypass bot is free to join {channel} right now.",
+      "busyIn": "{bot} is playing in {channel}",
+      "offline": "{bot} is offline",
+      "notAllowed": "{bot} isn't allowed in this channel",
+      "invite": "Add another Bypass to play in more channels at once:",
+      "add": "Add {bot}",
+      "premium": "Bypass 5 to 8 come with Premium."
+    },
+    "info": {
+      "header": "{bot} in {channel}",
+      "nothing": "{bot} isn't playing anything here.",
+      "upNext": "Up next",
+      "more": "and {count} more",
+      "card": "The player card with the buttons is in {channel}."
     }
   }
 }

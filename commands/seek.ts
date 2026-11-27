@@ -5,7 +5,8 @@ import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
-function parseTimeToMs(timeStr: string): number | null {
+/** "1:30", "90", "1m30s", "1m", "90s" → ms (also used when /seek is forwarded to a fleet instance). */
+export function parseTimeToMs(timeStr: string): number | null {
   // Parse formats like "1:30", "90", "1m30s", "1m", "90s"
   const colonMatch = timeStr.match(/^(\d+):(\d+)$/);
   if (colonMatch) {
