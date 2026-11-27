@@ -1,56 +1,18 @@
 import "server-only";
-import { auth } from "@/auth";
-import { isBotInGuild } from "@/lib/discord-server";
-import { fetchUserGuilds, getGuildIconUrl, hasManagePermission } from "@/lib/discord";
+import { getGuildIconUrl } from "@/lib/discord";
 import { GuildSettingsModel } from "@/lib/models/GuildSettings";
 import { PlaybackState } from "@/lib/models/PlaybackState";
 import { PremiumGuild } from "@/lib/models/PremiumGuild";
 import { connectToDatabase } from "@/lib/mongodb";
 import { getInstancePlaybackRaw, getInstanceStatus, getPlaybackState, isInstanceInGuild, isRedisAvailable } from "@/lib/redis";
 import type { DiscordGuild } from "@/types/discord";
-import { NextResponse } from "next/server";
 import { configuredInstances, FleetInstanceInfo, idlePlaybackState, inviteUrl, LivePlaybackState } from "../../../shared/fleet";
 import { normalizePlayback } from "./fleet-state";
 
-// ----------------------------------------------------------------- access
-
-export type GuildAccess =
-  | { ok: true; userId: string; username: string; guild: DiscordGuild; canManage: boolean }
-  | { ok: false; response: NextResponse };
-
-/**
- * Session + "shares the guild" + "Bypass is in the guild" (401/403/404).
- * TODO(merge): replace with the guild-access helper from the permissions
- * work, which widens access to every member and resolves groups.
+/*
+ * Fleet data for the dashboard routes. Access (session, membership, Bypass
+ * in the server, permission groups) is decided by lib/guild-access.ts.
  */
-export async function requireGuildMember(guildId: string): Promise<GuildAccess> {
-  const session = await auth();
-  if (!session?.accessToken || !session.user) {
-    return { ok: false, response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
-  }
-
-  let guilds: DiscordGuild[];
-  try {
-    guilds = await fetchUserGuilds(session.accessToken);
-  } catch (error) {
-    console.error("[fleet] Could not list the user's servers:", error);
-    return { ok: false, response: NextResponse.json({ error: "Could not reach Discord" }, { status: 502 }) };
-  }
-  const guild = guilds.find((g) => g.id === guildId);
-  if (!guild) return { ok: false, response: NextResponse.json({ error: "Forbidden" }, { status: 403 }) };
-
-  if (!(await isBotInGuild(guildId))) {
-    return { ok: false, response: NextResponse.json({ error: "Bypass is not in this server" }, { status: 404 }) };
-  }
-
-  return {
-    ok: true,
-    userId: session.user.discordId || session.user.id || "unknown",
-    username: session.user.name || "Dashboard User",
-    guild,
-    canManage: hasManagePermission(guild.permissions)
-  };
-}
 
 // --------------------------------------------------------------- playback
 
@@ -131,8 +93,8 @@ export async function fleetInstances(guildId: string, bindings?: Record<string, 
 }
 
 /** `icon` is Discord's hash (as elsewhere in the dashboard); `iconUrl` the CDN link. */
-export function guildSummary(guild: DiscordGuild) {
-  return { id: guild.id, name: guild.name, icon: guild.icon, iconUrl: getGuildIconUrl(guild) };
+export function guildSummary(guild: Pick<DiscordGuild, "id" | "name" | "icon">) {
+  return { id: guild.id, name: guild.name, icon: guild.icon, iconUrl: getGuildIconUrl(guild as DiscordGuild) };
 }
 
 export { idlePlaybackState, normalizePlayback };

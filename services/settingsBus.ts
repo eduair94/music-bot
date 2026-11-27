@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto";
+import { fleetKeys, type FleetEvent } from "../shared/fleet";
 import { getRedis, getRedisSubscriber } from "../shared/services/redis";
 
 /**
@@ -11,7 +12,7 @@ import { getRedis, getRedisSubscriber } from "../shared/services/redis";
  *   dashboard's live stream (forwarded as `event: settings`).
  */
 export const SETTINGS_CHANNEL = "bypass:settings";
-export const guildEventsChannel = (guildId: string) => `bypass:events:${guildId}`;
+export const guildEventsChannel = fleetKeys.events;
 
 /** Tags our own messages so this process does not drop the entry it just wrote. */
 const ORIGIN = `bot-${process.pid}-${randomUUID().slice(0, 8)}`;
@@ -47,7 +48,7 @@ export function publishSettingsChanged(guildId: string, keys: string[]): void {
   void redis
     .multi()
     .publish(SETTINGS_CHANNEL, JSON.stringify({ guildId, origin: ORIGIN }))
-    .publish(guildEventsChannel(guildId), JSON.stringify({ type: "settings", keys }))
+    .publish(guildEventsChannel(guildId), JSON.stringify({ type: "settings", keys } satisfies FleetEvent))
     .exec()
     .catch((error: unknown) => console.warn("[Settings] Publish failed:", (error as Error)?.message ?? error));
 }

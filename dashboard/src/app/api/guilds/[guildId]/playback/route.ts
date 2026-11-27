@@ -1,4 +1,5 @@
-import { idlePlaybackState, readPlayback, requireGuildMember } from "@/lib/fleet";
+import { idlePlaybackState, readPlayback } from "@/lib/fleet";
+import { getGuildAccess } from "@/lib/guild-access";
 import { NextResponse } from "next/server";
 import { parseInstance } from "../../../../../../../shared/fleet";
 
@@ -19,8 +20,8 @@ export async function GET(request: Request, { params }: RouteContext) {
   const instance = raw === null ? 1 : parseInstance(raw);
   if (!instance) return NextResponse.json({ error: "instance must be 1-8" }, { status: 400 });
 
-  const access = await requireGuildMember(guildId);
-  if (!access.ok) return access.response;
+  const { access, response } = await getGuildAccess(guildId);
+  if (!access) return response;
 
   try {
     return NextResponse.json((await readPlayback(guildId, instance)) ?? idlePlaybackState(guildId, instance));

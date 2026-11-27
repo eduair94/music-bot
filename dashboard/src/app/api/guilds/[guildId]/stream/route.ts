@@ -1,4 +1,5 @@
-import { fleetInstances, idlePlaybackState, normalizePlayback, requireGuildMember } from "@/lib/fleet";
+import { fleetInstances, idlePlaybackState, normalizePlayback } from "@/lib/fleet";
+import { getGuildAccess } from "@/lib/guild-access";
 import { createRedisSubscriber } from "@/lib/redis";
 import { NextResponse } from "next/server";
 import { FleetEvent, fleetKeys, parseInstance } from "../../../../../../../shared/fleet";
@@ -22,8 +23,8 @@ const PING_MS = 15_000;
  */
 export async function GET(request: Request, { params }: RouteContext) {
   const { guildId } = await params;
-  const access = await requireGuildMember(guildId);
-  if (!access.ok) return access.response;
+  const { access, response } = await getGuildAccess(guildId);
+  if (!access) return response;
 
   const subscriber = createRedisSubscriber();
   if (!subscriber) return NextResponse.json({ error: "Live updates are not available" }, { status: 503 });

@@ -1,4 +1,5 @@
-import { fleetInstances, guildSummary, isPremiumGuild, requireGuildMember } from "@/lib/fleet";
+import { fleetInstances, guildSummary, isPremiumGuild } from "@/lib/fleet";
+import { getGuildAccess } from "@/lib/guild-access";
 import { NextResponse } from "next/server";
 import { FLEET_FREE_INSTANCES, FLEET_MAX_INSTANCES } from "../../../../../../../shared/fleet";
 
@@ -15,11 +16,12 @@ interface RouteContext {
  */
 export async function GET(_request: Request, { params }: RouteContext) {
   const { guildId } = await params;
-  const access = await requireGuildMember(guildId);
-  if (!access.ok) return access.response;
+  const { access, response } = await getGuildAccess(guildId);
+  if (!access) return response;
 
   try {
-    const [instances, premiumActive] = await Promise.all([fleetInstances(guildId), isPremiumGuild(guildId).catch(() => false)]);
+    const bindings = access.settings?.fleet?.bindings ?? {};
+    const [instances, premiumActive] = await Promise.all([fleetInstances(guildId, bindings), isPremiumGuild(guildId).catch(() => false)]);
     return NextResponse.json({
       guild: guildSummary(access.guild),
       instances,

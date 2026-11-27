@@ -33,6 +33,17 @@ describe("validateSettingsPatch", () => {
     expect(validateSettingsPatch({ bogus: 1 }, stored, { strict: true }).errors.bogus).toBe("Unknown setting");
   });
 
+  it("never writes fleet bindings (PUT /fleet/bindings only)", () => {
+    const fleet = { bindings: { "2": ID } };
+    const strict = validateSettingsPatch({ fleet }, stored, { strict: true });
+    expect(strict.ok).toBe(false);
+    expect(strict.errors.fleet).toBe("This setting cannot be changed here");
+
+    const lenient = validateSettingsPatch({ ...stored, fleet, autoplay: true }, stored, { strict: false });
+    expect(lenient.updates).toEqual({ autoplay: true });
+    expect(lenient.ignored).toContain("fleet");
+  });
+
   it("validates ids, lists and enums", () => {
     const r = validateSettingsPatch(
       { djRoleId: "abc", allowedVoiceChannels: [ID, "1"], language: "xx", disabledCommands: ["Play!"] },

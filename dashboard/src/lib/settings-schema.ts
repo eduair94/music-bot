@@ -89,11 +89,12 @@ export const SETTINGS_FIELDS: Readonly<Record<string, Validator>> = Object.freez
 /**
  * Stored but not writable here: identity and timestamps, counters (bot
  * only), premium (Patreon only), 24/7 (needs the bot to join; use /247),
- * permission rules (PUT /permissions), and legacy prefix/mapping fields.
+ * permission rules (PUT /permissions), fleet bindings (PUT /fleet/bindings)
+ * and legacy prefix/mapping fields.
  */
 export const READ_ONLY_SETTINGS = new Set([
   "_id", "__v", "guildId", "createdAt", "updatedAt", "exists",
-  "totalSongsPlayed", "totalPlaytime", "premium", "stay247",
+  "totalSongsPlayed", "totalPlaytime", "premium", "stay247", "fleet",
   "permissions", "permissionConfig", "prefixes", "mappings", "languageMigrated"
 ]);
 

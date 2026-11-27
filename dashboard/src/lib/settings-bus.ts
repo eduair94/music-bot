@@ -1,4 +1,5 @@
 import "server-only";
+import { fleetKeys, type FleetEvent } from "../../../shared/fleet";
 import { getRedis } from "./redis";
 
 /**
@@ -8,7 +9,8 @@ import { getRedis } from "./redis";
  * bot's services/settingsBus.ts.
  */
 export const SETTINGS_CHANNEL = "bypass:settings";
-export const guildEventsChannel = (guildId: string) => `bypass:events:${guildId}`;
+/** Same channel the /stream route subscribes to. */
+export const guildEventsChannel = fleetKeys.events;
 
 export async function publishSettingsChanged(guildId: string, keys: string[]): Promise<void> {
   const redis = getRedis();
@@ -17,7 +19,7 @@ export async function publishSettingsChanged(guildId: string, keys: string[]): P
     await redis
       .multi()
       .publish(SETTINGS_CHANNEL, JSON.stringify({ guildId, origin: "dashboard" }))
-      .publish(guildEventsChannel(guildId), JSON.stringify({ type: "settings", keys }))
+      .publish(guildEventsChannel(guildId), JSON.stringify({ type: "settings", keys } satisfies FleetEvent))
       .exec();
   } catch (error) {
     // The bot's cache also expires on its own (5 min); a failed publish only delays the change.

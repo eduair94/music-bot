@@ -46,6 +46,15 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
       enabledAt: { type: Date, default: null }
     },
 
+    // Multi-bot fleet, keyed by instance number ("2", "3", …): bindings pins
+    // an instance to a voice channel (PUT /fleet/bindings only); stay247
+    // holds the 24/7 state of instances 2+ (instance 1 keeps the top-level
+    // stay247). Written by the bot and the bindings route, never by PATCH.
+    fleet: {
+      bindings: { type: Schema.Types.Mixed, default: {} },
+      stay247: { type: Schema.Types.Mixed, default: {} }
+    },
+
     // Premium Features
     premium: {
       enabled: { type: Boolean, default: false },
