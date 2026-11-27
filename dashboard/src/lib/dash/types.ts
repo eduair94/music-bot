@@ -133,11 +133,15 @@ export interface GuildMeta {
   textChannels: { id: string; name: string }[];
 }
 
+/** Plays split by the fleet bot that played them, keyed by instance number: `{ "1": 40, "2": 12 }`. */
+export type InstanceSplit = Record<string, number>;
+
 export interface Activity {
-  totals: { plays: number; listeningMs: number; requesters: number; skips: number };
-  daily: { date: string; plays: number; listeningMs: number }[];
+  totals: { plays: number; listeningMs: number; requesters: number; skips: number; byInstance: InstanceSplit };
+  daily: { date: string; plays: number; listeningMs: number; byInstance: InstanceSplit }[];
   hours: number[];
-  topTracks: { title: string; author: string; url: string; thumbnail?: string; plays: number }[];
+  /** `instance` is the bot that played the track most. */
+  topTracks: { title: string; author: string; url: string; thumbnail?: string; plays: number; byInstance: InstanceSplit; instance: number }[];
   topRequesters: { id: string; username: string; avatar?: string; plays: number }[];
   sources: Record<string, number>;
 }
@@ -152,6 +156,8 @@ export interface HistoryItem {
   requestedBy?: Requester;
   playedAt: string;
   autoplay?: boolean;
+  /** The fleet bot that played it (1 = Bypass). */
+  instance: number;
 }
 
 export interface AuditItem {

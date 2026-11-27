@@ -2,7 +2,8 @@
 
 /**
  * What the server listened to over the last 7 or 30 days: the period's
- * numbers on one ruled line, plays per day, plays by hour, top tracks and
+ * numbers on one ruled line, plays per day stacked by the bot (stage) that
+ * played them, plays by hour, top tracks and
  * requesters, sources, what played recently, and what changed on the
  * dashboard. The period switch scopes everything above the logs.
  */
@@ -19,6 +20,7 @@ import { DailyChart } from "./DailyChart";
 import { HourStrip } from "./HourStrip";
 import { ChangeLog, RecentTable } from "./Logs";
 import { SourcesBar, TopRequesters, TopTracks } from "./Rankings";
+import { instancesIn } from "./stages";
 
 type Days = 7 | 30;
 
@@ -36,6 +38,13 @@ export function ActivityScreen() {
   useEffect(() => setNow(Date.now()), []);
 
   const data = demo ?? activity.data;
+  // Bot chips only mean something when more than one bot plays here.
+  const bots = new Set<number>([
+    ...instancesIn(data?.totals.byInstance),
+    ...(history.data?.items ?? []).map((h) => h.instance || 1),
+    ...(fleet?.instances ?? []).filter((i) => i.inGuild).map((i) => i.instance),
+  ]);
+  const showBots = bots.size > 1;
   const stale = !demo && activity.loading && Boolean(data);
   const range = data?.daily.length
     ? `${fmtDay(data.daily[0].date, { day: "numeric", month: "short" })} – ${fmtDay(data.daily.at(-1)!.date, { day: "numeric", month: "short" })}`
@@ -71,8 +80,8 @@ export function ActivityScreen() {
               <NoPlays days={days} guildId={fleet?.guild.id} />
             ) : (
               <div className="grid grid-cols-1 gap-x-10 lg:grid-cols-12">
-                <Block title="Plays per day" className="lg:col-span-8" aside={<span className="text-ink-3">Today in red</span>}>
-                  <DailyChart daily={data.daily} />
+                <Block title="Plays per day" className="lg:col-span-8">
+                  <DailyChart daily={data.daily} byInstance={data.totals.byInstance} />
                 </Block>
                 <Block title="Sources" className="lg:col-span-4">
                   <SourcesBar sources={data.sources} />
@@ -81,7 +90,7 @@ export function ActivityScreen() {
                   <HourStrip hours={data.hours} />
                 </Block>
                 <Block title="Top tracks" className="lg:col-span-7">
-                  <TopTracks items={data.topTracks} />
+                  <TopTracks items={data.topTracks} showBots={showBots} />
                 </Block>
                 <Block title="Top requesters" className="lg:col-span-5">
                   <TopRequesters items={data.topRequesters} />
@@ -97,7 +106,7 @@ export function ActivityScreen() {
               {history.error && !history.data ? (
                 <Inline error={history.error} onRetry={() => void history.reload()} />
               ) : history.data ? (
-                <RecentTable items={history.data.items} now={now} />
+                <RecentTable items={history.data.items} now={now} showBots={showBots} />
               ) : (
                 <Lines />
               )}

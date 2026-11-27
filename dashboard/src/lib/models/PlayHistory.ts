@@ -12,6 +12,8 @@ export interface IPlayHistory {
   source: string;
   requestedBy: { id: string; username: string } | null;
   autoplay: boolean;
+  /** Which fleet bot played it (1 = Bypass). Missing on rows written before the bot recorded it: read as 1. */
+  instance?: number;
   playedAt: Date;
 }
 
@@ -27,6 +29,7 @@ const playHistorySchema = new Schema<IPlayHistory>(
     source: String,
     requestedBy: { type: new Schema({ id: String, username: String }, { _id: false }), default: null },
     autoplay: Boolean,
+    instance: Number,
     playedAt: Date
   },
   { versionKey: false, autoIndex: false, collection: "playhistory" }

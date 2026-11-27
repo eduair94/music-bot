@@ -2,12 +2,15 @@
 
 /**
  * Top tracks, top requesters and where the music came from. Bars are ink:
- * stage colours stay reserved for the bots themselves.
+ * stage colours stay reserved for the bots, so a top track carries only a
+ * chip of the bot that played it most.
  */
 import { useState } from "react";
 import { fmtCount } from "@/lib/dash/format";
+import { stageName } from "@/lib/dash/stages";
 import type { Activity } from "@/lib/dash/types";
 import { cx } from "../ui";
+import { instancesIn, StageChip } from "./stages";
 
 function PlaysBar({ value, max }: { value: number; max: number }) {
   const pct = max > 0 ? Math.max(2, (value / max) * 100) : 0;
@@ -25,7 +28,23 @@ function hasLink(url: string | undefined): url is string {
   return Boolean(url && url !== "#" && /^https?:\/\//.test(url));
 }
 
-export function TopTracks({ items }: { items: Activity["topTracks"] }) {
+type TopTrack = Activity["topTracks"][number];
+
+/** The track's main bot: the API's pick, else the largest share of its split, else Bypass. */
+function dominant(t: TopTrack): number {
+  if (Number.isInteger(t.instance) && t.instance >= 1) return t.instance;
+  const list = instancesIn(t.byInstance);
+  return list.reduce((best, n) => ((t.byInstance[String(n)] ?? 0) > (t.byInstance[String(best)] ?? 0) ? n : best), list[0] ?? 1);
+}
+
+/** "Played most by Bypass 2 (24 of 33)", or "All 12 on Bypass". */
+function botNote(t: TopTrack, instance: number): string {
+  const on = t.byInstance?.[String(instance)] ?? t.plays;
+  return on >= t.plays ? `All ${t.plays} on ${stageName(instance)}` : `Played most by ${stageName(instance)} (${on} of ${t.plays})`;
+}
+
+/** `showBots` adds the chip of the bot that played each track most (off when the server has one bot). */
+export function TopTracks({ items, showBots = false }: { items: Activity["topTracks"]; showBots?: boolean }) {
   if (!items.length) return <p className="py-6 text-[14px] text-ink-2">No songs played in this period.</p>;
   const max = Math.max(...items.map((t) => t.plays));
   return (
@@ -54,7 +73,10 @@ export function TopTracks({ items }: { items: Activity["topTracks"] }) {
               ) : (
                 <p className="bill truncate text-[21px]">{t.title}</p>
               )}
-              <p className="truncate text-[13px] text-ink-2">{t.author}</p>
+              <p className="flex min-w-0 items-center gap-2 text-[13px] text-ink-2">
+                {showBots ? <StageChip instance={dominant(t)} title={botNote(t, dominant(t))} /> : null}
+                <span className="truncate">{t.author}</span>
+              </p>
             </div>
           </div>
           <PlaysBar value={t.plays} max={max} />

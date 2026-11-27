@@ -3,8 +3,9 @@
 /**
  * Server settings, one section per concern with its own Save/Discard. Only
  * the fields that changed are sent (PATCH /settings); stage home channels go
- * through PUT /fleet/bindings. Members without the Settings permission see
- * every value read-only and who can change it.
+ * through PUT /fleet/bindings and the channels each stage may serve through
+ * PUT /permissions (stageChannels.ts). Members without the Settings
+ * permission see every value read-only and who can change it.
  */
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -13,16 +14,17 @@ import { useGuildLive } from "@/lib/dash/live";
 import { Button, cx } from "../ui";
 import { useToast } from "../Toast";
 import { SectionFooter, SectionFrame } from "./controls";
-import { outgoing, same, SECTIONS, validate } from "./model";
+import { list, outgoing, same, SECTIONS, validate } from "./model";
 import type { Doc, SectionDef, SectionId } from "./model";
 import { ChannelFields, CommandFields, LookFields, PlaybackFields, SafetyFields, StageRows, VoiceFields } from "./sections";
+import { useStageChannels } from "./stageChannels";
 
 const INTRO: Record<SectionId, string> = {
   playback: "Limits every bot in this server follows. Default volume applies when a bot starts its next queue.",
   voice: "When Bypass leaves a voice channel, and whether it stays around the clock.",
   channels: "Where members can use Bypass, and where it keeps its log.",
   stages:
-    "Each bot is a stage with its own colour across the dashboard. Give a bot a home channel and it takes the music there; without one, the first free bot answers.",
+    "Each bot is a stage with its own colour across the dashboard. Give a bot a home channel and it takes the music there; without one, the first free bot answers. A bot can also be kept to a list of channels.",
   look: "The language Bypass replies in and the colour of its messages.",
   commands: "Turn off commands you don't want members to use.",
   safety: "Members who can't use Bypass here.",
@@ -71,12 +73,19 @@ export function SettingsScreen() {
     return out;
   }, [instances, binding, bindingEdits, meta.data]);
 
+  // Channels each stage may serve (permission config), saved with the home channels.
+  const homeTouched = useCallback(
+    (n: number) => n in bindingEdits && bindingEdits[n] !== savedBinding(n),
+    [bindingEdits, savedBinding],
+  );
+  const scope = useStageChannels(instances, binding, homeTouched, save);
+
   const [saving, setSaving] = useState<SectionId | null>(null);
   const [savedAt, setSavedAt] = useState<Partial<Record<SectionId, number>>>({});
   const [failed, setFailed] = useState<Partial<Record<SectionId, string>>>({});
 
   const dirtyCount = (id: SectionId): number => {
-    if (id === "stages") return changedBindings.length;
+    if (id === "stages") return changedBindings.length + scope.changed.length;
     const sec = SECTIONS.find((s) => s.id === id)!;
     return changedKeys(sec).length;
   };
@@ -95,8 +104,10 @@ export function SettingsScreen() {
   }, [anyDirty]);
 
   const discard = (sec: SectionDef) => {
-    if (sec.id === "stages") setBindingEdits({});
-    else
+    if (sec.id === "stages") {
+      setBindingEdits({});
+      scope.discard();
+    } else
       setEdits((e) => {
         const next = { ...e };
         for (const k of sec.keys) delete next[k];
@@ -110,6 +121,9 @@ export function SettingsScreen() {
     setFailed((f) => ({ ...f, [sec.id]: undefined }));
     try {
       if (sec.id === "stages") {
+        // Lists first: a list that now carries the new home channel is harmless
+        // if the home change then fails, the reverse strands the bot.
+        await scope.save();
         const done: Record<number, string | null> = {};
         for (const i of changedBindings) {
           const voiceChannelId = bindingEdits[i.instance] ?? null;
@@ -142,10 +156,12 @@ export function SettingsScreen() {
     }
   };
 
+  const ready = Boolean(settings.data);
   const active = useScrollSpy(
     SECTIONS.map((s) => s.id),
-    Boolean(settings.data),
+    ready,
   );
+  useHashSection(ready);
 
   const guildName = fleet?.guild.name ?? "This server";
   const status = readOnly
@@ -253,6 +269,8 @@ export function SettingsScreen() {
                         errors={bindingErrors}
                         readOnly={readOnly}
                         meta={meta.data}
+                        scope={scope}
+                        allowed={list(get("allowedVoiceChannels"))}
                       />
                     ) : null}
                     {sec.id === "look" ? <LookFields {...props} /> : null}
@@ -284,6 +302,25 @@ function jump(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
   history.replaceState(null, "", `#${id}`);
+}
+
+/**
+ * Arriving with a section in the URL (e.g. #stages from Permissions): the
+ * sections render once settings load, so scroll there then, and on later
+ * hash changes.
+ */
+function useHashSection(ready: boolean) {
+  useEffect(() => {
+    if (!ready) return;
+    const go = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (!SECTIONS.some((s) => s.id === id)) return;
+      requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start" }));
+    };
+    go();
+    window.addEventListener("hashchange", go);
+    return () => window.removeEventListener("hashchange", go);
+  }, [ready]);
 }
 
 /** The section whose heading sits nearest the top third of the viewport. */

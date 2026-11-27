@@ -1,13 +1,15 @@
 "use client";
 
 /**
- * Recently played (from play history) and the log of changes made from the
- * dashboard (settings, permissions, stage bindings).
+ * Recently played (from play history, with the bot that played each song)
+ * and the log of changes made from the dashboard (settings, permissions,
+ * stage bindings).
  */
 import { useState } from "react";
 import { fmtAgo } from "@/lib/dash/format";
 import type { AuditItem, HistoryItem } from "@/lib/dash/types";
 import { Button } from "../ui";
+import { StageChip } from "./stages";
 
 const ROWS = 10;
 
@@ -15,7 +17,8 @@ function exact(iso: string): string {
   return new Date(iso).toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
-export function RecentTable({ items, now }: { items: HistoryItem[]; now: number }) {
+/** `showBots` adds the bot that played each song (off when the server has one bot). */
+export function RecentTable({ items, now, showBots = false }: { items: HistoryItem[]; now: number; showBots?: boolean }) {
   const [all, setAll] = useState(false);
   if (!items.length) return <p className="py-6 text-[14px] text-ink-2">Nothing has played here yet.</p>;
   const shown = all ? items : items.slice(0, ROWS);
@@ -28,6 +31,11 @@ export function RecentTable({ items, now }: { items: HistoryItem[]; now: number 
               <th scope="col" className="w-20 py-2 pr-3 font-semibold sm:w-24">
                 When
               </th>
+              {showBots ? (
+                <th scope="col" className="hidden w-[6.5rem] py-2 pr-3 font-semibold sm:table-cell">
+                  Stage
+                </th>
+              ) : null}
               <th scope="col" className="py-2 pr-3 font-semibold">
                 Song
               </th>
@@ -47,6 +55,11 @@ export function RecentTable({ items, now }: { items: HistoryItem[]; now: number 
                     {fmtAgo(h.playedAt, now)}
                   </time>
                 </td>
+                {showBots ? (
+                  <td className="hidden py-2.5 pr-3 sm:table-cell">
+                    <StageChip instance={h.instance || 1} />
+                  </td>
+                ) : null}
                 <td className="max-w-[10rem] py-2.5 pr-3 sm:max-w-[18rem]">
                   {h.url && h.url !== "#" && /^https?:\/\//.test(h.url) ? (
                     <a
@@ -60,7 +73,10 @@ export function RecentTable({ items, now }: { items: HistoryItem[]; now: number 
                   ) : (
                     <span className="block truncate font-semibold">{h.title}</span>
                   )}
-                  <span className="block truncate text-[13px] text-ink-2 sm:hidden">{h.author}</span>
+                  <span className="flex min-w-0 items-center gap-1.5 text-[13px] text-ink-2 sm:hidden">
+                    {showBots ? <StageChip instance={h.instance || 1} /> : null}
+                    <span className="truncate">{h.author}</span>
+                  </span>
                 </td>
                 <td className="hidden max-w-[12rem] truncate py-2.5 pr-3 text-ink-2 sm:table-cell">{h.author}</td>
                 <td className="py-2.5">

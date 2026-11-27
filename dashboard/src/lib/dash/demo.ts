@@ -185,25 +185,36 @@ function dayKey(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+/**
+ * Night Owls' three bots split the plays roughly 60 / 32 / 8: Bypass holds
+ * the Lobby every day, Bypass 2 follows the ranked 5-stack (busiest on
+ * Friday and Saturday nights), Bypass 3 plays in Study Hall on weekdays only.
+ */
 export function demoActivity(days = 30): Activity {
   const daily = Array.from({ length: days }, (_, i) => {
     const d = new Date(Date.now() - (days - 1 - i) * 86_400_000);
     const weekend = d.getDay() === 5 || d.getDay() === 6;
     const plays = Math.round(28 + 18 * Math.sin(i / 2.3) + (weekend ? 26 : 0) + ((i * 37) % 11));
-    return { date: dayKey(d), plays, listeningMs: plays * 205_000 };
+    const study = weekend || d.getDay() === 0 ? 0 : Math.round(plays * (0.14 + ((i * 7) % 5) / 100));
+    const ranked = Math.round(plays * (weekend ? 0.38 : 0.23)) + ((i * 5) % 3);
+    const byInstance: Record<string, number> = { "1": plays - ranked - study, "2": ranked };
+    if (study) byInstance["3"] = study;
+    return { date: dayKey(d), plays, listeningMs: plays * 205_000, byInstance };
   });
   const plays = daily.reduce((a, d) => a + d.plays, 0);
+  const byInstance: Record<string, number> = {};
+  for (const d of daily) for (const [k, v] of Object.entries(d.byInstance)) byInstance[k] = (byInstance[k] ?? 0) + v;
   const hours = [6, 3, 1, 0, 0, 0, 0, 1, 2, 3, 4, 6, 9, 8, 7, 9, 12, 18, 26, 34, 41, 44, 37, 19];
   return {
-    totals: { plays, listeningMs: daily.reduce((a, d) => a + d.listeningMs, 0), requesters: 38, skips: Math.round(plays * 0.11) },
+    totals: { plays, listeningMs: daily.reduce((a, d) => a + d.listeningMs, 0), requesters: 38, skips: Math.round(plays * 0.11), byInstance },
     daily,
     hours,
     topTracks: [
-      { title: "Nightcall", author: "Kavinsky", url: "#", plays: 41 },
-      { title: "Around the World", author: "Daft Punk", url: "#", plays: 33 },
-      { title: "Midnight City", author: "M83", url: "#", plays: 29 },
-      { title: "Genesis", author: "Justice", url: "#", plays: 24 },
-      { title: "Resonance", author: "HOME", url: "#", plays: 19 },
+      { title: "Nightcall", author: "Kavinsky", url: "#", plays: 41, byInstance: { "1": 34, "2": 7 }, instance: 1 },
+      { title: "Around the World", author: "Daft Punk", url: "#", plays: 33, byInstance: { "1": 9, "2": 24 }, instance: 2 },
+      { title: "Midnight City", author: "M83", url: "#", plays: 29, byInstance: { "1": 21, "2": 6, "3": 2 }, instance: 1 },
+      { title: "Genesis", author: "Justice", url: "#", plays: 24, byInstance: { "1": 13, "2": 11 }, instance: 1 },
+      { title: "Resonance", author: "HOME", url: "#", plays: 19, byInstance: { "1": 4, "3": 15 }, instance: 3 },
     ],
     topRequesters: [
       { id: people.mika.id, username: "mika", plays: 212 },
@@ -218,17 +229,18 @@ export function demoActivity(days = 30): Activity {
 
 export function demoHistory(): HistoryItem[] {
   const now = Date.now();
-  const items: [string, string, string, keyof typeof people, number, boolean?][] = [
-    ["Lose Yourself to Dance", "Daft Punk", "5:53", "rook", 9],
-    ["Sunset", "The Midnight", "5:21", "mika", 16],
-    ["Turbo Killer", "Carpenter Brut", "3:22", "dex", 24],
-    ["Tech Noir", "Gunship", "4:57", "toaster", 31, true],
-    ["Odd Look", "Kavinsky", "4:12", "junko", 37],
-    ["D.A.N.C.E.", "Justice", "4:02", "mika", 44],
-    ["Strobe", "deadmau5", "10:37", "rook", 52],
-    ["Breakthru", "Breakbot", "3:51", "toaster", 63, true],
+  // title, artist, length, requester, minutes ago, bot, autoplay
+  const items: [string, string, string, keyof typeof people, number, number, boolean?][] = [
+    ["Lose Yourself to Dance", "Daft Punk", "5:53", "rook", 9, 2],
+    ["Sunset", "The Midnight", "5:21", "mika", 16, 1],
+    ["Turbo Killer", "Carpenter Brut", "3:22", "dex", 24, 2],
+    ["Tech Noir", "Gunship", "4:57", "toaster", 31, 1, true],
+    ["Odd Look", "Kavinsky", "4:12", "junko", 37, 1],
+    ["D.A.N.C.E.", "Justice", "4:02", "mika", 44, 1],
+    ["Strobe", "deadmau5", "10:37", "rook", 52, 3],
+    ["Breakthru", "Breakbot", "3:51", "toaster", 63, 1, true],
   ];
-  return items.map(([title, author, duration, by, mins, autoplay]) => ({
+  return items.map(([title, author, duration, by, mins, instance, autoplay]) => ({
     title,
     author,
     duration,
@@ -237,6 +249,7 @@ export function demoHistory(): HistoryItem[] {
     requestedBy: autoplay ? undefined : people[by],
     playedAt: new Date(now - mins * 60_000).toISOString(),
     autoplay: Boolean(autoplay),
+    instance,
   }));
 }
 

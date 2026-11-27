@@ -1,15 +1,42 @@
 import { describe, expect, it } from "vitest";
-import { fillDaily, fillHours, parseDays, parseLimit } from "./activity-shape";
+import { dominantInstance, fillDaily, fillHours, instanceKey, parseDays, parseLimit, splitByInstance } from "./activity-shape";
 
 describe("activity shaping", () => {
   it("zero-fills every day of the window, oldest first", () => {
     const now = new Date("2026-11-27T15:00:00Z");
-    const daily = fillDaily(7, [{ _id: "2026-11-25", plays: 3, listeningMs: 600000 }], now);
+    const daily = fillDaily(
+      7,
+      [
+        { _id: "2026-11-25", plays: 3, listeningMs: 600000, byInstance: { "1": 2, "2": 1 } },
+        { _id: "2026-11-26", plays: 2, listeningMs: 400000 }
+      ],
+      now
+    );
     expect(daily).toHaveLength(7);
     expect(daily[0].date).toBe("2026-11-21");
     expect(daily[6].date).toBe("2026-11-27");
-    expect(daily[4]).toEqual({ date: "2026-11-25", plays: 3, listeningMs: 600000 });
-    expect(daily[5].plays).toBe(0);
+    expect(daily[4]).toEqual({ date: "2026-11-25", plays: 3, listeningMs: 600000, byInstance: { "1": 2, "2": 1 } });
+    // A day without a split is all Bypass; an empty day has no split.
+    expect(daily[5].byInstance).toEqual({ "1": 2 });
+    expect(daily[6]).toEqual({ date: "2026-11-27", plays: 0, listeningMs: 0, byInstance: {} });
+  });
+
+  it("splits plays by the bot that played them; old rows count as Bypass", () => {
+    expect(instanceKey(2)).toBe("2");
+    expect(instanceKey(null)).toBe("1");
+    expect(instanceKey(undefined)).toBe("1");
+    expect(instanceKey(9)).toBe("1");
+    const split = splitByInstance([
+      { instance: 1, plays: 4 },
+      { instance: null, plays: 3 },
+      { instance: 3, plays: 2 },
+      { instance: 2, plays: 0 }
+    ]);
+    expect(split).toEqual({ "1": 7, "3": 2 });
+    expect(dominantInstance(split)).toBe(1);
+    expect(dominantInstance({ "2": 5, "3": 5 })).toBe(2);
+    expect(dominantInstance({ "3": 6, "2": 5 })).toBe(3);
+    expect(dominantInstance({})).toBe(1);
   });
 
   it("builds a 24-hour histogram", () => {

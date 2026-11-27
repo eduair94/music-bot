@@ -7,7 +7,8 @@
  * can change it.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Lock } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Lock } from "lucide-react";
 import { isDemo } from "@/lib/dash/demo";
 import { useGuildMeta, useGuildSave, usePermissions } from "@/lib/dash/hooks";
 import { useGuildLive } from "@/lib/dash/live";
@@ -19,7 +20,7 @@ import { MemberCheck } from "./MemberCheck";
 import type { CheckSubject } from "./MemberCheck";
 import { configKey, describeChanges, normalize, pickableRoles, whoCanChange } from "./model";
 import { SaveBar } from "./SaveBar";
-import { DjRoles, HouseRules, SectionHead, StageChannels } from "./Sections";
+import { DjRoles, HouseRules, SectionHead } from "./Sections";
 import { StampMatrix } from "./StampMatrix";
 
 type SaveResult = { ok?: boolean; config?: PermissionConfig } | PermissionConfig | null;
@@ -42,7 +43,6 @@ export function PermissionsEditor() {
   const lastBase = useRef<PermissionConfig | null>(base);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [resetKey, setResetKey] = useState(0);
 
   // Adopt fresh server rules (another admin saved) unless mid-edit.
   useEffect(() => {
@@ -94,7 +94,6 @@ export function PermissionsEditor() {
     if (!base) return;
     setDraft(base);
     setSaveError(null);
-    setResetKey((k) => k + 1);
   }, [base]);
 
   const commit = useCallback(async () => {
@@ -110,7 +109,6 @@ export function PermissionsEditor() {
       lastBase.current = next;
       perms.setData(next);
       setDraft(next);
-      setResetKey((k) => k + 1);
       toast.push({
         title: "Permissions saved",
         detail: what.length ? `${what.slice(0, 3).join(" · ")}${what.length > 3 ? ` · ${what.length - 3} more` : ""}` : undefined,
@@ -219,17 +217,16 @@ export function PermissionsEditor() {
 
             <HouseRules config={draft} readOnly={readOnly} onChange={(options) => edit((c) => ({ ...c, options }))} />
 
-            <StageChannels
-              key={resetKey}
-              config={draft}
-              readOnly={readOnly}
-              instances={fleet?.instances ?? []}
-              meta={meta.data}
-              metaError={meta.error ? "Couldn't load the voice channels. Reload the page to try again." : null}
-              onChange={(instance, channels) =>
-                edit((c) => ({ ...c, instanceChannels: { ...c.instanceChannels, [String(instance)]: channels } }))
-              }
-            />
+            {/* Which channels each bot may serve sits with its home channel in Settings. */}
+            <p className="mt-16 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-y border-rule py-3.5 text-[14px] text-ink-2">
+              <span>Home channels, and the voice channels each bot may serve, are set per stage in Settings.</span>
+              <Link
+                href={`/servers/${guildId}/settings#stages`}
+                className="inline-flex items-center gap-1 font-semibold text-ink underline underline-offset-2 hover:no-underline"
+              >
+                Settings › Stages <ArrowRight size={14} aria-hidden className="self-center" />
+              </Link>
+            </p>
           </div>
 
           <aside className="min-w-0 xl:col-span-4">

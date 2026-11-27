@@ -1,18 +1,53 @@
 /** Pure helpers that turn aggregation buckets into complete series (tested in activity-shape.test.ts). */
 
+/** Plays split by the fleet bot that played them: `{ "1": 40, "2": 12 }`, keyed by instance number. */
+export type InstanceSplit = Record<string, number>;
+
+/** A play's instance as a key. Rows written before the bot recorded it (or anything out of 1..8) count as Bypass, "1". */
+export function instanceKey(value: unknown): string {
+  const n = Number(value);
+  return Number.isInteger(n) && n >= 1 && n <= 8 ? String(n) : "1";
+}
+
+/** `{ instance, plays }` buckets folded into one split; empty counts are dropped. */
+export function splitByInstance(rows: { instance?: unknown; plays: number }[] | undefined): InstanceSplit {
+  const out: InstanceSplit = {};
+  for (const row of rows ?? []) {
+    if (!(row.plays > 0)) continue;
+    const key = instanceKey(row.instance);
+    out[key] = (out[key] ?? 0) + row.plays;
+  }
+  return out;
+}
+
+/** The bot with the most plays in a split (ties go to the lower instance); 1 when the split is empty. */
+export function dominantInstance(split: InstanceSplit): number {
+  let best = 1;
+  let most = 0;
+  for (const [key, plays] of Object.entries(split)) {
+    const n = Number(key);
+    if (plays > most || (plays === most && plays > 0 && n < best)) {
+      best = n;
+      most = plays;
+    }
+  }
+  return best;
+}
+
 /** One entry per UTC day of the window, oldest first, zero-filled. */
 export function fillDaily(
   days: number,
-  rows: { _id: string; plays: number; listeningMs: number }[],
+  rows: { _id: string; plays: number; listeningMs: number; byInstance?: InstanceSplit }[],
   now: Date = new Date()
-): { date: string; plays: number; listeningMs: number }[] {
+): { date: string; plays: number; listeningMs: number; byInstance: InstanceSplit }[] {
   const byDate = new Map(rows.map((r) => [r._id, r]));
-  const out: { date: string; plays: number; listeningMs: number }[] = [];
+  const out: { date: string; plays: number; listeningMs: number; byInstance: InstanceSplit }[] = [];
   const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today - i * 86_400_000).toISOString().slice(0, 10);
     const row = byDate.get(date);
-    out.push({ date, plays: row?.plays ?? 0, listeningMs: row?.listeningMs ?? 0 });
+    const plays = row?.plays ?? 0;
+    out.push({ date, plays, listeningMs: row?.listeningMs ?? 0, byInstance: row?.byInstance ?? (plays > 0 ? { "1": plays } : {}) });
   }
   return out;
 }

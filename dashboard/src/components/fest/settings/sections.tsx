@@ -5,12 +5,13 @@
  * through `get`/`set`; saving and the footer live in SettingsScreen.
  */
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, Volume2 } from "lucide-react";
 import { stage } from "@/lib/dash/stages";
 import type { FleetInstance, GuildMeta } from "@/lib/dash/types";
 import { FieldRow, Select, Switch, TextInput, cx } from "../ui";
 import { ChannelOptions, ChannelSet, ChipList, FieldError, ListAdder, NumberField, PercentField } from "./controls";
 import type { ChannelOption } from "./controls";
+import type { StageChannelScope } from "./stageChannels";
 import { fmtSeconds, LANGUAGES, LEAVE_PRESETS, list, normLanguage, num, STAGE_COLOUR_NAMES, stay247Of } from "./model";
 
 export interface SectionProps {
@@ -198,7 +199,20 @@ export function ChannelFields({ get, set, readOnly, meta }: SectionProps & { met
           addLabel="Add text channel"
         />
       </FieldRow>
-      <FieldRow label="Voice channels" htmlFor="allowedVoiceChannels" hint="Bypass only joins these. Leave empty for every voice channel.">
+      <FieldRow
+        label="Voice channels"
+        htmlFor="allowedVoiceChannels"
+        hint={
+          <>
+            Bypass only joins these. Leave empty for every voice channel. A stage can only serve channels allowed here and in its own
+            list under{" "}
+            <a href="#stages" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
+              Stages
+            </a>
+            .
+          </>
+        }
+      >
         <ChannelSet
           id="allowedVoiceChannels"
           options={voiceOptions(meta)}
@@ -228,6 +242,10 @@ export function ChannelFields({ get, set, readOnly, meta }: SectionProps & { met
 
 // ── Stages ──────────────────────────────────────────────────────────────────
 
+/**
+ * One block per bot: its home channel and the other voice channels it may
+ * serve. Both decide where a bot can go, so they sit together here.
+ */
 export function StageRows({
   instances,
   binding,
@@ -235,6 +253,8 @@ export function StageRows({
   errors,
   readOnly,
   meta,
+  scope,
+  allowed,
 }: {
   instances: FleetInstance[];
   binding: (instance: number) => string | null;
@@ -242,6 +262,9 @@ export function StageRows({
   errors: Record<number, string>;
   readOnly: boolean;
   meta: GuildMeta | null;
+  scope: StageChannelScope;
+  /** Settings › Channels "Voice channels" (draft); empty means every channel. */
+  allowed: string[];
 }) {
   const voice = voiceOptions(meta);
   return (
@@ -258,64 +281,193 @@ export function StageRows({
               : "On the bench";
         const selectId = `binding-${inst.instance}`;
         return (
-          <div
-            key={inst.instance}
-            className="grid gap-3 border-t border-rule py-4 first:border-t-0 sm:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] sm:items-center sm:gap-8"
-          >
-            <div className="min-w-0">
-              <span
-                aria-hidden
-                className="mb-2 block h-1.5 w-24"
-                style={
-                  inst.inGuild
-                    ? { background: s.color }
-                    : { backgroundImage: "linear-gradient(to right, #8a8378 60%, transparent 0)", backgroundSize: "12px 6px" }
-                }
-              />
-              <label htmlFor={selectId} className={cx("bill block text-[30px]", !inst.inGuild && "text-ink-3")}>
-                {inst.name}
-              </label>
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 text-[13px] text-ink-2">
-                <span className="inline-flex items-center gap-1.5 font-semibold">
-                  <span aria-hidden className="h-2.5 w-2.5 rounded-[2px]" style={{ background: s.color }} />
-                  {STAGE_COLOUR_NAMES[inst.instance] ?? "Stage"} stage
-                </span>
-                <span aria-hidden>·</span>
-                <span>{status}</span>
-              </p>
-            </div>
-            <div className="min-w-0 sm:w-full sm:justify-self-end">
-              {inst.inGuild ? (
-                <>
-                  <Select
+          <div key={inst.instance} className="border-t border-rule py-5 first:border-t-0">
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,18rem)] sm:items-end sm:gap-8">
+              <div className="min-w-0">
+                <span
+                  aria-hidden
+                  className="mb-2 block h-1.5 w-24"
+                  style={
+                    inst.inGuild
+                      ? { background: s.color }
+                      : { backgroundImage: "linear-gradient(to right, #8a8378 60%, transparent 0)", backgroundSize: "12px 6px" }
+                  }
+                />
+                <h3 className={cx("bill text-[30px]", !inst.inGuild && "text-ink-3")}>{inst.name}</h3>
+                <p className="mt-1 flex flex-wrap items-center gap-x-2 text-[13px] text-ink-2">
+                  <span className="inline-flex items-center gap-1.5 font-semibold">
+                    <span aria-hidden className="h-2.5 w-2.5 rounded-[2px]" style={{ background: s.color }} />
+                    {STAGE_COLOUR_NAMES[inst.instance] ?? "Stage"} stage
+                  </span>
+                  <span aria-hidden>·</span>
+                  <span>{status}</span>
+                </p>
+              </div>
+              <div className="min-w-0 sm:w-full sm:justify-self-end">
+                {inst.inGuild ? (
+                  <>
+                    <label htmlFor={selectId} className="mb-1 block text-[13px] font-semibold text-ink">
+                      Home channel
+                    </label>
+                    <Select
+                      id={selectId}
+                      value={value ?? ""}
+                      disabled={readOnly}
+                      aria-invalid={errors[inst.instance] ? true : undefined}
+                      onChange={(e) => setBinding(inst.instance, e.target.value || null)}
+                    >
+                      <option value="">No home channel</option>
+                      <ChannelOptions options={voice} />
+                      {value && !voice.some((c) => c.id === value) ? <option value={value}>Deleted channel</option> : null}
+                    </Select>
+                    <FieldError id={`${selectId}-err`}>{errors[inst.instance]}</FieldError>
+                  </>
+                ) : (
+                  <a
                     id={selectId}
-                    value={value ?? ""}
-                    disabled={readOnly}
-                    aria-invalid={errors[inst.instance] ? true : undefined}
-                    onChange={(e) => setBinding(inst.instance, e.target.value || null)}
+                    href={inst.inviteUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-[4px] border border-ink px-4 text-sm font-semibold transition-colors hover:bg-ink hover:text-stock"
                   >
-                    <option value="">No home channel</option>
-                    <ChannelOptions options={voice} />
-                    {value && !voice.some((c) => c.id === value) ? <option value={value}>Deleted channel</option> : null}
-                  </Select>
-                  <FieldError id={`${selectId}-err`}>{errors[inst.instance]}</FieldError>
-                </>
-              ) : (
-                <a
-                  id={selectId}
-                  href={inst.inviteUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-10 w-full items-center justify-center gap-1.5 rounded-[4px] border border-ink px-4 text-sm font-semibold transition-colors hover:bg-ink hover:text-stock"
-                >
-                  Invite {inst.name} first <ArrowUpRight size={14} />
-                </a>
-              )}
+                    Invite {inst.name} first <ArrowUpRight size={14} />
+                  </a>
+                )}
+              </div>
             </div>
+            {inst.inGuild ? (
+              <ServeList inst={inst} home={value} voice={voice} scope={scope} allowed={allowed} readOnly={readOnly} />
+            ) : null}
           </div>
         );
       })}
     </>
+  );
+}
+
+function ServeList({
+  inst,
+  home,
+  voice,
+  scope,
+  allowed,
+  readOnly,
+}: {
+  inst: FleetInstance;
+  home: string | null;
+  voice: ChannelOption[];
+  scope: StageChannelScope;
+  allowed: string[];
+  readOnly: boolean;
+}) {
+  const n = inst.instance;
+  const s = stage(n);
+  const restricted = scope.ready && scope.restricted(n);
+  const extras = scope.ready ? scope.extras(n) : [];
+  const homeName = voice.find((c) => c.id === home)?.name ?? "Its home channel";
+  const listId = `serve-${n}`;
+  const groups = new Map<string, ChannelOption[]>();
+  for (const c of voice) {
+    if (c.id === home) continue;
+    groups.set(c.group ?? "", [...(groups.get(c.group ?? "") ?? []), c]);
+  }
+  const blockedHome = Boolean(home && allowed.length && !allowed.includes(home));
+
+  return (
+    <div className="mt-4">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p id={`${listId}-label`} className="text-[13px] font-semibold text-ink">
+            May also serve
+          </p>
+          <p className="mt-0.5 text-[13px] leading-snug text-ink-3">
+            {!scope.ready
+              ? scope.error
+                ? "Couldn't load the channel lists. Reload the page to try again."
+                : "Loading channel lists…"
+              : restricted
+                ? home
+                  ? `Only ${homeName} and the channels ticked here.`
+                  : "Only the channels ticked here."
+                : allowed.length
+                  ? "Any voice channel allowed under Channels."
+                  : "Any voice channel in the server."}
+          </p>
+        </div>
+        <label className="flex shrink-0 items-center gap-2 text-[13px] font-semibold text-ink">
+          Any channel
+          <Switch
+            label={`${inst.name} may serve any channel`}
+            checked={!restricted}
+            disabled={readOnly || !scope.ready}
+            color={s.color}
+            onChange={(v) => scope.setAny(n, v)}
+          />
+        </label>
+      </div>
+
+      {restricted ? (
+        <fieldset id={listId} disabled={readOnly} aria-labelledby={`${listId}-label`} className="mt-2 min-w-0">
+          {[...groups.entries()].map(([parent, chans]) => (
+            <div key={parent || "none"} className="mb-1">
+              {parent ? <p className="pb-0.5 pt-1.5 text-[11px] font-bold uppercase tracking-wider text-ink-3">{parent}</p> : null}
+              <ul className="grid gap-x-3 sm:grid-cols-2 lg:grid-cols-3">
+                {chans.map((c) => {
+                  const on = extras.includes(c.id);
+                  const off = allowed.length > 0 && !allowed.includes(c.id);
+                  return (
+                    <li key={c.id}>
+                      <label
+                        className={cx(
+                          "flex h-8 items-center gap-2.5 rounded-[3px] px-1 text-[14px] transition-colors",
+                          off && !on ? "cursor-default text-ink-3" : "cursor-pointer text-ink hover:bg-ink/[0.05]",
+                          "has-[:disabled]:cursor-default has-[:disabled]:hover:bg-transparent",
+                        )}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={on}
+                          disabled={off && !on}
+                          onChange={() => scope.toggle(n, c.id)}
+                          className="h-4 w-4 shrink-0 cursor-pointer disabled:cursor-default"
+                          style={{ accentColor: s.color }}
+                        />
+                        <Volume2 size={14} className="shrink-0 text-ink-3" aria-hidden />
+                        <span className="truncate">{c.name}</span>
+                        {off ? <span className="shrink-0 text-[11.5px] text-ink-3">off under Channels</span> : null}
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+          {!home && extras.length === 0 ? (
+            <p className="mt-1 flex items-start gap-1.5 text-[12.5px] font-semibold leading-snug text-now">
+              <AlertTriangle size={14} className="mt-px shrink-0" aria-hidden />
+              Tick at least one channel. Until then {inst.name} serves any channel.
+            </p>
+          ) : null}
+        </fieldset>
+      ) : null}
+
+      {scope.ready && scope.homeMissing(n) ? (
+        <p className="mt-2 flex flex-wrap items-start gap-x-2 gap-y-1 text-[12.5px] font-semibold leading-snug text-now">
+          <AlertTriangle size={14} className="mt-px shrink-0" aria-hidden />
+          <span>{homeName} isn&apos;t on its list, so {inst.name} never goes there.</span>
+          {readOnly ? null : (
+            <button type="button" onClick={() => scope.includeHome(n)} className="text-ink underline underline-offset-2 hover:no-underline">
+              Add it
+            </button>
+          )}
+        </p>
+      ) : blockedHome ? (
+        <p className="mt-2 flex items-start gap-1.5 text-[12.5px] font-semibold leading-snug text-now">
+          <AlertTriangle size={14} className="mt-px shrink-0" aria-hidden />
+          {homeName} is off under Channels › Voice channels, so {inst.name} can&apos;t join it.
+        </p>
+      ) : null}
+    </div>
   );
 }
 

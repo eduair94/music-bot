@@ -1,6 +1,7 @@
 import { GuildQueue, Player, QueueRepeatMode, Track } from "discord-player";
 import { IPlayHistory, PlayHistory } from "../models/PlayHistory";
 import { isHttpUrl, truncate } from "../utils/format";
+import { INSTANCE } from "../utils/instance";
 import { isAutoplayTrack } from "./autoplay";
 import { DatabaseService } from "./database";
 import { DiscordPlayerService } from "./discordPlayer";
@@ -98,6 +99,7 @@ export class PlayHistoryService {
         source: String(track.source || "unknown"),
         requestedBy: requester && !requester.bot ? { id: requester.id, username: requester.username } : null,
         autoplay: isAutoplayTrack(track),
+        instance: INSTANCE,
         playedAt: new Date()
       });
     } catch (error) {

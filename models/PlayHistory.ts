@@ -22,6 +22,8 @@ export interface IPlayHistory {
   requestedBy: { id: string; username: string } | null;
   /** Queued by autoplay rather than a person. */
   autoplay: boolean;
+  /** Which fleet bot played it (1 = Bypass). Rows written before this field existed count as 1. */
+  instance: number;
   playedAt: Date;
 }
 
@@ -39,6 +41,7 @@ const playHistorySchema = new Schema<IPlayHistory>(
       default: null
     },
     autoplay: { type: Boolean, default: false },
+    instance: { type: Number, default: 1, min: 1, max: 8 },
     playedAt: { type: Date, required: true, default: Date.now }
   },
   { timestamps: false, collection: "playhistory", versionKey: false }

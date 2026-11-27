@@ -1,15 +1,19 @@
 import { auth } from "@/auth";
+import { InviteSlab } from "@/components/fest/account/InviteSlab";
 import { PageHead } from "@/components/fest/account/PageHead";
 import { SignOutButton } from "@/components/fest/account/SignOutButton";
-import { InviteTile, OpenTile, type ServerTile } from "@/components/fest/account/ServerTiles";
+import { InviteTile, ServerRow, type ServerTile } from "@/components/fest/account/ServerTiles";
 import { btn } from "@/components/fest/account/styles";
+import { demoFleet } from "@/lib/dash/demo";
 import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
 import { enhanceGuildsWithBotInfo } from "@/lib/discord-server";
+import { presenceFrom, readStagePresence, type PresenceSource, type StagePresence } from "@/lib/stage-presence";
 import type { GuildWithBot } from "@/types/discord";
-import { ArrowUpRight, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { instanceName } from "../../../../../shared/fleet";
 import { botInviteUrl } from "../../../../../shared/links";
 
 export const metadata: Metadata = { title: "Your servers" };
@@ -46,6 +50,30 @@ function demoGuilds(): GuildWithBot[] {
   ];
 }
 
+/** Synthetic stage presence for the `?preview=full` servers; Basement Shows is left without live state. */
+function demoPresence(): Map<string, StagePresence> {
+  const lane = (instance: number, inGuild: boolean, online = true, playing?: [string, string, string]): PresenceSource => ({
+    instance,
+    name: instanceName(instance),
+    inGuild,
+    online,
+    playback: playing ? { isConnected: true, voiceChannelName: playing[2], currentTrack: { title: playing[0], author: playing[1] } } : null,
+  });
+  return new Map([
+    ["p1", presenceFrom([lane(1, true, true, ["Weightless", "Marconi Union", "Reading Room"]), lane(2, true), lane(3, false), lane(4, false)])],
+    [
+      "p2",
+      presenceFrom([
+        lane(1, true, true, ["Sandstorm", "Darude", "Squad 1"]),
+        lane(2, true, true, ["Levels", "Avicii", "Squad 2"]),
+        lane(3, true),
+        lane(4, true, false),
+      ]),
+    ],
+    ["p4", presenceFrom([lane(1, true), lane(2, false), lane(3, false), lane(4, false)])],
+  ]);
+}
+
 export default async function ServersPage({ searchParams }: { searchParams: Promise<{ preview?: string }> }) {
   const session = await auth();
   if (!session && !DEMO) redirect("/login");
@@ -76,11 +104,24 @@ export default async function ServersPage({ searchParams }: { searchParams: Prom
   if (DEMO && !error && preview !== "empty") open.unshift({ id: "demo", name: "Night Owls", icon: null, manage: true });
   if (preview === "empty") addable.push(...demoGuilds().filter((g) => !g.botInGuild).map(tile));
 
+  // Stage presence: one Redis pipeline for every real server (none when it's
+  // unavailable: rows then show without live state); demo servers use fixtures.
+  const presence = preview
+    ? demoPresence()
+    : await readStagePresence(open.filter((g) => g.id !== "demo").map((g) => g.id));
+  if (DEMO && open.some((g) => g.id === "demo")) presence.set("demo", presenceFrom(demoFleet().instances));
+  const onAir = open.reduce((n, g) => n + (presence.get(g.id)?.onAir ?? 0), 0);
+  const live = open.some((g) => presence.has(g.id));
+
   const status = error
     ? "Couldn't load your servers"
     : !session && !preview
-      ? "Demo server · sign in to see yours"
-      : `${open.length} with Bypass${addable.length ? ` · ${addable.length} you can add it to` : ""}`;
+      ? `Demo server · ${onAir} on air · sign in to see yours`
+      : `${open.length} with Bypass${live ? ` · ${onAir} on air` : ""}${addable.length ? ` · ${addable.length} you can add it to` : ""}`;
+
+  // A short list leaves the rest of the page to the open stage: invite Bypass right there.
+  const slab = !error && open.length <= 3;
+  const invites = addable.map((guild) => ({ guild, href: botInviteUrl(CLIENT_ID, guild.id) }));
 
   return (
     <>
@@ -107,34 +148,19 @@ export default async function ServersPage({ searchParams }: { searchParams: Prom
           </section>
         ) : null}
 
-        {!error && open.length === 0 ? (
-          <section className="grid max-w-5xl items-center gap-8 py-4 sm:grid-cols-[minmax(0,1fr)_22rem]">
-            <div>
-              <h2 className="bill text-[40px]">No stage set up yet</h2>
-              <p className="mt-3 max-w-[58ch] text-[15px] leading-relaxed text-ink-2">
-                Bypass isn&apos;t in any server you&apos;re in. Add it to a server where you have Manage Server, then
-                come back here to run the player, the queue and the permissions from the browser.
-              </p>
-              <a href={botInviteUrl(CLIENT_ID)} target="_blank" rel="noreferrer" className={btn("ink", "lg", "mt-6")}>
-                Add Bypass to a server <ArrowUpRight size={16} aria-hidden />
-              </a>
-            </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/dash/empty-stage.webp" alt="" width={960} height={640} className="w-full max-w-[22rem] sm:order-none" />
-          </section>
-        ) : null}
-
         {open.length > 0 ? (
-          <ul className="grid gap-x-8 border-b border-rule sm:grid-cols-2 xl:grid-cols-3" aria-label="Servers with Bypass">
-            {open.map((g) => (
+          <ul className="border-b border-ink" aria-label="Servers with Bypass">
+            {open.map((g, i) => (
               <li key={g.id} className="min-w-0">
-                <OpenTile guild={g} />
+                <ServerRow guild={g} presence={presence.get(g.id)} row={i} />
               </li>
             ))}
           </ul>
         ) : null}
 
-        {addable.length > 0 ? (
+        {slab ? <InviteSlab empty={open.length === 0} inviteHref={botInviteUrl(CLIENT_ID)} addable={invites} /> : null}
+
+        {!slab && invites.length > 0 ? (
           <section aria-labelledby="add-bypass" className="mt-16">
             <div className="flex flex-wrap items-end gap-x-5 gap-y-1">
               <h2 id="add-bypass" className="bill text-[36px]">
@@ -143,9 +169,9 @@ export default async function ServersPage({ searchParams }: { searchParams: Prom
               <p className="pb-1 text-[14px] text-ink-2">Servers where you have Manage Server and Bypass isn&apos;t in yet.</p>
             </div>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {addable.map((g) => (
-                <li key={g.id} className="min-w-0">
-                  <InviteTile guild={g} href={botInviteUrl(CLIENT_ID, g.id)} />
+              {invites.map(({ guild, href }) => (
+                <li key={guild.id} className="min-w-0">
+                  <InviteTile guild={guild} href={href} />
                 </li>
               ))}
             </ul>

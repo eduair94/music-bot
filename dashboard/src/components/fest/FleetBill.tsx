@@ -18,9 +18,13 @@ import { useToast } from "./Toast";
 import { Button, cx, IconButton, Menu, MenuItem } from "./ui";
 import { useTransitionNav } from "./vt";
 
-const PX_PER_MIN = 26;
+/** Minutes are drawn between these heights; the bill fits every queue end into view when it can. */
+const MAX_PX_PER_MIN = 26;
+const MIN_PX_PER_MIN = 17;
+/** The set on stage always has room for its title, countdown and transport. */
+const CUR_MIN_PX = 96;
 const MIN = 60_000;
-const px = (ms: number) => (ms / MIN) * PX_PER_MIN;
+const toPx = (ms: number, scale: number) => (ms / MIN) * scale;
 const QUEUE_END_PX = 168;
 
 function openAdd(instance?: number) {
@@ -64,6 +68,32 @@ export function FleetBill() {
     return Math.min(last, origin + 4 * 60 * MIN);
   }, [live, now, origin]);
 
+  // Fit the latest queue end (plus its dashed block) into the visible lane.
+  const [laneH, setLaneH] = useState(0);
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setLaneH(el.clientHeight - HEADER_H));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const lastEnd = useMemo(() => {
+    let last = 0;
+    for (const i of live) {
+      const p = i.playback!;
+      let t = currentStart(p, now) + trackMs(p.currentTrack);
+      for (const q of p.queue) t += trackMs(q);
+      last = Math.max(last, t);
+    }
+    return last;
+  }, [live, now]);
+  const scale = useMemo(() => {
+    if (!laneH || !lastEnd) return MAX_PX_PER_MIN;
+    const minutes = (lastEnd - origin) / MIN;
+    const fit = (laneH - QUEUE_END_PX - CUR_MIN_PX / 2 - 24) / Math.max(minutes, 1);
+    return Math.max(MIN_PX_PER_MIN, Math.min(MAX_PX_PER_MIN, Math.floor(fit * 2) / 2));
+  }, [laneH, lastEnd, origin]);
+  const px = (ms: number) => toPx(ms, scale);
   const height = px(end - origin);
   const nowY = px(now - origin);
 
@@ -96,7 +126,7 @@ export function FleetBill() {
   };
 
   return (
-    <div className="flex h-[calc(100dvh-4rem)] flex-col max-lg:h-[calc(100dvh-7rem)]">
+    <div className="flex flex-col md:h-[calc(100dvh-7rem)] lg:h-[calc(100dvh-4rem)]">
       {/* Title row */}
       <div className="flex flex-wrap items-end gap-x-5 gap-y-2 px-4 pb-3 pt-4 sm:px-6">
         <h1 className="bill text-[52px] leading-[0.85] sm:text-[60px]">Fleet</h1>
@@ -114,6 +144,7 @@ export function FleetBill() {
           <Button
             variant={follow ? "ink" : "outline"}
             size="sm"
+            className="max-md:hidden"
             aria-pressed={follow}
             onClick={() => {
               lastUserScroll.current = 0;
@@ -128,12 +159,22 @@ export function FleetBill() {
         </div>
       </div>
 
+      {/* Phones: one compact bill row per stage. */}
+      <CompactFleet
+        instances={instances}
+        now={now}
+        control={control}
+        guildName={fleet.guild.name}
+        guildId={fleet.guild.id}
+        myChannel={me?.voiceChannelId ?? null}
+      />
+
       {/* The bill */}
       <div
         ref={scroller}
         onWheel={() => (lastUserScroll.current = Date.now())}
         onTouchMove={() => (lastUserScroll.current = Date.now())}
-        className="relative min-h-0 flex-1 overflow-auto border-t-2 border-ink"
+        className="relative min-h-0 flex-1 overflow-auto border-t-2 border-ink max-md:hidden"
       >
         <div
           className="grid min-w-full"
@@ -152,11 +193,13 @@ export function FleetBill() {
           <div className="sticky left-0 z-20 border-r border-rule bg-stock" style={{ height }}>
             {ticks.map((t) => {
               const major = new Date(t).getMinutes() % 10 === 0;
+              const y = px(t - origin);
+              if (y < 10 || Math.abs(y - nowY) < 16) return null;
               return (
                 <span
                   key={t}
                   className={cx("clock absolute right-2 -translate-y-1/2 text-[12px]", major ? "text-ink" : "text-ink-3")}
-                  style={{ top: px(t - origin) }}
+                  style={{ top: y }}
                 >
                   {fmtClock(t)}
                 </span>
@@ -170,6 +213,7 @@ export function FleetBill() {
               inst={i}
               origin={origin}
               now={now}
+              scale={scale}
               height={height}
               control={control}
               guildName={fleet.guild.name}
@@ -190,10 +234,14 @@ export function FleetBill() {
           ))}
         </div>
         <div
-          className="pointer-events-none absolute left-0 right-0 z-[25]"
+          aria-hidden
+          className="pointer-events-none absolute left-14 right-0 z-[2] h-[2px] -translate-y-1/2 bg-now"
+          style={{ top: HEADER_H, transform: `translateY(${nowY}px)`, transition: "transform 1s linear" }}
+        />
+        <div
+          className="pointer-events-none absolute left-0 right-0 z-[26]"
           style={{ top: HEADER_H, transform: `translateY(${nowY}px)`, transition: "transform 1s linear" }}
         >
-          <div className="absolute left-14 right-0 h-[2px] -translate-y-1/2 bg-now" />
           <span className="clock sticky left-0 inline-block -translate-y-1/2 rounded-[3px] bg-now px-1.5 py-0.5 text-[15px] text-white shadow-[0_2px_6px_rgb(212_0_31/0.35)]">
             {fmtClock(now)}
           </span>
@@ -262,6 +310,7 @@ function StageColumn({
   inst,
   origin,
   now,
+  scale,
   height,
   control,
   guildName,
@@ -270,6 +319,7 @@ function StageColumn({
   inst: FleetInstance;
   origin: number;
   now: number;
+  scale: number;
   height: number;
   control: Control;
   guildName: string;
@@ -277,6 +327,7 @@ function StageColumn({
 }) {
   const s = stage(inst.instance);
   const p = inst.playback;
+  const px = (ms: number) => toPx(ms, scale);
   const nowY = px(now - origin);
 
   // Remember the set that just finished so it can leave the bill.
@@ -296,7 +347,7 @@ function StageColumn({
 
   if (!inst.inGuild) {
     return (
-      <div className="relative z-[1] border-r border-rule px-3" style={{ height }}>
+      <div className="relative border-r border-rule px-3" style={{ height }}>
         <div className="absolute inset-x-3 inset-y-0 rounded-[2px] border-[1.5px] border-dashed border-ink/35" />
         <div className="sticky z-10 mx-1.5 mt-6 rounded-[4px] border-[1.5px] border-dashed border-ink/50 bg-stock p-4" style={{ top: HEADER_H + 24 }}>
           <p className="bill text-[30px]">Not in {guildName}</p>
@@ -313,7 +364,7 @@ function StageColumn({
 
   if (!inst.online) {
     return (
-      <div className="hatch relative z-[1] border-r border-rule" style={{ height }}>
+      <div className="hatch relative border-r border-rule" style={{ height }}>
         <div className="sticky z-10 mx-3 mt-6 rounded-[4px] border border-ink/30 bg-stock p-4" style={{ top: HEADER_H + 24 }}>
           <p className="bill text-[30px] text-ink-2">Off air</p>
           <p className="mt-2 text-[14px] text-ink-2">{inst.name} isn&apos;t responding right now. Its stage comes back on its own when it reconnects.</p>
@@ -324,9 +375,9 @@ function StageColumn({
 
   if (!p?.currentTrack) {
     return (
-      <div className="relative z-[1] border-r border-rule" style={{ height, background: `color-mix(in srgb, ${s.tint} 45%, transparent)` }}>
+      <div className="relative border-r border-rule" style={{ height, background: `color-mix(in srgb, ${s.tint} 45%, transparent)` }}>
         <div
-          className="absolute inset-x-3 rounded-[4px] border-2 bg-stock/90 p-4"
+          className="absolute inset-x-3 z-[3] rounded-[4px] border-2 bg-stock/90 p-4"
           style={{ top: Math.max(12, nowY + 16), borderColor: s.color }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -347,28 +398,30 @@ function StageColumn({
   const start = currentStart(p, now);
   const curDur = trackMs(p.currentTrack);
   const curTop = px(start - origin);
-  const curH = Math.max(px(curDur), 44);
+  const curH = Math.max(px(curDur), CUR_MIN_PX);
+  // Later sets shift down by whatever the on-stage block was stretched; their printed start times stay exact.
+  const stretch = curH - px(curDur);
   const playedH = Math.min(curH, Math.max(0, nowY - curTop));
   prev.current = { key: curKey, top: curTop, height: curH, title: p.currentTrack.title };
 
   let cursor = start + curDur;
   const upcoming = p.queue.map((t, idx) => {
-    const top = px(cursor - origin);
+    const top = px(cursor - origin) + stretch;
     const h = px(trackMs(t));
     const at = cursor;
     cursor += trackMs(t);
     return { t, idx, top, h, at };
   });
-  const endTop = px(cursor - origin);
+  const endTop = px(cursor - origin) + stretch;
   const paused = p.isPaused;
   const remaining = Math.max(0, curDur - livePosition(p, now));
 
   return (
-    <div className="relative z-[1] border-r border-rule" style={{ height }}>
+    <div className="relative border-r border-rule" style={{ height }}>
       {ghost ? (
         <div
           aria-hidden
-          className="absolute inset-x-1.5 rounded-[3px] p-3"
+          className="absolute inset-x-1.5 z-[3] rounded-[3px] p-3"
           style={{ top: ghost.top, height: ghost.height, background: s.color, color: s.on, animation: "set-off 600ms cubic-bezier(0.7,0,0.84,0) forwards" }}
         >
           <p className="bill truncate text-[22px]">{ghost.title}</p>
@@ -379,7 +432,7 @@ function StageColumn({
       <article
         key={curKey}
         aria-label={`Now on ${inst.name}: ${p.currentTrack.title} by ${p.currentTrack.author}`}
-        className="print-pull absolute inset-x-1.5 overflow-hidden rounded-[3px]"
+        className="print-pull absolute inset-x-1.5 z-[3] overflow-hidden rounded-[3px]"
         style={{ top: curTop, height: curH, background: s.color, color: s.on }}
       >
         <div aria-hidden className="hatch absolute inset-x-0 top-0 bg-ink/15" style={{ height: playedH }} />
@@ -425,7 +478,7 @@ function StageColumn({
 
       {/* Queue end */}
       <div
-        className="absolute inset-x-1.5 rounded-[3px] border-[1.5px] border-dashed p-3"
+        className="absolute inset-x-1.5 z-[3] rounded-[3px] border-[1.5px] border-dashed bg-stock/80 p-3"
         style={{ top: endTop + 4, height: QUEUE_END_PX, borderColor: s.color }}
       >
         <p className="clock text-[34px] leading-none" style={{ color: s.color === "#f5b700" ? "#9a7300" : s.color }}>
@@ -495,7 +548,7 @@ function UpcomingBlock({
   onDragEnd: () => void;
 }) {
   const s = stage(inst);
-  const tall = height >= 52;
+  const tall = height >= 50;
   return (
     <div
       draggable
@@ -513,13 +566,13 @@ function UpcomingBlock({
       }}
       onDragEnd={onDragEnd}
       className={cx(
-        "print-pull group absolute inset-x-1.5 cursor-grab overflow-hidden rounded-[3px] transition-[opacity,transform] duration-200 active:cursor-grabbing",
+        "print-pull group absolute inset-x-1.5 z-[3] cursor-grab overflow-hidden rounded-[3px] transition-[opacity,transform] duration-200 active:cursor-grabbing",
         dragging && "scale-[0.98] opacity-40",
       )}
       style={{ top: top + 2, height: Math.max(height - 2, 22), background: s.color, color: s.on }}
     >
       {dropBefore ? <span aria-hidden className="absolute inset-x-0 top-0 z-10 h-[3px] bg-ink" /> : null}
-      <div className={cx("flex h-full gap-2 px-3", tall ? "flex-col py-2" : "items-center")}>
+      <div className={cx("flex h-full px-3", tall ? "flex-col gap-0.5 py-1.5" : "items-center gap-2")}>
         <div className="flex min-w-0 items-start gap-2">
           <p className={cx("bill min-w-0 flex-1 truncate", tall ? "text-[20px]" : "text-[15px]")}>{track.title}</p>
           <span className="clock shrink-0 text-[12px] opacity-85">{fmtClock(at)}</span>
@@ -567,7 +620,7 @@ function UpcomingBlock({
 
 function MoreColumn({ height }: { height: number }) {
   return (
-    <div className="relative z-[1] px-3" style={{ height }}>
+    <div className="relative px-3" style={{ height }}>
       <div className="sticky z-10 mt-6 rounded-[4px] border-[1.5px] border-dashed border-ink/35 bg-stock p-4" style={{ top: HEADER_H + 24 }}>
         <p className="bill text-[28px] text-ink-2">Up to four stages, free</p>
         <p className="mt-2 text-[14px] leading-snug text-ink-2">
@@ -581,7 +634,7 @@ function MoreColumn({ height }: { height: number }) {
 function Strip({ guildId }: { guildId: string }) {
   const { data } = useActivity(30);
   return (
-    <div className="relative z-30 flex items-center gap-6 border-t-2 border-ink bg-ink px-4 py-2.5 text-stock sm:px-6">
+    <div className="relative z-30 flex items-center gap-4 border-t-2 border-ink bg-ink px-4 py-2.5 text-stock max-md:sticky max-md:bottom-0 sm:gap-6 sm:px-6">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/dash/crowd-strip.webp"
@@ -591,16 +644,22 @@ function Strip({ guildId }: { guildId: string }) {
         className="pointer-events-none absolute bottom-full right-6 hidden h-16 w-auto opacity-90 md:block"
       />
       {data ? (
-        <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+        <dl className="flex min-w-0 items-baseline gap-x-4 sm:gap-x-6">
           <Stat value={fmtCount(data.totals.plays)} label="plays" />
           <Stat value={fmtListening(data.totals.listeningMs)} label="listened" />
-          <Stat value={fmtCount(data.totals.requesters)} label="requesters" />
+          <span className="max-sm:hidden">
+            <Stat value={fmtCount(data.totals.requesters)} label="requesters" />
+          </span>
         </dl>
       ) : (
         <span className="text-sm text-stock/60">Loading the last 30 days…</span>
       )}
-      <Link href={`/servers/${guildId}/activity`} className="ml-auto flex items-center gap-1 text-sm font-semibold text-stock/80 hover:text-stock">
-        Last 30 days <ArrowUpRight size={14} />
+      <Link
+        href={`/servers/${guildId}/activity`}
+        aria-label="Activity, last 30 days"
+        className="ml-auto flex shrink-0 items-center gap-1 text-sm font-semibold text-stock/80 hover:text-stock"
+      >
+        <span className="max-sm:hidden">Last 30 days</span> <ArrowUpRight size={14} />
       </Link>
     </div>
   );
@@ -615,5 +674,172 @@ function Stat({ value, label }: { value: string; label: string }) {
         {label}
       </span>
     </div>
+  );
+}
+
+// ── Phones ──────────────────────────────────────────────────────────────────
+
+function CompactFleet({
+  instances,
+  now,
+  control,
+  guildName,
+  guildId,
+  myChannel,
+}: {
+  instances: FleetInstance[];
+  now: number;
+  control: Control;
+  guildName: string;
+  guildId: string;
+  myChannel: string | null;
+}) {
+  return (
+    <div className="space-y-4 border-t-2 border-ink px-4 pb-6 pt-4 md:hidden">
+      {instances.map((i) => (
+        <CompactStage
+          key={i.instance}
+          inst={i}
+          now={now}
+          control={control}
+          guildName={guildName}
+          guildId={guildId}
+          mine={Boolean(myChannel && i.playback?.voiceChannelId === myChannel)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function CompactStage({
+  inst,
+  now,
+  control,
+  guildName,
+  guildId,
+  mine,
+}: {
+  inst: FleetInstance;
+  now: number;
+  control: Control;
+  guildName: string;
+  guildId: string;
+  mine: boolean;
+}) {
+  const s = stage(inst.instance);
+  const p = inst.playback;
+  const nav = useTransitionNav();
+  const status = !inst.inGuild
+    ? "Not in this server"
+    : !inst.online
+      ? "Off air"
+      : p?.isConnected
+        ? `${p.voiceChannelName ?? "Voice"} · ${p.listeners ?? 0} listening${mine ? " · your channel" : ""}`
+        : "On the bench";
+
+  let body: React.ReactNode;
+  if (!inst.inGuild) {
+    body = (
+      <div className="rounded-[4px] border-[1.5px] border-dashed border-ink/45 p-3">
+        <p className="text-[14px] leading-snug text-ink-2">
+          Invite {inst.name} to run another voice channel in {guildName} at the same time.
+        </p>
+        <a
+          href={inst.inviteUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-2.5 inline-flex h-9 items-center gap-1.5 rounded-[4px] bg-ink px-3.5 text-[13px] font-semibold text-stock"
+        >
+          Invite {inst.name} <ArrowUpRight size={14} />
+        </a>
+      </div>
+    );
+  } else if (!inst.online) {
+    body = (
+      <p className="hatch rounded-[4px] border border-ink/25 p-3 text-[14px] text-ink-2">
+        {inst.name} is not responding right now. Its stage comes back on its own.
+      </p>
+    );
+  } else if (!p?.currentTrack) {
+    body = (
+      <div className="flex items-center gap-3 rounded-[4px] p-2" style={{ background: `color-mix(in srgb, ${s.tint} 55%, transparent)` }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={s.benchArt} alt="" width={240} height={160} className="w-28 shrink-0" />
+        <div className="min-w-0">
+          <p className="text-[14px] leading-snug text-ink-2">{p?.isConnected ? `Waiting in ${p.voiceChannelName}.` : "Idle."}</p>
+          <Button className="mt-2" size="sm" variant="stage" stageColor={s.color} stageOn={s.on} onClick={() => openAdd(inst.instance)}>
+            <Play size={14} /> Start music
+          </Button>
+        </div>
+      </div>
+    );
+  } else {
+    const dur = trackMs(p.currentTrack);
+    const pos = livePosition(p, now);
+    const pct = dur > 0 ? Math.min(100, (pos / dur) * 100) : 0;
+    let end = now - pos + dur;
+    for (const q of p.queue) end += trackMs(q);
+    const next = p.queue[0];
+    body = (
+      <>
+        <article
+          key={`${p.currentTrack.url}|${p.currentTrack.title}`}
+          className="print-pull overflow-hidden rounded-[4px] p-3"
+          style={{ background: s.color, color: s.on }}
+          aria-label={`Now on ${inst.name}: ${p.currentTrack.title} by ${p.currentTrack.author}`}
+        >
+          <div className="flex items-start gap-2">
+            <p className="bill line-clamp-2 min-w-0 flex-1 text-[26px]">{p.currentTrack.title}</p>
+            <span className="clock shrink-0 text-[24px] leading-none">
+              {p.isPaused ? "II" : `−${fmtMs(Math.max(0, dur - pos))}`}
+            </span>
+          </div>
+          <p className="mt-0.5 truncate text-[13px] font-semibold opacity-90">
+            {p.currentTrack.author} · {p.currentTrack.duration}
+          </p>
+          <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-black/20" aria-hidden>
+            <div className="h-full rounded-full" style={{ width: `${pct}%`, background: s.on, transition: "width 1s linear" }} />
+          </div>
+          <div className="mt-2 flex items-center gap-1">
+            <Transport inst={inst.instance} paused={p.isPaused} color={s.on} control={control} />
+          </div>
+        </article>
+        <p className="mt-2 flex flex-wrap items-baseline gap-x-2 text-[13px] text-ink-2">
+          {next ? (
+            <span className="min-w-0 truncate">
+              Next <span className="font-semibold text-ink">{next.title}</span>
+            </span>
+          ) : null}
+          <span className="ml-auto shrink-0">
+            {p.queue.length} queued · ends <span className="clock text-[15px] text-ink">{fmtClock(end)}</span>
+          </span>
+        </p>
+      </>
+    );
+  }
+
+  return (
+    <section aria-label={inst.name}>
+      <div
+        className="h-1.5"
+        style={
+          inst.inGuild
+            ? { background: s.color }
+            : { backgroundImage: "linear-gradient(to right, #8a8378 60%, transparent 0)", backgroundSize: "14px 6px" }
+        }
+      />
+      <div className="flex items-baseline gap-2 pb-2 pt-1.5">
+        <button
+          type="button"
+          disabled={!inst.inGuild}
+          onClick={() => nav(`/servers/${guildId}/player?bot=${inst.instance}`)}
+          className={cx("bill shrink-0 text-[30px]", !inst.inGuild && "text-ink-3")}
+        >
+          {inst.name}
+        </button>
+        <span className="min-w-0 truncate text-[13px] font-semibold text-ink-2">{status}</span>
+      </div>
+      {body}
+    </section>
   );
 }

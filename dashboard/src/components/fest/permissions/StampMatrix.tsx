@@ -15,20 +15,31 @@ import { cx } from "../ui";
 import { GROUP_INFO, MODE, MODE_RANK, MODES, roleColor } from "./model";
 import { MemberAdder, MemberChip, RoleChip, RoleDot, RolePicker } from "./RolePicker";
 
-/** Speckled ink: fractal noise thresholded into the alpha of a mask. */
-const INK_MASK = `url("data:image/svg+xml,${encodeURIComponent(
-  "<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -18 12.3'/></filter><rect width='180' height='180' filter='url(#n)'/></svg>",
-)}")`;
+/**
+ * A real rubber-stamp impression (worn edges, speckle, a dry corner, a
+ * knocked-out frame line), stretched over the cell as an alpha mask so the
+ * band colour prints through it and the label stays live text.
+ */
+const INK_MASK = "url(/dash/stamp-ink.webp)";
 
 /** A hand-stamped impression never lands perfectly square. */
 const TILT = [-1.6, 1.1, -0.6, 1.5, -1.2, 0.7, -1.8, 1.3, -0.9, 0.5];
 
+/** One plate, four ways round, so neighbouring rows don't wear the same dry patch. */
+const FLIP: [number, number][] = [
+  [1, 1],
+  [-1, -1],
+  [-1, 1],
+  [1, -1],
+];
+
 const ROW_COLS = "md:grid-cols-[minmax(12rem,1fr)_minmax(20rem,27rem)]";
 
+/** Where the stamp was pressed, in % of the cell (50/50 from the keyboard). */
 interface StampOrigin {
   n: number;
-  sx: string;
-  sy: string;
+  x: number;
+  y: number;
 }
 
 export interface MatrixProps {
@@ -48,10 +59,10 @@ export function StampMatrix(props: MatrixProps) {
   const [stamps, setStamps] = useState<Partial<Record<Group, StampOrigin>>>({});
   const seq = useRef(0);
 
-  const stamp = (group: Group, mode: RuleMode, sx = "50%", sy = "50%") => {
+  const stamp = (group: Group, mode: RuleMode, x = 50, y = 50) => {
     if (props.readOnly || config.groups[group].mode === mode) return;
     seq.current += 1;
-    setStamps((s) => ({ ...s, [group]: { n: seq.current, sx, sy } }));
+    setStamps((s) => ({ ...s, [group]: { n: seq.current, x, y } }));
     props.onMode(group, mode);
   };
 
@@ -103,7 +114,7 @@ export function StampMatrix(props: MatrixProps) {
             origin={stamps[g]}
             expanded={open.has(g)}
             onToggle={() => toggle(g)}
-            onStamp={(mode, sx, sy) => stamp(g, mode, sx, sy)}
+            onStamp={(mode, x, y) => stamp(g, mode, x, y)}
           />
         ))}
       </div>
@@ -129,7 +140,7 @@ function Row({
   origin?: StampOrigin;
   expanded: boolean;
   onToggle: () => void;
-  onStamp: (mode: RuleMode, sx?: string, sy?: string) => void;
+  onStamp: (mode: RuleMode, x?: number, y?: number) => void;
 }) {
   const info = GROUP_INFO[group];
   const labelId = useId();
@@ -154,7 +165,7 @@ function Row({
     // Keyboard activation (detail 0) stamps from the centre.
     if (e.detail === 0) return onStamp(mode);
     const r = e.currentTarget.getBoundingClientRect();
-    onStamp(mode, `${Math.round(e.clientX - r.left)}px`, `${Math.round(e.clientY - r.top)}px`);
+    onStamp(mode, ((e.clientX - r.left) / r.width) * 100, ((e.clientY - r.top) / r.height) * 100);
   };
 
   const summary = [
@@ -249,7 +260,7 @@ function Row({
                     </span>
                   )}
                 </span>
-                {checked ? <Stamp key={origin?.n ?? 0} mode={m.mode} tilt={TILT[index % TILT.length]} origin={origin} /> : null}
+                {checked ? <Stamp key={origin?.n ?? 0} mode={m.mode} tilt={TILT[index % TILT.length]} flip={FLIP[index % FLIP.length]} origin={origin} /> : null}
               </button>
             );
           })}
@@ -269,28 +280,35 @@ function Row({
   );
 }
 
-function Stamp({ mode, tilt, origin }: { mode: RuleMode; tilt: number; origin?: StampOrigin }) {
+function Stamp({ mode, tilt, flip, origin }: { mode: RuleMode; tilt: number; flip: [number, number]; origin?: StampOrigin }) {
   const m = MODE[mode];
+  const [fx, fy] = flip;
+  // The ink layer is flipped, so mirror the press point into its coordinates.
+  const x = origin ? (fx < 0 ? 100 - origin.x : origin.x) : 50;
+  const y = origin ? (fy < 0 ? 100 - origin.y : origin.y) : 50;
   return (
     <span
       aria-hidden
-      className={cx("absolute inset-1 flex items-center justify-center rounded-[3px]", origin && "stamp-in")}
+      className={cx("absolute inset-1 flex items-center justify-center", origin && "stamp-in")}
       style={
         {
           background: m.color,
           color: m.on,
-          transform: `rotate(${tilt}deg)`,
+          transform: `rotate(${tilt}deg) scale(${fx}, ${fy})`,
           WebkitMaskImage: INK_MASK,
           maskImage: INK_MASK,
-          WebkitMaskSize: "180px 180px",
-          maskSize: "180px 180px",
-          "--sx": origin?.sx ?? "50%",
-          "--sy": origin?.sy ?? "50%",
+          WebkitMaskSize: "100% 100%",
+          maskSize: "100% 100%",
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          "--sx": `${x.toFixed(1)}%`,
+          "--sy": `${y.toFixed(1)}%`,
         } as React.CSSProperties
       }
     >
-      <span className="absolute inset-[4px] rounded-[2px] border-[1.5px] border-current opacity-60" />
-      <span className="bill relative text-[21px] leading-none md:text-[24px]">{m.stamp}</span>
+      <span className="bill relative inline-block text-[21px] leading-none md:text-[24px]" style={{ transform: `scale(${fx}, ${fy})` }}>
+        {m.stamp}
+      </span>
     </span>
   );
 }
