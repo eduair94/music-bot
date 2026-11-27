@@ -32,8 +32,12 @@ export interface PlayRequest {
   ephemeral?: boolean;
   /** /playnow: skip the current song once this is queued next (applied by a fleet instance it is handed to). */
   now?: boolean;
-  /** /radio: autoplay on afterwards (applied by a fleet instance it is handed to). */
-  radio?: boolean;
+  /**
+   * /radio: autoplay on afterwards; a RadioRequest also starts that radio
+   * session (station anchors, AI batch). Applied by a fleet instance it is
+   * handed to as well.
+   */
+  radio?: boolean | import("../services/radio").RadioRequest;
 }
 
 /**

@@ -437,6 +437,11 @@ export interface BotCommandParams {
   now?: boolean;
   /** play: turn autoplay on afterwards (/radio) */
   autoplay?: boolean;
+  /**
+   * play: start this radio session afterwards (/radio station or AI DJ).
+   * Shape: RadioRequest in services/radio.ts (bot-only, so typed loosely here).
+   */
+  radio?: { kind: "song" | "station" | "ai"; label: string; [key: string]: unknown };
   /** play: search source ("youtube" | "soundcloud") */
   source?: string;
   /** Language for the result message (Discord locale of the requester) */

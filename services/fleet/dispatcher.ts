@@ -258,8 +258,8 @@ export interface DispatchRequest {
   ephemeral?: boolean;
   /** /playnow: skip the current song once queued next. */
   now?: boolean;
-  /** /radio: turn autoplay on afterwards. */
-  radio?: boolean;
+  /** /radio: turn autoplay on afterwards; a RadioRequest also starts that radio session. */
+  radio?: boolean | import("../radio").RadioRequest;
 }
 
 /**
@@ -308,7 +308,8 @@ async function handOff(request: DispatchRequest, instance: number, voice: VoiceB
       textChannelId: interaction.channelId ?? undefined,
       next: request.next || undefined,
       now: request.now || undefined,
-      autoplay: request.radio || undefined,
+      autoplay: request.radio ? true : undefined,
+      radio: typeof request.radio === "object" ? { ...request.radio } : undefined,
       source: request.searchEngine === QueryType.SOUNDCLOUD_SEARCH ? "soundcloud" : undefined,
       locale: currentLocale()
     },

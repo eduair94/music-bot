@@ -54,6 +54,8 @@ export interface QueueMetadata {
   autoplay?: boolean;
   /** YouTube ids autoplay already used in this session (no repeats) */
   autoplaySeen?: Set<string>;
+  /** /radio session steering autoplay: anchors, station, AI prompt (services/radio.ts) */
+  radio?: import("./radio").RadioSession;
   /** 24/7: never leave on empty/end/stop */
   stay247?: boolean;
   /**

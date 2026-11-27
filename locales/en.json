@@ -680,11 +680,42 @@
     }
   },
   "radio": {
-    "description": "Start an endless radio from a song or artist",
+    "description": "Endless radio from a song, a genre station or an AI DJ prompt",
     "notInVoice": "You need to be in a voice channel.",
     "noQueue": "There is no track playing to base the radio on.",
     "success": "📻 Started radio based on **{title}**",
-    "error": "Failed to start radio. Please try again."
+    "error": "Failed to start radio. Please try again.",
+    "optionSong": "Song or artist to start from",
+    "optionStation": "A genre station",
+    "optionPrompt": "AI DJ: describe the music (e.g. rainy night jazz)",
+    "pickOne": "Pick only one: a song, a station or a prompt.",
+    "started": "Radio started from **{title}**. Related songs will keep playing.",
+    "stationStarted": "**{station}** radio is on. Songs of that style will keep playing.",
+    "aiStarted": "AI DJ radio is on: **{title}**. New songs will keep coming for your prompt.",
+    "aiPick": "picked by the AI DJ",
+    "panelAi": "AI DJ radio",
+    "panelStation": "{station} radio",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Electronic",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Classical",
+      "eighties": "80s hits",
+      "twothousands": "2000s hits",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Play recently played tracks",
@@ -1617,7 +1648,8 @@
       "longer_songs": "No Duration Limit",
       "vote_features": "Vote on Features",
       "founder_role": "Founder Role",
-      "direct_support": "Direct Support"
+      "direct_support": "Direct Support",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Vote skipped",
       "grab": "Grabbed track",
       "insert": "Inserted track",
-      "removecurrent": "Removed current track"
+      "removecurrent": "Removed current track",
+      "playlists": "updated the server playlists"
     },
     "detail": {
       "on": "On",
@@ -2092,5 +2125,124 @@
       "more": "and {count} more",
       "card": "The player card with the buttons is in {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlists and radio made from a description",
+    "promptOption": "Describe the music: mood, genre, era, artists, occasion…",
+    "playlist": {
+      "description": "Make a playlist from a description and play it",
+      "countOption": "How many songs (5-50, default 20)",
+      "playOption": "Queue it now (default: yes)",
+      "nextOption": "Play it right after the current song"
+    },
+    "radio": {
+      "description": "Endless AI radio for a description"
+    },
+    "notInVoice": "Join a voice channel first, or set play:False to only see the playlist.",
+    "trialUsed": "This server used its {limit} free AI DJ requests for today. They reset at 00:00 UTC.",
+    "dailyLimit": "This server reached today's limit of {limit} AI DJ requests. It resets at 00:00 UTC.",
+    "trialNote": "Free trial: {left} of {limit} AI DJ requests left today on this server. Founder unlocks more and longer AI radio.",
+    "unconfigured": "The AI DJ isn't set up on this bot.",
+    "busy": "The AI DJ is busy right now. Try again in a few minutes.",
+    "refused": "The AI DJ couldn't make a playlist for that. Try describing the music differently.",
+    "failed": "The AI DJ couldn't make that playlist. Please try again.",
+    "expired": "This playlist is no longer available. Make a new one with /ai playlist.",
+    "saved": "Saved to your collections as **{name}**. Play it any time with /collections load.",
+    "savedServer": "Saved as the server playlist **{name}**. Anyone can play it with /playlists play.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…and {count} more",
+      "play": "Play",
+      "save": "Save to my collections",
+      "saveServer": "Save as server playlist"
+    }
+  },
+  "playlists": {
+    "description": "The server's shared playlists, managed by DJs",
+    "nameOption": "Server playlist",
+    "newNameOption": "Name for the new server playlist",
+    "needDj": "Only DJs and server admins can change the server playlists.",
+    "notFound": "There is no server playlist called **{name}**.",
+    "limitReached": "This server has reached the maximum number of playlists. Delete one first.",
+    "exists": "A server playlist called **{name}** already exists.",
+    "created": "Server playlist **{name}** created. Add songs with /playlists add or /playlists save.",
+    "saved": "Saved the queue ({count} songs) as server playlist **{name}**.",
+    "full": "This playlist is full.",
+    "renamed": "Renamed **{old}** to **{name}**.",
+    "deleted": "Deleted server playlist **{name}**.",
+    "imported": "Imported **{count}** songs into server playlist **{name}**.",
+    "copied": "Copied to your collections as **{name}** ({count} songs).",
+    "list": {
+      "description": "List the server playlists",
+      "title": "📁 Server playlists",
+      "empty": "This server has no playlists yet. DJs can create one with /playlists create or /playlists save."
+    },
+    "view": {
+      "description": "Show the songs of a server playlist"
+    },
+    "play": {
+      "description": "Queue a server playlist",
+      "nextOption": "Play it right after the current song"
+    },
+    "create": {
+      "description": "Create an empty server playlist (DJs)"
+    },
+    "save": {
+      "description": "Save the current queue as a server playlist (DJs)"
+    },
+    "add": {
+      "description": "Add the current song, or a song you name, to a server playlist (DJs)",
+      "songOption": "Song name or link (default: the song playing now)",
+      "nothing": "Nothing is playing. Name a song to add."
+    },
+    "remove": {
+      "description": "Remove a song from a server playlist (DJs)"
+    },
+    "rename": {
+      "description": "Rename a server playlist (DJs)"
+    },
+    "delete": {
+      "description": "Delete a server playlist (DJs)"
+    },
+    "import": {
+      "description": "Import a Spotify, YouTube, Deezer or Apple Music playlist as a server playlist (DJs)"
+    },
+    "copy": {
+      "description": "Copy a server playlist into your own collections",
+      "asOption": "Name for your copy (default: same name)"
+    },
+    "log": {
+      "create": "created the server playlist {name}",
+      "save": "saved the queue as the server playlist {name}",
+      "delete": "deleted the server playlist {name}",
+      "import": "imported the server playlist {name}"
+    }
+  },
+  "library": {
+    "description": "Your own Spotify and YouTube playlists and liked songs",
+    "playlistOption": "One of your playlists (connect accounts on the dashboard)",
+    "accounts": {
+      "description": "See and manage your connected music accounts"
+    },
+    "play": {
+      "description": "Play one of your playlists or your liked songs"
+    },
+    "import": {
+      "description": "Save one of your playlists into your collections"
+    },
+    "likedSpotify": "Liked Songs",
+    "likedYouTube": "Liked videos",
+    "connect": "Connect an account",
+    "reconnect": "Connect again",
+    "manage": "Manage connections",
+    "notLinked": "not connected",
+    "notConnected": "Connect your {service} account on the dashboard first.",
+    "revoked": "Access to your {service} account was removed. Connect it again on the dashboard.",
+    "forbidden": "{service} didn't allow reading that playlist. Only playlists you own or collaborate on can be played.",
+    "failed": "Couldn't reach your music account right now. Please try again.",
+    "pickFromList": "Pick one of the suggested playlists.",
+    "empty": "That playlist has no playable songs.",
+    "imported": "Imported **{count}** songs into your collection **{name}**.",
+    "howTo": "Connect accounts on the dashboard, then use /library play to play your own playlists and liked songs."
   }
 }

@@ -58,7 +58,7 @@ const EPHEMERAL = MessageFlags.Ephemeral;
 
 /** Commands that would break (or spoil) a running guess-the-song round. */
 const GAME_BLOCKED_COMMANDS = new Set([
-  "play", "playnext", "playnow", "play_file", "play_spotify", "search", "radio", "autoplay", "247",
+  "play", "playnext", "playnow", "play_file", "play_spotify", "search", "radio", "ai", "autoplay", "247",
   "skip", "voteskip", "previous", "replay", "seek", "rewind", "jump", "pause", "resume", "loop",
   "volume", "effects", "shuffle", "move", "remove", "clear", "queuemanage", "join", "say", "grab",
   // These end the game; /guess stop does it with the starter-or-manager rule.

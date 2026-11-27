@@ -95,10 +95,10 @@ export function buildCollectionView(collection: ICollection, page: number, notic
   return container;
 }
 
-/** The owner's collections with a menu to open one. */
-export function buildCollectionList(ownerId: string, collections: CollectionSummary[]): ContainerBuilder {
+/** The owner's collections with a menu to open one (`title` overrides "Your collections", e.g. for server playlists). */
+export function buildCollectionList(ownerId: string, collections: CollectionSummary[], title?: string): ContainerBuilder {
   const container = new ContainerBuilder().setAccentColor(ACCENT);
-  container.addTextDisplayComponents((t) => t.setContent(`### ${i18n.__("collections.list.title")}`));
+  container.addTextDisplayComponents((t) => t.setContent(`### ${title ?? i18n.__("collections.list.title")}`));
 
   if (collections.length === 0) {
     container.addTextDisplayComponents((t) => t.setContent(i18n.__("collections.list.empty")));

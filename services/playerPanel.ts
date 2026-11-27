@@ -18,6 +18,7 @@ import { localeForGuild, localeForInteraction } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
 import { canUse, denialMessage, isRequesterOf } from "../utils/permissions";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
+import { isStationId, RADIO_STATIONS, RadioSession } from "./radio";
 import { DiscordPlayerService, isGuessGameQueue, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
 import { canGoLive, openLiveLyrics } from "./liveLyrics";
@@ -116,7 +117,9 @@ export class PlayerPanelService {
     const isLive = !track.durationMS;
     const title = isHttpUrl(track.url) ? `[${linkLabel(track.title, 90)}](${track.url})` : safeText(track.title, 90);
     const by = isAutoplayTrack(track)
-      ? i18n.__("player.autoplayPick")
+      ? (track.metadata as { aiRadio?: boolean } | null)?.aiRadio
+        ? `🤖 ${i18n.__("radio.aiPick")}`
+        : i18n.__("player.autoplayPick")
       : track.requestedBy && !track.requestedBy.bot
         ? i18n.__mf("player.requestedBy", { user: `<@${track.requestedBy.id}>` })
         : "";
@@ -145,7 +148,7 @@ export class PlayerPanelService {
     }
     const state = [`🔊 ${i18n.__mf("player.volume", { volume: queue.node.volume })}`];
     if (queue.repeatMode !== QueueRepeatMode.OFF) state.push(`🔁 ${loopLabel(queue.repeatMode)}`);
-    if (metadata.autoplay) state.push(`♾️ ${i18n.__("player.autoplayOn")}`);
+    if (metadata.autoplay) state.push(radioLabel(metadata.radio) ?? `♾️ ${i18n.__("player.autoplayOn")}`);
     if (metadata.stay247) state.push(`🌙 ${i18n.__("player.stay247On")}`);
     // What the encoder really sends (services/audioEncoder.ts), not the tier's label.
     if (metadata.encodedKbps) state.push(`🎚️ Opus ${metadata.encodedKbps} kbps`);
@@ -540,4 +543,14 @@ export class PlayerPanelService {
       });
     }
   }
+}
+
+/** The panel's state chip for a radio session ("🎸 Rock radio", "🤖 AI DJ"), or null for plain autoplay. */
+function radioLabel(session: RadioSession | undefined): string | null {
+  if (!session) return null;
+  if (session.kind === "ai") return `🤖 ${i18n.__("radio.panelAi")}`;
+  if (session.kind === "station" && isStationId(session.label)) {
+    return `${RADIO_STATIONS[session.label].emoji} ${i18n.__mf("radio.panelStation", { station: i18n.__(`radio.station.${session.label}`) })}`;
+  }
+  return `📻 ${i18n.__("radio.panelSong")}`;
 }

@@ -11,6 +11,7 @@ import { ImportError, PLATFORM_NAMES, resolvePlaylist } from "../services/collec
 import { loadCollection } from "../services/collectionPlayback";
 import { buildCollectionList, buildCollectionView } from "../services/collectionView";
 import { DatabaseService } from "../services/database";
+import { serverOwnerKey } from "../services/serverPlaylists";
 import { registerComponentHandler } from "../structs/componentRouter";
 import { isHttpUrl, safeText, truncate } from "../utils/format";
 import { descriptionLocalizations, i18n } from "../utils/i18n";
@@ -44,12 +45,15 @@ registerComponentHandler("collections", async (interaction, args) => {
   const [action, target, extra] = args;
 
   // List menu: open one of the owner's collections (privately, for the owner only).
+  // Server playlists (/playlists list) open for anyone in that server.
   if (action === "open") {
     if (!interaction.isStringSelectMenu()) return;
-    if (interaction.user.id !== target) return interaction.reply(ephemeral(`🔒 ${i18n.__("collections.notYours")}`));
+    const serverList = target === serverOwnerKey(interaction.guildId);
+    if (!serverList && interaction.user.id !== target) return interaction.reply(ephemeral(`🔒 ${i18n.__("collections.notYours")}`));
     const collection = await collectionService.getById(interaction.values[0]);
     // Re-render the list first: it refreshes the counts and resets the menu.
-    await interaction.update({ components: [buildCollectionList(target, await collectionService.listSummaries(target))], allowedMentions: NO_PINGS } as any);
+    const title = serverList ? i18n.__("playlists.list.title") : undefined;
+    await interaction.update({ components: [buildCollectionList(target, await collectionService.listSummaries(target), title)], allowedMentions: NO_PINGS } as any);
     if (!collection || collection.userId !== target) return interaction.followUp(ephemeral(`📭 ${i18n.__("collections.gone")}`));
     return interaction.followUp({ components: [buildCollectionView(collection, 0)], flags: V2 | EPHEMERAL, allowedMentions: NO_PINGS } as any);
   }

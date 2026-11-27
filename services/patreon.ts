@@ -570,6 +570,7 @@ export class PatreonService {
       "priority_queue",      // Priority in queue
       "unlimited_playlists", // Unlimited saved playlists
       "longer_songs",        // No song duration limit
+      "ai_dj",               // AI playlists and AI radio (higher daily limit)
       "vote_features",       // Vote on new features
       "founder_role",        // Exclusive Founder role
       "direct_support",      // Direct support channel access

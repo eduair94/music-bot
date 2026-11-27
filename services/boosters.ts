@@ -18,6 +18,7 @@ export const BOOSTER_PERK_FEATURES = [
   "priority_queue",
   "unlimited_playlists",
   "longer_songs",
+  "ai_dj",
   "direct_support"
 ] as const;
 

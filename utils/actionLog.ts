@@ -13,7 +13,7 @@ export type ActionType =
   | "setting_change" | "queue_clear" | "clear"
   | "join" | "leave" | "autoplay" | "previous" | "jump"
   | "swap" | "reverse" | "sort" | "removerange" | "removeduplicates" | "removelast"
-  | "voteskip" | "grab" | "restart" | "insert" | "removecurrent";
+  | "voteskip" | "grab" | "restart" | "insert" | "removecurrent" | "playlists";
 
 /**
  * Get the log channel for a guild
@@ -86,6 +86,7 @@ function getActionEmoji(action: ActionType): string {
     grab: "💾",
     insert: "⏭️",
     removecurrent: "🗑️",
+    playlists: "📁",
   };
   return emojis[action] || "🎵";
 }

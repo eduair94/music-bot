@@ -1,5 +1,6 @@
 import { GuildQueue, QueryType, QueueRepeatMode, Track } from "discord-player";
 import { DiscordPlayerService, QueueMetadata, youTubeVideoId } from "./discordPlayer";
+import { radioSeedId, refillAiRadio } from "./radio";
 
 /**
  * Autoplay: when the queue is about to run out, queue a related song.
@@ -9,6 +10,10 @@ import { DiscordPlayerService, QueueMetadata, youTubeVideoId } from "./discordPl
  * every YouTube change (it already broke playlists), while yt-dlp updates
  * itself on boot. The next song is fetched as soon as the last one starts,
  * so there is no silence between them.
+ *
+ * A radio session (services/radio.ts) steers this: every third pick is
+ * seeded from the session's anchor songs so a station stays on genre, and an
+ * AI radio asks Claude for the next batch before falling back to the mix.
  */
 
 const MIN_SECONDS = 60;
@@ -41,7 +46,10 @@ async function seedId(track: Track): Promise<string | null> {
 
 export async function findRelatedTrack(queue: GuildQueue, seed: Track): Promise<Track | null> {
   const service = DiscordPlayerService.getInstance();
-  const id = await seedId(seed);
+  const session = (queue.metadata as QueueMetadata | undefined)?.radio;
+  const currentId = await seedId(seed);
+  const id = radioSeedId(session, currentId);
+  if (session) session.picks++;
   if (!id) return null;
 
   const listing = await service.listYouTubePlaylist(`https://www.youtube.com/watch?v=${id}&list=RD${id}`, 25);
@@ -103,6 +111,15 @@ export async function ensureAutoplayNext(queue: GuildQueue): Promise<Track | nul
   if (pending.has(guildId)) return null;
   pending.add(guildId);
   try {
+    if (metadata.radio?.kind === "ai") {
+      const batch = await refillAiRadio(queue);
+      if (batch?.length) {
+        if (!queue.currentTrack && !queue.node.isPlaying()) {
+          await queue.node.play().catch((error) => console.error("[Autoplay] Could not start:", error));
+        }
+        return batch[0];
+      }
+    }
     const next = await findRelatedTrack(queue, seed);
     if (!next || queue.deleted || queue.tracks.size > 0 || metadata.guessGame) return null;
     queue.addTrack(next);

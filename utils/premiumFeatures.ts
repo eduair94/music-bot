@@ -13,6 +13,7 @@ export const PREMIUM_FEATURES = {
   priority_queue: "Priority Queue",
   unlimited_playlists: "Unlimited Playlists",
   longer_songs: "No Duration Limit",
+  ai_dj: "AI DJ",
   vote_features: "Vote on Features",
   founder_role: "Founder Role",
   direct_support: "Direct Support",

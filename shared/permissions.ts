@@ -432,6 +432,7 @@ export const COMMAND_GROUPS: Readonly<Record<string, Group | null>> = Object.fre
   playnext: "play",
   playnow: "play",
   radio: "play",
+  ai: "play",
   "play in voice channel": "play",
   "play next": "play",
   // playback: pause/resume/seek/previous
@@ -490,6 +491,11 @@ export const COMMAND_GROUPS: Readonly<Record<string, Group | null>> = Object.fre
   recentlyplayed: null,
   collections: null,
   playlist: null,
+  // Server playlists: viewing/playing is open (playing still answers to the "play" rule);
+  // editing needs a DJ role or admin (services/serverPlaylists.ts).
+  playlists: null,
+  // Connected Spotify/YouTube accounts; playing answers to the "play" rule.
+  library: null,
   guess: null,
   say: null,
   sayconfig: null,

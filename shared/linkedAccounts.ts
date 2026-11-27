@@ -58,6 +58,8 @@ export const PROVIDER_OAUTH: Record<LinkProvider, ProviderOAuthConfig> = {
     authorizeUrl: "https://accounts.spotify.com/authorize",
     tokenUrl: "https://accounts.spotify.com/api/token",
     scopes: ["playlist-read-private", "playlist-read-collaborative", "user-library-read", "user-read-private"],
+    // Always show Spotify's consent screen, so people can switch to another Spotify account.
+    authorizeParams: { show_dialog: "true" },
   },
   youtube: {
     label: "YouTube",

@@ -26,6 +26,7 @@ import {
     playRejectionMessage
 } from "../utils/playFlow";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
+import { RadioRequest, startRadio } from "./radio";
 import { DiscordPlayerService, isGuessGameQueue, PlayError, QueueMetadata } from "./discordPlayer";
 import { clearEffects, resolveEffect, setBassBoost, setEffect } from "./effects";
 import { clearPlayback, ensurePlaybackIndexes, publishPlayback, startPlaybackRefresher, toLiveTrack } from "./fleet/playbackState";
@@ -680,7 +681,11 @@ export class DashboardSyncService {
       });
 
       if (replacing && result.position === 1) result.queue.node.skip();
-      if (params.autoplay) {
+      if (params.radio && typeof params.radio === "object") {
+        // /radio station or AI DJ handed over by the primary: start the same session here.
+        startRadio(result.queue, params.radio as unknown as RadioRequest, result.track, member.user);
+        void ensureAutoplayNext(result.queue).then((added) => added && PlayerPanelService.getInstance().refresh(result.queue));
+      } else if (params.autoplay) {
         // /radio: keep going with related songs.
         const metadata = (result.queue.metadata || {}) as QueueMetadata;
         metadata.autoplay = true;
