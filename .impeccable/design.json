@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-27T06:30:46.587Z",
+  "title": "Design System: Bypass Dashboard",
+  "extensions": {
+    "colorMeta": {
+      "stock": {
+        "role": "neutral",
+        "displayName": "Poster Stock",
+        "canonical": "#f2ede4",
+        "tonalRamp": [
+          "#575653",
+          "#84817d",
+          "#b0aca6",
+          "#d7d3cb",
+          "#f4efe7",
+          "#f6f2ea",
+          "#f8f5ee",
+          "#faf7f0"
+        ]
+      },
+      "stock-deep": {
+        "role": "neutral",
+        "displayName": "Deep Stock",
+        "canonical": "#e8e1d4",
+        "tonalRamp": [
+          "#54524e",
+          "#7f7b75",
+          "#a9a49b",
+          "#cfc9bd",
+          "#ece6da",
+          "#f1ebe2",
+          "#f5f1e9",
+          "#f9f5ee"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Clean Paper",
+        "canonical": "#fbf8f2",
+        "tonalRamp": [
+          "#5a5957",
+          "#888784",
+          "#b6b4b0",
+          "#dfddd7",
+          "#fbf8f2",
+          "#fbf8f2",
+          "#fbf8f2",
+          "#fbf8f2"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Bill Ink",
+        "canonical": "#151515",
+        "tonalRamp": [
+          "#151515",
+          "#151515",
+          "#151515",
+          "#151515",
+          "#434241",
+          "#7d7b78",
+          "#b6b4b0",
+          "#dfddd7"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#3d3a35",
+        "tonalRamp": [
+          "#21201f",
+          "#292825",
+          "#312f2b",
+          "#383631",
+          "#63605b",
+          "#93908a",
+          "#c2bfb9",
+          "#e4e1db"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "#6b665d",
+        "tonalRamp": [
+          "#2f2d2b",
+          "#403e39",
+          "#514e47",
+          "#615c54",
+          "#88837b",
+          "#aca8a0",
+          "#d0ccc5",
+          "#eae6e0"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#cfc6b8",
+        "tonalRamp": [
+          "#4d4a46",
+          "#726e67",
+          "#979187",
+          "#b9b1a4",
+          "#d8d0c4",
+          "#e3ddd2",
+          "#eee9e1",
+          "#f6f2eb"
+        ]
+      },
+      "rule-soft": {
+        "role": "neutral",
+        "displayName": "Soft Rule",
+        "canonical": "#e0d8ca",
+        "tonalRamp": [
+          "#52504b",
+          "#7b7770",
+          "#a39e94",
+          "#c8c1b4",
+          "#e5ded2",
+          "#ece6dc",
+          "#f3eee6",
+          "#f8f4ed"
+        ]
+      },
+      "rule-absent": {
+        "role": "neutral",
+        "displayName": "Absent Grey",
+        "canonical": "#8a8378",
+        "tonalRamp": [
+          "#383633",
+          "#504c47",
+          "#67625a",
+          "#7c766c",
+          "#a19a90",
+          "#bdb8af",
+          "#d9d5cd",
+          "#edeae3"
+        ]
+      },
+      "now": {
+        "role": "primary",
+        "displayName": "NOW Red",
+        "canonical": "#d4001f",
+        "tonalRamp": [
+          "#4e0f18",
+          "#750b1a",
+          "#9b061c",
+          "#bd031e",
+          "#dc3249",
+          "#e6707e",
+          "#efaeb3",
+          "#f6dad9"
+        ]
+      },
+      "stage-1": {
+        "role": "secondary",
+        "displayName": "Bypass Red",
+        "canonical": "#e8402a",
+        "tonalRamp": [
+          "#54221b",
+          "#7f2b20",
+          "#a93324",
+          "#cf3b27",
+          "#ec6552",
+          "#f19384",
+          "#f5c1b6",
+          "#f9e2da"
+        ]
+      },
+      "stage-2": {
+        "role": "secondary",
+        "displayName": "Bypass 2 Cobalt",
+        "canonical": "#2a5bd7",
+        "tonalRamp": [
+          "#1b2a4f",
+          "#203876",
+          "#24469d",
+          "#2753c0",
+          "#547adc",
+          "#88a2e3",
+          "#bcc9ea",
+          "#e2e5ef"
+        ]
+      },
+      "stage-3": {
+        "role": "secondary",
+        "displayName": "Bypass 3 Sun Yellow",
+        "canonical": "#f5b700",
+        "tonalRamp": [
+          "#58460f",
+          "#85660b",
+          "#b28606",
+          "#daa403",
+          "#f6c430",
+          "#f8d46d",
+          "#f9e5a9",
+          "#faf0d5"
+        ]
+      },
+      "stage-3-text": {
+        "role": "secondary",
+        "displayName": "Mustard Text",
+        "canonical": "#9a7300",
+        "tonalRamp": [
+          "#3d310f",
+          "#58440b",
+          "#725706",
+          "#8a6803",
+          "#ad8e30",
+          "#c6af6d",
+          "#ded0a9",
+          "#efe8d5"
+        ]
+      },
+      "stage-4": {
+        "role": "secondary",
+        "displayName": "Bypass 4 Green",
+        "canonical": "#1f9d55",
+        "tonalRamp": [
+          "#183e28",
+          "#1a5935",
+          "#1c7442",
+          "#1e8d4d",
+          "#4baf74",
+          "#82c69c",
+          "#b9ddc3",
+          "#e1eddf"
+        ]
+      },
+      "stage-5": {
+        "role": "secondary",
+        "displayName": "Premium Magenta",
+        "canonical": "#c2187a",
+        "tonalRamp": [
+          "#491633",
+          "#6c1748",
+          "#8e175c",
+          "#ad186e",
+          "#cd4592",
+          "#dc7db0",
+          "#eab5ce",
+          "#f4dde4"
+        ]
+      },
+      "stage-6": {
+        "role": "secondary",
+        "displayName": "Premium Teal",
+        "canonical": "#0f8a8a",
+        "tonalRamp": [
+          "#133838",
+          "#125050",
+          "#116767",
+          "#107c7c",
+          "#3ea09f",
+          "#79bcb9",
+          "#b4d7d3",
+          "#dfebe6"
+        ]
+      },
+      "stage-7": {
+        "role": "secondary",
+        "displayName": "Premium Orange",
+        "canonical": "#f07d16",
+        "tonalRamp": [
+          "#573415",
+          "#834916",
+          "#ae5e16",
+          "#d67116",
+          "#f29642",
+          "#f5b479",
+          "#f8d3b0",
+          "#fae9d8"
+        ]
+      },
+      "stage-8": {
+        "role": "secondary",
+        "displayName": "Premium Violet",
+        "canonical": "#7c4ddb",
+        "tonalRamp": [
+          "#342650",
+          "#493178",
+          "#5d3ca0",
+          "#7046c3",
+          "#956fe0",
+          "#b59ae5",
+          "#d5c5eb",
+          "#ece3ef"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles (FLEET, PERMISSIONS); 56px mobile, 64px desktop; wdth 74 caps."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Stage names on column heads, major section heads."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Set titles in blocks, sub-sections, card heads (20-28px)."
+      },
+      "clock": {
+        "displayName": "Clock",
+        "purpose": "Times and stat numerals, tabular, wdth 75 (17-34px)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Row labels, descriptions, button labels at 600."
+      },
+      "body-sm": {
+        "displayName": "Body small",
+        "purpose": "Hints and metadata lines."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Table column headers and verdict words (ALLOWED / BLOCKED, LIVE) only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "menu-lift",
+        "value": "0 12px 32px -12px rgb(21 21 21 / 0.35)",
+        "purpose": "Dropdown menus and server switcher."
+      },
+      {
+        "name": "stub-lift",
+        "value": "0 10px 28px -14px rgb(21 21 21 / 0.45)",
+        "purpose": "Ticket-stub toasts."
+      },
+      {
+        "name": "tooltip-lift",
+        "value": "0 8px 20px -10px rgb(21 21 21 / 0.6)",
+        "purpose": "Ink chart tooltips."
+      },
+      {
+        "name": "drawer-lift",
+        "value": "-16px 0 40px -20px rgb(21 21 21 / 0.45)",
+        "purpose": "Add-song side drawer."
+      },
+      {
+        "name": "savebar-lift",
+        "value": "0 -12px 40px -16px rgb(21 21 21 / 0.45)",
+        "purpose": "Sticky permission save bar."
+      },
+      {
+        "name": "thumb",
+        "value": "0 1px 3px rgb(21 21 21 / 0.35)",
+        "purpose": "Range slider thumb."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default for entrances and view transitions."
+      },
+      {
+        "name": "ease-in",
+        "value": "cubic-bezier(0.7, 0, 0.84, 0)",
+        "purpose": "Exits (stub-out)."
+      },
+      {
+        "name": "print-pull",
+        "value": "620ms ease-out; clip-path inset(0 0 100% 0) to inset(0), brief saturate(1.6)",
+        "purpose": "A set block is printed onto the bill; also the busy-button line."
+      },
+      {
+        "name": "set-off",
+        "value": "clip-path inset(0 0 100% 0), translateY(-12px), opacity 0",
+        "purpose": "A finished set leaves the bill upward."
+      },
+      {
+        "name": "stamp-in",
+        "value": "420ms ease-out; circle clip from the pointer (--sx, --sy)",
+        "purpose": "A permission stamp lands where clicked."
+      },
+      {
+        "name": "stub-in",
+        "value": "380ms ease-out; translateY(16px) rotate(-1.5deg) to none",
+        "purpose": "Toast and menu entrance."
+      },
+      {
+        "name": "stub-out",
+        "value": "220ms ease-in; translateX(40px) rotate(4deg), fade",
+        "purpose": "Toast tears off."
+      },
+      {
+        "name": "now-pulse",
+        "value": "2s ease-in-out infinite, opacity 1 to 0.35",
+        "purpose": "LIVE dot."
+      },
+      {
+        "name": "view-transition",
+        "value": "420ms ease-out (groups), 260ms root",
+        "purpose": "Fleet block morphs into the player header."
+      },
+      {
+        "name": "press",
+        "value": "150ms; scale(0.97)",
+        "purpose": "Button press."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Primary action: Follow NOW, Invite, Start.",
+      "html": "<button class=\"ds-btn-ink\">Follow NOW</button>",
+      "css": ".ds-btn-ink{display:inline-flex;align-items:center;height:40px;padding:0 16px;border:0;border-radius:4px;background:#151515;color:#f2ede4;font:600 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,transform 150ms ease-out}.ds-btn-ink:hover{background:#3d3a35}.ds-btn-ink:active{transform:scale(.97)}.ds-btn-ink:focus-visible{outline:2px solid #151515;outline-offset:2px}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action; inverts to ink on hover.",
+      "html": "<button class=\"ds-btn-outline\">+ Add songs</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;height:40px;padding:0 16px;border:1px solid #151515;border-radius:4px;background:rgb(251 248 242 / .6);color:#151515;font:600 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms ease-out,color 150ms ease-out,transform 150ms}.ds-btn-outline:hover{background:#151515;color:#f2ede4}.ds-btn-outline:active{transform:scale(.97)}.ds-btn-outline:focus-visible{outline:2px solid #151515;outline-offset:2px}"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive action in NOW red.",
+      "html": "<button class=\"ds-btn-danger\">Disconnect</button>",
+      "css": ".ds-btn-danger{display:inline-flex;align-items:center;height:40px;padding:0 16px;border:1px solid #d4001f;border-radius:4px;background:transparent;color:#d4001f;font:600 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;cursor:pointer;transition:background-color 150ms,color 150ms}.ds-btn-danger:hover{background:#d4001f;color:#fff}.ds-btn-danger:focus-visible{outline:2px solid #151515;outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "text-input",
+      "description": "Paper field, ink-at-30% border, NOW-red caret.",
+      "html": "<input class=\"ds-input\" placeholder=\"Search songs or paste a link\">",
+      "css": ".ds-input{height:40px;width:280px;padding:0 12px;border:1px solid rgb(21 21 21 / .3);border-radius:4px;background:#fbf8f2;color:#151515;caret-color:#d4001f;font:400 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;transition:border-color 150ms}.ds-input::placeholder{color:#6b665d}.ds-input:focus{border-color:#151515;outline:none}.ds-input:focus-visible{outline:2px solid #151515;outline-offset:2px}"
+    },
+    {
+      "name": "Section Tabs",
+      "kind": "nav",
+      "refersTo": "nav-tab-active",
+      "description": "Top-bar tabs; the active tab is a solid ink block.",
+      "html": "<nav class=\"ds-tabs\"><a class=\"ds-tab is-active\" href=\"#\">Fleet</a><a class=\"ds-tab\" href=\"#\">Player</a><a class=\"ds-tab\" href=\"#\">Permissions</a><a class=\"ds-tab\" href=\"#\">Settings</a></nav>",
+      "css": ".ds-tabs{display:flex;gap:4px;padding:8px 12px;background:#f2ede4;border-bottom:2px solid #151515}.ds-tab{padding:8px 12px;border-radius:4px;color:#151515;text-decoration:none;font:600 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;transition:background-color 150ms}.ds-tab:hover{background:rgb(21 21 21 / .07)}.ds-tab.is-active{background:#151515;color:#f2ede4}.ds-tab:focus-visible{outline:2px solid #151515;outline-offset:2px}"
+    },
+    {
+      "name": "Set Block",
+      "kind": "custom",
+      "refersTo": "set-block",
+      "description": "A song as a stage-coloured block on the timetable; height is duration.",
+      "html": "<div class=\"ds-set\"><div class=\"ds-set-head\"><span class=\"ds-set-title\">Midnight City</span><span class=\"ds-set-time\">03:27</span></div><p class=\"ds-set-meta\">M83 · 4:03 · Toaster</p></div>",
+      "css": ".ds-set{width:300px;height:68px;padding:10px 12px;border-radius:3px;background:#e8402a;color:#fff;animation:ds-pull 620ms cubic-bezier(.16,1,.3,1) both}.ds-set-head{display:flex;justify-content:space-between;align-items:baseline}.ds-set-title{font:800 20px/0.92 'Anybody', 'Arial Narrow', sans-serif;font-variation-settings:'wdth' 74;text-transform:uppercase;letter-spacing:-.01em}.ds-set-time{font:700 13px 'Anybody', 'Arial Narrow', sans-serif;font-variation-settings:'wdth' 75;font-variant-numeric:tabular-nums}.ds-set-meta{margin:6px 0 0;font:600 13px 'Public Sans', ui-sans-serif, system-ui, sans-serif}.ds-set:hover{filter:brightness(.96)}@keyframes ds-pull{from{clip-path:inset(0 0 100% 0);filter:saturate(1.6) brightness(1.08)}to{clip-path:inset(0);filter:none}}"
+    },
+    {
+      "name": "Queue End",
+      "kind": "card",
+      "description": "Dashed outline in the stage colour marking where the queue runs out.",
+      "html": "<div class=\"ds-qend\"><span class=\"ds-qend-time\">03:42</span><p>Queue ends. Autoplay is off, the stage goes quiet.</p></div>",
+      "css": ".ds-qend{width:300px;padding:12px;border:1.5px dashed #2a5bd7;border-radius:3px;color:#2a5bd7;background:transparent}.ds-qend-time{font:700 30px/1 'Anybody', 'Arial Narrow', sans-serif;font-variation-settings:'wdth' 75;font-variant-numeric:tabular-nums}.ds-qend p{margin:8px 0 0;color:#3d3a35;font:400 13px 'Public Sans', ui-sans-serif, system-ui, sans-serif}"
+    },
+    {
+      "name": "Permission Stamp",
+      "kind": "chip",
+      "description": "The minimum audience stamped in that audience's stage ink, beside an empty dashed cell.",
+      "html": "<span class=\"ds-stamp\">DJs</span><span class=\"ds-cell\"></span>",
+      "css": ".ds-stamp{display:inline-flex;align-items:center;justify-content:center;width:104px;height:40px;border-radius:3px;background:#2a5bd7;color:#fff;font:800 20px 'Anybody', 'Arial Narrow', sans-serif;font-variation-settings:'wdth' 74;text-transform:uppercase;animation:ds-stamp 420ms cubic-bezier(.16,1,.3,1) both}.ds-cell{display:inline-block;width:104px;height:40px;margin-left:12px;border:1.5px dashed #cfc6b8;border-radius:3px;vertical-align:middle}.ds-cell:hover{border-color:#151515}@keyframes ds-stamp{from{clip-path:circle(0% at 50% 50%)}to{clip-path:circle(150% at 50% 50%)}}"
+    },
+    {
+      "name": "Ticket Stub Toast",
+      "kind": "custom",
+      "description": "Paper toast with a dashed perforation tab.",
+      "html": "<div class=\"ds-stub\"><span class=\"ds-stub-tab\"></span><div class=\"ds-stub-body\"><p class=\"ds-stub-title\">Added to Bypass 2</p><p class=\"ds-stub-detail\">One More Time · Daft Punk</p></div></div>",
+      "css": ".ds-stub{display:flex;width:320px;overflow:hidden;border:1px solid #151515;border-radius:4px;background:#fbf8f2;box-shadow:0 10px 28px -14px rgb(21 21 21 / .45);animation:ds-stub 380ms cubic-bezier(.16,1,.3,1) both}.ds-stub-tab{width:12px;border-right:1px dashed rgb(21 21 21 / .4)}.ds-stub-body{padding:10px 14px}.ds-stub-title{margin:0;font:600 14px 'Public Sans', ui-sans-serif, system-ui, sans-serif;color:#151515}.ds-stub-detail{margin:2px 0 0;font:400 13px 'Public Sans', ui-sans-serif, system-ui, sans-serif;color:#3d3a35}@keyframes ds-stub{from{transform:translateY(16px) rotate(-1.5deg);opacity:0}to{transform:none;opacity:1}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clash Finder",
+    "overview": "The server is a festival bill. Each Bypass bot instance is a stage with its own printed colour, every song is a set blocked out on one shared clock, and a red NOW line cuts across all stages at once. The surface is printed poster stock with paper grain, black ink, and ruled hairlines; everything reads as screen-printed rather than lit. Colour is information: a stage colour means \"this bot\", everywhere it appears.\n\nDensity is that of a timetable: tight condensed caps for names, titles and times; a calm humanist sans for the working text; tabular numerals throughout so clocks and counts never wobble. Absence is drawn, not hidden: a missing stage, an ended queue, or an empty permission cell gets a dashed printer's outline. Motion borrows from print: blocks are pulled onto the bill, finished sets leave upward, permissions land like rubber stamps, toasts are ticket stubs.\n\nThe world refuses the grey-card Discord dashboard with blurple buttons and the near-black neon console. It is light-only (`color-scheme: light`).",
+    "keyCharacteristics": [
+      "Warm poster stock with a tiled paper-grain raster, ink-black text and controls, hairline rules.",
+      "Eight stage colours that carry data (set blocks, column rules, progress, chart series, permission stamps), never decoration.",
+      "Anybody at condensed width (wdth 74), weight 800, in caps for the bill voice; Public Sans for UI.",
+      "Dashed outlines and diagonal hatching for what is absent, ended, or already played.",
+      "A single red NOW line and red now-marker as the live-time signal.",
+      "Flat printed surfaces; soft shadows only on things that float above the bill."
+    ],
+    "rules": [
+      {
+        "name": "The Stage Owns Its Colour Rule",
+        "body": "A stage colour always means that bot instance, on every screen. Never use a stage ink for generic emphasis, status, or decoration; use ink for emphasis and NOW red for live time.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Red Line Rule",
+        "body": "NOW red (#d4001f) marks the present moment and refusals. It is never a fill for content blocks; Stage 1 red does that job.",
+        "section": "colors"
+      },
+      {
+        "name": "The Bill Voice Rule",
+        "body": "Anybody caps is reserved for names, titles and times: things that would be printed on the bill. Controls, descriptions and form text stay in Public Sans, sentence case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Wide Variant Rule",
+        "body": "A wider cut (wdth 90) exists for the rare line that needs to read as a banner; the default bill voice is wdth 74.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Bill Rule",
+        "body": "Anything printed on the bill (set blocks, cards, rows, stamps) carries no shadow. A shadow means the element is lifted off the paper and will go away.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep each bot instance on its stage colour from `stages.ts` everywhere it appears: column rule, blocks, progress, chart series, stamps.",
+      "**Do** use ink-black (#151515) for primary buttons and the active tab, and Public Sans 600 for their labels.",
+      "**Do** draw absence with a 1.5px dashed outline and played/off-air time with diagonal hatching instead of hiding it.",
+      "**Do** set names, titles and times in Anybody condensed caps, and use tabular numerals for every time and count.",
+      "**Do** swap Sun Yellow for Mustard Text (#9a7300) when yellow sits as text or an icon on stock.",
+      "**Do** give new raster art a `.json` provenance sidecar and keep it in flat screen-print inks.",
+      "**Do** respect reduced motion: print, stamp and stub motions collapse to 1ms."
+    ],
+    "donts": [
+      "**Don't** use stage colours as generic accents, status colours or decoration.",
+      "**Don't** use NOW red for anything but live time, the caret, danger and refusals.",
+      "**Don't** put shadows on printed elements; shadows belong to menus, tooltips, toasts, drawers and the save bar only, and are never hard offset blocks.",
+      "**Don't** add a dark mode or neon glow, or use Discord blurple outside Discord-branded login and add-to-server buttons.",
+      "**Don't** set small caps tracked labels above titles; caps micro-labels are for table column headers and verdict words only.",
+      "**Don't** bring the landing's studio-console styling (coal/amber) into `.fest` screens, or this bill vocabulary into the landing, `/admin` or `/insights`."
+    ]
+  }
+}
