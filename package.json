@@ -27,6 +27,7 @@
     "test": "vitest run --dir tests/unit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.14.0",
     "@discord-player/extractor": "^7.2.0",
     "@distube/ytdl-core": "^4.16.12",
     "@snazzah/davey": "^0.1.10",
@@ -54,7 +55,6 @@
     "youtubei.js": "^16.0.1"
   },
   "devDependencies": {
-    "@anthropic-ai/sdk": "^1.14.0",
     "@types/express": "^5.0.6",
     "@types/i18n": "^0.13.12",
     "@types/node": "^20.14.2",
