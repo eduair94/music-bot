@@ -53,7 +53,8 @@
     "liveNoSync": "Den här låten har ingen synkad text, så det finns inget liveläge för den.",
     "liveNoPermission": "Bara den som startade livetexten eller någon med Hantera meddelanden kan stoppa den.",
     "liveNotDuringGame": "Låttexter döljs medan ett gissa låten-spel pågår.",
-    "liveVersionHint": "Tidsatt för en annan version av låten, så raderna kan hamna ur synk"
+    "liveVersionHint": "Tidsatt för en annan version av låten, så raderna kan hamna ur synk",
+    "privateOption": "Bara du ser låttexten"
   },
   "move": {
     "description": "Flytta låtar i kön",

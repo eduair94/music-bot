@@ -53,7 +53,8 @@
     "liveNoSync": "Kāore he kupu tukutahi mō tēnei waiata, nō reira kāore he aratau ora.",
     "liveNoPermission": "Ko te tangata nāna i tīmata ngā kupu waiata ora, ko tētahi rānei whai Manage Messages anake ka taea te kati.",
     "liveNotDuringGame": "Ka hunaia ngā kupu waiata i te wā e haere ana tētahi kēmu matapae waiata.",
-    "liveVersionHint": "I whakaritea mō tētahi atu putanga o te waiata, nō reira tērā pea ka hē te wā o ētahi rārangi"
+    "liveVersionHint": "I whakaritea mō tētahi atu putanga o te waiata, nō reira tērā pea ka hē te wā o ētahi rārangi",
+    "privateOption": "Ko koe anake ka kite i ngā kupu waiata"
   },
   "move": {
     "description": "Mova rob woeod een ta tic",

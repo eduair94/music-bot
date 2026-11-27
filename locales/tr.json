@@ -53,7 +53,8 @@
     "liveNoSync": "Bu şarkının senkronize sözleri yok, bu yüzden canlı modu da yok.",
     "liveNoPermission": "Canlı sözleri yalnızca başlatan kişi veya Mesajları Yönet yetkisi olan biri durdurabilir.",
     "liveNotDuringGame": "Şarkı tahmin oyunu sürerken sözler gizlenir.",
-    "liveVersionHint": "Şarkının farklı bir versiyonuna göre zamanlandı, satırlar kayabilir"
+    "liveVersionHint": "Şarkının farklı bir versiyonuna göre zamanlandı, satırlar kayabilir",
+    "privateOption": "Şarkı sözlerini yalnızca sen görürsün"
   },
   "move": {
     "description": "Şarkıyı sırada taşı",

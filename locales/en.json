@@ -53,7 +53,8 @@
     "liveNoSync": "This song has no synced lyrics, so there's no live mode for it.",
     "liveNoPermission": "Only the person who started the live lyrics or someone with Manage Messages can stop them.",
     "liveNotDuringGame": "Lyrics are hidden while a guess-the-song game is running.",
-    "liveVersionHint": "Timed for a different version of the song, so lines may drift"
+    "liveVersionHint": "Timed for a different version of the song, so lines may drift",
+    "privateOption": "Only you see the lyrics"
   },
   "move": {
     "description": "Move songs around in the queue",

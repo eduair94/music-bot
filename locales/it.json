@@ -53,7 +53,8 @@
     "liveNoSync": "Questa canzone non ha un testo sincronizzato, quindi la modalità live non è disponibile.",
     "liveNoPermission": "Solo chi ha avviato il testo live o chi ha il permesso Gestisci messaggi può fermarlo.",
     "liveNotDuringGame": "I testi sono nascosti durante una partita di indovina la canzone.",
-    "liveVersionHint": "Sincronizzato per un'altra versione della canzone, le righe potrebbero sfasarsi"
+    "liveVersionHint": "Sincronizzato per un'altra versione della canzone, le righe potrebbero sfasarsi",
+    "privateOption": "Solo tu vedi il testo"
   },
   "move": {
     "description": "Sposta il brano nella coda",

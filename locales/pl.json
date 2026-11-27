@@ -54,7 +54,8 @@
     "liveNoSync": "Ta piosenka nie ma zsynchronizowanego tekstu, więc tryb na żywo jest niedostępny.",
     "liveNoPermission": "Tylko osoba, która włączyła tekst na żywo, lub ktoś z uprawnieniem Zarządzanie wiadomościami może go zatrzymać.",
     "liveNotDuringGame": "Teksty są ukryte podczas gry w zgadywanie piosenek.",
-    "liveVersionHint": "Zsynchronizowano z inną wersją piosenki, więc linijki mogą się rozjeżdżać"
+    "liveVersionHint": "Zsynchronizowano z inną wersją piosenki, więc linijki mogą się rozjeżdżać",
+    "privateOption": "Tylko ty widzisz tekst piosenki"
   },
   "move": {
     "description": "Przenosi utwory w kolejce",

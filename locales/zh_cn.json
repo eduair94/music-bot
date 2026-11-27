@@ -53,7 +53,8 @@
     "liveNoSync": "这首歌没有同步歌词，所以无法使用实时模式。",
     "liveNoPermission": "只有开启实时歌词的人或拥有「管理消息」权限的人才能停止。",
     "liveNotDuringGame": "猜歌游戏进行中，歌词已隐藏。",
-    "liveVersionHint": "歌词时间轴对应的是另一个版本，可能会有偏差"
+    "liveVersionHint": "歌词时间轴对应的是另一个版本，可能会有偏差",
+    "privateOption": "歌词仅你可见"
   },
   "move": {
     "description": "移动歌曲到队列的其他位置",

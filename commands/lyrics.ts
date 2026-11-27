@@ -30,7 +30,7 @@ export default {
         .setDescriptionLocalizations(descriptionLocalizations("lyricsCmd.optionQuery") ?? {})
         .setMaxLength(200)
     )
-    .addBooleanOption((option) => option.setName("private").setDescription("Only you see the lyrics")),
+    .addBooleanOption((option) => option.setName("private").setDescription(i18n.__("lyrics.privateOption"))),
   cooldown: 4,
   category: "info",
   userInstallable: true,

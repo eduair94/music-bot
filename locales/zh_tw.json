@@ -53,7 +53,8 @@
     "liveNoSync": "這首歌沒有同步歌詞，所以無法使用即時模式。",
     "liveNoPermission": "只有開啟即時歌詞的人或擁有「管理訊息」權限的人才能停止。",
     "liveNotDuringGame": "猜歌遊戲進行中，歌詞會被隱藏。",
-    "liveVersionHint": "時間軸對應的是這首歌的其他版本，歌詞可能會有些偏移"
+    "liveVersionHint": "時間軸對應的是這首歌的其他版本，歌詞可能會有些偏移",
+    "privateOption": "只有你看得到歌詞"
   },
   "move": {
     "description": "移動歌曲到隊列的其他位置",

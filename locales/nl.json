@@ -53,7 +53,8 @@
     "liveNoSync": "Dit nummer heeft geen gesynchroniseerde songtekst, dus er is geen live modus voor.",
     "liveNoPermission": "Alleen degene die de live songtekst heeft gestart of iemand met Berichten beheren kan hem stoppen.",
     "liveNotDuringGame": "Songteksten zijn verborgen zolang er een raad-het-nummer-spel bezig is.",
-    "liveVersionHint": "Getimed voor een andere versie van het nummer, dus regels kunnen verschuiven"
+    "liveVersionHint": "Getimed voor een andere versie van het nummer, dus regels kunnen verschuiven",
+    "privateOption": "Alleen jij ziet de songtekst"
   },
   "move": {
     "description": "Verplaats nummers in de wachtrij",

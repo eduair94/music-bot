@@ -53,7 +53,8 @@
     "liveNoSync": "Tahle skladba nemá synchronizovaný text, takže pro ni není režim naživo.",
     "liveNoPermission": "Text naživo může zastavit jen ten, kdo ho spustil, nebo někdo s oprávněním Spravovat zprávy.",
     "liveNotDuringGame": "Během hry Hádej písničku je text skrytý.",
-    "liveVersionHint": "Časování je pro jinou verzi skladby, takže řádky můžou ujíždět"
+    "liveVersionHint": "Časování je pro jinou verzi skladby, takže řádky můžou ujíždět",
+    "privateOption": "Text písně uvidíš jen ty"
   },
   "move": {
     "description": "Přesouvat skladby ve frontě",

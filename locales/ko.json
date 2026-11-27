@@ -53,7 +53,8 @@
     "liveNoSync": "이 곡은 싱크 가사가 없어서 실시간 모드를 사용할 수 없어요.",
     "liveNoPermission": "실시간 가사를 시작한 사람이나 메시지 관리 권한이 있는 사람만 중지할 수 있어요.",
     "liveNotDuringGame": "노래 맞히기 게임 중에는 가사가 숨겨져요.",
-    "liveVersionHint": "다른 버전에 맞춰진 가사라 줄이 어긋날 수 있어요"
+    "liveVersionHint": "다른 버전에 맞춰진 가사라 줄이 어긋날 수 있어요",
+    "privateOption": "가사를 나만 볼 수 있어요"
   },
   "move": {
     "description": "대기열에서 음악을 이동합니다.",

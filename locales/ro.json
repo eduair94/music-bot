@@ -53,7 +53,8 @@
     "liveNoSync": "Melodia asta nu are versuri sincronizate, deci nu are mod live.",
     "liveNoPermission": "Doar cine a pornit versurile live sau cineva cu permisiunea Manage Messages le poate opri.",
     "liveNotDuringGame": "Versurile sunt ascunse cât timp rulează un joc de ghicit melodia.",
-    "liveVersionHint": "Sincronizate pentru altă versiune a melodiei, așa că versurile pot fi decalate"
+    "liveVersionHint": "Sincronizate pentru altă versiune a melodiei, așa că versurile pot fi decalate",
+    "privateOption": "Doar tu vezi versurile"
   },
   "move": {
     "description": "Mută melodiile în coadă",

@@ -53,7 +53,8 @@
     "liveNoSync": "Essa música não tem letra sincronizada, então não dá para usar o modo ao vivo.",
     "liveNoPermission": "Só quem iniciou a letra ao vivo ou alguém com Gerenciar Mensagens pode parar.",
     "liveNotDuringGame": "As letras ficam ocultas enquanto um jogo de adivinhar a música está rolando.",
-    "liveVersionHint": "Sincronizada para outra versão da música, então as linhas podem ficar fora de tempo"
+    "liveVersionHint": "Sincronizada para outra versão da música, então as linhas podem ficar fora de tempo",
+    "privateOption": "Só você vê a letra"
   },
   "move": {
     "description": "Troca a música de posição na playlist.",

@@ -53,7 +53,8 @@
     "liveNoSync": "Lagu ini tidak punya lirik tersinkron, jadi tidak ada mode live.",
     "liveNoPermission": "Hanya orang yang memulai lirik live atau yang punya izin Kelola Pesan yang bisa menghentikannya.",
     "liveNotDuringGame": "Lirik disembunyikan selama game tebak lagu berlangsung.",
-    "liveVersionHint": "Waktunya dibuat untuk versi lain lagu ini, jadi baris lirik mungkin meleset"
+    "liveVersionHint": "Waktunya dibuat untuk versi lain lagu ini, jadi baris lirik mungkin meleset",
+    "privateOption": "Hanya kamu yang bisa melihat lirik"
   },
   "move": {
     "description": "Memindahkan lagu ke dalam antrian",

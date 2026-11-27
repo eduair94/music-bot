@@ -53,7 +53,8 @@
     "liveNoSync": "Dieser Song hat keine synchronisierten Lyrics, daher gibt es keinen Live-Modus.",
     "liveNoPermission": "Nur die Person, die die Live-Lyrics gestartet hat, oder jemand mit „Nachrichten verwalten“ kann sie stoppen.",
     "liveNotDuringGame": "Lyrics sind ausgeblendet, solange ein Song-Raten-Spiel läuft.",
-    "liveVersionHint": "Für eine andere Version des Songs getimt, Zeilen können daher verrutschen"
+    "liveVersionHint": "Für eine andere Version des Songs getimt, Zeilen können daher verrutschen",
+    "privateOption": "Nur du siehst den Songtext"
   },
   "move": {
     "description": "Verschiebe Songs in der Queue",

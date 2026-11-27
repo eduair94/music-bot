@@ -53,7 +53,8 @@
     "liveNoSync": "Denne sangen har ingen synkronisert tekst, så live-modus er ikke tilgjengelig.",
     "liveNoPermission": "Bare den som startet live-sangteksten eller noen med Administrer meldinger kan stoppe den.",
     "liveNotDuringGame": "Sangtekster er skjult mens et gjett sangen-spill pågår.",
-    "liveVersionHint": "Tilpasset en annen versjon av sangen, så linjene kan komme litt i utakt"
+    "liveVersionHint": "Tilpasset en annen versjon av sangen, så linjene kan komme litt i utakt",
+    "privateOption": "Bare du ser sangteksten"
   },
   "move": {
     "description": "Flytt sanger rundt i køen",

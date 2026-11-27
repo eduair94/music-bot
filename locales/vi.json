@@ -53,7 +53,8 @@
     "liveNoSync": "Bài này không có lời đồng bộ nên không có chế độ trực tiếp.",
     "liveNoPermission": "Chỉ người bật lời trực tiếp hoặc người có quyền Quản lý tin nhắn mới dừng được.",
     "liveNotDuringGame": "Lời bài hát bị ẩn khi đang chơi đoán bài hát.",
-    "liveVersionHint": "Được canh giờ theo phiên bản khác của bài hát nên lời có thể bị lệch"
+    "liveVersionHint": "Được canh giờ theo phiên bản khác của bài hát nên lời có thể bị lệch",
+    "privateOption": "Chỉ bạn thấy được lời bài hát"
   },
   "move": {
     "description": "Di chuyển bài hát trong hàng đợi",

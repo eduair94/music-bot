@@ -53,7 +53,8 @@
     "liveNoSync": "Esta canción no tiene letra sincronizada, así que no hay modo en vivo.",
     "liveNoPermission": "Solo quien inició la letra en vivo o alguien con Gestionar mensajes puede detenerla.",
     "liveNotDuringGame": "La letra está oculta mientras hay un juego de adivinar la canción.",
-    "liveVersionHint": "Sincronizada para otra versión de la canción, así que las líneas pueden desfasarse"
+    "liveVersionHint": "Sincronizada para otra versión de la canción, así que las líneas pueden desfasarse",
+    "privateOption": "Solo tú ves la letra"
   },
   "move": {
     "description": "Mueve canciones de la cola",
