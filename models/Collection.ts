@@ -23,6 +23,7 @@ export interface ICollection extends Document {
   tracks: ICollectionTrack[];
   isPublic: boolean; // Whether others can view/play
   shareCode?: string; // Unique share code for sharing
+  sourceUrl?: string; // Playlist link it was imported from (/collections import)
   createdAt: Date;
   updatedAt: Date;
 }
@@ -71,6 +72,11 @@ const collectionSchema = new Schema(
       unique: true,
       sparse: true, // Allows null values
       index: true,
+    },
+    sourceUrl: {
+      type: String,
+      trim: true,
+      maxlength: 500,
     },
   },
   {

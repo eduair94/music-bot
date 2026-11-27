@@ -1,192 +1,179 @@
 import { useQueue } from "discord-player";
 import {
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    SlashCommandBuilder
+  AutocompleteInteraction,
+  ChatInputCommandInteraction,
+  InteractionReplyOptions,
+  MessageFlags,
+  SlashCommandBuilder
 } from "discord.js";
-import { collectionService } from "../services/collection";
-import { i18n } from "../utils/i18n";
-import { safeReply } from "../utils/safeReply";
+import { collectionService, MAX_COLLECTION_TRACKS } from "../services/collection";
+import { ImportError, PLATFORM_NAMES, resolvePlaylist } from "../services/collectionImport";
+import { loadCollection } from "../services/collectionPlayback";
+import { buildCollectionList, buildCollectionView } from "../services/collectionView";
+import { DatabaseService } from "../services/database";
+import { registerComponentHandler } from "../structs/componentRouter";
+import { isHttpUrl, safeText, truncate } from "../utils/format";
+import { descriptionLocalizations, i18n } from "../utils/i18n";
+
+const V2 = MessageFlags.IsComponentsV2;
+const EPHEMERAL = MessageFlags.Ephemeral;
+const NO_PINGS = { parse: [] as [] };
+
+type CachedChatInput = ChatInputCommandInteraction<"cached">;
+
+/** Description plus its translations, read from the locale files at load. */
+function described<T extends { setDescription(text: string): T; setDescriptionLocalizations(map: Record<string, string> | null): T }>(
+  builder: T,
+  key: string
+): T {
+  return builder.setDescription(i18n.__(key)).setDescriptionLocalizations(descriptionLocalizations(key) ?? null);
+}
+
+const ephemeral = (content: string): InteractionReplyOptions => ({ content, flags: EPHEMERAL, allowedMentions: NO_PINGS });
+const failed = () => ephemeral(`⚠️ ${i18n.__("collections.error")}`);
+
+function databaseReady(): boolean {
+  return DatabaseService.getInstance().isReady();
+}
+
+// ------------------------------------------------------------- components
+
+registerComponentHandler("collections", async (interaction, args) => {
+  if (!interaction.inCachedGuild() || !interaction.isMessageComponent()) return;
+  if (!databaseReady()) return interaction.reply(failed());
+  const [action, target, extra] = args;
+
+  // List menu: open one of the owner's collections (privately, for the owner only).
+  if (action === "open") {
+    if (!interaction.isStringSelectMenu()) return;
+    if (interaction.user.id !== target) return interaction.reply(ephemeral(`🔒 ${i18n.__("collections.notYours")}`));
+    const collection = await collectionService.getById(interaction.values[0]);
+    // Re-render the list first: it refreshes the counts and resets the menu.
+    await interaction.update({ components: [buildCollectionList(target, await collectionService.listSummaries(target))], allowedMentions: NO_PINGS } as any);
+    if (!collection || collection.userId !== target) return interaction.followUp(ephemeral(`📭 ${i18n.__("collections.gone")}`));
+    return interaction.followUp({ components: [buildCollectionView(collection, 0)], flags: V2 | EPHEMERAL, allowedMentions: NO_PINGS } as any);
+  }
+
+  if (!interaction.isButton()) return;
+  const collection = await collectionService.getById(target);
+  if (!collection) return interaction.reply(ephemeral(`📭 ${i18n.__("collections.gone")}`));
+
+  if (action === "page") {
+    return interaction.update({ components: [buildCollectionView(collection, Number(extra) || 0)], allowedMentions: NO_PINGS } as any);
+  }
+  // Anyone who can see the message may queue it; they become the requester.
+  if (action === "play" || action === "add") {
+    return loadCollection(interaction, collection, action === "play" ? "next" : "end", true);
+  }
+  return interaction.reply(ephemeral(i18n.__("router.expired")));
+});
+
+// ---------------------------------------------------------------- command
+
+/** Options whose value is one of the user's collections (autocompleted). */
+const EXISTING_NAME_OPTIONS = new Set(["name", "old_name", "source", "target"]);
+/** Subcommands whose `name` is a new collection: no suggestions. */
+const NEW_NAME_SUBCOMMANDS = new Set(["create", "clone", "import"]);
 
 export default {
   data: new SlashCommandBuilder()
     .setName("collections")
     .setDescription(i18n.__("collections.description"))
+    .addSubcommand((sub) => described(sub.setName("list"), "collections.list.description"))
     .addSubcommand((sub) =>
-      sub
-        .setName("list")
-        .setDescription(i18n.__("collections.list.description"))
-    )
-    .addSubcommand((sub) =>
-      sub
-        .setName("create")
-        .setDescription(i18n.__("collections.create.description"))
+      described(sub.setName("create"), "collections.create.description")
+        .addStringOption((opt) => described(opt.setName("name"), "collections.create.nameOption").setRequired(true).setMaxLength(100))
         .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.create.nameOption"))
-            .setRequired(true)
-            .setMaxLength(100)
-        )
-        .addStringOption((opt) =>
-          opt
-            .setName("description")
-            .setDescription(i18n.__("collections.create.descriptionOption"))
-            .setRequired(false)
-            .setMaxLength(500)
+          described(opt.setName("description"), "collections.create.descriptionOption").setRequired(false).setMaxLength(500)
         )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("delete")
-        .setDescription(i18n.__("collections.delete.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.delete.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("delete"), "collections.delete.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.delete.nameOption").setRequired(true).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("view")
-        .setDescription(i18n.__("collections.view.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.view.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("view"), "collections.view.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.view.nameOption").setRequired(true).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("save")
-        .setDescription(i18n.__("collections.save.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.save.nameOption"))
-            .setRequired(true)
-            .setMaxLength(100)
-        )
+      described(sub.setName("save"), "collections.save.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.save.nameOption").setRequired(true).setMaxLength(100).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("load")
-        .setDescription(i18n.__("collections.load.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.load.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("load"), "collections.load.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.load.nameOption").setRequired(true).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("rename")
-        .setDescription(i18n.__("collections.rename.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("old_name")
-            .setDescription(i18n.__("collections.rename.oldNameOption"))
-            .setRequired(true)
-        )
-        .addStringOption((opt) =>
-          opt
-            .setName("new_name")
-            .setDescription(i18n.__("collections.rename.newNameOption"))
-            .setRequired(true)
-            .setMaxLength(100)
-        )
+      described(sub.setName("import"), "collections.import.description")
+        .addStringOption((opt) => described(opt.setName("url"), "collections.import.urlOption").setRequired(true).setMaxLength(500))
+        .addStringOption((opt) => described(opt.setName("name"), "collections.import.nameOption").setRequired(false).setMaxLength(100))
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("share")
-        .setDescription(i18n.__("collections.share.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.share.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("rename"), "collections.rename.description")
+        .addStringOption((opt) => described(opt.setName("old_name"), "collections.rename.oldNameOption").setRequired(true).setAutocomplete(true))
+        .addStringOption((opt) => described(opt.setName("new_name"), "collections.rename.newNameOption").setRequired(true).setMaxLength(100))
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("unshare")
-        .setDescription(i18n.__("collections.unshare.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.unshare.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("share"), "collections.share.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.share.nameOption").setRequired(true).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("clone")
-        .setDescription(i18n.__("collections.clone.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("share_code")
-            .setDescription(i18n.__("collections.clone.shareCodeOption"))
-            .setRequired(true)
-        )
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.clone.nameOption"))
-            .setRequired(true)
-            .setMaxLength(100)
-        )
+      described(sub.setName("unshare"), "collections.unshare.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.unshare.nameOption").setRequired(true).setAutocomplete(true)
+      )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("merge")
-        .setDescription(i18n.__("collections.merge.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("source")
-            .setDescription(i18n.__("collections.merge.sourceOption"))
-            .setRequired(true)
-        )
-        .addStringOption((opt) =>
-          opt
-            .setName("target")
-            .setDescription(i18n.__("collections.merge.targetOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("clone"), "collections.clone.description")
+        .addStringOption((opt) => described(opt.setName("share_code"), "collections.clone.shareCodeOption").setRequired(true))
+        .addStringOption((opt) => described(opt.setName("name"), "collections.clone.nameOption").setRequired(true).setMaxLength(100))
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("addcurrent")
-        .setDescription(i18n.__("collections.addcurrent.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.addcurrent.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("merge"), "collections.merge.description")
+        .addStringOption((opt) => described(opt.setName("source"), "collections.merge.sourceOption").setRequired(true).setAutocomplete(true))
+        .addStringOption((opt) => described(opt.setName("target"), "collections.merge.targetOption").setRequired(true).setAutocomplete(true))
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("removetrack")
-        .setDescription(i18n.__("collections.removetrack.description"))
-        .addStringOption((opt) =>
-          opt
-            .setName("name")
-            .setDescription(i18n.__("collections.removetrack.nameOption"))
-            .setRequired(true)
-        )
+      described(sub.setName("addcurrent"), "collections.addcurrent.description").addStringOption((opt) =>
+        described(opt.setName("name"), "collections.addcurrent.nameOption").setRequired(true).setAutocomplete(true)
+      )
+    )
+    .addSubcommand((sub) =>
+      described(sub.setName("removetrack"), "collections.removetrack.description")
+        .addStringOption((opt) => described(opt.setName("name"), "collections.removetrack.nameOption").setRequired(true).setAutocomplete(true))
         .addIntegerOption((opt) =>
-          opt
-            .setName("position")
-            .setDescription(i18n.__("collections.removetrack.positionOption"))
-            .setRequired(true)
-            .setMinValue(1)
+          described(opt.setName("position"), "collections.removetrack.positionOption").setRequired(true).setMinValue(1)
         )
     ),
 
+  category: "playlists",
+
+  /** The user's own collections, filtered by what they typed. */
+  async autocomplete(interaction: AutocompleteInteraction) {
+    const focused = interaction.options.getFocused(true);
+    const subcommand = interaction.options.getSubcommand(false) ?? "";
+    if (!EXISTING_NAME_OPTIONS.has(focused.name) || NEW_NAME_SUBCOMMANDS.has(subcommand) || !databaseReady()) {
+      return interaction.respond([]);
+    }
+    const typed = String(focused.value ?? "").toLowerCase().trim();
+    const summaries = await collectionService.listSummaries(interaction.user.id);
+    const choices = summaries
+      .filter((c) => !typed || c.name.toLowerCase().includes(typed))
+      .slice(0, 25)
+      .map((c) => ({
+        name: truncate(`${c.name} · ${i18n.__mf("collections.trackCount", { count: c.count })}`, 100),
+        value: c.name.slice(0, 100)
+      }));
+    return interaction.respond(choices);
+  },
+
   async execute(interaction: ChatInputCommandInteraction) {
+    if (!interaction.inCachedGuild()) return;
+    if (!databaseReady()) return interaction.reply(failed());
     const subcommand = interaction.options.getSubcommand();
     const userId = interaction.user.id;
 
@@ -203,6 +190,8 @@ export default {
         return handleSave(interaction, userId);
       case "load":
         return handleLoad(interaction, userId);
+      case "import":
+        return handleImport(interaction, userId);
       case "rename":
         return handleRename(interaction, userId);
       case "share":
@@ -218,514 +207,256 @@ export default {
       case "removetrack":
         return handleRemoveTrack(interaction, userId);
       default:
-        return safeReply(interaction, {
-          content: i18n.__("common.error"),
-          ephemeral: true,
-        });
+        return interaction.reply(failed());
     }
-  },
+  }
 };
 
-async function handleList(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
-  const collections = await collectionService.getUserCollections(userId);
+/** Collection names are user text; keep them from breaking the message markdown. */
+const nameOf = (name: string) => safeText(name, 100);
 
-  if (collections.length === 0) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.list.empty"),
-      ephemeral: true,
-    });
-  }
-
-  const embed = new EmbedBuilder()
-    .setTitle(i18n.__("collections.list.title"))
-    .setColor("#0099ff")
-    .setDescription(
-      collections
-        .map(
-          (c, i) =>
-            `**${i + 1}.** ${c.name} - ${c.tracks.length} ${i18n.__("collections.tracks")}${
-              c.shareCode ? " 🔗" : ""
-            }`
-        )
-        .join("\n")
-    )
-    .setFooter({
-      text: i18n.__mf("collections.list.footer", { count: collections.length }),
-    });
-
-  return safeReply(interaction, { embeds: [embed] });
+async function handleList(interaction: CachedChatInput, userId: string) {
+  const collections = await collectionService.listSummaries(userId);
+  if (collections.length === 0) return interaction.reply(ephemeral(i18n.__("collections.list.empty")));
+  return interaction.reply({ components: [buildCollectionList(userId, collections)], flags: V2, allowedMentions: NO_PINGS } as any);
 }
 
-async function handleCreate(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
-  const name = interaction.options.getString("name", true);
+async function handleCreate(interaction: CachedChatInput, userId: string) {
+  const name = interaction.options.getString("name", true).trim();
   const description = interaction.options.getString("description") || undefined;
 
-  // Check limit
-  const canCreate = await collectionService.canCreateCollection(userId);
-  if (!canCreate) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.create.limitReached"),
-      ephemeral: true,
-    });
+  if (!(await collectionService.canCreateCollection(userId))) {
+    return interaction.reply(ephemeral(i18n.__("collections.create.limitReached")));
   }
-
-  // Check if exists
-  const existing = await collectionService.getByName(userId, name);
-  if (existing) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.create.exists", { name }),
-      ephemeral: true,
-    });
+  if (await collectionService.getByName(userId, name)) {
+    return interaction.reply(ephemeral(i18n.__mf("collections.create.exists", { name: nameOf(name) })));
   }
 
   try {
     await collectionService.create(userId, name, description);
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.create.success", { name }),
-    });
+    return interaction.reply({ content: i18n.__mf("collections.create.success", { name: nameOf(name) }), allowedMentions: NO_PINGS });
   } catch (error) {
-    console.error("Error creating collection:", error);
-    return safeReply(interaction, {
-      content: i18n.__("common.error"),
-      ephemeral: true,
-    });
+    console.error("[collections] Error creating collection:", error);
+    return interaction.reply(failed());
   }
 }
 
-async function handleDelete(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleDelete(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-
-  const deleted = await collectionService.delete(userId, name);
-  if (!deleted) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
+  if (!(await collectionService.delete(userId, name))) {
+    return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
   }
-
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.delete.success", { name }),
-  });
+  return interaction.reply({ content: i18n.__mf("collections.delete.success", { name: nameOf(name) }), allowedMentions: NO_PINGS });
 }
 
-async function handleView(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleView(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-
   const collection = await collectionService.getByName(userId, name);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
-
-  const formatDuration = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
-  const totalDuration = collection.tracks.reduce((sum, t) => sum + t.duration, 0);
-  const trackList = collection.tracks.slice(0, 10).map((t, i) => 
-    `**${i + 1}.** [${t.title}](${t.url}) - ${formatDuration(t.duration)}`
-  );
-
-  if (collection.tracks.length > 10) {
-    trackList.push(
-      i18n.__mf("collections.view.andMore", {
-        count: collection.tracks.length - 10,
-      })
-    );
-  }
-
-  const embed = new EmbedBuilder()
-    .setTitle(`📁 ${collection.name}`)
-    .setColor("#0099ff")
-    .setDescription(
-      collection.description || trackList.join("\n") || i18n.__("collections.view.empty")
-    )
-    .addFields(
-      {
-        name: i18n.__("collections.view.tracksField"),
-        value: collection.tracks.length.toString(),
-        inline: true,
-      },
-      {
-        name: i18n.__("collections.view.durationField"),
-        value: formatDuration(totalDuration),
-        inline: true,
-      }
-    );
-
-  if (collection.description && collection.tracks.length > 0) {
-    embed.addFields({
-      name: i18n.__("collections.view.tracksField"),
-      value: trackList.join("\n"),
-    });
-  }
-
-  if (collection.shareCode) {
-    embed.addFields({
-      name: i18n.__("collections.view.shareCodeField"),
-      value: `\`${collection.shareCode}\``,
-      inline: true,
-    });
-  }
-
-  return safeReply(interaction, { embeds: [embed] });
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
+  return interaction.reply({ components: [buildCollectionView(collection, 0)], flags: V2, allowedMentions: NO_PINGS } as any);
 }
 
-async function handleSave(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
-  const name = interaction.options.getString("name", true);
-  const queue = useQueue(interaction.guildId!);
+async function handleSave(interaction: CachedChatInput, userId: string) {
+  const name = interaction.options.getString("name", true).trim();
+  const queue = useQueue(interaction.guildId);
 
   if (!queue || (!queue.currentTrack && queue.tracks.size === 0)) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.save.noQueue"),
-      ephemeral: true,
-    });
+    return interaction.reply(ephemeral(i18n.__("collections.save.noQueue")));
   }
 
   // Check limit for new collections
   const existing = await collectionService.getByName(userId, name);
-  if (!existing) {
-    const canCreate = await collectionService.canCreateCollection(userId);
-    if (!canCreate) {
-      return safeReply(interaction, {
-        content: i18n.__("collections.create.limitReached"),
-        ephemeral: true,
-      });
-    }
+  if (!existing && !(await collectionService.canCreateCollection(userId))) {
+    return interaction.reply(ephemeral(i18n.__("collections.create.limitReached")));
   }
 
   try {
-    const collection = await collectionService.saveQueue(
-      userId,
-      name,
-      queue.tracks.toArray(),
-      queue.currentTrack || undefined
-    );
-
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.save.success", {
-        name,
-        count: collection.tracks.length,
-      }),
+    const collection = await collectionService.saveQueue(userId, name, queue.tracks.toArray(), queue.currentTrack || undefined);
+    return interaction.reply({
+      content: i18n.__mf("collections.save.success", { name: nameOf(name), count: collection.tracks.length }),
+      allowedMentions: NO_PINGS
     });
   } catch (error) {
-    console.error("Error saving collection:", error);
-    return safeReply(interaction, {
-      content: i18n.__("common.error"),
-      ephemeral: true,
-    });
+    console.error("[collections] Error saving collection:", error);
+    return interaction.reply(failed());
   }
 }
 
-async function handleLoad(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleLoad(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-  const member = interaction.guild?.members.cache.get(userId);
-  const voiceChannel = member?.voice.channel;
-
-  if (!voiceChannel) {
-    return safeReply(interaction, {
-      content: i18n.__("common.notInVoice"),
-      ephemeral: true,
-    });
-  }
-
   const collection = await collectionService.getByName(userId, name);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
+  return loadCollection(interaction, collection, "end", false);
+}
 
-  if (collection.tracks.length === 0) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.load.empty"),
-      ephemeral: true,
-    });
+async function handleImport(interaction: CachedChatInput, userId: string) {
+  const url = interaction.options.getString("url", true).trim();
+  const requestedName = interaction.options.getString("name")?.trim() || null;
+
+  if (!isHttpUrl(url)) return interaction.reply(ephemeral(`🔗 ${i18n.__("collections.import.invalidUrl")}`));
+  if (!(await collectionService.canCreateCollection(userId))) {
+    return interaction.reply(ephemeral(i18n.__("collections.create.limitReached")));
+  }
+  if (requestedName && (await collectionService.getByName(userId, requestedName))) {
+    return interaction.reply(ephemeral(i18n.__mf("collections.import.exists", { name: nameOf(requestedName) })));
   }
 
   await interaction.deferReply();
 
+  let playlist;
   try {
-    const { useDiscordPlayer } = await import("../services/discordPlayer");
-    const discordPlayer = useDiscordPlayer();
-    const textChannel = interaction.channel as any;
-    let addedCount = 0;
-
-    for (const track of collection.tracks) {
-      try {
-        await discordPlayer.play(voiceChannel, track.url, textChannel);
-        addedCount++;
-      } catch (e) {
-        console.error(`Failed to add track ${track.title}:`, e);
-      }
-    }
-
-    return interaction.editReply({
-      content: i18n.__mf("collections.load.success", {
-        name,
-        count: addedCount,
-      }),
-    });
+    playlist = await resolvePlaylist(url, interaction.user, MAX_COLLECTION_TRACKS);
   } catch (error) {
-    console.error("Error loading collection:", error);
-    return interaction.editReply({
-      content: i18n.__("common.error"),
-    });
+    if (error instanceof ImportError && error.code === "notReady") {
+      return interaction.editReply({ content: `⏳ ${i18n.__("play.initializing")}` });
+    }
+    if (error instanceof ImportError && error.code === "invalidUrl") {
+      return interaction.editReply({ content: `🔗 ${i18n.__("collections.import.invalidUrl")}` });
+    }
+    if (!(error instanceof ImportError)) console.error("[collections] Import failed:", error);
+    return interaction.editReply({ content: `❌ ${i18n.__("collections.import.failed")}` });
   }
+  if (playlist.tracks.length === 0) return interaction.editReply({ content: `❌ ${i18n.__("collections.import.failed")}` });
+
+  const source = PLATFORM_NAMES[playlist.platform];
+  const name = truncate(requestedName || playlist.title?.trim() || source, 100);
+  if (!requestedName && (await collectionService.getByName(userId, name))) {
+    return interaction.editReply({ content: i18n.__mf("collections.import.exists", { name: nameOf(name) }), allowedMentions: NO_PINGS });
+  }
+
+  let created;
+  try {
+    created = await collectionService.createFromTracks(userId, name, playlist.tracks, url);
+  } catch (error) {
+    if ((error as { code?: number })?.code === 11000) {
+      return interaction.editReply({ content: i18n.__mf("collections.import.exists", { name: nameOf(name) }), allowedMentions: NO_PINGS });
+    }
+    console.error("[collections] Could not save imported playlist:", error);
+    return interaction.editReply({ content: `⚠️ ${i18n.__("collections.error")}` });
+  }
+
+  const { collection, skipped: overLimit } = created;
+  const skipped = overLimit + playlist.invalid;
+  const notice = [i18n.__mf("collections.import.success", { count: collection.tracks.length, source, name: nameOf(name) })];
+  if (skipped > 0) notice.push(`-# ${i18n.__mf("collections.import.skipped", { count: skipped, max: MAX_COLLECTION_TRACKS })}`);
+  // Without API keys the Spotify extractor reads the public embed, which lists 100 songs at most.
+  if (playlist.platform === "spotify" && playlist.tracks.length === 100) notice.push(`-# ${i18n.__("collections.import.spotifyCap")}`);
+
+  return interaction.editReply({
+    components: [buildCollectionView(collection, 0, notice.join("\n"))],
+    flags: V2,
+    allowedMentions: NO_PINGS
+  } as any);
 }
 
-async function handleRename(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleRename(interaction: CachedChatInput, userId: string) {
   const oldName = interaction.options.getString("old_name", true);
-  const newName = interaction.options.getString("new_name", true);
+  const newName = interaction.options.getString("new_name", true).trim();
 
-  // Check if new name already exists
-  const existingNew = await collectionService.getByName(userId, newName);
-  if (existingNew) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.rename.exists", { name: newName }),
-      ephemeral: true,
-    });
+  if (await collectionService.getByName(userId, newName)) {
+    return interaction.reply(ephemeral(i18n.__mf("collections.rename.exists", { name: nameOf(newName) })));
   }
 
   const collection = await collectionService.rename(userId, oldName, newName);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name: oldName }),
-      ephemeral: true,
-    });
-  }
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(oldName) })));
 
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.rename.success", { oldName, newName }),
+  return interaction.reply({
+    content: i18n.__mf("collections.rename.success", { oldName: nameOf(oldName), newName: nameOf(newName) }),
+    allowedMentions: NO_PINGS
   });
 }
 
-async function handleShare(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleShare(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-
   const shareCode = await collectionService.createShareCode(userId, name);
-  if (!shareCode) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
-
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.share.success", { name, code: shareCode }),
-  });
+  if (!shareCode) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
+  return interaction.reply({ content: i18n.__mf("collections.share.success", { name: nameOf(name), code: shareCode }), allowedMentions: NO_PINGS });
 }
 
-async function handleUnshare(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleUnshare(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-
   const collection = await collectionService.removeShareCode(userId, name);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
-
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.unshare.success", { name }),
-  });
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
+  return interaction.reply({ content: i18n.__mf("collections.unshare.success", { name: nameOf(name) }), allowedMentions: NO_PINGS });
 }
 
-async function handleClone(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
-  const shareCode = interaction.options.getString("share_code", true);
-  const name = interaction.options.getString("name", true);
+async function handleClone(interaction: CachedChatInput, userId: string) {
+  const shareCode = interaction.options.getString("share_code", true).trim();
+  const name = interaction.options.getString("name", true).trim();
 
-  // Check limit
-  const canCreate = await collectionService.canCreateCollection(userId);
-  if (!canCreate) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.create.limitReached"),
-      ephemeral: true,
-    });
+  if (!(await collectionService.canCreateCollection(userId))) {
+    return interaction.reply(ephemeral(i18n.__("collections.create.limitReached")));
   }
-
-  // Check if name exists
-  const existing = await collectionService.getByName(userId, name);
-  if (existing) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.create.exists", { name }),
-      ephemeral: true,
-    });
+  if (await collectionService.getByName(userId, name)) {
+    return interaction.reply(ephemeral(i18n.__mf("collections.create.exists", { name: nameOf(name) })));
   }
 
   try {
-    const collection = await collectionService.cloneFromShareCode(
-      userId,
-      shareCode,
-      name
-    );
-
-    if (!collection) {
-      return safeReply(interaction, {
-        content: i18n.__("collections.clone.invalidCode"),
-        ephemeral: true,
-      });
-    }
-
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.clone.success", {
-        name,
-        count: collection.tracks.length,
-      }),
+    const collection = await collectionService.cloneFromShareCode(userId, shareCode, name);
+    if (!collection) return interaction.reply(ephemeral(i18n.__("collections.clone.invalidCode")));
+    return interaction.reply({
+      content: i18n.__mf("collections.clone.success", { name: nameOf(name), count: collection.tracks.length }),
+      allowedMentions: NO_PINGS
     });
   } catch (error) {
-    console.error("Error cloning collection:", error);
-    return safeReply(interaction, {
-      content: i18n.__("common.error"),
-      ephemeral: true,
-    });
+    console.error("[collections] Error cloning collection:", error);
+    return interaction.reply(failed());
   }
 }
 
-async function handleMerge(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleMerge(interaction: CachedChatInput, userId: string) {
   const source = interaction.options.getString("source", true);
   const target = interaction.options.getString("target", true);
 
-  if (source === target) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.merge.sameCollection"),
-      ephemeral: true,
-    });
-  }
+  if (source === target) return interaction.reply(ephemeral(i18n.__("collections.merge.sameCollection")));
 
   const collection = await collectionService.merge(userId, source, target);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.merge.notFound"),
-      ephemeral: true,
-    });
-  }
+  if (!collection) return interaction.reply(ephemeral(i18n.__("collections.merge.notFound")));
 
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.merge.success", {
-      source,
-      target,
-      count: collection.tracks.length,
-    }),
+  return interaction.reply({
+    content: i18n.__mf("collections.merge.success", { source: nameOf(source), target: nameOf(target), count: collection.tracks.length }),
+    allowedMentions: NO_PINGS
   });
 }
 
-async function handleAddCurrent(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleAddCurrent(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
-  const queue = useQueue(interaction.guildId!);
+  const queue = useQueue(interaction.guildId);
 
-  if (!queue || !queue.currentTrack) {
-    return safeReply(interaction, {
-      content: i18n.__("collections.addcurrent.noTrack"),
-      ephemeral: true,
-    });
-  }
+  if (!queue || !queue.currentTrack) return interaction.reply(ephemeral(i18n.__("collections.addcurrent.noTrack")));
 
   const collection = await collectionService.getByName(userId, name);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
 
   try {
     await collectionService.addTracks(userId, name, [queue.currentTrack]);
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.addcurrent.success", {
-        track: queue.currentTrack.title,
-        name,
-      }),
+    return interaction.reply({
+      content: i18n.__mf("collections.addcurrent.success", { track: safeText(queue.currentTrack.title, 100), name: nameOf(name) }),
+      allowedMentions: NO_PINGS
     });
   } catch (error) {
-    console.error("Error adding track:", error);
-    return safeReply(interaction, {
-      content: i18n.__("common.error"),
-      ephemeral: true,
-    });
+    console.error("[collections] Error adding track:", error);
+    return interaction.reply(failed());
   }
 }
 
-async function handleRemoveTrack(
-  interaction: ChatInputCommandInteraction,
-  userId: string
-) {
+async function handleRemoveTrack(interaction: CachedChatInput, userId: string) {
   const name = interaction.options.getString("name", true);
   const position = interaction.options.getInteger("position", true);
 
   const collection = await collectionService.getByName(userId, name);
-  if (!collection) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.notFound", { name }),
-      ephemeral: true,
-    });
-  }
+  if (!collection) return interaction.reply(ephemeral(i18n.__mf("collections.notFound", { name: nameOf(name) })));
 
   if (position < 1 || position > collection.tracks.length) {
-    return safeReply(interaction, {
-      content: i18n.__mf("collections.removetrack.invalidPosition", {
-        max: collection.tracks.length,
-      }),
-      ephemeral: true,
-    });
+    return interaction.reply(ephemeral(i18n.__mf("collections.removetrack.invalidPosition", { max: collection.tracks.length })));
   }
 
   const trackTitle = collection.tracks[position - 1].title;
   const result = await collectionService.removeTrack(userId, name, position - 1);
-  
-  if (!result) {
-    return safeReply(interaction, {
-      content: i18n.__("common.error"),
-      ephemeral: true,
-    });
-  }
+  if (!result) return interaction.reply(failed());
 
-  return safeReply(interaction, {
-    content: i18n.__mf("collections.removetrack.success", {
-      track: trackTitle,
-      name,
-    }),
+  return interaction.reply({
+    content: i18n.__mf("collections.removetrack.success", { track: safeText(trackTitle, 100), name: nameOf(name) }),
+    allowedMentions: NO_PINGS
   });
 }

@@ -1,10 +1,13 @@
 import {
   ChatInputCommandInteraction,
+  MessageFlags,
   PermissionsBitField,
   SlashCommandBuilder,
 } from "discord.js";
 import { GuildSettingsService } from "../services/guildSettings";
+import { descriptionLocalizations, i18n } from "../utils/i18n";
 import {
+  canManageSettings,
   handleAdminRole,
   handleBehavior,
   handleBlacklist,
@@ -22,136 +25,76 @@ import {
   SettingsHandlerContext,
 } from "./settings/index";
 
+/** Description plus its translations, read from the locale files at load. */
+function described<T extends { setDescription(text: string): T; setDescriptionLocalizations(map: Record<string, string> | null): T }>(
+  builder: T,
+  key: string
+): T {
+  return builder.setDescription(i18n.__(key)).setDescriptionLocalizations(descriptionLocalizations(key) ?? null);
+}
+
 export default {
   data: new SlashCommandBuilder()
     .setName("settings")
-    .setDescription("Configure bot settings for this server (Admin only)")
+    .setDescription(i18n.__("settings.description"))
     .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild)
+    .addSubcommand((sub) => described(sub.setName("view"), "settings.view.description"))
+    .addSubcommand((sub) => described(sub.setName("djrole"), "settings.djrole.description"))
+    .addSubcommand((sub) => described(sub.setName("adminrole"), "settings.adminrole.description"))
     .addSubcommand((sub) =>
-      sub.setName("view").setDescription("View current settings")
-    )
-    .addSubcommand((sub) =>
-      sub.setName("djrole").setDescription("Set the DJ role for music control")
-    )
-    .addSubcommand((sub) =>
-      sub.setName("adminrole").setDescription("Set the admin role for settings management")
-    )
-    .addSubcommand((sub) =>
-      sub
-        .setName("volume")
-        .setDescription("Set default and maximum volume")
+      described(sub.setName("volume"), "settings.volume.description")
         .addIntegerOption((opt) =>
-          opt
-            .setName("default")
-            .setDescription("Default volume (0-100)")
-            .setMinValue(0)
-            .setMaxValue(100)
+          described(opt.setName("default"), "settings.volume.optionDefault").setMinValue(0).setMaxValue(100)
         )
         .addIntegerOption((opt) =>
-          opt
-            .setName("max")
-            .setDescription("Maximum allowed volume (0-100)")
-            .setMinValue(0)
-            .setMaxValue(100)
+          described(opt.setName("max"), "settings.volume.optionMax").setMinValue(0).setMaxValue(100)
         )
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("queue")
-        .setDescription("Configure queue settings")
+      described(sub.setName("queue"), "settings.queue.description")
         .addIntegerOption((opt) =>
-          opt
-            .setName("maxsize")
-            .setDescription("Maximum queue size (1-1000)")
-            .setMinValue(1)
-            .setMaxValue(1000)
+          described(opt.setName("maxsize"), "settings.queue.optionMaxSize").setMinValue(1).setMaxValue(1000)
         )
-        .addBooleanOption((opt) =>
-          opt
-            .setName("preventduplicates")
-            .setDescription("Prevent duplicate songs in queue")
-        )
+        .addBooleanOption((opt) => described(opt.setName("preventduplicates"), "settings.queue.optionPreventDuplicates"))
     )
     .addSubcommand((sub) =>
-      sub
-        .setName("behavior")
-        .setDescription("Configure bot behavior")
-        .addBooleanOption((opt) =>
-          opt
-            .setName("announcements")
-            .setDescription("Announce now playing in text channel")
-        )
-        .addBooleanOption((opt) =>
-          opt
-            .setName("autoleave")
-            .setDescription("Leave voice channel when empty")
-        )
+      described(sub.setName("behavior"), "settings.behavior.description")
+        .addBooleanOption((opt) => described(opt.setName("announcements"), "settings.behavior.optionAnnouncements"))
+        .addBooleanOption((opt) => described(opt.setName("autoleave"), "settings.behavior.optionAutoLeave"))
         .addIntegerOption((opt) =>
-          opt
-            .setName("leavetimeout")
-            .setDescription("Seconds before leaving empty channel (30-3600)")
-            .setMinValue(30)
-            .setMaxValue(3600)
+          described(opt.setName("leavetimeout"), "settings.behavior.optionLeaveTimeout").setMinValue(30).setMaxValue(3600)
         )
     )
+    .addSubcommand((sub) => described(sub.setName("voicechannels"), "settings.voicechannels.description"))
+    .addSubcommand((sub) => described(sub.setName("textchannels"), "settings.textchannels.description"))
+    .addSubcommand((sub) => described(sub.setName("logchannel"), "settings.logchannel.description"))
     .addSubcommand((sub) =>
-      sub.setName("voicechannels").setDescription("Set allowed voice channels")
+      described(sub.setName("blacklist"), "settings.blacklist.description")
+        .addUserOption((opt) => described(opt.setName("add"), "settings.blacklist.optionAdd"))
+        .addUserOption((opt) => described(opt.setName("remove"), "settings.blacklist.optionRemove"))
     )
+    .addSubcommand((sub) => described(sub.setName("language"), "settings.language.description"))
     .addSubcommand((sub) =>
-      sub.setName("textchannels").setDescription("Set allowed text channels for commands")
+      described(sub.setName("embedcolor"), "settings.embedcolor.description").addStringOption((opt) =>
+        described(opt.setName("color"), "settings.embedcolor.optionColor").setRequired(true)
+      )
     )
-    .addSubcommand((sub) =>
-      sub.setName("logchannel").setDescription("Set the channel for bot logs (now playing, etc.)")
-    )
-    .addSubcommand((sub) =>
-      sub
-        .setName("blacklist")
-        .setDescription("Manage user blacklist")
-        .addUserOption((opt) =>
-          opt.setName("add").setDescription("Add user to blacklist")
-        )
-        .addUserOption((opt) =>
-          opt.setName("remove").setDescription("Remove user from blacklist")
-        )
-    )
-    .addSubcommand((sub) =>
-      sub.setName("language").setDescription("Set bot language for this server")
-    )
-    .addSubcommand((sub) =>
-      sub
-        .setName("embedcolor")
-        .setDescription("Set custom embed color")
-        .addStringOption((opt) =>
-          opt
-            .setName("color")
-            .setDescription("Hex color code (e.g., #FF5500)")
-            .setRequired(true)
-        )
-    )
-    .addSubcommand((sub) =>
-      sub.setName("reset").setDescription("Reset all settings to default")
-    )
-    .addSubcommand((sub) =>
-      sub.setName("stats").setDescription("View server music statistics")
-    ),
+    .addSubcommand((sub) => described(sub.setName("reset"), "settings.reset.description"))
+    .addSubcommand((sub) => described(sub.setName("stats"), "settings.stats.description")),
 
   cooldown: 3,
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const guildId = interaction.guild!.id;
+    if (!interaction.inCachedGuild()) return;
+    const guildId = interaction.guildId;
     const settingsService = GuildSettingsService.getInstance();
     const subcommand = interaction.options.getSubcommand();
 
-    // Check if user has permission to manage settings
-    const member = interaction.guild!.members.cache.get(interaction.user.id);
-    const isServerAdmin = member?.permissions.has(PermissionsBitField.Flags.ManageGuild) || false;
-    const userRoles = member?.roles.cache.map((r) => r.id) || [];
-    
-    const canManage = await settingsService.canManageSettings(guildId, userRoles, isServerAdmin);
-    if (!canManage) {
+    // Manage Server, or the admin role set with /settings adminrole
+    if (!(await canManageSettings(interaction))) {
       return interaction.reply({
-        content: "You don't have permission to manage bot settings.",
-        ephemeral: true,
+        content: `🔒 ${i18n.__("settings.noPermission")}`,
+        flags: MessageFlags.Ephemeral,
       });
     }
 
@@ -189,8 +132,8 @@ export default {
     }
 
     return interaction.reply({
-      content: "Unknown subcommand.",
-      ephemeral: true,
+      content: i18n.__("settings.unknownSubcommand"),
+      flags: MessageFlags.Ephemeral,
     });
   },
 };

@@ -2,49 +2,40 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ComponentType,
   EmbedBuilder,
+  MessageComponentInteraction,
+  MessageFlags
 } from "discord.js";
+import { GuildSettingsService } from "../../services/guildSettings";
+import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
-export async function handleReset({ interaction, guildId, settingsService }: SettingsHandlerContext) {
+export async function handleReset({ interaction }: SettingsHandlerContext) {
   const confirmButton = new ButtonBuilder()
-    .setCustomId("reset_confirm")
-    .setLabel("Yes, Reset All Settings")
+    .setCustomId("settings:reset:confirm")
+    .setLabel(i18n.__("settings.reset.confirm"))
     .setStyle(ButtonStyle.Danger);
 
   const cancelButton = new ButtonBuilder()
-    .setCustomId("reset_cancel")
-    .setLabel("Cancel")
+    .setCustomId("settings:reset:cancel")
+    .setLabel(i18n.__("settings.reset.cancel"))
     .setStyle(ButtonStyle.Secondary);
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(confirmButton, cancelButton);
 
-  const response = await interaction.reply({
-    content: "Are you sure you want to reset ALL settings to default? This cannot be undone.",
+  return interaction.reply({
+    content: i18n.__("settings.reset.prompt"),
     components: [row],
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral
   });
+}
 
-  const collector = response.createMessageComponentCollector({
-    componentType: ComponentType.Button,
-    time: 30000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "reset_confirm") {
-      await settingsService.resetSettings(guildId);
-      await i.update({
-        content: "All settings have been reset to default.",
-        components: [],
-      });
-    } else {
-      await i.update({
-        content: "Reset cancelled.",
-        components: [],
-      });
-    }
-  });
+export async function onResetComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  if (action === "confirm") {
+    await GuildSettingsService.getInstance().resetSettings(interaction.guildId);
+    return interaction.update({ content: i18n.__("settings.reset.done"), components: [] });
+  }
+  return interaction.update({ content: i18n.__("settings.reset.cancelled"), components: [] });
 }
 
 export async function handleStats({ interaction, settings }: SettingsHandlerContext) {
@@ -52,21 +43,21 @@ export async function handleStats({ interaction, settings }: SettingsHandlerCont
   const minutes = Math.floor((settings.totalPlaytime % 3600) / 60);
 
   const embed = new EmbedBuilder()
-    .setTitle("Music Statistics")
+    .setTitle(i18n.__("settings.stats.title"))
     .setColor(settings.embedColor as `#${string}`)
     .addFields(
       {
-        name: "Total Songs Played",
+        name: i18n.__("settings.stats.songsPlayed"),
         value: settings.totalSongsPlayed.toLocaleString(),
         inline: true,
       },
       {
-        name: "Total Playtime",
-        value: hours + "h " + minutes + "m",
+        name: i18n.__("settings.stats.playtime"),
+        value: i18n.__mf("settings.stats.playtimeValue", { hours, minutes }),
         inline: true,
       }
     )
     .setTimestamp();
 
-  return interaction.reply({ embeds: [embed], ephemeral: true });
+  return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
 }

@@ -9,7 +9,7 @@ import {
   PermissionFlagsBits,
   SeparatorSpacingSize
 } from "discord.js";
-import { SITE_URL, SUPPORT_INVITE_URL } from "../shared/links";
+import { botInviteUrl, SITE_URL, SUPPORT_INVITE_URL } from "../shared/links";
 import { mention } from "../structs/commandRegistry";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
@@ -37,7 +37,25 @@ function pickChannel(guild: Guild): GuildTextBasedChannel | null {
   return preferred ?? candidates.find(canPost) ?? null;
 }
 
-export function buildWelcome(botName: string): ContainerBuilder {
+export interface WelcomeOptions {
+  /** The bot lacks Set Voice Channel Status (invited with an older link). */
+  missingVoiceStatus?: boolean;
+  /** Re-authorization link for this server (defaults to the generic invite). */
+  inviteUrl?: string;
+}
+
+export function buildWelcome(botName: string, options: WelcomeOptions = {}): ContainerBuilder {
+  const tips = [
+    `-# ${i18n
+      .__("welcome.tips")
+      .replace("**/help**", mention("help"))
+      .replace("**/settings**", mention("settings"))
+      .replace("**/autoplay**", mention("autoplay"))}`
+  ];
+  if (options.missingVoiceStatus) {
+    tips.push(`-# 🔑 ${i18n.__mf("welcome.voiceStatusHint", { url: options.inviteUrl ?? botInviteUrl() })}`);
+  }
+
   return new ContainerBuilder()
     .setAccentColor(0xf8aa2a)
     .addTextDisplayComponents((t) => t.setContent(`## 🎶 ${i18n.__mf("welcome.title", { bot: botName })}`))
@@ -45,15 +63,7 @@ export function buildWelcome(botName: string): ContainerBuilder {
       t.setContent(i18n.__("welcome.body").replace("**/play**", `**${mention("play")}**`))
     )
     .addSeparatorComponents((s) => s.setDivider(true).setSpacing(SeparatorSpacingSize.Small))
-    .addTextDisplayComponents((t) =>
-      t.setContent(
-        `-# ${i18n
-          .__("welcome.tips")
-          .replace("**/help**", mention("help"))
-          .replace("**/settings**", mention("settings"))
-          .replace("**/autoplay**", mention("autoplay"))}`
-      )
-    )
+    .addTextDisplayComponents((t) => t.setContent(tips.join("\n")))
     .addActionRowComponents((row) =>
       row.setComponents(
         new ButtonBuilder().setCustomId("help:open").setEmoji("📖").setLabel(i18n.__("welcome.commands")).setStyle(ButtonStyle.Primary),
@@ -68,7 +78,14 @@ export async function sendWelcome(guild: Guild): Promise<void> {
     const channel = pickChannel(guild);
     if (!channel) return;
     const locale = await localeForGuild(guild);
-    const container = runWithLocale(locale, () => buildWelcome(guild.client.user.username));
+    // Shown only when the invite left out Set Voice Channel Status ("♪ Song" under the channel name).
+    const missingVoiceStatus = !(guild.members.me?.permissions.has(PermissionFlagsBits.SetVoiceChannelStatus) ?? true);
+    const container = runWithLocale(locale, () =>
+      buildWelcome(guild.client.user.username, {
+        missingVoiceStatus,
+        inviteUrl: botInviteUrl(guild.client.user.id, guild.id)
+      })
+    );
     await channel.send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } });
     console.log(`[Welcome] Sent onboarding to ${guild.name} #${channel.name}`);
   } catch (error) {
