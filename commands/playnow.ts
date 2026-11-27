@@ -32,7 +32,7 @@ export default {
       return;
     }
 
-    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true });
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true, now: true });
     if (result && replacing && result.position === 1) {
       result.queue.node.skip();
     }

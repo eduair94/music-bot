@@ -29,7 +29,9 @@ const trackSchema = new Schema<ITrack>(
 
 const playbackStateSchema = new Schema<IPlaybackState>(
   {
-    guildId: { type: String, required: true, unique: true, index: true },
+    // Unique per (guildId, instance); the bot creates the indexes (services/fleet/playbackState.ts).
+    guildId: { type: String, required: true },
+    instance: { type: Number, default: 1 },
     isConnected: { type: Boolean, default: false },
     voiceChannelId: { type: String, default: null },
     voiceChannelName: { type: String, default: null },
@@ -47,9 +49,16 @@ const playbackStateSchema = new Schema<IPlaybackState>(
       default: "off"
     },
     audioBitrate: { type: Number, default: 128 },
+    positionAt: { type: Number, default: null },
+    autoplay: { type: Boolean, default: false },
+    filters: { type: [String], default: [] },
+    listeners: { type: Number, default: 0 },
     lastUpdated: { type: Date, default: Date.now },
     playbackStartedAt: { type: Date, default: null },
-  }
+  },
+  // The bot owns this collection's indexes; never recreate the pre-fleet
+  // unique guildId index from here.
+  { autoIndex: false }
 );
 
 export const PlaybackState = models.PlaybackState || model<IPlaybackState>("PlaybackState", playbackStateSchema);

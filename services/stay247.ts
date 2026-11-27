@@ -1,8 +1,11 @@
 import { GuildQueue } from "discord-player";
 import { ChannelType, Client, Guild, TextChannel, VoiceBasedChannel } from "discord.js";
+import { GuildSettings, IGuildSettings } from "../models/GuildSettings";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
+import { INSTANCE, stay247Of, stay247Update } from "../utils/instance";
 import { hasPremiumFeature } from "../utils/premiumCheck";
+import { DatabaseService } from "./database";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
 
@@ -13,6 +16,9 @@ const SWEEP_MS = 15 * 60 * 1000;
  * channel empties, and rejoins that channel after a restart. It runs on the
  * entitlement of the member who turned it on (Founder, or an active vote);
  * a periodic sweep turns it off when that runs out.
+ *
+ * Each fleet instance keeps its own 24/7 state (utils/instance.ts
+ * stay247Of), so a secondary never rejoins the primary's channel.
  */
 export class Stay247Service {
   private static instance: Stay247Service;
@@ -68,24 +74,26 @@ export class Stay247Service {
   }
 
   public async enable(guild: Guild, voice: VoiceBasedChannel, text: TextChannel | null, userId: string): Promise<void> {
-    await GuildSettingsService.getInstance().updateSettings(guild.id, {
-      stay247: {
+    await GuildSettingsService.getInstance().updateSettings(
+      guild.id,
+      stay247Update({
         enabled: true,
         voiceChannelId: voice.id,
         textChannelId: text?.id ?? null,
         enabledBy: userId,
         enabledAt: new Date()
-      }
-    });
+      })
+    );
     await this.connect(guild, voice, text);
   }
 
   public async disable(guild: Guild): Promise<void> {
     const service = GuildSettingsService.getInstance();
     const settings = await service.getSettings(guild.id);
-    await service.updateSettings(guild.id, {
-      stay247: { enabled: false, voiceChannelId: null, textChannelId: null, enabledBy: null, enabledAt: null }
-    });
+    await service.updateSettings(
+      guild.id,
+      stay247Update({ enabled: false, voiceChannelId: null, textChannelId: null, enabledBy: null, enabledAt: null })
+    );
     const queue = DiscordPlayerService.getInstance().getQueue(guild.id);
     if (!queue) return;
     this.applyToQueue(queue, false, settings.autoLeaveTimeout ?? 300, settings.autoLeaveEmpty ?? true);
@@ -103,20 +111,33 @@ export class Stay247Service {
     }
   }
 
+  /** Servers where this instance has 24/7 on. */
+  private async stay247Guilds(): Promise<IGuildSettings[]> {
+    if (INSTANCE === 1) return GuildSettingsService.getInstance().getStay247Guilds();
+    if (!DatabaseService.getInstance().isConnected()) return [];
+    try {
+      return (await GuildSettings.find({ [`fleet.stay247.${INSTANCE}.enabled`]: true }).lean()) as IGuildSettings[];
+    } catch (error) {
+      console.error("[24/7] Error fetching 24/7 guilds:", error);
+      return [];
+    }
+  }
+
   private async restoreAll(): Promise<void> {
     if (!this.client) return;
-    const guilds = await GuildSettingsService.getInstance().getStay247Guilds();
+    const guilds = await this.stay247Guilds();
     let restored = 0;
     for (const settings of guilds) {
       const guild = this.client.guilds.cache.get(settings.guildId);
-      if (!guild || !settings.stay247?.voiceChannelId) continue;
-      if (!(await this.entitled(settings.stay247.enabledBy))) {
-        await this.turnOffLost(guild, settings.stay247.textChannelId);
+      const stay = stay247Of(settings);
+      if (!guild || !stay?.voiceChannelId) continue;
+      if (!(await this.entitled(stay.enabledBy))) {
+        await this.turnOffLost(guild, stay.textChannelId);
         continue;
       }
-      const voice = guild.channels.cache.get(settings.stay247.voiceChannelId);
+      const voice = guild.channels.cache.get(stay.voiceChannelId);
       if (!voice || !voice.isVoiceBased()) continue;
-      const textRaw = settings.stay247.textChannelId ? guild.channels.cache.get(settings.stay247.textChannelId) : null;
+      const textRaw = stay.textChannelId ? guild.channels.cache.get(stay.textChannelId) : null;
       const text = textRaw && textRaw.type === ChannelType.GuildText ? (textRaw as TextChannel) : null;
       try {
         await this.connect(guild, voice, text);
@@ -132,12 +153,13 @@ export class Stay247Service {
 
   private async sweep(): Promise<void> {
     if (!this.client) return;
-    const guilds = await GuildSettingsService.getInstance().getStay247Guilds();
+    const guilds = await this.stay247Guilds();
     for (const settings of guilds) {
       const guild = this.client.guilds.cache.get(settings.guildId);
       if (!guild) continue;
-      if (!(await this.entitled(settings.stay247?.enabledBy))) {
-        await this.turnOffLost(guild, settings.stay247?.textChannelId ?? null);
+      const stay = stay247Of(settings);
+      if (!(await this.entitled(stay?.enabledBy))) {
+        await this.turnOffLost(guild, stay?.textChannelId ?? null);
       }
     }
   }

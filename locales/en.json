@@ -2040,5 +2040,57 @@
     "noGame": "There's no guess-the-song game running here.",
     "stopped": "Game stopped.",
     "blockedDuringGame": "A guess-the-song game is running in this server. Wait for it to finish or end it with {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "This bot isn't in the server.",
+      "nothingPlaying": "Nothing is playing.",
+      "paused": "Paused.",
+      "resumed": "Resumed.",
+      "skipped": "Skipped {title}.",
+      "noPrevious": "There is no previous song.",
+      "previous": "Playing the previous song.",
+      "stopped": "Stopped and cleared the queue.",
+      "left": "Left {channel}.",
+      "volume": "Volume set to {volume}%.",
+      "volumeCapped": "Volume set to {volume}%, this server's maximum.",
+      "badVolume": "Pick a volume between 0 and {max}.",
+      "shuffled": "Queue shuffled.",
+      "badLoop": "Loop mode must be off, track or queue.",
+      "effectOn": "{effect} on.",
+      "effectOff": "{effect} off.",
+      "bassBoost": "Bass boost: {level}.",
+      "bassBoostName": "Bass boost",
+      "removed": "Removed {title}.",
+      "badPosition": "Pick a position between 1 and {max}.",
+      "moved": "Moved {title} to position {position}.",
+      "skippedTo": "Skipped to {title}.",
+      "cleared": "Queue cleared.",
+      "seeked": "Jumped to {time}.",
+      "badSeek": "Pick a time between 0:00 and {duration}.",
+      "joined": "Joined {channel}.",
+      "searchResults": "{count} results.",
+      "searchFailed": "Search didn't work. Try again.",
+      "unknownCommand": "Unknown command: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} is joining {channel}",
+      "slow": "{bot} is still loading it. The song starts as soon as it's ready.",
+      "noAnswer": "{bot} didn't answer. Try again in a moment.",
+      "noneFree": "No Bypass bot is free to join {channel} right now.",
+      "busyIn": "{bot} is playing in {channel}",
+      "offline": "{bot} is offline",
+      "notAllowed": "{bot} isn't allowed in this channel",
+      "invite": "Add another Bypass to play in more channels at once:",
+      "add": "Add {bot}",
+      "premium": "Bypass 5 to 8 come with Premium."
+    },
+    "info": {
+      "header": "{bot} in {channel}",
+      "nothing": "{bot} isn't playing anything here.",
+      "upNext": "Up next",
+      "more": "and {count} more",
+      "card": "The player card with the buttons is in {channel}."
+    }
   }
 }

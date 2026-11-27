@@ -10,6 +10,7 @@ import {
   VoiceBasedChannel
 } from "discord.js";
 import { DiscordPlayerService, isGuessGameQueue, PlayError, PlayResult } from "../services/discordPlayer";
+import { dispatchPlay } from "../services/fleet/dispatcher";
 import { mention } from "../structs/commandRegistry";
 import { GuildSettingsService } from "../services/guildSettings";
 import { getPlaybackSettings } from "./audioSettings";
@@ -28,6 +29,10 @@ export interface PlayRequest {
   searchEngine?: SearchQueryType;
   /** Reply privately (used by context menus so the channel only sees the panel). */
   ephemeral?: boolean;
+  /** /playnow: skip the current song once this is queued next (applied by a fleet instance it is handed to). */
+  now?: boolean;
+  /** /radio: autoplay on afterwards (applied by a fleet instance it is handed to). */
+  radio?: boolean;
 }
 
 /**
@@ -312,6 +317,10 @@ export async function runPlay(request: PlayRequest): Promise<PlayResult | null> 
   const guild = interaction.guild;
   const member = interaction.member as GuildMember;
   let accepted = false;
+
+  // Fleet: another Bypass instance may serve the requester's channel; then
+  // the request is handed over (or refused) and answered there.
+  if (await dispatchPlay(request)) return null;
 
   try {
     const result = await enqueue(

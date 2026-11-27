@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import { FleetEvent, fleetKeys, LivePlaybackState, idlePlaybackState } from "../fleet";
 
 // Redis key prefixes for organization
 export const REDIS_KEYS = {
@@ -251,27 +252,33 @@ export async function getAllBotGuildsData(): Promise<GuildData[]> {
 // ============ Playback State ============
 
 /**
- * Update playback state for a guild
+ * Write one instance's playback state: `playback:<guildId>:<n>` (contract
+ * shape), plus the legacy `playback:<guildId>` key for instance 1 (old
+ * shape, for readers that predate the fleet), and publish it on
+ * `bypass:events:<guildId>` for the dashboard's live stream.
  */
-export async function setPlaybackState(guildId: string, state: object): Promise<void> {
+export async function setPlaybackState(
+  guildId: string,
+  instance: number,
+  state: LivePlaybackState,
+  legacyState?: object
+): Promise<void> {
   const redis = getRedis();
-  await redis.set(
-    REDIS_KEYS.PLAYBACK_STATE(guildId),
-    JSON.stringify(state),
-    "EX",
-    REDIS_TTL.PLAYBACK_STATE
-  );
-  
-  // Publish event for real-time subscribers
-  await redis.publish(REDIS_KEYS.EVENTS_CHANNEL, JSON.stringify({
-    type: "playback_update",
-    guildId,
-    timestamp: Date.now(),
-  }));
+  const pipeline = redis.pipeline();
+  pipeline.set(fleetKeys.playback(guildId, instance), JSON.stringify(state), "EX", REDIS_TTL.PLAYBACK_STATE);
+  if (instance === 1 && legacyState) {
+    pipeline.set(REDIS_KEYS.PLAYBACK_STATE(guildId), JSON.stringify(legacyState), "EX", REDIS_TTL.PLAYBACK_STATE);
+    pipeline.publish(
+      REDIS_KEYS.EVENTS_CHANNEL,
+      JSON.stringify({ type: "playback_update", guildId, timestamp: Date.now() })
+    );
+  }
+  pipeline.publish(fleetKeys.events(guildId), JSON.stringify({ type: "playback", instance, state } satisfies FleetEvent));
+  await pipeline.exec();
 }
 
 /**
- * Get playback state for a guild
+ * Get playback state for a guild (legacy key, instance 1)
  */
 export async function getPlaybackState(guildId: string): Promise<object | null> {
   const redis = getRedis();
@@ -279,31 +286,100 @@ export async function getPlaybackState(guildId: string): Promise<object | null> 
   return data ? JSON.parse(data) : null;
 }
 
+/** One instance's playback state, or null when it has none in this server. */
+export async function getInstancePlaybackState(guildId: string, instance: number): Promise<LivePlaybackState | null> {
+  const data = await getRedis().get(fleetKeys.playback(guildId, instance));
+  if (!data) return null;
+  try {
+    return JSON.parse(data) as LivePlaybackState;
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Clear playback state for a guild
+ * Clear one instance's playback state and tell live dashboards it is idle.
  */
-export async function clearPlaybackState(guildId: string): Promise<void> {
+export async function clearPlaybackState(guildId: string, instance = 1): Promise<void> {
   const redis = getRedis();
-  await redis.del(REDIS_KEYS.PLAYBACK_STATE(guildId));
+  const pipeline = redis.pipeline();
+  pipeline.del(fleetKeys.playback(guildId, instance));
+  if (instance === 1) pipeline.del(REDIS_KEYS.PLAYBACK_STATE(guildId));
+  pipeline.publish(
+    fleetKeys.events(guildId),
+    JSON.stringify({ type: "playback", instance, state: idlePlaybackState(guildId, instance) } satisfies FleetEvent)
+  );
+  await pipeline.exec();
 }
 
 // ============ Bot Status ============
 
 /**
- * Set bot online status
+ * Set an instance's online status (`bot:status:<n>`; instance 1 also keeps
+ * the legacy `bot:status` the admin console reads).
  */
-export async function setBotStatus(status: object): Promise<void> {
+export async function setBotStatus(status: object, instance = 1): Promise<void> {
   const redis = getRedis();
-  await redis.set(REDIS_KEYS.BOT_STATUS, JSON.stringify(status), "EX", REDIS_TTL.BOT_STATUS);
+  const json = JSON.stringify({ ...status, instance });
+  const pipeline = redis.pipeline();
+  pipeline.set(fleetKeys.status(instance), json, "EX", REDIS_TTL.BOT_STATUS);
+  if (instance === 1) pipeline.set(REDIS_KEYS.BOT_STATUS, json, "EX", REDIS_TTL.BOT_STATUS);
+  await pipeline.exec();
 }
 
 /**
- * Get bot status
+ * Get bot status (legacy key, instance 1)
  */
 export async function getBotStatus(): Promise<object | null> {
   const redis = getRedis();
   const data = await redis.get(REDIS_KEYS.BOT_STATUS);
   return data ? JSON.parse(data) : null;
+}
+
+/** An instance's heartbeat, or null when it is not running. */
+export async function getInstanceStatus(instance: number): Promise<{ online?: boolean } | null> {
+  const data = await getRedis().get(fleetKeys.status(instance));
+  if (!data) return null;
+  try {
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
+
+// ============ Fleet presence ============
+
+/** Seconds the per-instance guild set survives without a refresh (refreshed every 3 min). */
+const INSTANCE_GUILDS_TTL = 10 * 60;
+
+/** Replace the set of guilds an instance is in (`bot:guilds:<n>`). */
+export async function syncInstanceGuilds(instance: number, guildIds: string[]): Promise<void> {
+  const key = fleetKeys.guilds(instance);
+  const pipeline = getRedis().pipeline();
+  pipeline.del(key);
+  if (guildIds.length > 0) {
+    pipeline.sadd(key, ...guildIds);
+    pipeline.expire(key, INSTANCE_GUILDS_TTL);
+  }
+  await pipeline.exec();
+}
+
+export async function addInstanceGuild(instance: number, guildId: string): Promise<void> {
+  const key = fleetKeys.guilds(instance);
+  await getRedis().pipeline().sadd(key, guildId).expire(key, INSTANCE_GUILDS_TTL).exec();
+}
+
+export async function removeInstanceGuild(instance: number, guildId: string): Promise<void> {
+  await getRedis().srem(fleetKeys.guilds(instance), guildId);
+}
+
+export async function isInstanceInGuild(instance: number, guildId: string): Promise<boolean> {
+  return (await getRedis().sismember(fleetKeys.guilds(instance), guildId)) === 1;
+}
+
+/** Publish a fleet event to a guild's live stream (`bypass:events:<guildId>`). */
+export async function publishGuildEvent(guildId: string, event: FleetEvent): Promise<void> {
+  await getRedis().publish(fleetKeys.events(guildId), JSON.stringify(event));
 }
 
 // ============ Pub/Sub Events ============

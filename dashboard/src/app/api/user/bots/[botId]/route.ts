@@ -75,6 +75,8 @@ export async function DELETE(request: Request, { params }: RouteContext) {
         botId,
         status: "pending",
         createdAt: new Date(),
+        // requestedBy is required by the schema; without it the command never saved.
+        requestedBy: { id: session.user.discordId, username: session.user.name || "Dashboard User" },
       });
       
       // Wait a moment for the stop command to be processed
@@ -136,6 +138,8 @@ export async function POST(request: Request, { params }: RouteContext) {
       botId,
       status: "pending",
       createdAt: new Date(),
+      // requestedBy is required by the schema; without it the command never saved.
+      requestedBy: { id: session.user.discordId, username: session.user.name || "Dashboard User" },
     });
 
     // Update bot status immediately for UI feedback

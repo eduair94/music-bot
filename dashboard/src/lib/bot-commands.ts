@@ -6,10 +6,15 @@ export interface CommandOutcome {
   id: string;
   status: "completed" | "failed" | "pending";
   result?: string;
+  /** Structured result from the bot (search: { results: Track[] }). */
+  data?: unknown;
   error?: string;
 }
 
-/** Insert a `botcommands` document and poll until the bot processes it or the timeout elapses. */
+/**
+ * Insert a `botcommands` document and poll until the bot processes it or the
+ * timeout elapses. `doc.instance` targets a fleet instance (default 1).
+ */
 export async function enqueueAndWait(doc: Partial<IBotCommand>, timeoutMs = 5000): Promise<CommandOutcome> {
   await connectToDatabase();
   const created = await BotCommand.create({ ...doc, status: "pending" });
@@ -17,7 +22,7 @@ export async function enqueueAndWait(doc: Partial<IBotCommand>, timeoutMs = 5000
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
     const row = (await BotCommand.findById(id).lean()) as IBotCommand | null;
-    if (row && row.status === "completed") return { id, status: "completed", result: row.result };
+    if (row && row.status === "completed") return { id, status: "completed", result: row.result, data: row.data };
     if (row && row.status === "failed") return { id, status: "failed", error: row.error || "Command failed" };
     await new Promise((r) => setTimeout(r, 150));
   }

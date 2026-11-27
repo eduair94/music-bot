@@ -36,12 +36,13 @@ const trackSchema = new Schema<ITrack>(
 // Playback State Schema
 const playbackStateSchema = new Schema<IPlaybackState>(
   {
+    // Unique per (guildId, instance): see the indexes below.
     guildId: { 
       type: String, 
-      required: true, 
-      unique: true,
-      index: true 
+      required: true
     },
+    /** Fleet instance that owns this state (1 = primary). */
+    instance: { type: Number, default: 1 },
     
     // Connection State
     isConnected: { type: Boolean, default: false },
@@ -72,15 +73,26 @@ const playbackStateSchema = new Schema<IPlaybackState>(
     // Audio Quality
     audioBitrate: { type: Number, default: 128 },
     
+    // Fleet / live fields
+    positionAt: { type: Number, default: null },
+    autoplay: { type: Boolean, default: false },
+    filters: { type: [String], default: [] },
+    listeners: { type: Number, default: 0 },
+
     // Timestamps
     lastUpdated: { type: Date, default: Date.now },
     playbackStartedAt: { type: Date, default: null },
   },
   {
     timestamps: false, // We manage lastUpdated manually
+    // Indexes are created by services/fleet/playbackState.ts#ensurePlaybackIndexes,
+    // which first drops the pre-fleet unique guildId index (autoIndex would
+    // collide with it).
+    autoIndex: false,
   }
 );
 
+playbackStateSchema.index({ guildId: 1, instance: 1 }, { unique: true, name: "guildId_1_instance_1" });
 // TTL index - auto-delete stale states after 1 hour
 playbackStateSchema.index({ lastUpdated: 1 }, { expireAfterSeconds: 3600 });
 

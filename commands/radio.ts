@@ -23,7 +23,7 @@ export default {
   autocomplete: play.autocomplete,
 
   async execute(interaction: ChatInputCommandInteraction<"cached">) {
-    const result = await runPlay({ interaction, query: interaction.options.getString("song", true) });
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), radio: true });
     if (!result) return;
     const metadata = (result.queue.metadata || {}) as QueueMetadata;
     metadata.autoplay = true;

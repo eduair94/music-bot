@@ -39,9 +39,28 @@ async function shutdown(signal: string) {
 
   TelemetryService.getInstance().stop();
 
+  const { INSTANCE, isPrimary } = await import("./utils/instance");
+  if (isPrimary) {
+    try {
+      const { SupportServerService } = await import("./services/supportServer");
+      await SupportServerService.getInstance().markRestarting();
+    } catch {
+      // best effort
+    }
+  }
+
+  // Live dashboards: this instance is going away in each of its servers.
   try {
-    const { SupportServerService } = await import("./services/supportServer");
-    await SupportServerService.getInstance().markRestarting();
+    const { isRedisAvailable, publishGuildEvent } = await import("./shared/services/redis");
+    const publish = (async () => {
+      if (!(await isRedisAvailable())) return;
+      await Promise.allSettled(
+        bot.client.guilds.cache.map((guild) =>
+          publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online: false, inGuild: true })
+        )
+      );
+    })();
+    await Promise.race([publish, new Promise((resolve) => setTimeout(resolve, 2000).unref())]);
   } catch {
     // best effort
   }
