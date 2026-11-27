@@ -24,14 +24,12 @@ export interface BotIdentityInfo {
 }
 
 /**
- * Get quality badge string based on bitrate
+ * Badge for an Opus bitrate. Pass what the encoder will really send
+ * (`targetKbps` in services/audioEncoder.ts), not just the tier.
  */
 export function getQualityBadge(bitrate?: number): string {
-  if (!bitrate) return "🔉 128kbps";
-  if (bitrate >= 320) return "🔊 HQ 320kbps";
-  if (bitrate >= 256) return "🔊 256kbps";
-  if (bitrate >= 192) return "🔉 192kbps";
-  return `🔉 ${bitrate}kbps`;
+  const kbps = bitrate || 128;
+  return `${kbps >= 192 ? "🔊" : "🔉"} Opus ${kbps} kbps`;
 }
 
 /**

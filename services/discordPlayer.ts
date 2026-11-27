@@ -11,6 +11,7 @@ import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
 import { stay247Of } from "../utils/instance";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
+import { applyAudioProfile } from "./audioEncoder";
 import { GuildSettingsService } from "./guildSettings";
 import { TelemetryService } from "./telemetry";
 import { errorEvent, trackEvent } from "./telemetry/events";
@@ -41,8 +42,14 @@ export interface QueueMetadata {
   channel?: TextChannel;
   /** Current track workaround for when queue.currentTrack is not updated */
   currentTrack?: Track;
-  /** Audio bitrate in kbps (e.g., 128, 192, 320) */
+  /**
+   * The audio tier this queue is entitled to, in kbps (128 free; 320 for
+   * premium servers, Patreon members, voters and support-server boosters).
+   * Raised, never lowered, when someone with a higher tier adds a song.
+   */
   audioBitrate?: number;
+  /** What the Opus encoder is really sending, in kbps (services/audioEncoder.ts). */
+  encodedKbps?: number;
   /** Queue related tracks when the queue runs out */
   autoplay?: boolean;
   /** YouTube ids autoplay already used in this session (no repeats) */
@@ -485,9 +492,36 @@ export class DiscordPlayerService {
     }
 
     // Player trigger - fires when player is about to play a track
+    // Fires whenever a new audio resource starts playing (each track, filter
+    // change and seek), each with a fresh Opus encoder: configure it.
     this.player.events.on("playerTrigger", (queue: GuildQueue, track: Track, reason: string) => {
       debug(`trigger: ${track.title} (${reason}, ${queue.tracks.size} remaining)`);
+      this.applyAudio(queue);
     });
+  }
+
+  /**
+   * Put the queue's audio tier into its live Opus encoder and remember what
+   * the encoder now sends. Safe to call at any time.
+   */
+  public applyAudio(queue: GuildQueue): number | null {
+    const metadata = (queue.metadata || {}) as QueueMetadata;
+    const kbps = applyAudioProfile(queue, metadata.audioBitrate ?? 128);
+    if (kbps) {
+      if (kbps !== metadata.encodedKbps) console.log(`[DiscordPlayer] 🎚️ Opus ${kbps} kbps in ${queue.guild?.id} (tier ${metadata.audioBitrate ?? 128})`);
+      metadata.encodedKbps = kbps;
+      queue.metadata = metadata;
+    }
+    return kbps;
+  }
+
+  /** Someone with a higher audio tier joined the session: upgrade it now. */
+  private raiseAudioTier(queue: GuildQueue, audioBitrate: number): void {
+    const metadata = (queue.metadata || {}) as QueueMetadata;
+    if (audioBitrate <= (metadata.audioBitrate ?? 0)) return;
+    metadata.audioBitrate = audioBitrate;
+    queue.metadata = metadata;
+    this.applyAudio(queue);
   }
 
   /**
@@ -928,6 +962,7 @@ export class DiscordPlayerService {
     const live = existing && !existing.deleted ? existing : null;
     const existingSize = live ? live.tracks.size : 0;
     const isActive = Boolean(live && (live.currentTrack || live.node.isPlaying()));
+    if (live) this.raiseAudioTier(live, audioBitrate);
 
     const queueMetadata: QueueMetadata = {
       channel: textChannel,

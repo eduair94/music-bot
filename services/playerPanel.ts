@@ -147,6 +147,8 @@ export class PlayerPanelService {
     if (queue.repeatMode !== QueueRepeatMode.OFF) state.push(`🔁 ${loopLabel(queue.repeatMode)}`);
     if (metadata.autoplay) state.push(`♾️ ${i18n.__("player.autoplayOn")}`);
     if (metadata.stay247) state.push(`🌙 ${i18n.__("player.stay247On")}`);
+    // What the encoder really sends (services/audioEncoder.ts), not the tier's label.
+    if (metadata.encodedKbps) state.push(`🎚️ Opus ${metadata.encodedKbps} kbps`);
     lines.push(state.join(" · "));
 
     const next = queue.tracks.at(0);

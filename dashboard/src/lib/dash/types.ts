@@ -88,7 +88,18 @@ export interface PlaybackState {
   autoplay?: boolean;
   filters?: string[];
   listeners?: number;
+  /** What the bot's Opus encoder sends right now; absent until a song starts. */
+  audio?: LiveAudio;
   lastUpdated: number;
+}
+
+export interface LiveAudio {
+  /** Opus bitrate being sent, kbps. */
+  kbps: number;
+  /** The session's tier, kbps (128 standard, 320 with Premium, a vote or a support-server boost). */
+  tierKbps: number;
+  /** The voice channel's bitrate setting, kbps. */
+  channelKbps?: number;
 }
 
 export interface FleetInstance {

@@ -11,7 +11,7 @@ import { Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward, Square, V
 import { fmtClock, livePosition, trackMs } from "@/lib/dash/format";
 import { useTicker } from "@/lib/dash/live";
 import { stage, type StageStyle } from "@/lib/dash/stages";
-import type { FleetInstance, LoopMode, Me, PlaybackState, Track } from "@/lib/dash/types";
+import type { FleetInstance, LiveAudio, LoopMode, Me, PlaybackState, Track } from "@/lib/dash/types";
 import { cx, Slider, Switch } from "../ui";
 import { SeekBar } from "./SeekBar";
 import {
@@ -244,6 +244,7 @@ export function PlayerDeck({ inst, p, me }: { inst: FleetInstance; p: PlaybackSt
       </div>
 
       <Mixer p={p} s={s} gate={gates.volume} control={control} />
+      <Signal audio={p.audio} />
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
         <div className="flex items-center gap-3" title={gates.loop.ok ? undefined : gates.loop.reason}>
@@ -476,6 +477,26 @@ function Mixer({
         {vol}
       </span>
     </div>
+  );
+}
+
+// ── Signal ───────────────────────────────────────────────────────────────────
+
+/** What the bot really sends into the channel, and what holds it back if anything does. */
+function Signal({ audio }: { audio?: LiveAudio }) {
+  if (!audio) return null;
+  const held = audio.kbps < audio.tierKbps;
+  return (
+    <p className="-mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[12.5px] leading-snug text-ink-2">
+      <span className="clock text-[15px] leading-none text-ink">Opus {audio.kbps} kbps</span>
+      <span>
+        {held
+          ? `This session could send ${audio.tierKbps} kbps; the voice channel${audio.channelKbps ? ` is set to ${audio.channelKbps} kbps and` : ""} holds it back. Raise the channel's bitrate in Discord to hear more.`
+          : audio.tierKbps > 128
+            ? "Hi-Fi: Premium, a vote or a support-server boost is on this session."
+            : "Standard quality. Premium, a vote or a support-server boost raises the session's bitrate."}
+      </span>
+    </p>
   );
 }
 

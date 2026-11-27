@@ -136,8 +136,20 @@ export interface LivePlaybackState {
   filters?: string[];
   /** People (not bots) in the voice channel. */
   listeners?: number;
+  /** What the Opus encoder sends right now; absent until a song starts. */
+  audio?: LiveAudio;
   /** Epoch ms. */
   lastUpdated: number;
+}
+
+/** The audio a stage is really sending (services/audioEncoder.ts). */
+export interface LiveAudio {
+  /** Opus bitrate the encoder is set to, in kbps. */
+  kbps: number;
+  /** The tier this session is entitled to, in kbps (128 free, 320 premium/vote/boost). */
+  tierKbps: number;
+  /** The voice channel's own bitrate setting, in kbps. */
+  channelKbps?: number;
 }
 
 /** One instance as `GET /fleet` lists it. */

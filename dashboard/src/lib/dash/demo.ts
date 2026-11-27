@@ -66,6 +66,7 @@ export function demoFleet(now = Date.now()): Fleet {
     autoplay: true,
     filters: [],
     listeners: 6,
+    audio: { kbps: 320, tierKbps: 320, channelKbps: 384 },
     lastUpdated: now,
   };
   const s2: PlaybackState = {
@@ -89,6 +90,7 @@ export function demoFleet(now = Date.now()): Fleet {
     autoplay: false,
     filters: ["bassboost"],
     listeners: 5,
+    audio: { kbps: 96, tierKbps: 320, channelKbps: 96 },
     lastUpdated: now,
   };
   return {

@@ -76,6 +76,13 @@ export function buildLiveState(queue: GuildQueue): LivePlaybackState {
     autoplay: Boolean(metadata.autoplay),
     filters: activeEffects(queue),
     listeners: voice ? voice.members.filter((m) => !m.user.bot).size : 0,
+    audio: metadata.encodedKbps
+      ? {
+          kbps: metadata.encodedKbps,
+          tierKbps: metadata.audioBitrate ?? 128,
+          channelKbps: voice && "bitrate" in voice && voice.bitrate ? Math.round(voice.bitrate / 1000) : undefined
+        }
+      : undefined,
     lastUpdated: now
   };
 }
@@ -131,7 +138,8 @@ export async function publishPlayback(queue: GuildQueue, persist = true): Promis
   if (!queue.guild) return null;
   const guildId = queue.guild.id;
   const state = buildLiveState(queue);
-  const legacy = toLegacyState(state, ((queue.metadata || {}) as QueueMetadata).audioBitrate || 96);
+  const metadata = (queue.metadata || {}) as QueueMetadata;
+  const legacy = toLegacyState(state, metadata.encodedKbps || metadata.audioBitrate || 128);
 
   try {
     if (await isRedisAvailable()) await setRedisPlaybackState(guildId, INSTANCE, state, legacy);

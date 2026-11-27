@@ -9,11 +9,12 @@ import {
   TextChannel,
   VoiceBasedChannel
 } from "discord.js";
-import { DiscordPlayerService, isGuessGameQueue, PlayError, PlayResult } from "../services/discordPlayer";
+import { DiscordPlayerService, isGuessGameQueue, PlayError, PlayResult, QueueMetadata } from "../services/discordPlayer";
 import { dispatchPlay } from "../services/fleet/dispatcher";
 import { mention } from "../structs/commandRegistry";
 import { GuildSettingsService } from "../services/guildSettings";
-import { getPlaybackSettings } from "./audioSettings";
+import { targetKbps } from "../services/audioEncoder";
+import { getPlaybackSettings, getQualityBadge } from "./audioSettings";
 import { formatDuration, isHttpUrl, linkLabel, safeText } from "./format";
 import { i18n } from "./i18n";
 import { hasPremiumFeature } from "./premiumCheck";
@@ -302,7 +303,9 @@ export async function enqueue(request: EnqueueRequest, hooks: EnqueueHooks = {})
   });
   if (!result) throw new PlayRejection("noResults");
 
-  return { ...result, qualityBadge: quality.bitrate > 128 ? quality.qualityBadge : null };
+  // The badge names what the encoder will send in this channel, not the tier's ceiling.
+  const sendKbps = targetKbps(Math.max(quality.bitrate, (result.queue?.metadata as QueueMetadata | undefined)?.audioBitrate ?? 0), voiceChannel.bitrate);
+  return { ...result, qualityBadge: quality.bitrate > 128 ? getQualityBadge(sendKbps) : null };
 }
 
 /**
