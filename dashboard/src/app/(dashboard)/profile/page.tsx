@@ -1,12 +1,15 @@
 import { auth } from "@/auth";
+import { Connections, type ConnectNotice } from "@/components/fest/account/Connections";
 import { PageHead } from "@/components/fest/account/PageHead";
 import { getPlanStatus, hoursLeft, planName, type PlanStatus } from "@/components/fest/account/plan";
 import { SignOutButton } from "@/components/fest/account/SignOutButton";
 import { btn } from "@/components/fest/account/styles";
+import { emptyConnections, isConnectErrorCode, listConnections, type ConnectionView } from "@/lib/connections";
 import { ArrowRight, Bot, LayoutGrid, LifeBuoy, ListMusic } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { isLinkProvider } from "../../../../../shared/linkedAccounts";
 
 export const metadata: Metadata = { title: "Profile" };
 
@@ -51,7 +54,31 @@ function PlanBlock({ plan, signedIn }: { plan: PlanStatus | null; signedIn: bool
   );
 }
 
-export default async function ProfilePage() {
+type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
+
+/** The outcome /api/connect/<p>/callback sent back, if any. */
+function connectNotice(params: Awaited<SearchParams>): ConnectNotice | null {
+  const connected = first(params.connected);
+  if (isLinkProvider(connected)) return { kind: "connected", provider: connected };
+  const error = first(params.connectError);
+  if (!error) return null;
+  const provider = first(params.provider);
+  return { kind: "error", code: isConnectErrorCode(error) ? error : "failed", provider: isLinkProvider(provider) ? provider : null };
+}
+
+async function readConnections(discordId: string | null): Promise<ConnectionView[] | null> {
+  if (!discordId) return emptyConnections();
+  try {
+    return await listConnections(discordId);
+  } catch (error) {
+    console.error("[profile] connections:", error instanceof Error ? error.message : error);
+    return null;
+  }
+}
+
+export default async function ProfilePage({ searchParams }: { searchParams: SearchParams }) {
   const session = await auth();
   if (!session && !DEMO) redirect("/login");
 
@@ -61,7 +88,11 @@ export default async function ProfilePage() {
     email: session?.user?.email ?? null,
     discordId: session?.user?.discordId ?? null,
   };
-  const plan = user.discordId ? await getPlanStatus(user.discordId) : null;
+  const [plan, connections] = await Promise.all([
+    user.discordId ? getPlanStatus(user.discordId) : null,
+    readConnections(user.discordId),
+  ]);
+  const notice = connectNotice(await searchParams);
 
   return (
     <>
@@ -109,6 +140,9 @@ export default async function ProfilePage() {
               </Link>
             </div>
           </section>
+
+          {/* Spotify / YouTube accounts the bot can read for /library */}
+          <Connections connections={connections} notice={notice} demo={!session} />
 
           {/* Elsewhere in your account */}
           <section aria-labelledby="shortcuts" className="mt-16">
