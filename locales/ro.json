@@ -1136,7 +1136,7 @@
       "freeName": "Gratuit — {price}",
       "freePerks": "Audio 128kbps\nCoadă, playlisturi și versuri\nToate comenzile",
       "founderName": "Founder / Beta Tester — {price}/lună",
-      "founderPerks": "Audio 320kbps\nFiltre audio\nMod 24/7\nCoadă prioritară\nRol Founder și suport direct"
+      "founderPerks": "Audio 256kbps\nFiltre audio\nMod 24/7\nRol Founder și suport direct"
     }
   },
   "boost": {
@@ -1951,7 +1951,7 @@
   },
   "upsell": {
     "title": "{feature} este un avantaj Founder",
-    "description": "Founder costă {price}/lună, are doar {spots} locuri și deblochează audio 320kbps, modul 24/7, fără limită de durată a pieselor și rolul Founder.",
+    "description": "Founder costă {price}/lună, are doar {spots} locuri și deblochează audio 256kbps, modul 24/7, fără limită de durată a pieselor și rolul Founder.",
     "afterJoin": "După ce te alături",
     "afterJoinSteps": "1. conectează-ți contul Discord în setările Patreon\n2. rulează `/premium link` pe acest server",
     "becomeFounder": "Devino Founder",

@@ -10,6 +10,7 @@ import type { ITrack, TrackSource } from "../../shared/types";
 import { INSTANCE } from "../../utils/instance";
 import { DatabaseService } from "../database";
 import { isGuessGameQueue, QueueMetadata } from "../discordPlayer";
+import { targetKbps } from "../audioEncoder";
 import { activeEffects } from "../effects";
 
 /** Redis keys live 30 s; refresh well inside that while connected. */
@@ -79,7 +80,8 @@ export function buildLiveState(queue: GuildQueue): LivePlaybackState {
     audio: metadata.encodedKbps
       ? {
           kbps: metadata.encodedKbps,
-          tierKbps: metadata.audioBitrate ?? 128,
+          // The most this session's tier can send under the current limit.
+          tierKbps: targetKbps(metadata.audioBitrate ?? 128, voice && "bitrate" in voice ? voice.bitrate : null),
           channelKbps: voice && "bitrate" in voice && voice.bitrate ? Math.round(voice.bitrate / 1000) : undefined
         }
       : undefined,

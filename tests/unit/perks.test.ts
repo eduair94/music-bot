@@ -22,8 +22,12 @@ describe("/perks view", () => {
   });
 
   it("quotes the real quality and the Patreon link", () => {
-    expect(text).toContain("320kbps");
+    // 256 kbps is the highest rate Discord delivers without loss (services/audioEncoder.ts).
+    expect(text).toContain("256kbps");
+    expect(text).not.toContain("320kbps");
     expect(text).not.toContain("192kbps");
+    // There is no priority queue; the perks must not promise one.
+    expect(text).not.toMatch(/priority queue/i);
     expect(text).toContain("https://www.patreon.com/c/u36360623");
     expect(text).toContain("50");
   });

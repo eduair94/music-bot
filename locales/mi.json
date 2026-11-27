@@ -1135,7 +1135,7 @@
       "freeName": "Kore Utu — {price}",
       "freePerks": "Oro 128kbps\nRārangi tatari, rārangi waiata me ngā kupu waiata\nIa whakahau",
       "founderName": "Founder / Kaiwhakamātau Beta — {price}/marama",
-      "founderPerks": "Oro 320kbps\nTātari oro\nAratau 24/7\nRārangi tatari matua\nTūranga Founder me te tautoko tōtika"
+      "founderPerks": "Oro 256kbps\nTātari oro\nAratau 24/7\nTūranga Founder me te tautoko tōtika"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "He painga Founder a {feature}",
-    "description": "Ko te utu o Founder he {price}/marama, he {spots} tūranga anake, ā, ka huakina te oro 320kbps, te aratau 24/7, kāore he tepe roanga waiata, me te tūranga Founder.",
+    "description": "Ko te utu o Founder he {price}/marama, he {spots} tūranga anake, ā, ka huakina te oro 256kbps, te aratau 24/7, kāore he tepe roanga waiata, me te tūranga Founder.",
     "afterJoin": "I muri i tō urunga",
     "afterJoinSteps": "1. hono i tō pūkete Discord i ō tautuhinga Patreon\n2. whakahaerehia te `/premium link` i tēnei tūmau",
     "becomeFounder": "Hei Founder",

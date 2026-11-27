@@ -1135,7 +1135,7 @@
       "freeName": "Free — {price}",
       "freePerks": "128kbps の音質\nキュー、プレイリスト、歌詞\nすべてのコマンド",
       "founderName": "Founder / ベータテスター — {price}/月",
-      "founderPerks": "320kbps の音質\nオーディオフィルター\n24時間モード\n優先キュー\nFounder ロールと直接サポート"
+      "founderPerks": "256kbps の音質\nオーディオフィルター\n24時間モード\nFounder ロールと直接サポート"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature}はFounder特典です",
-    "description": "Founderは月額{price}、先着{spots}名限定で、320kbps音質、24時間モード、曲の長さ制限なし、Founderロールが利用できます。",
+    "description": "Founderは月額{price}、先着{spots}名限定で、256kbps音質、24時間モード、曲の長さ制限なし、Founderロールが利用できます。",
     "afterJoin": "参加後の手順",
     "afterJoinSteps": "1. Patreonの設定でDiscordアカウントを連携\n2. このサーバーで`/premium link`を実行",
     "becomeFounder": "Founderになる",

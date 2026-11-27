@@ -1135,7 +1135,7 @@
       "freeName": "Gratis — {price}",
       "freePerks": "128kbps lyd\nKø, spillelister og sangtekster\nAlle kommandoer",
       "founderName": "Founder / Betatester — {price}/måned",
-      "founderPerks": "320kbps lyd\nLydfiltre\n24/7-modus\nPrioritert kø\nFounder-rolle og direkte support"
+      "founderPerks": "256kbps lyd\nLydfiltre\n24/7-modus\nFounder-rolle og direkte support"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} er en Founder-fordel",
-    "description": "Founder koster {price}/måned, er begrenset til {spots} plasser, og låser opp 320kbps lyd, 24/7-modus, ingen grense for låtlengde og Founder-rollen.",
+    "description": "Founder koster {price}/måned, er begrenset til {spots} plasser, og låser opp 256kbps lyd, 24/7-modus, ingen grense for låtlengde og Founder-rollen.",
     "afterJoin": "Etter at du har blitt med",
     "afterJoinSteps": "1. koble Discord-kontoen din i Patreon-innstillingene\n2. kjør `/premium link` på denne serveren",
     "becomeFounder": "Bli Founder",

@@ -494,7 +494,7 @@ function Signal({ audio }: { audio?: LiveAudio }) {
           ? `This session could send ${audio.tierKbps} kbps; the voice channel${audio.channelKbps ? ` is set to ${audio.channelKbps} kbps and` : ""} holds it back. Raise the channel's bitrate in Discord to hear more.`
           : audio.tierKbps > 128
             ? "Hi-Fi: Premium, a vote or a support-server boost is on this session."
-            : "Standard quality. Premium, a vote or a support-server boost raises the session's bitrate."}
+            : "Standard quality. Premium, a vote or a support-server boost doubles it to 256 kbps."}
       </span>
     </p>
   );

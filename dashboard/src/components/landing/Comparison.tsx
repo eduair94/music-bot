@@ -35,7 +35,7 @@ const bots: BotRow[] = [
   },
   {
     name: "Bypass",
-    audio: "Up to 320kbps from Tier 1",
+    audio: "Up to 256kbps from Tier 1",
     dashboard: "Full web dashboard + complete Discord commands",
     pricing: "Founder tier — lowest price, locked forever",
     highlight: true,

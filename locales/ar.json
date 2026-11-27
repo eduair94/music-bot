@@ -1135,7 +1135,7 @@
       "freeName": "مجاني — {price}",
       "freePerks": "صوت 128kbps\nقائمة الانتظار وقوائم التشغيل والكلمات\nكل الأوامر",
       "founderName": "Founder / مختبر بيتا — {price}/شهرياً",
-      "founderPerks": "صوت 320kbps\nفلاتر الصوت\nوضع 24/7\nأولوية في قائمة الانتظار\nرتبة Founder ودعم مباشر"
+      "founderPerks": "صوت 256kbps\nفلاتر الصوت\nوضع 24/7\nرتبة Founder ودعم مباشر"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} ميزة خاصة بـ Founder",
-    "description": "اشتراك Founder بسعر {price} شهريًا، ومحدود بـ {spots} مقعدًا، ويفتح لك صوت 320kbps ووضع 24/7 وبدون حد لطول الأغاني ورتبة Founder.",
+    "description": "اشتراك Founder بسعر {price} شهريًا، ومحدود بـ {spots} مقعدًا، ويفتح لك صوت 256kbps ووضع 24/7 وبدون حد لطول الأغاني ورتبة Founder.",
     "afterJoin": "بعد انضمامك",
     "afterJoinSteps": "1. اربط حساب Discord في إعدادات Patreon\n2. استخدم `/premium link` في هذا السيرفر",
     "becomeFounder": "كن Founder",

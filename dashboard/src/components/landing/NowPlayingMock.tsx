@@ -36,11 +36,11 @@ const BUTTON_STYLES: Record<ButtonStyle, string> = {
 const FIELDS = [
   { name: "🎤 Artist", value: "M83" },
   { name: "🎵 Source", value: "youtube" },
-  { name: "🔊 Quality", value: "🔊 Opus 320 kbps" },
+  { name: "🔊 Quality", value: "🔊 Opus 256 kbps" },
 ];
 
 const DESCRIPTION =
-  "A Bypass now-playing message in Discord: Midnight City by M83 from YouTube at 320 kbps, two and a half minutes in, with buttons to seek, pause, stop, skip and refresh.";
+  "A Bypass now-playing message in Discord: Midnight City by M83 from YouTube at 256 kbps, two and a half minutes in, with buttons to seek, pause, stop, skip and refresh.";
 
 function Code({ children }: { children: React.ReactNode }) {
   return (

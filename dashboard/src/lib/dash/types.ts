@@ -96,7 +96,7 @@ export interface PlaybackState {
 export interface LiveAudio {
   /** Opus bitrate being sent, kbps. */
   kbps: number;
-  /** The session's tier, kbps (128 standard, 320 with Premium, a vote or a support-server boost). */
+  /** The most the session's tier can send, kbps (128 standard; 256 with Premium, a vote or a support-server boost). */
   tierKbps: number;
   /** The voice channel's bitrate setting, kbps. */
   channelKbps?: number;

@@ -10,8 +10,7 @@
  * throws, and would clamp to 128 kbps anyway.
  *
  * This module talks to the libopus encoder directly:
- *  - bitrate: the tier's kbps, capped by what Discord lets the channel carry
- *    (see `targetKbps`), up to Opus's 510 kbps ceiling;
+ *  - bitrate: the tier's kbps, held to DELIVERED_MAX_KBPS (see `targetKbps`);
  *  - signal = music, so the encoder never switches to its speech (SILK)
  *    modes on quiet passages;
  *  - full band (20 kHz), complexity 10.
@@ -43,6 +42,18 @@ export const OPUS_MIN_KBPS = 32;
  * loss reported, so this much is known to be delivered.
  */
 export const CHANNEL_CAP_FLOOR_KBPS = 96;
+/**
+ * The highest rate Discord delivers without loss, measured 2026-11-27 with
+ * scripts/probeVoiceBitrate.cjs (Bypass 2 receiving the main bot in a 96 kbps
+ * channel of an unboosted server):
+ *   96 kbps  -> 1500/1500 packets, 96.4 kbps received
+ *   256 kbps -> 1503/1495 and 1491/1490 packets, 257 kbps received
+ *   320 kbps -> 5-10% of packets missing in every run, 288-306 kbps received
+ * Discord ignores the channel's bitrate setting for a bot's stream (300 kbps
+ * also arrived through 64k and 8k channels), but something on the path drops
+ * packets somewhere between 256 and 320 kbps, so 256 is the ceiling.
+ */
+export const DELIVERED_MAX_KBPS = 256;
 
 /** The libopus binding the stream wrapper holds (mediaplex, @discordjs/opus or opusscript). */
 interface LibopusEncoder {
@@ -57,25 +68,24 @@ interface LibopusEncoder {
 export type ChannelCapPolicy = "channel" | "none" | number;
 
 /**
- * Whether the encoder may go above the voice channel's bitrate setting.
- * "channel" (default) keeps it at the channel's limit, which is what
- * Discord's own clients do, but never under CHANNEL_CAP_FLOOR_KBPS; "none"
- * ignores the channel. Set VOICE_BITRATE_CAP=none once a probe
- * (scripts/probeVoiceBitrate.cjs) shows Discord delivers more than the
- * channel setting. A number (VOICE_BITRATE_CAP=256) is a fixed ceiling in
- * kbps that ignores the channel.
+ * How the encoder's bitrate is limited. Default: a fixed ceiling of
+ * DELIVERED_MAX_KBPS. VOICE_BITRATE_CAP overrides it with another number
+ * (a ceiling in kbps), "none" (only the tier), or "channel" (the voice
+ * channel's setting, never under CHANNEL_CAP_FLOOR_KBPS, the way Discord's
+ * own clients behave). Re-measure with scripts/probeVoiceBitrate.cjs before
+ * raising it.
  */
 export function capPolicy(): ChannelCapPolicy {
   const value = process.env.VOICE_BITRATE_CAP?.trim();
-  if (value === "none") return "none";
+  if (value === "none" || value === "channel") return value;
   const kbps = Number(value);
   if (value && Number.isFinite(kbps) && kbps >= OPUS_MIN_KBPS) return kbps;
-  return "channel";
+  return DELIVERED_MAX_KBPS;
 }
 
 /**
- * The bitrate to encode at: the tier's, never above what the channel carries
- * (when the policy caps), and inside Opus's range.
+ * The bitrate to encode at: the tier's, never above the policy's limit, and
+ * inside Opus's range.
  *
  * @param tierKbps  what this queue is entitled to (128 free, 320 premium/vote/boost)
  * @param channelBps the voice channel's `bitrate` setting in bits per second

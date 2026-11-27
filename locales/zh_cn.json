@@ -1135,7 +1135,7 @@
       "freeName": "免费 — {price}",
       "freePerks": "128kbps 音质\n队列、播放列表和歌词\n所有命令",
       "founderName": "Founder / 内测用户 — {price}/月",
-      "founderPerks": "320kbps 音质\n音频滤镜\n24/7 模式\n优先队列\nFounder 身份组和专属支持"
+      "founderPerks": "256kbps 音质\n音频滤镜\n24/7 模式\nFounder 身份组和专属支持"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} 是 Founder 专属福利",
-    "description": "Founder 每月 {price}，仅限 {spots} 个名额，可解锁 320kbps 音质、24/7 模式、无歌曲时长限制以及 Founder 身份组。",
+    "description": "Founder 每月 {price}，仅限 {spots} 个名额，可解锁 256kbps 音质、24/7 模式、无歌曲时长限制以及 Founder 身份组。",
     "afterJoin": "加入之后",
     "afterJoinSteps": "1. 在你的 Patreon 设置中关联你的 Discord 账号\n2. 在此服务器中运行 `/premium link`",
     "becomeFounder": "成为 Founder",

@@ -1135,7 +1135,7 @@
       "freeName": "Ücretsiz — {price}",
       "freePerks": "128kbps ses\nKuyruk, çalma listeleri ve şarkı sözleri\nTüm komutlar",
       "founderName": "Founder / Beta Test Kullanıcısı — {price}/ay",
-      "founderPerks": "320kbps ses\nSes filtreleri\n24/7 modu\nÖncelikli kuyruk\nFounder rolü ve doğrudan destek"
+      "founderPerks": "256kbps ses\nSes filtreleri\n24/7 modu\nFounder rolü ve doğrudan destek"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} bir Founder ayrıcalığıdır",
-    "description": "Founder aylık {price}, {spots} kişiyle sınırlı ve 320kbps ses, 24/7 modu, şarkı uzunluğu sınırının kalkmasını ve Founder rolünü açar.",
+    "description": "Founder aylık {price}, {spots} kişiyle sınırlı ve 256kbps ses, 24/7 modu, şarkı uzunluğu sınırının kalkmasını ve Founder rolünü açar.",
     "afterJoin": "Katıldıktan sonra",
     "afterJoinSteps": "1. Patreon ayarlarından Discord hesabını bağla\n2. bu sunucuda `/premium link` komutunu çalıştır",
     "becomeFounder": "Founder ol",

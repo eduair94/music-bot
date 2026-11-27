@@ -34,7 +34,7 @@ Jockie Music's edge is several bots per server (four free) with permissions set 
 - Multi-bot (decided 2026-11-27): four free bots per server, more for Premium servers. The extra Discord applications do not exist yet and need the owner's Developer Portal session.
 - Undecided: exact number of Premium instances; per-instance Premium pricing.
 - Never claim: priority queue, "unlimited playlists", or scale beyond the real number (about 23 servers in Nov 2026; the old "10k servers" copy is false).
-- Bitrate is real since 2026-11-27 (`services/audioEncoder.ts`): the Opus encoder sends the session's tier, 128 kbps standard and 320 kbps with Premium, a vote or a support-server boost, held to the voice channel's bitrate setting but never under 96 kbps (before that every server got ~99 kbps whatever the tier said). So say "up to 320 kbps" and tie it to Premium/vote/boost; never promise 320 kbps to free users or in every channel. YouTube's source is Opus ~130-160 kbps: the higher rate removes re-encoding loss, it does not add detail the source lacks.
+- Bitrate is real since 2026-11-27 (`services/audioEncoder.ts`): the Opus encoder sends 128 kbps standard and 256 kbps with Premium, a vote or a support-server boost, in any voice channel (before that every server got ~99 kbps whatever the tier said). 256 is the measured ceiling: Discord passes a bot's stream regardless of the channel's bitrate setting, but at 320 kbps 5-10% of packets were lost (scripts/probeVoiceBitrate.cjs). So say "up to 256 kbps", tied to Premium/vote/boost; never promise 320 kbps, and never promise 256 to free users. YouTube's source is Opus ~130-160 kbps: the higher rate removes re-encoding loss, it does not add detail the source lacks.
 
 ## Brand Commitments
 

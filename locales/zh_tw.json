@@ -1135,7 +1135,7 @@
       "freeName": "免費 — {price}",
       "freePerks": "128kbps 音質\n佇列、播放清單和歌詞\n所有指令",
       "founderName": "Founder／Beta 測試者 — {price}/月",
-      "founderPerks": "320kbps 音質\n音訊濾鏡\n24/7 模式\n優先佇列\nFounder 身分組與專屬支援"
+      "founderPerks": "256kbps 音質\n音訊濾鏡\n24/7 模式\nFounder 身分組與專屬支援"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} 是 Founder 專屬福利",
-    "description": "Founder 每月 {price}，限量 {spots} 個名額，可解鎖 320kbps 音質、24/7 模式、無歌曲長度限制以及 Founder 身分組。",
+    "description": "Founder 每月 {price}，限量 {spots} 個名額，可解鎖 256kbps 音質、24/7 模式、無歌曲長度限制以及 Founder 身分組。",
     "afterJoin": "加入後",
     "afterJoinSteps": "1. 在你的 Patreon 設定中連結 Discord 帳號\n2. 在這個伺服器執行 `/premium link`",
     "becomeFounder": "成為 Founder",

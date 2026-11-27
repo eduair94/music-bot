@@ -1135,7 +1135,7 @@
       "freeName": "Miễn phí — {price}",
       "freePerks": "Âm thanh 128kbps\nHàng chờ, playlist và lời bài hát\nMọi lệnh",
       "founderName": "Founder / Beta Tester — {price}/tháng",
-      "founderPerks": "Âm thanh 320kbps\nBộ lọc âm thanh\nChế độ 24/7\nHàng chờ ưu tiên\nVai trò Founder và hỗ trợ trực tiếp"
+      "founderPerks": "Âm thanh 256kbps\nBộ lọc âm thanh\nChế độ 24/7\nVai trò Founder và hỗ trợ trực tiếp"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} là đặc quyền của Founder",
-    "description": "Founder có giá {price}/tháng, giới hạn {spots} suất, mở khóa âm thanh 320kbps, chế độ 24/7, không giới hạn độ dài bài hát và vai trò Founder.",
+    "description": "Founder có giá {price}/tháng, giới hạn {spots} suất, mở khóa âm thanh 256kbps, chế độ 24/7, không giới hạn độ dài bài hát và vai trò Founder.",
     "afterJoin": "Sau khi tham gia",
     "afterJoinSteps": "1. liên kết tài khoản Discord của bạn trong cài đặt Patreon\n2. chạy `/premium link` trong máy chủ này",
     "becomeFounder": "Trở thành Founder",

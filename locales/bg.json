@@ -1135,7 +1135,7 @@
       "freeName": "Безплатен — {price}",
       "freePerks": "128kbps аудио\nОпашка, плейлисти и текстове\nВсички команди",
       "founderName": "Founder / Бета тестер — {price}/месец",
-      "founderPerks": "320kbps аудио\nАудио филтри\nРежим 24/7\nПриоритетна опашка\nFounder роля и директна поддръжка"
+      "founderPerks": "256kbps аудио\nАудио филтри\nРежим 24/7\nFounder роля и директна поддръжка"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} е привилегия за Founder",
-    "description": "Founder струва {price}/месец, местата са ограничени до {spots} и отключва аудио 320kbps, режим 24/7, без ограничение за дължината на песните и ролята Founder.",
+    "description": "Founder струва {price}/месец, местата са ограничени до {spots} и отключва аудио 256kbps, режим 24/7, без ограничение за дължината на песните и ролята Founder.",
     "afterJoin": "След като се присъединиш",
     "afterJoinSteps": "1. свържи своя Discord акаунт в настройките на Patreon\n2. изпълни `/premium link` в този сървър",
     "becomeFounder": "Стани Founder",

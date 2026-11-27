@@ -5,7 +5,7 @@ import { FaDiscord } from "react-icons/fa";
 
 /** Product facts anyone can check — no audience or uptime claims. */
 const FACTS = [
-  { figure: "320kbps", rest: "audio", lead: "Up to" },
+  { figure: "256kbps", rest: "audio", lead: "Up to" },
   { figure: String(COMMAND_COUNT), rest: "slash commands" },
   { figure: String(EFFECT_COUNT), rest: "audio effects" },
   { figure: "Free", rest: "to add" },
@@ -29,7 +29,7 @@ export default function Hero() {
           </h1>
 
           <p className="rise rise-2 mt-8 max-w-[34rem] text-lg md:text-xl text-dune leading-relaxed text-pretty">
-            Bypass is the studio-grade music bot for Discord. Up to 320kbps
+            Bypass is the studio-grade music bot for Discord. Up to 256kbps
             audio, instant queueing, playlists from YouTube and Spotify,
             stackable audio filters — and a web dashboard your whole server
             can drive.

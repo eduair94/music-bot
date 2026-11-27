@@ -72,7 +72,7 @@ export default function OpenGraphImage() {
           }}
         >
           <div style={{ fontSize: 28, color: "#a89d90" }}>
-            Studio-grade Discord music bot · 320kbps · Web dashboard
+            Studio-grade Discord music bot · 256kbps · Web dashboard
           </div>
           <div
             style={{

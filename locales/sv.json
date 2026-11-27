@@ -1135,7 +1135,7 @@
       "freeName": "Gratis — {price}",
       "freePerks": "128kbps ljud\nKö, spellistor och låttexter\nAlla kommandon",
       "founderName": "Founder / Betatestare — {price}/månad",
-      "founderPerks": "320kbps ljud\nLjudfilter\n24/7-läge\nPrioriterad kö\nFounder-roll och direktsupport"
+      "founderPerks": "256kbps ljud\nLjudfilter\n24/7-läge\nFounder-roll och direktsupport"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} är en Founder-förmån",
-    "description": "Founder kostar {price}/månad, är begränsat till {spots} platser och låser upp 320 kbps-ljud, 24/7-läge, ingen gräns för låtlängd och Founder-rollen.",
+    "description": "Founder kostar {price}/månad, är begränsat till {spots} platser och låser upp 256 kbps-ljud, 24/7-läge, ingen gräns för låtlängd och Founder-rollen.",
     "afterJoin": "När du har gått med",
     "afterJoinSteps": "1. koppla ditt Discord-konto i dina Patreon-inställningar\n2. kör `/premium link` på den här servern",
     "becomeFounder": "Bli Founder",

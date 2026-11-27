@@ -146,7 +146,7 @@ export interface LivePlaybackState {
 export interface LiveAudio {
   /** Opus bitrate the encoder is set to, in kbps. */
   kbps: number;
-  /** The tier this session is entitled to, in kbps (128 free, 320 premium/vote/boost). */
+  /** The most this session's tier can send under the bot's limit, in kbps (128 standard, 256 Hi-Fi). */
   tierKbps: number;
   /** The voice channel's own bitrate setting, in kbps. */
   channelKbps?: number;

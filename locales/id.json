@@ -1135,7 +1135,7 @@
       "freeName": "Gratis — {price}",
       "freePerks": "Audio 128kbps\nAntrean, playlist, dan lirik\nSemua perintah",
       "founderName": "Founder / Beta Tester — {price}/bulan",
-      "founderPerks": "Audio 320kbps\nFilter audio\nMode 24/7\nAntrean prioritas\nRole Founder dan dukungan langsung"
+      "founderPerks": "Audio 256kbps\nFilter audio\nMode 24/7\nRole Founder dan dukungan langsung"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} adalah keuntungan Founder",
-    "description": "Founder seharga {price}/bulan, terbatas hanya {spots} slot, dan membuka audio 320kbps, mode 24/7, tanpa batas durasi lagu, serta role Founder.",
+    "description": "Founder seharga {price}/bulan, terbatas hanya {spots} slot, dan membuka audio 256kbps, mode 24/7, tanpa batas durasi lagu, serta role Founder.",
     "afterJoin": "Setelah kamu bergabung",
     "afterJoinSteps": "1. hubungkan akun Discord kamu di pengaturan Patreon\n2. jalankan `/premium link` di server ini",
     "becomeFounder": "Jadi Founder",

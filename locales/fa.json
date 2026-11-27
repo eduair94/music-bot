@@ -1135,7 +1135,7 @@
       "freeName": "رایگان — {price}",
       "freePerks": "صدای 128kbps\nصف، پلی‌لیست و متن آهنگ\nهمه دستورات",
       "founderName": "Founder / تستر بتا — {price}/ماه",
-      "founderPerks": "صدای 320kbps\nفیلترهای صوتی\nحالت 24/7\nصف با اولویت\nنقش Founder و پشتیبانی مستقیم"
+      "founderPerks": "صدای 256kbps\nفیلترهای صوتی\nحالت 24/7\nنقش Founder و پشتیبانی مستقیم"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} از مزایای Founder است",
-    "description": "Founder ماهانه {price} است، فقط {spots} جای خالی دارد و صدای 320kbps، حالت 24/7، بدون محدودیت طول آهنگ و نقش Founder را باز می‌کند.",
+    "description": "Founder ماهانه {price} است، فقط {spots} جای خالی دارد و صدای 256kbps، حالت 24/7، بدون محدودیت طول آهنگ و نقش Founder را باز می‌کند.",
     "afterJoin": "بعد از عضویت",
     "afterJoinSteps": "1. حساب Discord خودت را در تنظیمات Patreon وصل کن\n2. دستور `/premium link` را در این سرور اجرا کن",
     "becomeFounder": "Founder شو",

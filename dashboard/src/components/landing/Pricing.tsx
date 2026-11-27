@@ -38,7 +38,7 @@ const tiers: PricingTier[] = [
       "All Free features",
       "Audio filters (bass boost, nightcore)",
       "24/7 mode — bot stays in channel",
-      "Maximum audio quality (320kbps)",
+      "Maximum audio quality (256kbps)",
       "No song duration limit",
       "Vote on new features",
       "Exclusive Founder role",

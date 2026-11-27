@@ -2,6 +2,8 @@ import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "
 import { PatreonService } from "../services/patreon";
 import { PremiumGuildService } from "../services/premiumGuild";
 import { i18n } from "../utils/i18n";
+import { targetKbps } from "../services/audioEncoder";
+import { getQualityBadge } from "../utils/audioSettings";
 
 /**
  * /premium command - Manage premium server links
@@ -50,7 +52,7 @@ export default {
               { name: "128 kbps", value: 128 },
               { name: "192 kbps", value: 192 },
               { name: "256 kbps", value: 256 },
-              { name: "320 kbps (HQ)", value: 320 }
+              { name: "320 kbps (plays at 256, Discord's lossless maximum)", value: 320 }
             )
         )
         .addStringOption((option) =>
@@ -90,7 +92,7 @@ export default {
             const currentServers = await premiumService.getUserServers(userId);
 
             embed.addFields(
-              { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: `${result.guild.audioBitrate}kbps`, inline: true },
+              { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: getQualityBadge(targetKbps(result.guild.audioBitrate, null)), inline: true },
               { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: result.guild.customBotName === "indie" ? "Indie Music Bot" : result.guild.customBotName || "Premium", inline: true },
               { name: `📊 ${i18n.__("premium.serverSlots")}`, value: `${currentServers.length}/${maxServers}`, inline: true }
             );
@@ -133,7 +135,7 @@ export default {
                 : servers
                     .map((s, i) => 
                       `**${i + 1}.** ${s.guildName || s.guildId}\n` +
-                      `   🎵 ${s.audioBitrate}kbps • 🎸 ${s.customBotName === "indie" ? "Indie Music Bot" : s.customBotName || "Premium"}\n` +
+                      `   🎵 ${targetKbps(s.audioBitrate, null)}kbps • 🎸 ${s.customBotName === "indie" ? "Indie Music Bot" : s.customBotName || "Premium"}\n` +
                       `   📅 ${i18n.__mf("premium.list.linkedAt", { time: `<t:${Math.floor(s.linkedAt.getTime() / 1000)}:R>` })}`
                     )
                     .join("\n\n")
@@ -178,11 +180,7 @@ export default {
             .setTimestamp();
 
           if (isPremium && guild) {
-            const qualityBadge = 
-              guild.audioBitrate >= 320 ? "🎵 HQ 320kbps" :
-              guild.audioBitrate >= 256 ? "🎵 256kbps" :
-              guild.audioBitrate >= 192 ? "🎵 192kbps" :
-              "🎵 128kbps";
+            const qualityBadge = getQualityBadge(targetKbps(guild.audioBitrate, null));
 
             const identityLabel = 
               guild.customBotName === "indie" ? "🎸 Indie Music Bot" :
@@ -243,7 +241,7 @@ export default {
             const guild = await premiumService.getGuildSettings(guildId);
             if (guild) {
               embed.addFields(
-                { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: `${guild.audioBitrate}kbps`, inline: true },
+                { name: `🎵 ${i18n.__("premium.audioQuality")}`, value: getQualityBadge(targetKbps(guild.audioBitrate, null)), inline: true },
                 { name: `🎸 ${i18n.__("premium.botIdentity")}`, value: guild.customBotName === "indie" ? "Indie Music Bot" : guild.customBotName || "Premium", inline: true }
               );
             }

@@ -1135,7 +1135,7 @@
       "freeName": "Grátis — {price}",
       "freePerks": "Áudio de 128kbps\nFila, playlists e letras\nTodos os comandos",
       "founderName": "Founder / Beta Tester — {price}/mês",
-      "founderPerks": "Áudio de 320kbps\nFiltros de áudio\nModo 24/7\nFila prioritária\nCargo de Founder e suporte direto"
+      "founderPerks": "Áudio de 256kbps\nFiltros de áudio\nModo 24/7\nCargo de Founder e suporte direto"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} é um benefício Founder",
-    "description": "O Founder custa {price}/mês, tem só {spots} vagas e libera áudio em 320kbps, modo 24/7, sem limite de duração de música e o cargo Founder.",
+    "description": "O Founder custa {price}/mês, tem só {spots} vagas e libera áudio em 256kbps, modo 24/7, sem limite de duração de música e o cargo Founder.",
     "afterJoin": "Depois de entrar",
     "afterJoinSteps": "1. vincule sua conta do Discord nas configurações do Patreon\n2. use `/premium link` neste servidor",
     "becomeFounder": "Seja um Founder",

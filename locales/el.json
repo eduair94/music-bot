@@ -1135,7 +1135,7 @@
       "freeName": "Δωρεάν — {price}",
       "freePerks": "Ήχος 128kbps\nΟυρά, playlist και στίχοι\nΌλες οι εντολές",
       "founderName": "Founder / Beta Tester — {price}/μήνα",
-      "founderPerks": "Ήχος 320kbps\nΦίλτρα ήχου\nΛειτουργία 24/7\nΟυρά προτεραιότητας\nΡόλος Founder και άμεση υποστήριξη"
+      "founderPerks": "Ήχος 256kbps\nΦίλτρα ήχου\nΛειτουργία 24/7\nΡόλος Founder και άμεση υποστήριξη"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "Το {feature} είναι προνόμιο Founder",
-    "description": "Το Founder κοστίζει {price}/μήνα, με περιορισμένες {spots} θέσεις, και ξεκλειδώνει ήχο 320kbps, λειτουργία 24/7, χωρίς όριο διάρκειας τραγουδιού και τον ρόλο Founder.",
+    "description": "Το Founder κοστίζει {price}/μήνα, με περιορισμένες {spots} θέσεις, και ξεκλειδώνει ήχο 256kbps, λειτουργία 24/7, χωρίς όριο διάρκειας τραγουδιού και τον ρόλο Founder.",
     "afterJoin": "Αφού γίνεις μέλος",
     "afterJoinSteps": "1. σύνδεσε τον λογαριασμό σου στο Discord από τις ρυθμίσεις του Patreon\n2. τρέξε `/premium link` σε αυτόν τον server",
     "becomeFounder": "Γίνε Founder",

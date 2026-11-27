@@ -1135,7 +1135,7 @@
       "freeName": "무료 — {price}",
       "freePerks": "128kbps 오디오\n대기열, 플레이리스트, 가사\n모든 명령어",
       "founderName": "Founder / 베타 테스터 — 월 {price}",
-      "founderPerks": "320kbps 오디오\n오디오 필터\n24/7 모드\n우선 대기열\nFounder 역할 및 직접 지원"
+      "founderPerks": "256kbps 오디오\n오디오 필터\n24/7 모드\nFounder 역할 및 직접 지원"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature}은(는) Founder 혜택이에요",
-    "description": "Founder는 월 {price}이며 {spots}자리 한정이에요. 320kbps 오디오, 24/7 모드, 곡 길이 제한 없음, Founder 역할이 제공돼요.",
+    "description": "Founder는 월 {price}이며 {spots}자리 한정이에요. 256kbps 오디오, 24/7 모드, 곡 길이 제한 없음, Founder 역할이 제공돼요.",
     "afterJoin": "가입한 후에",
     "afterJoinSteps": "1. Patreon 설정에서 Discord 계정을 연결하세요\n2. 이 서버에서 `/premium link`를 실행하세요",
     "becomeFounder": "Founder 되기",

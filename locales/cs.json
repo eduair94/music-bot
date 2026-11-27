@@ -1135,7 +1135,7 @@
       "freeName": "Free — {price}",
       "freePerks": "Zvuk 128kbps\nFronta, playlisty a texty písní\nVšechny příkazy",
       "founderName": "Founder / Beta tester — {price}/měsíc",
-      "founderPerks": "Zvuk 320kbps\nZvukové filtry\nRežim 24/7\nPrioritní fronta\nRole Founder a přímá podpora"
+      "founderPerks": "Zvuk 256kbps\nZvukové filtry\nRežim 24/7\nRole Founder a přímá podpora"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} je výhoda pro Founder",
-    "description": "Founder stojí {price}/měsíc, je omezen na {spots} míst a odemyká zvuk 320kbps, režim 24/7, žádný limit délky skladby a roli Founder.",
+    "description": "Founder stojí {price}/měsíc, je omezen na {spots} míst a odemyká zvuk 256kbps, režim 24/7, žádný limit délky skladby a roli Founder.",
     "afterJoin": "Až se připojíš",
     "afterJoinSteps": "1. propoj svůj Discord účet v nastavení Patreon\n2. spusť `/premium link` na tomto serveru",
     "becomeFounder": "Staň se Founderem",

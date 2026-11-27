@@ -1135,7 +1135,7 @@
       "freeName": "ฟรี — {price}",
       "freePerks": "เสียง 128kbps\nคิว เพลย์ลิสต์ และเนื้อเพลง\nใช้ได้ทุกคำสั่ง",
       "founderName": "Founder / ผู้ทดสอบเบต้า — {price}/เดือน",
-      "founderPerks": "เสียง 320kbps\nฟิลเตอร์เสียง\nโหมด 24/7\nคิวลำดับความสำคัญ\nบทบาท Founder และซัพพอร์ตโดยตรง"
+      "founderPerks": "เสียง 256kbps\nฟิลเตอร์เสียง\nโหมด 24/7\nบทบาท Founder และซัพพอร์ตโดยตรง"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} เป็นสิทธิพิเศษของ Founder",
-    "description": "Founder ราคา {price}/เดือน มีจำกัดเพียง {spots} ที่ และปลดล็อกเสียง 320kbps, โหมด 24/7, ไม่จำกัดความยาวเพลง และยศ Founder",
+    "description": "Founder ราคา {price}/เดือน มีจำกัดเพียง {spots} ที่ และปลดล็อกเสียง 256kbps, โหมด 24/7, ไม่จำกัดความยาวเพลง และยศ Founder",
     "afterJoin": "หลังจากสมัครแล้ว",
     "afterJoinSteps": "1. เชื่อมบัญชี Discord ของคุณในการตั้งค่า Patreon\n2. ใช้คำสั่ง `/premium link` ในเซิร์ฟเวอร์นี้",
     "becomeFounder": "เป็น Founder",

@@ -3,6 +3,12 @@ import { OpusEncoder } from "mediaplex";
 import { configureEncoder, encoderOf, OPUS_CTL, targetKbps } from "../../services/audioEncoder";
 
 describe("targetKbps", () => {
+  it("defaults to the measured lossless ceiling, whatever the channel", () => {
+    delete process.env.VOICE_BITRATE_CAP;
+    expect(targetKbps(320, 64_000)).toBe(256);
+    expect(targetKbps(128, 64_000)).toBe(128);
+  });
+
   it("keeps the tier when the channel allows it", () => {
     expect(targetKbps(320, 384_000, "channel")).toBe(320);
     expect(targetKbps(128, 384_000, "channel")).toBe(128);

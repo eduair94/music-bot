@@ -1135,7 +1135,7 @@
       "freeName": "Gratis — {price}",
       "freePerks": "128kbps audio\nWachtrij, afspeellijsten en songteksten\nAlle commando's",
       "founderName": "Founder / Bètatester — {price}/maand",
-      "founderPerks": "320kbps audio\nAudiofilters\n24/7-modus\nVoorrang in de wachtrij\nFounder-rol en directe support"
+      "founderPerks": "256kbps audio\nAudiofilters\n24/7-modus\nFounder-rol en directe support"
     }
   },
   "boost": {
@@ -1950,7 +1950,7 @@
   },
   "upsell": {
     "title": "{feature} is een Founder-voordeel",
-    "description": "Founder kost {price}/maand, is beperkt tot {spots} plekken en geeft je 320kbps-audio, 24/7-modus, geen limiet op nummerlengte en de Founder-rol.",
+    "description": "Founder kost {price}/maand, is beperkt tot {spots} plekken en geeft je 256kbps-audio, 24/7-modus, geen limiet op nummerlengte en de Founder-rol.",
     "afterJoin": "Nadat je lid bent geworden",
     "afterJoinSteps": "1. koppel je Discord-account in je Patreon-instellingen\n2. voer `/premium link` uit in deze server",
     "becomeFounder": "Word Founder",

@@ -19,7 +19,7 @@ export const SITE_URL = (
 export const SITE_TAGLINE = "Studio-Grade Discord Music Bot";
 
 export const SITE_DESCRIPTION =
-  "Studio-grade music for your Discord server. Audio up to 320kbps, instant queueing, playlists from YouTube and Spotify, audio filters, and a full web dashboard. Free to add.";
+  "Studio-grade music for your Discord server. Audio up to 256kbps, instant queueing, playlists from YouTube and Spotify, audio filters, and a full web dashboard. Free to add.";
 
 export const DISCORD_INVITE = process.env.NEXT_PUBLIC_DISCORD_INVITE || SUPPORT_INVITE_URL;
 
