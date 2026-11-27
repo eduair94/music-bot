@@ -1,7 +1,6 @@
-import { auth } from "@/auth";
-import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
-import { GuildSettingsModel } from "@/lib/models/GuildSettings";
-import { connectToDatabase } from "@/lib/mongodb";
+import { isSameOrigin } from "@/lib/admin/guards";
+import { getGuildAccess, requireGroup } from "@/lib/guild-access";
+import { applySettingsPatch } from "@/lib/guild-settings";
 import { NextResponse } from "next/server";
 
 // Force dynamic rendering
@@ -11,75 +10,47 @@ interface RouteContext {
   params: Promise<{ guildId: string }>;
 }
 
+/**
+ * Legacy settings endpoint (the v1 settings form). Kept working until the
+ * new UI ships; new code uses /settings. Both need the "settings" group.
+ */
+
 // GET guild settings
-export async function GET(request: Request, { params }: RouteContext) {
-  const session = await auth();
-  
-  if (!session?.accessToken) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function GET(_request: Request, { params }: RouteContext) {
   const { guildId } = await params;
+  const { access, response } = await getGuildAccess(guildId);
+  if (!access) return response;
+  const denied = requireGroup(access, "settings");
+  if (denied) return denied;
 
-  // Verify user has permission
-  const guilds = await fetchUserGuilds(session.accessToken);
-  const guild = guilds.find((g) => g.id === guildId);
-
-  if (!guild || !hasManagePermission(guild.permissions)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
-
-  try {
-    await connectToDatabase();
-    const settings = await GuildSettingsModel.findOne({ guildId }).lean();
-    
-    if (!settings) {
-      return NextResponse.json({ guildId, exists: false });
-    }
-
-    return NextResponse.json(settings);
-  } catch (error) {
-    console.error("Error fetching guild settings:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+  if (!access.settings) return NextResponse.json({ guildId, exists: false });
+  return NextResponse.json(access.settings);
 }
 
-// PATCH update guild settings
+// PATCH update guild settings: partial and validated. The form posts the
+// whole document; read-only fields (counters, premium, ids) are ignored and
+// only changed values are written.
 export async function PATCH(request: Request, { params }: RouteContext) {
-  const session = await auth();
-  
-  if (!session?.accessToken) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!isSameOrigin(request.headers, request.headers.get("host"))) {
+    return NextResponse.json({ error: "Cross-origin request rejected" }, { status: 403 });
   }
-
   const { guildId } = await params;
+  const { access, response } = await getGuildAccess(guildId);
+  if (!access) return response;
+  const denied = requireGroup(access, "settings");
+  if (denied) return denied;
 
-  // Verify user has permission
-  const guilds = await fetchUserGuilds(session.accessToken);
-  const guild = guilds.find((g) => g.id === guildId);
-
-  if (!guild || !hasManagePermission(guild.permissions)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
   try {
-    const updates = await request.json();
-
-    // Remove fields that shouldn't be updated via API
-    delete updates._id;
-    delete updates.guildId;
-    delete updates.createdAt;
-    delete updates.premium; // Premium should be updated via Patreon only
-
-    await connectToDatabase();
-    
-    const settings = await GuildSettingsModel.findOneAndUpdate(
-      { guildId },
-      { $set: { ...updates, updatedAt: new Date() } },
-      { new: true, upsert: true }
-    ).lean();
-
-    return NextResponse.json(settings);
+    const outcome = await applySettingsPatch(access, body, { strict: false });
+    if (!outcome.ok) return NextResponse.json({ error: "Invalid settings", fields: outcome.errors }, { status: 400 });
+    return NextResponse.json(outcome.settings);
   } catch (error) {
     console.error("Error updating guild settings:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

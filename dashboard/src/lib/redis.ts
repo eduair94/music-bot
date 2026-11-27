@@ -17,7 +17,7 @@ const globalForRedis = globalThis as unknown as {
   redisClient: Redis | undefined;
 };
 
-function getRedis(): Redis | null {
+export function getRedis(): Redis | null {
   const redisUrl = process.env.REDIS_URL || process.env.REDIS_URI;
   
   if (!redisUrl) {
