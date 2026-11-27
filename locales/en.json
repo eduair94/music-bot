@@ -1065,7 +1065,8 @@
     "commands": "Commands",
     "dashboard": "Dashboard",
     "support": "Support server",
-    "vote": "Vote"
+    "vote": "Vote",
+    "voiceStatusHint": "Want the song that's playing shown under the voice channel name? [Re-authorize me]({url}) to grant the Set Voice Channel Status permission."
   },
   "router": {
     "guildOnly": "This command only works in a server.",
@@ -1325,5 +1326,10 @@
   },
   "user": {
     "description": "User profile and preferences"
+  },
+  "voiceStatus": {
+    "title": "Voice channel status",
+    "missing": "I can't show the song that's playing under the voice channel name because I'm missing the **Set Voice Channel Status** permission. Re-authorize me to add it; your settings stay as they are.",
+    "reauthorize": "Re-authorize"
   }
 }

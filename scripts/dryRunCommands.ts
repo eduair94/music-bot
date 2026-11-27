@@ -96,6 +96,7 @@ async function main() {
       check(`help (${locale})`, buildHelp("Bypass").components);
       check(`help music (${locale})`, buildHelp("Bypass", "music").components);
       check(`welcome (${locale})`, [buildWelcome("Bypass")]);
+      check(`welcome, no voice status (${locale})`, [buildWelcome("Bypass", { missingVoiceStatus: true })]);
     });
   }
 

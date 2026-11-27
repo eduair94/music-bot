@@ -1,4 +1,13 @@
-import { ColorResolvable, EmbedBuilder, MessageFlags } from "discord.js";
+import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ColorResolvable,
+  EmbedBuilder,
+  MessageFlags,
+  PermissionFlagsBits
+} from "discord.js";
+import { botInviteUrl } from "../../shared/links";
 import { BotLocale, LOCALE_NAMES, i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
@@ -89,5 +98,23 @@ export async function handleView({ interaction, settings }: SettingsHandlerConte
     .setFooter({ text: label("footer") })
     .setTimestamp();
 
-  return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
+  // Servers that invited the bot before Set Voice Channel Status was in the
+  // invite link can't show "♪ Song — Artist" under the voice channel name.
+  // Point admins at a re-authorization link for this server.
+  const components: ActionRowBuilder<ButtonBuilder>[] = [];
+  const me = interaction.guild?.members.me;
+  if (me && !me.permissions.has(PermissionFlagsBits.SetVoiceChannelStatus)) {
+    embed.addFields({ name: `⚠️ ${i18n.__("voiceStatus.title")}`, value: i18n.__("voiceStatus.missing"), inline: false });
+    components.push(
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setStyle(ButtonStyle.Link)
+          .setURL(botInviteUrl(interaction.client.user.id, interaction.guildId ?? undefined))
+          .setEmoji("🔑")
+          .setLabel(i18n.__("voiceStatus.reauthorize"))
+      )
+    );
+  }
+
+  return interaction.reply({ embeds: [embed], components, flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
 }
