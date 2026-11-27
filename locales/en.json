@@ -264,7 +264,8 @@
       "positionInQueue": "Position in Queue",
       "status": "Status",
       "tier": "Tier"
-    }
+    },
+    "poweredBy": "⚡ Powered by {provider}"
   },
   "seek": {
     "description": "Seek to a specific time in the track",

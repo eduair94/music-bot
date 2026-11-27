@@ -19,6 +19,14 @@ export const FOUNDER_SPOTS = 50;
 /** Public website (landing + dashboard). */
 export const SITE_URL = "https://music-bot.checkleaked.com";
 
+/**
+ * Our own Spotify scraper + YouTube download provider that powers track
+ * resolution. Credited ("Powered by …") on the player panel, Spotify play
+ * embeds, lyrics/save cards and the landing footer.
+ */
+export const SPOTIFY_PROVIDER_HOST = "spotify.checkleaked.cc";
+export const SPOTIFY_PROVIDER_URL = `https://${SPOTIFY_PROVIDER_HOST}`;
+
 /** Production application id (used for listing and vote links). */
 export const BOT_APPLICATION_ID = "1315125264786653225";
 

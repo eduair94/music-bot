@@ -4,6 +4,7 @@ import { GuildSettingsService } from "../services/guildSettings";
 import { dispatchPlay } from "../services/fleet/dispatcher";
 import { SpotifyService } from "../services/spotify";
 import { getPlaybackSettings } from "../utils/audioSettings";
+import { SPOTIFY_PROVIDER_HOST } from "../shared/links";
 import { i18n } from "../utils/i18n";
 import { listenersElsewhere } from "../utils/playFlow";
 
@@ -158,7 +159,7 @@ export default {
               { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(playlistThumbnail)
-            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })} • ${i18n.__mf("common.poweredBy", { provider: SPOTIFY_PROVIDER_HOST })}` });
 
           embed.addFields({ 
             name: `▶️ ${i18n.__("play_spotify.nowPlaying")}`, 
@@ -177,7 +178,7 @@ export default {
               { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
             )
             .setThumbnail(track.thumbnail || null)
-            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
+            .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })} • ${i18n.__mf("common.poweredBy", { provider: SPOTIFY_PROVIDER_HOST })}` });
 
           if (!isFirstTrack) {
             embed.addFields({ name: i18n.__("common.field.positionInQueue"), value: `#${queue.size}`, inline: true });
@@ -237,7 +238,7 @@ export default {
           { name: i18n.__("common.field.loadTime"), value: `${loadTime}ms`, inline: true }
         )
         .setThumbnail(trackResult.albumArt)
-        .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })}` });
+        .setFooter({ text: `${qualityBadge} • ${botIdentity} • ${i18n.__mf("common.requestedBy", { user: interaction.user.username })} • ${i18n.__mf("common.poweredBy", { provider: SPOTIFY_PROVIDER_HOST })}` });
 
       if (!isFirstTrack) {
         embed.addFields({ name: i18n.__("common.field.positionInQueue"), value: `#${queue.size}`, inline: true });

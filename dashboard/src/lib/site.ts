@@ -23,7 +23,7 @@ export const SITE_DESCRIPTION =
 
 export const DISCORD_INVITE = process.env.NEXT_PUBLIC_DISCORD_INVITE || SUPPORT_INVITE_URL;
 
-export { FOUNDER_PRICE_USD, FOUNDER_SPOTS, PATREON_URL } from "../../../shared/links";
+export { FOUNDER_PRICE_USD, FOUNDER_SPOTS, PATREON_URL, SPOTIFY_PROVIDER_HOST, SPOTIFY_PROVIDER_URL } from "../../../shared/links";
 export const GITHUB_URL = "https://github.com/eduair94/music-bot";
 export const GITHUB_ISSUES_URL = `${GITHUB_URL}/issues`;
 
