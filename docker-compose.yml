@@ -1,3 +1,35 @@
+# Shared by the bot and its fleet instances: the debug panel answers on
+# DEBUG_PORT inside each container.
+x-bot-healthcheck: &bot-healthcheck
+  test:
+    - CMD
+    - node
+    - -e
+    - >-
+      const p=process.env.DEBUG_PORT||'9090';
+      const t=encodeURIComponent(process.env.DEBUG_TOKEN||'');
+      fetch('http://127.0.0.1:'+p+'/api/status?token='+t)
+        .then(r=>process.exit(r.ok?0:1))
+        .catch(()=>process.exit(1));
+  interval: 60s
+  timeout: 10s
+  retries: 3
+  start_period: 90s
+
+# Fleet instances (Bypass 2, 3, 4): the same image as `bot`, one Discord
+# application each, started with BOT_INSTANCE=<n> and that application's
+# token. They stay off until the tokens exist:
+#   docker compose --profile fleet up -d
+# Needs TOKEN_2..TOKEN_4 and FLEET_APPLICATION_IDS in .env (see .env.example).
+x-fleet-bot: &fleet-bot
+  build: .
+  restart: unless-stopped
+  env_file: .env
+  profiles: ["fleet"]
+  volumes:
+    - ./cookies.txt:/app/cookies.txt
+  healthcheck: *bot-healthcheck
+
 services:
   # ── Discord Music Bot ───────────────────────────────────────
   bot:
@@ -10,21 +42,29 @@ services:
     volumes:
       # Mount cookies.txt from host for YouTube auth (yt-dlp needs write access to update cookies)
       - ./cookies.txt:/app/cookies.txt
-    healthcheck:
-      test:
-        - CMD
-        - node
-        - -e
-        - >-
-          const p=process.env.DEBUG_PORT||'9090';
-          const t=encodeURIComponent(process.env.DEBUG_TOKEN||'');
-          fetch('http://127.0.0.1:'+p+'/api/status?token='+t)
-            .then(r=>process.exit(r.ok?0:1))
-            .catch(()=>process.exit(1));
-      interval: 60s
-      timeout: 10s
-      retries: 3
-      start_period: 90s
+    healthcheck: *bot-healthcheck
+
+  # ── Fleet: Bypass 2-4 (no published ports; one /play lives in `bot`) ──
+  bot-2:
+    <<: *fleet-bot
+    container_name: music-bot-2
+    environment:
+      BOT_INSTANCE: "2"
+      TOKEN: ${TOKEN_2:-}
+
+  bot-3:
+    <<: *fleet-bot
+    container_name: music-bot-3
+    environment:
+      BOT_INSTANCE: "3"
+      TOKEN: ${TOKEN_3:-}
+
+  bot-4:
+    <<: *fleet-bot
+    container_name: music-bot-4
+    environment:
+      BOT_INSTANCE: "4"
+      TOKEN: ${TOKEN_4:-}
 
   # ── Web dashboard / landing page (Next.js) ──────────────────
   dashboard:
