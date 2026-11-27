@@ -35,7 +35,19 @@
     "description": "Lyrics of the current song, or any song",
     "errorNotQueue": "There is nothing playing.",
     "lyricsNotFound": "No lyrics found for {title}.",
-    "embedTitle": "{title} - Lyrics"
+    "embedTitle": "{title} - Lyrics",
+    "liveTitle": "Live lyrics",
+    "liveButton": "Live lyrics",
+    "liveHint": "Synced lyrics available: press Live lyrics to follow along.",
+    "liveStop": "Stop",
+    "livePaused": "Paused",
+    "liveEnded": "Live lyrics ended.",
+    "liveReplaced": "Live lyrics moved to a newer message.",
+    "liveStoppedBy": "Live lyrics stopped by {user}.",
+    "liveNoSync": "This song has no synced lyrics, so there's no live mode for it.",
+    "liveNoPermission": "Only the person who started the live lyrics or someone with Manage Messages can stop them.",
+    "liveNotDuringGame": "Lyrics are hidden while a guess-the-song game is running.",
+    "liveVersionHint": "Timed for a different version of the song, so lines may drift"
   },
   "move": {
     "description": "Move songs around in the queue",

@@ -19,6 +19,7 @@ import { i18n, runWithLocale } from "../utils/i18n";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
 import { DiscordPlayerService, isGuessGameQueue, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
+import { canGoLive, openLiveLyrics } from "./liveLyrics";
 import { findLyrics } from "./lyrics";
 import { buildQueueView } from "./queueView";
 import { clearVoiceStatus, nowPlayingStatus, setVoiceStatus } from "./voiceStatus";
@@ -384,7 +385,7 @@ export class PlayerPanelService {
     if (action === "queue") {
       return interaction.reply({ ...(await buildQueueView(queue, 0)), flags: ephemeral | V2, allowedMentions: NO_MENTIONS });
     }
-    if (action === "lyrics") return this.replyLyrics(interaction, track);
+    if (action === "lyrics") return this.replyLyrics(interaction, queue, track);
     if (action === "save") return this.saveToDm(interaction, track);
 
     // Controls: same voice channel + DJ.
@@ -467,18 +468,37 @@ export class PlayerPanelService {
     }
   }
 
-  private async replyLyrics(interaction: ButtonInteraction, track: Track): Promise<unknown> {
-    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    const result = await findLyrics(track.title, track.author || "");
+  /**
+   * 🎤 on the panel: the live synced view when the song has timed lyrics
+   * (a public message that follows the player), otherwise the static lyrics
+   * just for the person who asked.
+   *
+   * Acknowledged with deferUpdate, not deferReply: Discord turns the first
+   * follow-up after a deferred reply into an edit of that (ephemeral) reply,
+   * which would make the live view private.
+   */
+  private async replyLyrics(interaction: ButtonInteraction, queue: GuildQueue, track: Track): Promise<unknown> {
+    await interaction.deferUpdate();
+    const result = await findLyrics(track.title, track.author || "", { durationMs: track.durationMS, preferSynced: true });
     if (!result) {
-      return interaction.editReply({ content: `🎤 ${i18n.__mf("player.lyricsNotFound", { title: safeText(track.title, 80) })}` });
+      return interaction.followUp({
+        content: `🎤 ${i18n.__mf("player.lyricsNotFound", { title: safeText(track.title, 80) })}`,
+        flags: MessageFlags.Ephemeral
+      });
+    }
+    if (canGoLive(result, track) && currentTrackOf(queue)?.id === track.id) {
+      try {
+        return await openLiveLyrics(interaction, { queue, track, result, via: "followUp", ephemeral: false });
+      } catch (error) {
+        console.warn("[PlayerPanel] Live lyrics failed, showing static lyrics:", (error as Error)?.message ?? error);
+      }
     }
     const container = new ContainerBuilder()
       .setAccentColor(DEFAULT_ACCENT)
       .addTextDisplayComponents((t) => t.setContent(`### 🎤 ${safeText(result.title, 80)} — ${safeText(result.artist, 60)}`))
       .addTextDisplayComponents((t) => t.setContent(truncate(result.text, 3700)))
       .addTextDisplayComponents((t) => t.setContent(`-# ${i18n.__mf("lyricsCmd.source", { source: result.source })}`));
-    return interaction.editReply({ components: [container], flags: V2 } as any);
+    return interaction.followUp({ components: [container], flags: V2 | MessageFlags.Ephemeral } as any);
   }
 
   private async saveToDm(interaction: ButtonInteraction, track: Track): Promise<unknown> {
