@@ -1,291 +1,181 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import MusicNoteIcon from "@mui/icons-material/MusicNote";
-import QueueMusicIcon from "@mui/icons-material/QueueMusic";
-import SettingsIcon from "@mui/icons-material/Settings";
-import SupportIcon from "@mui/icons-material/Support";
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Alert,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { PageHead } from "@/components/fest/account/PageHead";
+import { btn, textLink } from "@/components/fest/account/styles";
+import { faqs as landingFaqs } from "@/data/faq";
+import { ArrowRight, ArrowUpRight, Plus } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { DISCORD_INVITE } from "@/lib/site";
+import { SUPPORT_INVITE_URL } from "../../../../../shared/links";
 
-const commandCategories = [
+export const metadata: Metadata = { title: "Help" };
+
+const STEPS = [
   {
-    name: "Playback",
-    icon: <MusicNoteIcon />,
-    commands: [
-      { name: "/play", description: "Play a song from YouTube, Spotify, or SoundCloud", usage: "/play <song name or URL>" },
-      { name: "/pause", description: "Pause the current track", usage: "/pause" },
-      { name: "/resume", description: "Resume playback", usage: "/resume" },
-      { name: "/stop", description: "Stop playback and clear the queue", usage: "/stop" },
-      { name: "/skip", description: "Skip the current track", usage: "/skip" },
-      { name: "/volume", description: "Set the playback volume", usage: "/volume <1-100>" },
-      { name: "/nowplaying", description: "Show the currently playing track", usage: "/nowplaying" },
-    ],
+    title: "Add Bypass to your server",
+    body: (
+      <>
+        Someone with Manage Server adds it from{" "}
+        <Link href="/servers" className={textLink}>
+          Your servers
+        </Link>
+        . Bypass only asks for what it needs to post its player and speak in voice.
+      </>
+    ),
   },
   {
-    name: "Queue Management",
-    icon: <QueueMusicIcon />,
-    commands: [
-      { name: "/queue", description: "View the current queue", usage: "/queue" },
-      { name: "/shuffle", description: "Shuffle the queue", usage: "/shuffle" },
-      { name: "/loop", description: "Toggle loop mode", usage: "/loop [off|track|queue]" },
-      { name: "/remove", description: "Remove a track from the queue", usage: "/remove <position>" },
-      { name: "/jump", description: "Jump to a specific track in the queue", usage: "/jump <position>" },
-      { name: "/move", description: "Move a track to a different position", usage: "/move <from> <to>" },
-    ],
+    title: "Join a voice channel and play",
+    body: (
+      <>
+        Run <code className="[font-family:inherit] font-semibold text-ink">/play</code> with a song name or a link from YouTube, Spotify,
+        SoundCloud, Apple Music or Deezer. Bypass joins your channel and starts the queue.
+      </>
+    ),
   },
   {
-    name: "Search & Discovery",
-    icon: <HelpOutlineIcon />,
-    commands: [
-      { name: "/search", description: "Search for tracks and select from results", usage: "/search <query>" },
-      { name: "/lyrics", description: "Get lyrics for the current or specified song", usage: "/lyrics [song name]" },
-      { name: "/collections", description: "Save and load your own playlists", usage: "/collections <save|load|list>" },
-    ],
-  },
-  {
-    name: "Settings",
-    icon: <SettingsIcon />,
-    commands: [
-      { name: "/settings", description: "View and manage server settings", usage: "/settings" },
-      { name: "/setbitrate", description: "Set the audio bitrate", usage: "/setbitrate <64-384>" },
-      { name: "/resetbitrate", description: "Reset bitrate to default", usage: "/resetbitrate" },
-    ],
+    title: "Run it from here",
+    body: (
+      <>
+        Open your server in the dashboard to see what&apos;s playing, change the queue and the volume, and, if you
+        manage the server, decide who may control the music under Permissions.
+      </>
+    ),
   },
 ];
 
-const faqs = [
+const COMMANDS = [
+  ["/play", "Play a song or playlist by name or link."],
+  ["/queue", "See what's up next."],
+  ["/skip", "Skip the current song."],
+  ["/lyrics", "Lyrics for the current song, synced when available."],
+  ["/history", "What played recently, with play again."],
+  ["/collections", "Save, load and import your own playlists."],
+  ["/247", "Keep Bypass in the channel around the clock (Founder, or 12 hours after a vote)."],
+  ["/guess", "Start a guess-the-song round."],
+];
+
+/** Dashboard questions first, then the landing's answers that hold for signed-in members. */
+const LANDING_KEEP = [
+  "Is Bypass really free?",
+  "What languages does Bypass support?",
+  "How does the Patreon integration work?",
+  "The bot is not playing audio. What should I do?",
+];
+
+const FAQS = [
   {
-    question: "How do I add the bot to my server?",
-    answer: "Click the 'Add to Server' button on the homepage or go to the Servers page and click 'Invite Bot' on any server where you have Manage Server permissions.",
+    question: "Why can't I use some controls?",
+    answer:
+      "Server admins decide who may control the music. Controls you can't use stay visible and say which rule blocks them. Ask someone with Manage Server to change it under Permissions.",
   },
   {
-    question: "Why can't I use certain commands?",
-    answer: "Some commands require specific permissions. Make sure you have the DJ role (if configured) or the necessary Discord permissions. Server admins can configure command permissions in the dashboard.",
+    question: "Why isn't my server listed?",
+    answer:
+      "Your servers lists every server you share with Bypass. If Bypass isn't in a server yet, someone with Manage Server has to add it; servers you manage show an Add Bypass button.",
   },
   {
-    question: "How do I restrict commands to specific channels?",
-    answer: "Go to your Server Settings in the dashboard and configure allowed text and voice channels. Only those channels will be able to use bot commands.",
+    question: "What are the other stages on the Fleet?",
+    answer:
+      "Extra Bypass bots that each play in their own voice channel are on the way. Until they launch, Bypass plays in one voice channel per server.",
   },
-  {
-    question: "What audio sources are supported?",
-    answer: "The bot supports YouTube, Spotify, SoundCloud, and direct audio file URLs. For Spotify, the bot will search for matching tracks on YouTube.",
-  },
-  {
-    question: "How do I get premium features?",
-    answer: "Visit our Patreon page to subscribe. Premium benefits include higher audio quality, longer queue limits, and priority support.",
-  },
-  {
-    question: "The bot is not responding to commands",
-    answer: "Make sure the bot has the necessary permissions (View Channel, Send Messages, Connect, Speak). Also check if you're using the bot in an allowed channel.",
-  },
+  ...landingFaqs.filter((f) => LANDING_KEEP.includes(f.question)),
+];
+
+const SECTIONS = [
+  { id: "start", label: "Getting started" },
+  { id: "commands", label: "Commands" },
+  { id: "questions", label: "Questions" },
+  { id: "support", label: "Support" },
 ];
 
 export default function HelpPage() {
   return (
-    <Box>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Help & Documentation
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Learn how to use the music bot and get answers to common questions.
-        </Typography>
-      </Box>
+    <>
+      <PageHead title="Help" status="Getting started, the main commands, and answers" />
 
-      {/* Quick Links */}
-      <Alert
-        severity="info"
-        sx={{
-          mb: 4,
-          backgroundColor: "rgba(248, 170, 42, 0.08)",
-          border: "1px solid rgba(248, 170, 42, 0.3)",
-        }}
-        action={
-          <Button
-            component={Link}
-            href={DISCORD_INVITE}
-            target="_blank"
-            color="inherit"
-            size="small"
-          >
-            Join Discord
-          </Button>
-        }
-      >
-        Need more help? Join our support Discord server for live assistance!
-      </Alert>
+      <div className="grid gap-x-10 px-4 pb-24 pt-10 sm:px-6 lg:grid-cols-12">
+        <nav aria-label="On this page" className="hidden lg:col-span-3 lg:block xl:col-span-2">
+          <ul className="sticky top-24 space-y-1 border-l border-rule">
+            {SECTIONS.map((s) => (
+              <li key={s.id}>
+                <a href={`#${s.id}`} className="-ml-px block border-l-2 border-transparent py-1 pl-3 text-[14px] font-semibold text-ink-2 transition-colors hover:border-ink hover:text-ink">
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      {/* Commands Section */}
-      <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mt: 4 }}>
-        Bot Commands
-      </Typography>
+        <article className="min-w-0 max-w-[68ch] lg:col-span-9 xl:col-span-7">
+          <section id="start" aria-labelledby="start-h" className="scroll-mt-24">
+            <h2 id="start-h" className="bill text-[40px]">
+              Getting started
+            </h2>
+            <ol className="mt-5 space-y-6">
+              {STEPS.map((s, i) => (
+                <li key={s.title} className="flex gap-4">
+                  <span className="clock flex h-8 w-8 shrink-0 items-center justify-center rounded-[4px] bg-ink text-[17px] text-stock">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0 pt-0.5">
+                    <h3 className="text-[17px] font-semibold">{s.title}</h3>
+                    <p className="mt-1 text-[15px] leading-relaxed text-ink-2">{s.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-      <Stack spacing={2} sx={{ mb: 4 }}>
-        {commandCategories.map((category) => (
-          <Card
-            key={category.name}
-            sx={{
-              
-              
-            }}
-          >
-            <Accordion
-              sx={{
-                background: "transparent",
-                boxShadow: "none",
-                "&:before": { display: "none" },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                sx={{ px: 3 }}
-              >
-                <Stack direction="row" alignItems="center" spacing={2}>
-                  <Box sx={{ color: "primary.main" }}>{category.icon}</Box>
-                  <Typography variant="h6" fontWeight={600}>
-                    {category.name}
-                  </Typography>
-                  <Chip
-                    label={`${category.commands.length} commands`}
-                    size="small"
-                    sx={{ ml: 2 }}
-                  />
-                </Stack>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: 3, pb: 3 }}>
-                <Stack spacing={2}>
-                  {category.commands.map((cmd) => (
-                    <Box
-                      key={cmd.name}
-                      sx={{
-                        p: 2,
-                        borderRadius: 1,
-                        bgcolor: "rgba(0, 0, 0, 0.2)",
-                      }}
-                    >
-                      <Stack
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="flex-start"
-                      >
-                        <Box>
-                          <Typography
-                            variant="subtitle1"
-                            fontWeight={600}
-                            sx={{ color: "#f8aa2a", fontFamily: "var(--font-jetbrains), monospace" }}
-                          >
-                            {cmd.name}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {cmd.description}
-                          </Typography>
-                        </Box>
-                        <Chip
-                          label={cmd.usage}
-                          size="small"
-                          sx={{
-                            fontFamily: "monospace",
-                            fontSize: "0.75rem",
-                            bgcolor: "rgba(88, 101, 242, 0.2)",
-                          }}
-                        />
-                      </Stack>
-                    </Box>
-                  ))}
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-        ))}
-      </Stack>
+          <section id="commands" aria-labelledby="commands-h" className="mt-20 scroll-mt-24">
+            <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+              <h2 id="commands-h" className="bill text-[40px]">
+                Commands
+              </h2>
+              <Link href="/commands" className="flex items-center gap-1.5 pb-1 text-[14px] font-semibold hover:underline">
+                Every command <ArrowRight size={15} aria-hidden />
+              </Link>
+            </div>
+            <dl className="mt-4 border-b border-rule">
+              {COMMANDS.map(([name, what]) => (
+                <div key={name} className="grid gap-x-6 border-t border-rule py-3 first:border-t-2 first:border-ink sm:grid-cols-[9rem_minmax(0,1fr)]">
+                  <dt>
+                    <code className="[font-family:inherit] text-[15px] font-semibold text-ink">{name}</code>
+                  </dt>
+                  <dd className="text-[15px] leading-relaxed text-ink-2">{what}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
 
-      {/* FAQ Section */}
-      <Typography variant="h5" fontWeight={700} gutterBottom sx={{ mt: 4 }}>
-        Frequently Asked Questions
-      </Typography>
+          <section id="questions" aria-labelledby="questions-h" className="mt-20 scroll-mt-24">
+            <h2 id="questions-h" className="bill text-[40px]">
+              Questions
+            </h2>
+            <div className="mt-4 border-b border-rule">
+              {FAQS.map((f) => (
+                <details key={f.question} className="group border-t border-rule first:border-t-2 first:border-ink">
+                  <summary className="flex cursor-pointer list-none items-start gap-4 py-4 text-[16px] font-semibold marker:hidden [&::-webkit-details-marker]:hidden">
+                    <span className="min-w-0 flex-1">{f.question}</span>
+                    <Plus size={18} aria-hidden className="mt-0.5 shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-open:rotate-45" />
+                  </summary>
+                  <p className="-mt-1 pb-5 pr-8 text-[15px] leading-relaxed text-ink-2">{f.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
 
-      <Stack spacing={2}>
-        {faqs.map((faq, index) => (
-          <Card
-            key={index}
-            sx={{
-              
-              
-            }}
-          >
-            <Accordion
-              sx={{
-                background: "transparent",
-                boxShadow: "none",
-                "&:before": { display: "none" },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                sx={{ px: 3 }}
-              >
-                <Typography variant="subtitle1" fontWeight={600}>
-                  {faq.question}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails sx={{ px: 3, pb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  {faq.answer}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Card>
-        ))}
-      </Stack>
-
-      {/* Support Card */}
-      <Card
-        sx={{
-          mt: 4,
-          background: "linear-gradient(135deg, rgba(248, 170, 42, 0.12) 0%, rgba(21, 18, 16, 0.9) 100%)",
-          border: "1px solid rgba(88, 101, 242, 0.3)",
-        }}
-      >
-        <CardContent sx={{ p: 4, textAlign: "center" }}>
-          <SupportIcon sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
-          <Typography variant="h5" fontWeight={700} gutterBottom>
-            Still need help?
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 500, mx: "auto" }}>
-            Our support team is ready to help. Join our Discord server or check out our premium support options.
-          </Typography>
-          <Stack direction="row" spacing={2} justifyContent="center">
-            <Button
-              variant="contained"
-              component={Link}
-              href={DISCORD_INVITE}
-              target="_blank"
-            >
-              Join Support Server
-            </Button>
-            <Button
-              variant="outlined"
-              component={Link}
-              href="/premium"
-            >
-              Premium Support
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Box>
+          <section id="support" aria-labelledby="support-h" className="mt-20 scroll-mt-24">
+            <h2 id="support-h" className="bill text-[40px]">
+              Still stuck?
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
+              Ask in the Bypass support server. Post in the help channel, or open a ticket if it&apos;s about your account or
+              a payment. Staff never ask for your password or a bot token.
+            </p>
+            <a href={SUPPORT_INVITE_URL} target="_blank" rel="noreferrer" className={btn("ink", "md", "mt-5")}>
+              Join the support server <ArrowUpRight size={16} aria-hidden />
+            </a>
+          </section>
+        </article>
+      </div>
+    </>
   );
 }

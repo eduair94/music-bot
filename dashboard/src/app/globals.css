@@ -342,3 +342,260 @@ body {
     transition: none;
   }
 }
+
+/* ────────────────────────────────────────────────────────────
+   BYPASS DASHBOARD — "Clash Finder"
+   A festival bill: printed stock, ink, ruled hairlines, and one
+   colour per stage (bot instance). Scoped to .fest so the landing
+   keeps its studio-console look.
+   ──────────────────────────────────────────────────────────── */
+
+@theme inline {
+  --color-stock: #f2ede4;
+  --color-stock-deep: #e8e1d4;
+  --color-paper: #fbf8f2;
+  --color-ink: #151515;
+  --color-ink-2: #3d3a35;
+  --color-ink-3: #6b665d;
+  --color-rule: #cfc6b8;
+  --color-rule-soft: #e0d8ca;
+  --color-now: #d4001f;
+  --color-stage-1: #e8402a;
+  --color-stage-2: #2a5bd7;
+  --color-stage-3: #f5b700;
+  --color-stage-4: #1f9d55;
+  --color-stage-5: #c2187a;
+  --color-stage-6: #0f8a8a;
+  --color-stage-7: #f07d16;
+  --color-stage-8: #7c4ddb;
+  --font-bill: var(--font-anybody), "Arial Narrow", sans-serif;
+  --font-ui: var(--font-public), ui-sans-serif, system-ui, sans-serif;
+}
+
+body:has(.fest) {
+  background: #f2ede4;
+  color: #151515;
+}
+
+.fest {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  min-height: 100dvh;
+  background-color: var(--color-stock);
+  background-image: url("/dash/paper-grain.webp");
+  background-size: 512px 512px;
+  color: var(--color-ink);
+  font-family: var(--font-public), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "tnum" 1;
+  color-scheme: light;
+}
+
+.fest ::selection {
+  background: var(--color-ink);
+  color: var(--color-stock);
+}
+
+.fest :focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.fest * {
+  scrollbar-color: var(--color-ink-3) transparent;
+  scrollbar-width: thin;
+}
+
+.fest ::-webkit-scrollbar-thumb {
+  background: var(--color-ink-3);
+}
+
+.fest input,
+.fest textarea {
+  caret-color: var(--color-now);
+}
+
+/* The bill's display voice: Anybody at condensed width, set in caps. */
+.bill {
+  font-family: var(--font-anybody), "Arial Narrow", sans-serif;
+  font-variation-settings: "wdth" 74;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+
+.bill-wide {
+  font-family: var(--font-anybody), "Arial Narrow", sans-serif;
+  font-variation-settings: "wdth" 90;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* Times on the clock: condensed, tabular, never wobbling. */
+.clock {
+  font-family: var(--font-anybody), "Arial Narrow", sans-serif;
+  font-variation-settings: "wdth" 75;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Things that are absent or ended get a dashed printer's outline. */
+.dashed {
+  border: 1.5px dashed currentColor;
+}
+
+/* Diagonal hatching for "off air" and the part of a set already played. */
+.hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(21 21 21 / 0.08) 0 2px,
+    transparent 2px 7px
+  );
+}
+
+/* Screen-print pull: a set block is printed onto the bill, ink wiping down. */
+@keyframes print-pull {
+  from {
+    clip-path: inset(0 0 100% 0);
+    filter: saturate(1.6) brightness(1.08);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    filter: none;
+  }
+}
+
+/* A finished set leaves the bill upward. */
+@keyframes set-off {
+  to {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}
+
+/* Rubber stamp: a mark lands from where you clicked. */
+@keyframes stamp-in {
+  from {
+    clip-path: circle(0% at var(--sx, 50%) var(--sy, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--sx, 50%) var(--sy, 50%));
+  }
+}
+
+/* Ticket stub toast: slides in, tears off on exit. */
+@keyframes stub-in {
+  from {
+    transform: translateY(16px) rotate(-1.5deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes stub-out {
+  to {
+    transform: translateX(40px) rotate(4deg);
+    opacity: 0;
+  }
+}
+
+@keyframes now-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.print-pull {
+  animation: print-pull 620ms var(--ease-out) both;
+}
+
+.stamp-in {
+  animation: stamp-in 420ms var(--ease-out) both;
+}
+
+.stub-in {
+  animation: stub-in 380ms var(--ease-out) both;
+}
+
+.stub-out {
+  animation: stub-out 220ms var(--ease-in) forwards;
+}
+
+.now-dot {
+  animation: now-pulse 2s ease-in-out infinite;
+}
+
+/* Fleet → player continuity: the stage block morphs into the player header. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}
+
+::view-transition-group(*) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .print-pull,
+  .stamp-in,
+  .stub-in,
+  .stub-out {
+    animation-duration: 1ms;
+  }
+  .now-dot {
+    animation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 1ms !important;
+  }
+}
+
+/* Range: ink track, stage-coloured fill, square ink thumb. */
+.fest-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.fest-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--stage) var(--fill), rgb(21 21 21 / 0.14) var(--fill));
+}
+.fest-range::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: rgb(21 21 21 / 0.14);
+}
+.fest-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--stage);
+}
+.fest-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 3px;
+  background: #151515;
+  border: 2px solid #fbf8f2;
+  box-shadow: 0 1px 3px rgb(21 21 21 / 0.35);
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fest-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: #151515;
+  border: 2px solid #fbf8f2;
+}
+.fest-range:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}

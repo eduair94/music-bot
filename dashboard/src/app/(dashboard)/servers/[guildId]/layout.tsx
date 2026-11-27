@@ -1,23 +1,21 @@
-import { ReactNode } from "react";
-import { Box, Tabs, Tab, Paper } from "@mui/material";
-import Link from "next/link";
-import { ServerTabs } from "./ServerTabs";
+import { AddSongDrawer } from "@/components/fest/AddSongDrawer";
+import { GuildGate } from "@/components/fest/GuildGate";
+import { GuildLiveProvider } from "@/lib/dash/live";
 
-interface ServerLayoutProps {
-  children: ReactNode;
-  params: Promise<{ guildId: string }>;
-}
+export const dynamic = "force-dynamic";
 
-export default async function ServerLayout({
+export default async function GuildLayout({
   children,
   params,
-}: ServerLayoutProps) {
+}: {
+  children: React.ReactNode;
+  params: Promise<{ guildId: string }>;
+}) {
   const { guildId } = await params;
-
   return (
-    <Box>
-      <ServerTabs guildId={guildId} />
-      {children}
-    </Box>
+    <GuildLiveProvider guildId={guildId}>
+      <GuildGate>{children}</GuildGate>
+      <AddSongDrawer />
+    </GuildLiveProvider>
   );
 }

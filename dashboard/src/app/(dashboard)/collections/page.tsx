@@ -1,29 +1,17 @@
 import { auth } from "@/auth";
-import { Box, Typography } from "@mui/material";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { CollectionsClient } from "./CollectionsClient";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = { title: "Collections" };
+
+const DEMO = process.env.NEXT_PUBLIC_DASH_DEMO === "1";
 
 export default async function CollectionsPage() {
   const session = await auth();
+  if (!session && !DEMO) redirect("/login");
 
-  if (!session) {
-    redirect("/login");
-  }
-
-  return (
-    <Box>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          My Collections
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Create and manage your personal music collections. Save your favorite playlists and load them into any server.
-        </Typography>
-      </Box>
-
-      <CollectionsClient />
-    </Box>
-  );
+  return <CollectionsClient demo={!session} />;
 }

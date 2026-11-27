@@ -1,1 +1,4 @@
 .next
+# local dashboard demo mode
+.env*.local
+.asset-src/

@@ -1,11 +1,5 @@
-import { redirect } from "next/navigation";
+import { FleetBill } from "@/components/fest/FleetBill";
 
-interface Props {
-  params: Promise<{ guildId: string }>;
-}
-
-export default async function ServerPage({ params }: Props) {
-  const { guildId } = await params;
-  // Redirect to settings by default
-  redirect(`/servers/${guildId}/settings`);
+export default function FleetPage() {
+  return <FleetBill />;
 }

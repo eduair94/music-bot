@@ -1,51 +1,65 @@
 import { auth } from "@/auth";
-import { DashboardHeader } from "@/components/dashboard/Header";
-import { DashboardSidebar } from "@/components/dashboard/Sidebar";
-import { AppProviders } from "@/components/providers/AppProviders";
-import { Box } from "@mui/material";
+import { ToastProvider } from "@/components/fest/Toast";
+import { TopBar, type SwitcherGuild } from "@/components/fest/TopBar";
+import { fetchUserGuilds } from "@/lib/discord";
+import { enhanceGuildsWithBotInfo } from "@/lib/discord-server";
 import type { Metadata } from "next";
+import { Anybody, Public_Sans } from "next/font/google";
 import { redirect } from "next/navigation";
 
-const DRAWER_WIDTH = 280;
+const anybody = Anybody({
+  subsets: ["latin"],
+  axes: ["wdth"],
+  display: "swap",
+  variable: "--font-anybody",
+});
+
+const publicSans = Public_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-public",
+});
+
 const OWNER_ID = process.env.OWNER_ID || process.env.DISCORD_OWNER_ID;
+const DEMO = process.env.NEXT_PUBLIC_DASH_DEMO === "1";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const session = await auth();
-
-  if (!session) {
-    redirect("/login");
+async function switcherGuilds(accessToken: string | undefined): Promise<SwitcherGuild[]> {
+  const demo: SwitcherGuild[] = DEMO ? [{ id: "demo", name: "Night Owls", icon: null }] : [];
+  if (!accessToken) return demo;
+  try {
+    const guilds = await enhanceGuildsWithBotInfo(await fetchUserGuilds(accessToken));
+    return [...demo, ...guilds.filter((g) => g.botInGuild).map((g) => ({ id: g.id, name: g.name, icon: g.icon }))];
+  } catch {
+    return demo;
   }
+}
 
-  // Check if user is the bot owner
-  const isOwner = session.user?.discordId === OWNER_ID;
+export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  if (!session && !DEMO) redirect("/login");
+
+  const guilds = await switcherGuilds(session?.accessToken);
+  const user = {
+    name: session?.user?.name ?? "rook",
+    image: session?.user?.image ?? null,
+  };
+  const isOwner = Boolean(session?.user?.discordId && session.user.discordId === OWNER_ID);
 
   return (
-    <AppProviders>
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
-        <DashboardSidebar width={DRAWER_WIDTH} isOwner={isOwner} />
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            minHeight: "100vh",
-            bgcolor: "#0c0a09",
-            backgroundImage: "radial-gradient(#1d1916 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-            overflow: "auto",
-          }}
-        >
-          <DashboardHeader isOwner={isOwner} />
-          <Box sx={{ p: { xs: 2, sm: 3 } }}>{children}</Box>
-        </Box>
-      </Box>
-    </AppProviders>
+    <div className={`fest ${anybody.variable} ${publicSans.variable}`}>
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:bg-ink focus:px-3 focus:py-2 focus:text-stock">
+        Skip to content
+      </a>
+      <ToastProvider>
+        <TopBar guilds={guilds} user={user} isOwner={isOwner} />
+        <main id="main" className="min-w-0">
+          {children}
+        </main>
+      </ToastProvider>
+    </div>
   );
 }

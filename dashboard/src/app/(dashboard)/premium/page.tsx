@@ -1,264 +1,131 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import DiamondIcon from "@mui/icons-material/Diamond";
-import StarIcon from "@mui/icons-material/Star";
-import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import { auth } from "@/auth";
+import { PageHead } from "@/components/fest/account/PageHead";
+import { getPlanStatus, hoursLeft, type PlanStatus } from "@/components/fest/account/plan";
+import { PremiumPass } from "@/components/fest/account/PremiumPass";
+import { btn } from "@/components/fest/account/styles";
+import { ArrowUpRight } from "lucide-react";
+import type { Metadata } from "next";
 import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    Grid2 as Grid,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Stack,
-    Typography,
-} from "@mui/material";
+  FOUNDER_PRICE_USD,
+  FOUNDER_SPOTS,
+  PATREON_URL,
+  SUPPORT_INVITE_URL,
+  TOPGG_VOTE_URL,
+} from "../../../../../shared/links";
 
-const plans = [
+export const metadata: Metadata = { title: "Premium" };
+
+/**
+ * Only perks the bot actually enforces (utils/premiumCheck.ts, utils/playFlow.ts,
+ * services/boosters.ts). PRODUCT.md: never claim priority queue, unlimited
+ * playlists or bitrate as a quality difference.
+ */
+const PERKS = [
   {
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    description: "Perfect for getting started",
-    features: [
-      "Play music from YouTube",
-      "Queue management",
-      "Basic playback controls",
-      "Volume control",
-      "Lyrics display",
-      "27+ languages support",
-    ],
-    current: true,
-    icon: <StarIcon />,
-    color: "#72767d",
+    title: "24/7 in your voice channel",
+    body: "Turn it on with /247. Bypass stays through the quiet stretches and comes back after a restart.",
   },
   {
-    name: "Founder / Beta Tester",
-    price: "$3",
-    period: "per month",
-    description: "Limited to 50 spots - Locked forever",
-    features: [
-      "All Free features",
-      "Audio Filters (bass boost, nightcore)",
-      "24/7 Mode - Bot stays in channel",
-      "Maximum Audio Quality",
-      "Priority Queue",
-      "Unlimited Saved Playlists",
-      "No Song Duration Limit",
-      "Vote on New Features",
-      "Exclusive Founder Role",
-      "Direct Support Channel",
-    ],
-    popular: true,
-    icon: <WorkspacePremiumIcon />,
-    color: "#f8aa2a",
-    ctaLink: "https://www.patreon.com/c/u36360623",
+    title: "Full-length songs",
+    body: "When a server caps song length, the songs you queue still play to the end.",
   },
   {
-    name: "Coming Soon",
-    price: "$3.50+",
-    period: "per month",
-    description: "Future premium tiers",
-    features: [
-      "Multi-server support",
-      "Custom bot instance",
-      "Priority support",
-      "More features coming...",
-    ],
-    icon: <DiamondIcon />,
-    color: "#5865F2",
-    ctaLink: "https://www.patreon.com/c/u36360623",
+    title: "Every server you use",
+    body: "Perks follow your Discord account, so they work wherever you play music with Bypass.",
+  },
+  {
+    title: "The Founders role",
+    body: "Your name under Founders in the Bypass support server, synced from Patreon.",
   },
 ];
 
-export default function PremiumPage() {
+function statusLine(plan: PlanStatus | null): string {
+  if (!plan) return `Founder is $${FOUNDER_PRICE_USD} a month on Patreon`;
+  if (plan.patreon?.founder) return "You're a Founder. Thank you for backing Bypass.";
+  if (plan.patreon) return `You back Bypass on Patreon${plan.patreon.tierTitle ? ` (${plan.patreon.tierTitle})` : ""}`;
+  if (plan.booster) return "You're boosting the support server, so Founder perks are on";
+  if (plan.voteUntil) return `Your vote perks are on for ${hoursLeft(plan.voteUntil)}`;
+  return "You're on Free";
+}
+
+export default async function PremiumPage() {
+  const session = await auth();
+  const plan = session?.user?.discordId ? await getPlanStatus(session.user.discordId) : null;
+  const patron = Boolean(plan?.patreon);
+
   return (
-    <Box>
-      <Box sx={{ mb: 4, textAlign: "center" }}>
-        <Chip
-          label="Support on Patreon"
-          size="small"
-          sx={{
-            mb: 2,
-            bgcolor: "#F96854",
-            color: "white",
-            fontWeight: 600,
-          }}
-        />
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Unlock Premium Features
-        </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: "auto" }}>
-          Support the development and get exclusive features.
-        </Typography>
-      </Box>
+    <>
+      <PageHead title="Premium" status={statusLine(plan)} />
 
-      <Grid container spacing={3} justifyContent="center">
-        {plans.map((plan) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={plan.name}>
-            <Card
-              sx={{
-                height: "100%",
-                ...(plan.popular && {
-                  background: `linear-gradient(135deg, ${plan.color}20 0%, rgba(21, 18, 16, 0.9) 100%)`,
-                  border: `2px solid ${plan.color}`,
-                }),
-                position: "relative",
-                overflow: "visible",
-              }}
-            >
-              {plan.popular && (
-                <Chip
-                  label="LIMITED TIME"
-                  size="small"
-                  sx={{
-                    position: "absolute",
-                    top: -12,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    bgcolor: plan.color,
-                    color: "#0c0a09",
-                    fontWeight: 700,
-                  }}
-                />
-              )}
+      <div className="grid gap-x-10 px-4 pb-24 sm:px-6 lg:grid-cols-12">
+        {/* The pass hangs from the page's rule. */}
+        <div className="mx-auto w-full max-w-[15rem] sm:max-w-[19rem] lg:col-span-5 lg:max-w-none xl:col-span-4 xl:col-start-2">
+          <div className="lg:sticky lg:top-16">
+            <PremiumPass price={FOUNDER_PRICE_USD} spots={FOUNDER_SPOTS} />
+          </div>
+        </div>
 
-              <CardContent sx={{ p: 4 }}>
-                <Stack spacing={3}>
-                  <Box sx={{ textAlign: "center" }}>
-                    <Box
-                      sx={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: "16px",
-                        bgcolor: `${plan.color}20`,
-                        color: plan.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        mx: "auto",
-                        mb: 2,
-                      }}
-                    >
-                      {plan.icon}
-                    </Box>
+        <div className="min-w-0 pt-10 lg:col-span-7 lg:pt-14 xl:col-span-6">
+          <h2 className="bill text-[40px]">What Founders get</h2>
+          <ul className="mt-5 max-w-[46rem] border-b border-rule">
+            {PERKS.map((p) => (
+              <li key={p.title} className="grid gap-1 border-t border-rule py-4 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-6">
+                <h3 className="text-[16px] font-semibold text-ink">{p.title}</h3>
+                <p className="text-[15px] leading-relaxed text-ink-2">{p.body}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a href={PATREON_URL} target="_blank" rel="noreferrer" className={btn("ink", "lg")}>
+              {patron ? "Manage on Patreon" : "Become a Founder"} <ArrowUpRight size={16} aria-hidden />
+            </a>
+            <p className="text-[13px] text-ink-3">
+              ${FOUNDER_PRICE_USD} a month, billed by Patreon. Cancel there anytime.
+            </p>
+          </div>
 
-                    <Typography variant="h5" fontWeight={700}>
-                      {plan.name}
-                    </Typography>
+          <h2 className="bill mt-20 text-[40px]">Two free ways in</h2>
+          <div className="mt-5 grid max-w-[46rem] border-t-2 border-ink sm:grid-cols-2">
+            <section className="py-5 sm:pr-6">
+              <h3 className="bill text-[28px]">Vote on top.gg</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-2">
+                Each vote turns on 24/7 mode for you for 12 hours. When it runs out, vote again.
+              </p>
+              <a href={TOPGG_VOTE_URL} target="_blank" rel="noreferrer" className={btn("outline", "md", "mt-4")}>
+                Vote on top.gg <ArrowUpRight size={15} aria-hidden />
+              </a>
+            </section>
+            <section className="border-t border-rule py-5 sm:border-l sm:border-t-0 sm:pl-6">
+              <h3 className="bill text-[28px]">Boost the support server</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-2">
+                Boosters get 24/7 and full-length songs for as long as the boost lasts. Nothing to link.
+              </p>
+              <a href={SUPPORT_INVITE_URL} target="_blank" rel="noreferrer" className={btn("outline", "md", "mt-4")}>
+                Join the support server <ArrowUpRight size={15} aria-hidden />
+              </a>
+            </section>
+          </div>
 
-                    <Box sx={{ mt: 1 }}>
-                      <Typography
-                        variant="h3"
-                        component="span"
-                        fontWeight={800}
-                        sx={{ color: plan.color }}
-                      >
-                        {plan.price}
-                      </Typography>
-                      <Typography variant="body2" component="span" color="text.secondary">
-                        {" "}/ {plan.period}
-                      </Typography>
-                    </Box>
-
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                      {plan.description}
-                    </Typography>
-                  </Box>
-
-                  <List dense>
-                    {plan.features.map((feature, index) => (
-                      <ListItem key={index} sx={{ px: 0 }}>
-                        <ListItemIcon sx={{ minWidth: 32 }}>
-                          <CheckCircleIcon
-                            sx={{ fontSize: 18, color: plan.color }}
-                          />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={feature}
-                          primaryTypographyProps={{ variant: "body2" }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-
-                  <Button
-                    variant={plan.current ? "outlined" : "contained"}
-                    fullWidth
-                    disabled={plan.current}
-                    component={plan.ctaLink ? "a" : "button"}
-                    href={plan.ctaLink}
-                    target={plan.ctaLink ? "_blank" : undefined}
-                    rel={plan.ctaLink ? "noopener noreferrer" : undefined}
-                    sx={{
-                      py: 1.5,
-                      ...(plan.popular && !plan.current && {
-                        bgcolor: plan.color,
-                        "&:hover": {
-                          bgcolor: plan.color,
-                          opacity: 0.9,
-                        },
-                      }),
-                    }}
-                  >
-                    {plan.current ? "Current Plan" : plan.popular ? "Become a Founder" : "Join Waitlist"}
-                  </Button>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-
-      {/* FAQ Section */}
-      <Box sx={{ mt: 8, textAlign: "center" }}>
-        <Typography variant="h5" fontWeight={700} gutterBottom>
-          Frequently Asked Questions
-        </Typography>
-
-        <Grid container spacing={3} sx={{ mt: 2 }}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Card
-              sx={{
-                
-                
-                textAlign: "left",
-              }}
-            >
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" fontWeight={600} gutterBottom>
-                  How do payments work?
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  We use Patreon for all payments. Your subscription is billed monthly and you can cancel anytime. Benefits are applied automatically to your Discord account.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Card
-              sx={{
-                
-                
-                textAlign: "left",
-              }}
-            >
-              <CardContent sx={{ p: 3 }}>
-                <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Can I cancel anytime?
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Yes! You can cancel your subscription at any time. Your premium benefits will remain active until the end of your billing period.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
+          <h2 className="bill mt-20 text-[40px]">How it works</h2>
+          <ol className="mt-5 max-w-[62ch] space-y-4">
+            {[
+              <>Join the Founder tier on Patreon.</>,
+              <>In your Patreon settings, connect your Discord account so Bypass can match you.</>,
+              <>
+                Bypass picks it up on its own. Check with <code className="[font-family:inherit] font-semibold text-ink">/patreon status</code>, or
+                run <code className="[font-family:inherit] font-semibold text-ink">/patreon sync</code> if it hasn&apos;t shown up yet.
+              </>,
+            ].map((step, i) => (
+              <li key={i} className="flex gap-4 text-[15px] leading-relaxed text-ink-2">
+                <span className="clock mt-px flex h-7 w-7 shrink-0 items-center justify-center rounded-[4px] border border-ink text-[15px] text-ink">
+                  {i + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </>
   );
 }
