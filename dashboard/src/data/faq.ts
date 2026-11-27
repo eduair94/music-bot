@@ -17,7 +17,7 @@ export const faqs: FAQItem[] = [
   {
     question: "What premium features do I get as a Founder?",
     answer:
-      "Founders get audio filters such as bass boost and nightcore, 24/7 mode so the bot stays in the channel, maximum audio quality, priority queue, unlimited saved playlists, no song duration limit, a vote on new features, an exclusive Discord role, and direct support access.",
+      "Founders get 24/7 mode so the bot stays in the channel, songs that play to the end even when a server caps song length, the perks in every server they use Bypass in, and the Founders role in the support server.",
   },
   {
     question: "How does the Patreon integration work?",

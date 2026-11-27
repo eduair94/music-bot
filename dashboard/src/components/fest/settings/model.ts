@@ -21,7 +21,7 @@ export const SECTIONS: SectionDef[] = [
     title: "Playback",
     keys: ["defaultVolume", "maxVolume", "maxQueueSize", "maxSongDuration", "preventDuplicates", "autoplay", "voteSkipPercentage"],
   },
-  { id: "voice", title: "Voice", keys: ["autoLeaveEmpty", "autoLeaveTimeout", "stay247"] },
+  { id: "voice", title: "Voice", keys: ["autoLeaveEmpty", "autoLeaveTimeout"] },
   { id: "channels", title: "Channels", keys: ["allowedTextChannels", "allowedVoiceChannels", "logChannelId"] },
   { id: "stages", title: "Stages", keys: [] },
   { id: "look", title: "Language & look", keys: ["language", "embedColor"] },

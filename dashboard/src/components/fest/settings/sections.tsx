@@ -153,32 +153,23 @@ export function VoiceFields({ get, set, errors, readOnly, meta }: SectionProps &
       </FieldRow>
       <FieldRow
         label="24/7"
-        htmlFor="stay247-channel"
         hint={
           <>
-            Stay in one voice channel around the clock and rejoin it after restarts. 24/7 needs Premium: the Founder tier, a support-server
-            boost, or a vote (12 hours).{" "}
+            Stays in one voice channel around the clock and rejoins it after restarts. Turn it on or off with{" "}
+            <code className="font-semibold text-ink">/247</code> in Discord, from the channel it should keep. It needs Premium: the
+            Founder tier, a support-server boost, or a vote (12 hours).{" "}
             <Link href="/premium" className="font-semibold text-ink underline underline-offset-2 hover:no-underline">
               See Premium
             </Link>
           </>
         }
       >
-        <div className="flex items-center gap-3">
-          <Select
-            id="stay247-channel"
-            className="min-w-0 flex-1"
-            value={s247.voiceChannelId ?? ""}
-            disabled={readOnly || !s247.enabled}
-            aria-invalid={errors.stay247 ? true : undefined}
-            onChange={(e) => set("stay247", { ...s247, voiceChannelId: e.target.value || null })}
-          >
-            <option value="">{s247.enabled ? "Pick a channel…" : "Off"}</option>
-            <ChannelOptions options={voice} />
-          </Select>
-          <Switch label="24/7" checked={s247.enabled} onChange={(v) => set("stay247", { ...s247, enabled: v })} disabled={readOnly} />
-        </div>
-        <FieldError id="stay247-err">{errors.stay247}</FieldError>
+        <p className="flex items-center gap-2 text-sm sm:justify-end">
+          <span aria-hidden className={s247.enabled ? "h-2.5 w-2.5 rounded-full bg-stage-4" : "h-2.5 w-2.5 rounded-full border border-ink-3"} />
+          {s247.enabled
+            ? `On in ${voice.find((v) => v.id === s247.voiceChannelId)?.name ?? "its channel"}`
+            : "Off"}
+        </p>
       </FieldRow>
     </>
   );
