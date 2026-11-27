@@ -16,13 +16,16 @@ x-bot-healthcheck: &bot-healthcheck
   retries: 3
   start_period: 90s
 
-# Fleet instances (Bypass 2, 3, 4): the same image as `bot`, one Discord
+# Fleet instances (Bypass 2, 3, 4): the image `bot` builds, one Discord
 # application each, started with BOT_INSTANCE=<n> and that application's
-# token. They stay off until the tokens exist:
-#   docker compose --profile fleet up -d
-# Needs TOKEN_2..TOKEN_4 and FLEET_APPLICATION_IDS in .env (see .env.example).
+# token. Needs TOKEN_2..TOKEN_4 and FLEET_APPLICATION_IDS in .env (see
+# .env.example). They share `bot`'s image so a deploy cannot leave them on
+# old code; deploy all of them together, which builds once and recreates
+# every container whose image changed:
+#   docker compose --profile fleet up -d --build bot bot-2 bot-3 bot-4 dashboard
 x-fleet-bot: &fleet-bot
-  build: .
+  image: music-bot-bot:latest
+  pull_policy: never
   restart: unless-stopped
   env_file: .env
   profiles: ["fleet"]
@@ -34,6 +37,7 @@ services:
   # ── Discord Music Bot ───────────────────────────────────────
   bot:
     build: .
+    image: music-bot-bot:latest
     container_name: music-bot
     restart: unless-stopped
     env_file: .env

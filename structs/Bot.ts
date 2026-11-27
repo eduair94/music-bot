@@ -393,10 +393,15 @@ export class Bot {
   }
 
   private setPresence(): void {
+    // Fleet instances register no commands: /play is typed to Bypass, which
+    // sends one of them when it is already busy in another channel.
+    const state = isPrimary
+      ? "🎶 /play · /help · music-bot.checkleaked.com"
+      : "🎶 Extra stage: /play with Bypass in another voice channel";
     try {
       this.client.user?.setPresence({
         status: "online",
-        activities: [{ name: "custom", type: ActivityType.Custom, state: "🎶 /play · /help · music-bot.checkleaked.com" }]
+        activities: [{ name: "custom", type: ActivityType.Custom, state }]
       });
     } catch (error) {
       console.warn("[Bot] Could not set presence:", error);
