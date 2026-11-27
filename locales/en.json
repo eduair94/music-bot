@@ -377,7 +377,9 @@
       "description": "View all your collections",
       "title": "📁 Your Collections",
       "empty": "You don't have any collections yet. Create one with `/collections create`!",
-      "footer": "Total: {count} collections"
+      "footer": "Total: {count} collections",
+      "select": "Open a collection…",
+      "more": "…and {count} more. Open them with /collections view."
     },
     "create": {
       "description": "Create a new collection",
@@ -399,7 +401,12 @@
       "tracksField": "Tracks",
       "durationField": "Duration",
       "shareCodeField": "Share Code",
-      "andMore": "...and {count} more tracks"
+      "andMore": "...and {count} more tracks",
+      "play": "Play",
+      "addToQueue": "Add to queue",
+      "summary": "{count} tracks · {duration}",
+      "page": "Page {page}/{pages}",
+      "importedFrom": "Imported from {source}"
     },
     "save": {
       "description": "Save current queue as a collection",
@@ -411,7 +418,9 @@
       "description": "Load a collection into the queue",
       "nameOption": "Name of the collection to load",
       "empty": "This collection is empty.",
-      "success": "📂 Loaded **{count}** tracks from collection **{name}**!"
+      "success": "📂 Loaded **{count}** tracks from collection **{name}**!",
+      "queuedNext": "They play right after the current song.",
+      "skipped": "{count} skipped (longer than this server allows, over the queue limit, or not found)."
     },
     "rename": {
       "description": "Rename a collection",
@@ -435,7 +444,8 @@
       "shareCodeOption": "The share code to clone from",
       "nameOption": "Name for your new collection",
       "invalidCode": "Invalid or expired share code.",
-      "success": "📋 Cloned **{count}** tracks to new collection **{name}**!"
+      "success": "📋 Cloned **{count}** tracks to new collection **{name}**!",
+      "clonedFrom": "Cloned from {name}"
     },
     "merge": {
       "description": "Merge one collection into another",
@@ -457,6 +467,21 @@
       "positionOption": "Position of the track to remove (1-based)",
       "invalidPosition": "Invalid position. Collection has {max} tracks.",
       "success": "🗑️ Removed **{track}** from collection **{name}**."
+    },
+    "error": "Something went wrong with your collections. Please try again.",
+    "trackCount": "{count} tracks",
+    "gone": "That collection no longer exists.",
+    "notYours": "This menu belongs to someone else. Use /collections list to see your own.",
+    "import": {
+      "description": "Import a playlist from Spotify, YouTube, Deezer or Apple Music",
+      "urlOption": "Playlist link (Spotify, YouTube, Deezer, Apple Music album)",
+      "nameOption": "Name for the new collection (default: the playlist's title)",
+      "invalidUrl": "That doesn't look like a link. Paste a playlist URL from Spotify, YouTube, Deezer or an Apple Music album.",
+      "failed": "I couldn't read that playlist. Make sure it's public and the link is from Spotify, YouTube, Deezer or an Apple Music album.",
+      "exists": "You already have a collection named **{name}**. Choose another name with the `name` option.",
+      "success": "📥 Imported **{count}** tracks from {source} into **{name}**.",
+      "skipped": "{count} skipped (over the {max}-track limit per collection, or not playable).",
+      "spotifyCap": "Spotify only shares the first 100 songs of a playlist link."
     }
   },
   "endtime": {
