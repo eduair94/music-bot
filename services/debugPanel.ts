@@ -128,7 +128,10 @@ export class DebugPanel {
   }
 
   // ── Self-contained HTML page ─────────────────────────────
-  /** action=play|state|stop|skip; guild, voice, text, query, autoplay=1. */
+  /**
+   * action=play|state|stop|skip|radio|aiplaylist; guild, voice, text, query, autoplay=1.
+   * radio: station=<id> | prompt=<text> | query=<song>. aiplaylist: prompt, count.
+   */
   private async selfTest(q: Record<string, string>): Promise<unknown> {
     const { DiscordPlayerService } = await import("./discordPlayer");
     const service = DiscordPlayerService.getInstance();
@@ -148,8 +151,12 @@ export class DebugPanel {
         position: current?.node.getTimestamp()?.current.label ?? null,
         current: current?.currentTrack ? `${current.currentTrack.title} — ${current.currentTrack.author}` : null,
         requestedBy: current?.currentTrack?.requestedBy?.username ?? null,
-        upNext: current?.tracks.toArray().slice(0, 3).map((t) => `${t.title}${(t.metadata as any)?.autoplay ? " [autoplay]" : ""}`) ?? [],
+        upNext: current?.tracks.toArray().slice(0, 3).map((t) => `${t.title}${(t.metadata as any)?.aiRadio ? " [ai]" : (t.metadata as any)?.autoplay ? " [autoplay]" : ""}`) ?? [],
+        queued: current?.tracks.size ?? 0,
         autoplay: Boolean(meta.autoplay),
+        radio: meta.radio
+          ? { kind: meta.radio.kind, label: meta.radio.label, anchors: meta.radio.anchorIds?.length ?? 0, picks: meta.radio.picks, batches: `${meta.radio.batches}/${meta.radio.batchLimit}` }
+          : null,
         stay247: Boolean(meta.stay247),
         volume: current?.node.volume ?? null
       };
@@ -179,6 +186,52 @@ export class DebugPanel {
         void ensureAutoplayNext(result.queue);
       }
       return { started: result?.track.title ?? null, added: result?.added, queuePosition: result?.position, ...state() };
+    }
+    if (q.action === "radio" || q.action === "aiplaylist") {
+      const voice = guild.channels.cache.get(q.voice);
+      const text = guild.channels.cache.get(q.text);
+      if (!voice?.isVoiceBased() || !text?.isTextBased()) throw new Error("voice/text channel not found");
+      const radio = await import("./radio");
+      const { generatePlaylist, songLine } = await import("./ai/playlistGenerator");
+      const me = this.client!.user;
+
+      let first: string;
+      let request: import("./radio").RadioRequest | null = null;
+      let rest: { artist: string; title: string }[] = [];
+      let ai: { title: string; description: string; tracks: number } | null = null;
+      if (q.prompt) {
+        const playlist = await generatePlaylist({
+          prompt: q.prompt,
+          count: q.action === "aiplaylist" ? Math.min(50, Number(q.count) || 10) : 10,
+          language: q.lang || "en",
+          feature: q.action === "aiplaylist" ? "ai_playlist" : "ai_radio"
+        });
+        ai = { title: playlist.title, description: playlist.description, tracks: playlist.tracks.length };
+        first = songLine(playlist.tracks[0]);
+        rest = playlist.tracks.slice(1);
+        if (q.action === "radio") request = { kind: "ai", label: q.prompt, prompt: q.prompt, pending: rest, batchLimit: Number(q.batches) || 3, language: q.lang || "en" };
+      } else if (q.station && radio.isStationId(q.station)) {
+        const [seed, ...more] = radio.shuffledSeeds(q.station);
+        first = seed;
+        request = { kind: "station", label: q.station, anchorQueries: more };
+      } else {
+        first = q.query || "never gonna give you up";
+        request = { kind: "song", label: first };
+      }
+
+      const result = await service.play(voice, first, text as any, 128, 25, { requestedBy: me });
+      if (!result) throw new Error("nothing played");
+      if (request) {
+        radio.startRadio(result.queue, request, result.track, me);
+        const { ensureAutoplayNext } = await import("./autoplay");
+        void ensureAutoplayNext(result.queue);
+      } else {
+        // aiplaylist: the rest of the songs, matched on YouTube when they play.
+        const tracks = rest.map((song) => radio.aiQueueTrack(song, me)).filter((t): t is NonNullable<typeof t> => t !== null);
+        for (const t of tracks) t.setMetadata({});
+        if (tracks.length) result.queue.addTrack(tracks);
+      }
+      return { started: result.track.title, ai, ...state() };
     }
     throw new Error("unknown action");
   }
