@@ -1009,11 +1009,27 @@ export class DiscordPlayerService {
       return { ...result, position: options.next && isActive ? 1 : isActive ? existingSize + 1 : 0 };
     }
 
-    const searchResult = await this.player.search(query, {
+    const searchEngine = isUrl ? QueryType.AUTO : isLocalFile ? QueryType.FILE : options.searchEngine ?? QueryType.YOUTUBE_SEARCH;
+    let searchResult = await this.player.search(query, {
       requestedBy: requestedBy ?? undefined,
       // Local files go to AttachmentExtractor; non-URL queries are YouTube searches
-      searchEngine: isUrl ? QueryType.AUTO : isLocalFile ? QueryType.FILE : options.searchEngine ?? QueryType.YOUTUBE_SEARCH,
+      searchEngine,
     });
+
+    // youtubei.js sometimes cannot parse the search page YouTube serves (the
+    // layout varies by request: "Type mismatch, got DecoratedAvatarView"),
+    // and the search comes back empty. yt-dlp parses it independently.
+    if ((!searchResult || searchResult.isEmpty()) && searchEngine === QueryType.YOUTUBE_SEARCH) {
+      const found = await this.listYouTubePlaylist(`ytsearch1:${query}`, 1);
+      const id = found?.entries[0]?.id;
+      if (id) {
+        console.warn(`[DiscordPlayer] ↪️ Extractor search was empty, yt-dlp found ${id} for: ${query}`);
+        searchResult = await this.player.search(`https://www.youtube.com/watch?v=${id}`, {
+          requestedBy: requestedBy ?? undefined,
+          searchEngine: QueryType.AUTO,
+        });
+      }
+    }
 
     if (!searchResult || searchResult.isEmpty()) {
       throw new PlayError("noResults", { query });

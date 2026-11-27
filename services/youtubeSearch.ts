@@ -16,6 +16,8 @@ export interface VideoResult {
   isLive: boolean;
 }
 
+import { spawn } from "child_process";
+
 type Innertube = any;
 
 let client: Promise<Innertube> | null = null;
@@ -63,6 +65,16 @@ export async function searchYouTube(query: string, limit = 8): Promise<VideoResu
       throw error;
     }
     const videos: any[] = (response.videos || response.results || []).filter((v: any) => v?.id && v.type === "Video");
+    // youtubei.js drops every video when YouTube serves a layout it can't
+    // parse ("Type mismatch, got DecoratedAvatarView"); ask yt-dlp instead.
+    if (videos.length === 0) {
+      const fallback = await searchWithYtDlp(query, limit);
+      if (fallback.length) {
+        console.warn(`[YouTubeSearch] youtubei.js found nothing, yt-dlp found ${fallback.length} for: ${query}`);
+        cache.set(key, { at: Date.now(), results: fallback });
+      }
+      return fallback;
+    }
     const results = videos.slice(0, limit).map((v: any): VideoResult => {
       const durationText: string | null = v.duration?.text ?? null;
       const title = v.title?.text ?? String(v.title ?? "Unknown");
@@ -86,6 +98,46 @@ export async function searchYouTube(query: string, limit = 8): Promise<VideoResu
 
   inflight.set(key, task);
   return task;
+}
+
+/** YouTube search through yt-dlp (slower, ~2 s, but independent of youtubei.js). */
+export function searchWithYtDlp(query: string, limit = 8): Promise<VideoResult[]> {
+  return new Promise((resolve) => {
+    const args = ["--flat-playlist", "--dump-single-json", "--no-warnings", "--socket-timeout", "15", "--force-ipv4", `ytsearch${Math.max(1, limit)}:${query}`];
+    const proc = spawn("yt-dlp", args, { stdio: ["ignore", "pipe", "ignore"] });
+    let out = "";
+    proc.stdout.setEncoding("utf8");
+    proc.stdout.on("data", (chunk: string) => (out += chunk));
+    proc.on("error", () => resolve([]));
+    proc.on("close", (code) => {
+      if (code !== 0) return resolve([]);
+      try {
+        const entries: any[] = JSON.parse(out).entries ?? [];
+        resolve(
+          entries
+            .filter((e) => e?.id)
+            .map((e): VideoResult => {
+              const durationSec = typeof e.duration === "number" ? Math.round(e.duration) : null;
+              const durationText =
+                durationSec === null
+                  ? null
+                  : `${Math.floor(durationSec / 60)}:${String(durationSec % 60).padStart(2, "0")}`;
+              return {
+                id: String(e.id),
+                title: e.title || "Unknown title",
+                author: e.channel || e.uploader || "Unknown",
+                durationText,
+                durationSec,
+                url: `https://www.youtube.com/watch?v=${e.id}`,
+                isLive: e.live_status === "is_live" || durationSec === null
+              };
+            })
+        );
+      } catch {
+        resolve([]);
+      }
+    });
+  });
 }
 
 /** searchYouTube with a deadline; resolves [] instead of exceeding it. */
