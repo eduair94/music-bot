@@ -1,6 +1,11 @@
 # 🎶 Bypass — hi-fi Discord music bot
 
-**[Add to Discord](https://music-bot.checkleaked.com/invite)** · [Website](https://music-bot.checkleaked.com) · [Commands](https://music-bot.checkleaked.com/commands) · [Support server](https://discord.gg/KwKwtasGZE)
+**[Add to Discord](https://music-bot.checkleaked.com/invite)** · [Website](https://music-bot.checkleaked.com) · [Commands](https://music-bot.checkleaked.com/commands) · [Status](https://music-bot.checkleaked.com/status) · [Support server](https://discord.gg/KwKwtasGZE)
+
+[![Servers](https://img.shields.io/endpoint?url=https%3A%2F%2Fmusic-bot.checkleaked.com%2Fapi%2Fpublic%2Fstats%3Fformat%3Dshields%26metric%3Dservers)](https://music-bot.checkleaked.com/status)
+[![Members](https://img.shields.io/endpoint?url=https%3A%2F%2Fmusic-bot.checkleaked.com%2Fapi%2Fpublic%2Fstats%3Fformat%3Dshields%26metric%3Dmembers)](https://music-bot.checkleaked.com/status)
+[![Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fmusic-bot.checkleaked.com%2Fapi%2Fpublic%2Fstats%3Fformat%3Dshields%26metric%3Dstatus)](https://music-bot.checkleaked.com/status)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Join a voice channel and type `/play`. Results appear while you type.
 

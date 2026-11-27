@@ -18,7 +18,7 @@ Everything needed to list **Bypass Hi-Fi Music Bot** on bot directories. Every c
 | Terms | https://music-bot.checkleaked.com/terms |
 | Source | https://github.com/eduair94/music-bot |
 | Premium | Optional. Founder on Patreon ($3/month). Voting unlocks 24/7 and studio quality for 12 h. |
-| Permissions | No Administrator. View/Send/Embed/Attach/Read History/External Emojis in text; Connect/Speak/Voice Activity/Request to Speak in voice; Set Voice Channel Status. |
+| Permissions | 10 permissions, no Administrator or moderation. View/Send/Send in Threads/Embed/Read History in text; Connect/Speak/Voice Activity/Request to Speak in voice; Set Voice Channel Status. Each one explained at /install#permissions. |
 | Tags | Music, Radio, Spotify, YouTube, Lyrics, 24/7, Playlists, Multilingual |
 | Languages | 28: English, Spanish, Portuguese (BR), French, German, Italian, Dutch, Polish, Russian, Ukrainian, Turkish, Arabic, Persian, Japanese, Korean, Chinese (Simplified, Singapore, Traditional), Thai, Vietnamese, Indonesian, Czech, Bulgarian, Greek, Romanian, Swedish, Norwegian, Māori |
 

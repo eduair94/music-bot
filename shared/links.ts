@@ -35,12 +35,14 @@ export const TOPGG_VOTE_URL = `${TOPGG_URL}/vote`;
 
 /**
  * Bot permissions requested on invite: see and post in text channels (player
- * panel, embeds, files, threads, external emojis, history), join and speak in
- * voice and stage channels, and set the voice channel status ("♪ Song").
- * Computed from discord.js PermissionFlagsBits; keep in sync with
- * scripts/syncAppProfile.ts.
+ * panel, embeds, threads, history), join and speak in voice and stage
+ * channels, and set the voice channel status ("♪ Song"). Each one is listed
+ * with its reason in ./invitePermissions (the unit test checks the two match).
+ * Attach Files and Use External Emojis were dropped 2026-11-27: no music
+ * feature used them. scripts/syncAppProfile.ts pushes this to Discord's
+ * default install settings.
  */
-export const INVITE_PERMISSIONS = "281754186664960";
+export const INVITE_PERMISSIONS = "281754186370048";
 
 export function botInviteUrl(clientId: string = BOT_APPLICATION_ID, guildId?: string): string {
   const params = new URLSearchParams({

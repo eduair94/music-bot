@@ -85,6 +85,7 @@ export default function Footer() {
             <h2 id="footer-support" className="console-label mb-4">Support</h2>
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/support" prefetch={false} className={linkClass}>Discord server</Link></li>
+              <li><Link href="/status" prefetch={false} className={linkClass}>Status</Link></li>
               <li>
                 <a href={GITHUB_ISSUES_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   Report a bug<span className="sr-only"> (opens in a new tab)</span>
@@ -92,7 +93,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                  GitHub<span className="sr-only"> (opens in a new tab)</span>
+                  Source code (MIT)<span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </li>
               <li>

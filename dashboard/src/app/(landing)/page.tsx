@@ -10,7 +10,9 @@ import FAQ from "@/components/landing/FAQ";
 import Features from "@/components/landing/Features";
 import Hero from "@/components/landing/Hero";
 import Pricing from "@/components/landing/Pricing";
+import Trust from "@/components/landing/Trust";
 import { faqs } from "@/data/faq";
+import { getPublicStats, getRepoPushedAt } from "@/lib/public-stats";
 import {
   FOUNDER_PRICE_USD,
   SITE_DESCRIPTION,
@@ -18,6 +20,14 @@ import {
   SITE_TAGLINE,
   SITE_URL,
 } from "@/lib/site";
+
+/*
+ * Static HTML, regenerated at most once a minute so the live numbers (servers,
+ * members, player status) stay current. The Docker build has no Redis, so the
+ * build-time render has no numbers and the first request after a deploy
+ * regenerates it.
+ */
+export const revalidate = 60;
 
 /** Structured data: site identity, the bot as a software product, and the FAQ. */
 const structuredData = [
@@ -77,7 +87,8 @@ const structuredData = [
   },
 ];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const [stats, pushedAt] = await Promise.all([getPublicStats(), getRepoPushedAt()]);
   return (
     <>
       <script
@@ -87,9 +98,10 @@ export default function LandingPage() {
           __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
         }}
       />
-      <Hero />
+      <Hero stats={stats} />
       <Features />
       <Comparison />
+      <Trust stats={stats} pushedAt={pushedAt} />
       <Pricing />
       <CommandIndex />
       <FAQ />

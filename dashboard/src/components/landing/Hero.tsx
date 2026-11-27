@@ -1,9 +1,10 @@
 import NowPlayingMock from "@/components/landing/NowPlayingMock";
 import { COMMAND_COUNT, EFFECT_COUNT } from "@/data/commands";
+import { compactCount, type PublicStats } from "@/lib/public-stats-shape";
 import Link from "next/link";
 import { FaDiscord } from "react-icons/fa";
 
-/** Product facts anyone can check — no audience or uptime claims. */
+/** Product facts anyone can check. Audience numbers are never hardcoded: LiveReach reads them live. */
 const FACTS = [
   { figure: "256kbps", rest: "audio", lead: "Up to" },
   { figure: String(COMMAND_COUNT), rest: "slash commands" },
@@ -11,7 +12,53 @@ const FACTS = [
   { figure: "Free", rest: "to add" },
 ];
 
-export default function Hero() {
+const figure = "font-mono tabular-nums text-cream";
+
+/**
+ * Live reach, read from the bots' Redis heartbeats (see lib/public-stats.ts).
+ * Rendered only when the numbers are available; never a placeholder.
+ */
+function LiveReach({ stats }: { stats: PublicStats }) {
+  // Same grid as the facts list below, so the two rows share columns at every width.
+  const allDown = stats.online === 0;
+  return (
+    <ul
+      className="rise rise-4 mt-10 grid grid-cols-2 items-center gap-y-2 text-sm text-dune sm:flex sm:flex-wrap sm:gap-x-7 lg:grid xl:flex"
+      role="list"
+      aria-label="Live numbers"
+    >
+      <li>
+        <span className={figure}>{compactCount(stats.servers)}</span> servers
+      </li>
+      <li>
+        <span className={figure}>{compactCount(stats.members)}</span> members
+      </li>
+      {stats.songsPlayed ? (
+        <li>
+          <span className={figure}>{compactCount(stats.songsPlayed)}</span> songs played
+        </li>
+      ) : null}
+      {stats.playingNow > 0 ? (
+        <li>
+          <span className={figure}>{compactCount(stats.playingNow)}</span> playing now
+        </li>
+      ) : null}
+      <li className="flex items-center gap-2.5">
+        <span className={allDown ? "led led--off" : "led"} aria-hidden="true" />
+        <Link
+          href="/status"
+          prefetch={false}
+          className="underline decoration-line-strong underline-offset-4 transition-colors hover:text-cream hover:decoration-amber"
+        >
+          {allDown ? "Status: offline" : "Live status"}
+        </Link>
+      </li>
+    </ul>
+  );
+}
+
+export default function Hero({ stats }: { stats?: PublicStats | null }) {
+  const live = stats && stats.servers > 0 ? stats : null;
   return (
     <section
       className="relative border-b border-line pt-32 pb-16 sm:pt-36 lg:pt-44 lg:pb-20"
@@ -52,9 +99,11 @@ export default function Hero() {
             </a>
           </div>
 
+          {live && <LiveReach stats={live} />}
+
           {/* Two by two until xl: at lg the half-width column is too narrow for one line. */}
           <ul
-            className="rise rise-4 mt-10 grid grid-cols-2 gap-y-2 text-sm text-dune sm:flex sm:flex-wrap sm:gap-x-7 lg:grid xl:flex"
+            className={`rise rise-4 ${live ? "mt-4" : "mt-10"} grid grid-cols-2 gap-y-2 text-sm text-dune sm:flex sm:flex-wrap sm:gap-x-7 lg:grid xl:flex`}
             role="list"
             aria-label="At a glance"
           >

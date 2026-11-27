@@ -8,10 +8,11 @@ import CommandText from "@/components/landing/CommandText";
 import SectionHeader from "@/components/landing/SectionHeader";
 import { COMMAND_COUNT, commands } from "@/data/commands";
 import { LANGUAGE_COUNT, SITE_URL } from "@/lib/site";
-import { Check } from "lucide-react";
+import { Minus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { FaDiscord } from "react-icons/fa";
+import { INVITE_PERMISSION_LIST, NEVER_REQUESTED } from "../../../../../shared/invitePermissions";
 
 const description =
   "Add the Bypass music bot to your Discord server in three steps: authorize, pick a server, and run /play. No setup, no hosting, free to use.";
@@ -27,8 +28,11 @@ export const metadata: Metadata = {
   },
 };
 
-/** Permissions requested by the OAuth invite (see /invite). */
-const PERMISSIONS = ["View Channels", "Connect", "Speak", "Use Voice Activity", "Slash Commands"];
+/** Permissions requested by the OAuth invite (/invite), grouped as Discord's screen groups them. */
+const PERMISSION_GROUPS = [
+  { title: "In text channels", items: INVITE_PERMISSION_LIST.filter((p) => p.scope === "text") },
+  { title: "In voice and stage channels", items: INVITE_PERMISSION_LIST.filter((p) => p.scope === "voice") },
+];
 
 const ESSENTIAL = ["/play", "/queue", "/skip", "/nowplaying", "/volume", "/shuffle"]
   .map((name) => commands.find((c) => c.name === name))
@@ -123,17 +127,19 @@ export default function InstallationPage() {
             <Step
               number={2}
               title="Pick a server and authorize"
-              description="Choose the server from the dropdown and confirm. Bypass asks only for what it needs to join voice and answer slash commands."
+              description="Choose the server from the dropdown and confirm. Bypass asks only for what it needs to join voice and post the player."
             >
               <p className="text-sm text-dust">Permissions requested</p>
-              <ul className="mt-2 space-y-1.5 text-sm text-cream/90" role="list">
-                {PERMISSIONS.map((name) => (
-                  <li key={name} className="flex items-center gap-2">
-                    <Check className="h-3.5 w-3.5 shrink-0 text-dune" aria-hidden="true" />
-                    {name}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-1 text-sm text-cream/90 leading-relaxed text-pretty">
+                <span className="font-mono tabular-nums">{INVITE_PERMISSION_LIST.length}</span> permissions, all for
+                voice playback and the player message. No Administrator, moderation or Manage permissions.
+              </p>
+              <a
+                href="#permissions"
+                className="mt-2 inline-block text-sm text-dune underline decoration-line-strong underline-offset-4 transition-colors hover:text-cream hover:decoration-amber"
+              >
+                See each one and why
+              </a>
             </Step>
 
             <Step
@@ -162,6 +168,51 @@ export default function InstallationPage() {
               </dl>
             </Step>
           </ol>
+        </div>
+      </section>
+
+      <section id="permissions" className="scroll-mt-20 py-20 lg:py-24 border-t border-line" aria-labelledby="permissions-title">
+        <div className="shell">
+          <h2 id="permissions-title" className={subheading}>
+            Every permission, and why
+          </h2>
+          <p className="mt-4 max-w-[38rem] text-lg text-dune leading-relaxed text-pretty">
+            The same list Discord shows on its authorization screen, with what each one is for.
+          </p>
+
+          <div className="mt-10 grid gap-x-8 gap-y-12 lg:grid-cols-12">
+            <div className="space-y-10 lg:col-span-8">
+              {PERMISSION_GROUPS.map((group) => (
+                <div key={group.title}>
+                  <h3 className="font-display text-lg font-semibold text-cream">{group.title}</h3>
+                  <dl className="mt-3">
+                    {group.items.map((p) => (
+                      <div key={p.key} className="grid gap-x-8 gap-y-1 border-t border-line py-3 sm:grid-cols-[15rem_1fr]">
+                        <dt className="text-sm font-medium text-cream">{p.name}</dt>
+                        <dd className="text-sm text-dune leading-relaxed text-pretty">{p.why}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
+
+            <div className="lg:col-span-4 lg:col-start-9">
+              <h3 className="font-display text-lg font-semibold text-cream">Never requested</h3>
+              <ul className="mt-3" role="list">
+                {NEVER_REQUESTED.map((p) => (
+                  <li key={p.key} className="flex items-center gap-2.5 border-t border-line py-3 text-sm text-dune">
+                    <Minus className="h-3.5 w-3.5 shrink-0 text-clip" aria-hidden="true" />
+                    {p.name}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-dust leading-relaxed text-pretty">
+                Bypass can&apos;t edit your server settings, roles or members, or delete anyone&apos;s messages. Removing
+                it from the server takes every permission away.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
