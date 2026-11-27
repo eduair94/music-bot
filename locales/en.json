@@ -1017,7 +1017,9 @@
     "autoplayDisabled": "Autoplay off.",
     "volumeLimit": "This server caps the volume at {max}%.",
     "lyricsButton": "Lyrics",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "trackFailed": "Couldn't play **{title}**, skipping it. Try another link or search.",
+    "guessRunning": "A guess-the-song game is running here. The player comes back when it ends."
   },
   "queueView": {
     "title": "Queue",

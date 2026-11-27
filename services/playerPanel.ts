@@ -17,7 +17,7 @@ import { formatDuration, isHttpUrl, linkLabel, progressBar, safeText, truncate }
 import { localeForGuild, localeForInteraction } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
-import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
+import { DiscordPlayerService, isGuessGameQueue, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
 import { findLyrics } from "./lyrics";
 import { buildQueueView } from "./queueView";
@@ -227,6 +227,8 @@ export class PlayerPanelService {
 
   /** A new song started: move the panel to the bottom of the channel (or edit it in place). */
   public announce(queue: GuildQueue): Promise<unknown> {
+    // Guess-the-song: no panel and no voice status, they would give the answer away.
+    if (isGuessGameQueue(queue)) return Promise.resolve();
     const guildId = queue.guild.id;
     const track = currentTrackOf(queue);
     if (track) {
@@ -267,6 +269,9 @@ export class PlayerPanelService {
    */
   public async repost(queue: GuildQueue, interaction: import("discord.js").ChatInputCommandInteraction<"cached">): Promise<unknown> {
     const guildId = queue.guild.id;
+    if (isGuessGameQueue(queue)) {
+      return interaction.reply({ content: `🎮 ${i18n.__("player.guessRunning")}`, flags: MessageFlags.Ephemeral });
+    }
     return this.enqueue(guildId, async () => {
       const container = await this.render(queue);
       const response = await interaction.reply({
@@ -286,7 +291,7 @@ export class PlayerPanelService {
   /** State changed (pause, volume, queue…): edit the panel, at most every ~1.5 s. */
   public refresh(queue: GuildQueue, immediate = false): void {
     const guildId = queue.guild.id;
-    if (!this.panels.has(guildId)) return;
+    if (!this.panels.has(guildId) || isGuessGameQueue(queue)) return;
     const run = () => {
       this.refreshTimers.delete(guildId);
       void this.enqueue(guildId, async () => {
@@ -304,7 +309,10 @@ export class PlayerPanelService {
   /** Playback ended: freeze the panel into a one-line summary. */
   public end(queue: GuildQueue, reason: "ended" | "stopped" | "disconnected"): Promise<unknown> {
     const guildId = queue.guild.id;
-    void clearVoiceStatus(queue.player.client, queue.channel?.id ?? queue.connection?.joinConfig.channelId);
+    // A guess game never set a status; don't touch the channel's.
+    if (!isGuessGameQueue(queue)) {
+      void clearVoiceStatus(queue.player.client, queue.channel?.id ?? queue.connection?.joinConfig.channelId);
+    }
     const timer = this.refreshTimers.get(guildId);
     if (timer) clearTimeout(timer);
     this.refreshTimers.delete(guildId);
@@ -341,6 +349,8 @@ export class PlayerPanelService {
     player.events.on("audioTracksAdd", (queue) => this.refresh(queue));
     player.events.on("audioTrackRemove", (queue) => this.refresh(queue));
     player.events.on("emptyQueue", (queue) => {
+      // Between guess-the-song rounds the queue runs dry on purpose.
+      if (isGuessGameQueue(queue)) return;
       const metadata = (queue.metadata || {}) as QueueMetadata;
       if (metadata.autoplay) {
         // The prefetch missed (lookup failed or the song was skipped early): try once more.
@@ -365,6 +375,9 @@ export class PlayerPanelService {
 
     if (!queue || queue.deleted || !track) {
       return interaction.reply({ content: `❌ ${i18n.__("player.nothingPlaying")}`, flags: ephemeral });
+    }
+    if (isGuessGameQueue(queue)) {
+      return interaction.reply({ content: `🎮 ${i18n.__("player.guessRunning")}`, flags: ephemeral });
     }
 
     // Read-only actions: anyone can use them.

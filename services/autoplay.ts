@@ -91,7 +91,8 @@ export function isAutoplayTrack(track: Track | null | undefined): boolean {
  */
 export async function ensureAutoplayNext(queue: GuildQueue): Promise<Track | null> {
   const metadata = (queue.metadata || {}) as QueueMetadata;
-  if (!metadata.autoplay || queue.deleted) return null;
+  // A guess-the-song game runs dry between rounds on purpose; never fill it.
+  if (!metadata.autoplay || metadata.guessGame || queue.deleted) return null;
   if (queue.repeatMode !== QueueRepeatMode.OFF) return null;
   if (queue.tracks.size > 0) return null;
 
@@ -103,7 +104,7 @@ export async function ensureAutoplayNext(queue: GuildQueue): Promise<Track | nul
   pending.add(guildId);
   try {
     const next = await findRelatedTrack(queue, seed);
-    if (!next || queue.deleted || queue.tracks.size > 0) return null;
+    if (!next || queue.deleted || queue.tracks.size > 0 || metadata.guessGame) return null;
     queue.addTrack(next);
     console.log(`[Autoplay] ➕ ${queue.guild.name}: ${next.title}`);
     // Queue already ran dry while we were looking: start it.
