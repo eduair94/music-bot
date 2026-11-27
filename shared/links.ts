@@ -1,12 +1,12 @@
 /**
  * Public links and commercial facts shared by the bot and the dashboard.
  *
- * The support invite is permanent (max_age 0, max_uses 0). The previous one
- * expired and shipped dead in the help page, /install, the terms and privacy
- * pages, the FAQ and the /info support command.
+ * The support invite is permanent (max_age 0, max_uses 0) and lands in
+ * #welcome. The older permanent invite hjJQKp5zDU still works (bot lists link
+ * it) but lands in #tickets, so new links use this one.
  */
 
-export const SUPPORT_INVITE_URL = "https://discord.gg/hjJQKp5zDU";
+export const SUPPORT_INVITE_URL = "https://discord.gg/KwKwtasGZE";
 
 export const PATREON_URL = "https://www.patreon.com/c/u36360623";
 

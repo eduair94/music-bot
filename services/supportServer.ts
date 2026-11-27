@@ -1,4 +1,6 @@
 import {
+  ButtonBuilder,
+  ButtonStyle,
   ChannelType,
   Client,
   ContainerBuilder,
@@ -7,12 +9,17 @@ import {
   GuildTextBasedChannel,
   Message,
   MessageFlags,
+  PermissionFlagsBits,
   SeparatorSpacingSize,
+  TextChannel,
+  ThreadAutoArchiveDuration,
   ThreadChannel
 } from "discord.js";
 import { Vote } from "../models/Vote";
 import { CHANGELOG } from "../shared/changelog";
 import { SUPPORT_INVITE_URL } from "../shared/links";
+import { TICKET_TOPICS, TicketTopic } from "../shared/tickets";
+import { ComponentInteraction, isButton, isStringSelect, registerComponentHandler } from "../structs/componentRouter";
 import { formatDuration, truncate } from "../utils/format";
 import { DatabaseService } from "./database";
 import { TelemetryService } from "./telemetry";
@@ -25,12 +32,15 @@ import { TelemetryService } from "./telemetry";
  *  - Founders role for active patrons, Server Owners role for owners of servers using the bot
  *  - staff #guild-join / #guild-leave / #bot-errors logs
  *  - an automatic first reply on every new #help post
+ *  - private tickets: the #tickets panel (posted by scripts/setupSupportServer.ts)
+ *    opens a private thread per member, closed with a button
  * Channels and roles are found by name, so the server layout can change
  * without a deploy. Every action is best-effort and never throws.
  */
 const SUPPORT_GUILD_ID = process.env.SUPPORT_GUILD_ID || "1458199268564406487";
 const STATUS_MARKER = "Bypass status";
-const ACCENT = 0xf8aa2a;
+/** The logo's violet. */
+const ACCENT = 0x8b5cf6;
 
 const channelKey = (name: string) => name.split("・").pop()?.toLowerCase().trim() ?? name.toLowerCase();
 
@@ -86,6 +96,7 @@ export class SupportServerService {
     client.on("threadCreate", (thread, newlyCreated) => {
       if (newlyCreated) void this.welcomeHelpPost(thread).catch(() => undefined);
     });
+    registerComponentHandler("ticket", (interaction, args) => this.handleTicket(interaction, args));
     TelemetryService.getInstance().onError((scope, error) => void this.logError(scope, error).catch(() => undefined));
     console.log("[Support] ✅ Linked to the support server");
   }
@@ -297,5 +308,84 @@ export class SupportServerService {
         )
       );
     await thread.send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } } as any);
+  }
+
+  // ----------------------------------------------------------- tickets
+
+  private async handleTicket(interaction: ComponentInteraction, args: string[]): Promise<void> {
+    if (interaction.guildId !== SUPPORT_GUILD_ID) return;
+    if (args[0] === "open" && isStringSelect(interaction)) return this.openTicket(interaction, interaction.values[0] as TicketTopic);
+    if (args[0] === "close" && isButton(interaction)) return this.closeTicket(interaction);
+  }
+
+  /** One private thread per member and topic-agnostic: a second click points to the open one. */
+  private async openTicket(interaction: ComponentInteraction, topicKey: TicketTopic): Promise<void> {
+    const topic = TICKET_TOPICS[topicKey] ?? TICKET_TOPICS.other;
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const channel = interaction.channel;
+    if (!channel || channel.type !== ChannelType.GuildText) {
+      await interaction.editReply("Tickets can only be opened from the tickets channel.");
+      return;
+    }
+    const user = interaction.user;
+    const suffix = ` · ${user.username}`;
+    const active = await (channel as TextChannel).threads.fetchActive();
+    const open = active.threads.find((t) => t.parentId === channel.id && t.type === ChannelType.PrivateThread && t.name.endsWith(suffix));
+    if (open) {
+      await interaction.editReply(`You already have an open ticket: <#${open.id}>`);
+      return;
+    }
+
+    const thread = await (channel as TextChannel).threads.create({
+      name: truncate(`${topic.emoji} ${topic.label.toLowerCase()}${suffix}`, 100),
+      type: ChannelType.PrivateThread,
+      invitable: false,
+      autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
+      reason: `Ticket opened by ${user.tag} (${user.id})`
+    });
+    await thread.members.add(user.id);
+    const owner = interaction.guild?.ownerId;
+    if (owner && owner !== user.id) await thread.members.add(owner).catch(() => undefined);
+
+    const staff = ["Support", "Moderators"].map((n) => this.role(n)).filter(Boolean);
+    const container = new ContainerBuilder()
+      .setAccentColor(ACCENT)
+      .addTextDisplayComponents((t) => t.setContent(`## ${topic.emoji} ${topic.label}`))
+      .addTextDisplayComponents((t) =>
+        t.setContent(
+          [
+            `Hi <@${user.id}>, thanks for reaching out. Only you and staff can see this thread.`,
+            "",
+            `**To help us answer fast:** ${topic.hint}`,
+            "",
+            "-# Staff will never ask for your password or token. Press Close when you're done."
+          ].join("\n")
+        )
+      )
+      .addActionRowComponents((row) =>
+        row.setComponents(new ButtonBuilder().setCustomId("ticket:close").setStyle(ButtonStyle.Secondary).setEmoji("🔒").setLabel("Close ticket"))
+      );
+    await thread.send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { users: [user.id] } } as any);
+    // A role mention adds that role's members to the private thread.
+    if (staff.length) {
+      await thread.send({ content: `-# ${staff.map((r) => `<@&${r!.id}>`).join(" ")}`, allowedMentions: { roles: staff.map((r) => r!.id) } }).catch(() => undefined);
+    }
+    await interaction.editReply(`Your ticket is open: <#${thread.id}>`);
+    console.log(`[Support] Ticket opened (${topicKey}) by ${user.id}`);
+  }
+
+  /** The member who opened the ticket or anyone who can manage threads may close it. */
+  private async closeTicket(interaction: ComponentInteraction): Promise<void> {
+    const thread = interaction.channel;
+    if (!thread?.isThread() || thread.type !== ChannelType.PrivateThread) return;
+    const isOpener = thread.name.endsWith(` · ${interaction.user.username}`);
+    const isStaff = interaction.memberPermissions?.has(PermissionFlagsBits.ManageThreads) ?? false;
+    if (!isOpener && !isStaff) {
+      await interaction.reply({ content: "Only the member who opened this ticket or staff can close it.", flags: MessageFlags.Ephemeral });
+      return;
+    }
+    await interaction.reply({ content: `🔒 Closed by <@${interaction.user.id}>. Need more help? Open a new ticket.`, allowedMentions: { parse: [] } });
+    // Locked: only staff can reopen it; the thread stays as a record.
+    await thread.edit({ locked: true, archived: true, reason: `Ticket closed by ${interaction.user.tag}` }).catch(() => undefined);
   }
 }

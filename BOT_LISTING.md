@@ -13,7 +13,7 @@ Everything needed to list **Bypass Hi-Fi Music Bot** on bot directories. Every c
 | Library | discord.js (TypeScript) |
 | Invite URL | https://music-bot.checkleaked.com/invite |
 | Website | https://music-bot.checkleaked.com |
-| Support server | https://discord.gg/hjJQKp5zDU (permanent invite) |
+| Support server | https://discord.gg/KwKwtasGZE (permanent invite) |
 | Privacy policy | https://music-bot.checkleaked.com/privacy |
 | Terms | https://music-bot.checkleaked.com/terms |
 | Source | https://github.com/eduair94/music-bot |
@@ -60,7 +60,7 @@ Every song gets a live player card with buttons: previous, pause, skip, stop, lo
 ## Free, with optional perks
 Everything above is free. Voting unlocks 24/7 mode and studio quality for 12 hours. Founder supporters ($3/month on Patreon) keep them permanently.
 
-Support: https://discord.gg/hjJQKp5zDU · Website: https://music-bot.checkleaked.com
+Support: https://discord.gg/KwKwtasGZE · Website: https://music-bot.checkleaked.com
 ```
 
 ## Plain-sentence description (bots.ondiscord.xyz forbids lists and pipes)

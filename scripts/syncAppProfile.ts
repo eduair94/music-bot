@@ -18,7 +18,7 @@ const DESCRIPTION = [
     "a button player, autoplay radio, lyrics, effects (bass boost, nightcore, 8D), saved playlists and 24/7 mode. " +
     "Speaks 28 languages.",
   "",
-  "Support: discord.gg/hjJQKp5zDU",
+  "Support: discord.gg/KwKwtasGZE",
   "Website: music-bot.checkleaked.com"
 ].join("\n");
 
