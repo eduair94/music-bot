@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
+import { gate, isRequesterOf } from "../utils/permissions";
 import { canModifyQueue } from "../utils/queue";
 
 const pattern = /^[0-9]{1,2}(\s*,\s*[0-9]{1,2})*$/;
@@ -14,26 +14,26 @@ export default {
       option.setName("slot").setDescription(i18n.__("remove.description")).setRequired(true)
     ),
   async execute(interaction: ChatInputCommandInteraction) {
-    // Defer reply immediately to prevent interaction timeout
-    await interaction.deferReply().catch(console.error);
-    
     const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
     const removeArgs = interaction.options.getString("slot");
+    const playerService = DiscordPlayerService.getInstance();
+    const queue = playerService.getQueue(interaction.guild!.id);
+
+    // "queue" group. With requesterCanSkipOwn, members may remove songs they
+    // queued themselves. Checked before deferring so a refusal stays private.
+    const targets = (removeArgs ?? "").split(",").map((arg) => parseInt(arg.trim(), 10));
+    const ownOnly =
+      Boolean(queue) &&
+      targets.length > 0 &&
+      targets.every((n) => Number.isInteger(n) && n >= 1 && isRequesterOf(queue!.tracks.at(n - 1), interaction.user.id));
+    if (!(await gate(interaction, "queue", { isRequester: ownOnly }))) return;
+
+    // Defer reply immediately to prevent interaction timeout
+    await interaction.deferReply().catch(console.error);
 
     if (!canModifyQueue(guildMember!)) {
       return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
-
-    // Check DJ permission
-    const hasDJ = await hasDJPermission(guildMember as GuildMember);
-    if (!hasDJ) {
-      return interaction.editReply({ 
-        content: `❌ ${i18n.__("common.djRequired")}`
-      }).catch(console.error);
-    }
-
-    const playerService = DiscordPlayerService.getInstance();
-    const queue = playerService.getQueue(interaction.guild!.id);
 
     if (!queue) {
       return interaction.editReply({ content: i18n.__("remove.errorNotQueue") }).catch(console.error);

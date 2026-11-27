@@ -2,7 +2,6 @@ import { QueueRepeatMode } from "discord-player";
 import { ChatInputCommandInteraction, GuildMember, MessageFlags, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { PlayerPanelService } from "../services/playerPanel";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
@@ -36,9 +35,6 @@ export default {
     }
     if (!canModifyQueue(member)) {
       return interaction.reply({ content: `🔇 ${i18n.__("player.notInVoice")}`, flags: MessageFlags.Ephemeral });
-    }
-    if (!(await hasDJPermission(member))) {
-      return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: MessageFlags.Ephemeral });
     }
 
     const requested = interaction.options.getString("mode");

@@ -7,7 +7,6 @@ import {
 import { GuildSettingsService } from "../services/guildSettings";
 import { descriptionLocalizations, i18n } from "../utils/i18n";
 import {
-  canManageSettings,
   handleAdminRole,
   handleBehavior,
   handleBlacklist,
@@ -23,7 +22,9 @@ import {
   handleVoiceChannels,
   handleVolume,
   SettingsHandlerContext,
+  settingsVerdict,
 } from "./settings/index";
+import { denialMessage } from "../utils/permissions";
 
 /** Description plus its translations, read from the locale files at load. */
 function described<T extends { setDescription(text: string): T; setDescriptionLocalizations(map: Record<string, string> | null): T }>(
@@ -90,12 +91,10 @@ export default {
     const settingsService = GuildSettingsService.getInstance();
     const subcommand = interaction.options.getSubcommand();
 
-    // Manage Server, or the admin role set with /settings adminrole
-    if (!(await canManageSettings(interaction))) {
-      return interaction.reply({
-        content: `🔒 ${i18n.__("settings.noPermission")}`,
-        flags: MessageFlags.Ephemeral,
-      });
+    // The "settings" rule: Manage Server, the admin role, or whoever the rule allows
+    const verdict = await settingsVerdict(interaction);
+    if (!verdict.ok) {
+      return interaction.reply({ content: denialMessage(verdict), flags: MessageFlags.Ephemeral });
     }
 
     const settings = await settingsService.getSettings(guildId);

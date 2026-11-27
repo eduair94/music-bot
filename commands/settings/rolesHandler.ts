@@ -6,7 +6,9 @@ import {
   MessageFlags,
   RoleSelectMenuBuilder
 } from "discord.js";
+import type { IGuildSettings } from "../../models/GuildSettings";
 import { GuildSettingsService } from "../../services/guildSettings";
+import { normalizeConfig } from "../../shared/permissions";
 import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
@@ -32,15 +34,33 @@ export async function handleDJRole({ interaction }: SettingsHandlerContext) {
   });
 }
 
+/**
+ * The legacy DJ role plus, once the server has saved permission rules, the
+ * same change in their DJ role list (the old role out, the new one in), so
+ * /settings djrole keeps working next to the dashboard.
+ */
+async function djRoleUpdate(guildId: string, roleId: string | null): Promise<Partial<IGuildSettings>> {
+  const settings = await GuildSettingsService.getInstance().getSettings(guildId);
+  const updates: Partial<IGuildSettings> = { djRoleId: roleId };
+  const saved = settings.permissionConfig;
+  if (saved && Object.keys(saved).length > 0) {
+    const config = normalizeConfig(saved);
+    const kept = config.djRoles.filter((id) => id !== settings.djRoleId);
+    config.djRoles = roleId && !kept.includes(roleId) ? [...kept, roleId] : kept;
+    updates.permissionConfig = config;
+  }
+  return updates;
+}
+
 export async function onDJRoleComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
   const settingsService = GuildSettingsService.getInstance();
   if (action === "clear") {
-    await settingsService.updateSettings(interaction.guildId, { djRoleId: null });
+    await settingsService.updateSettings(interaction.guildId, await djRoleUpdate(interaction.guildId, null));
     return interaction.update({ content: i18n.__("settings.djrole.clearedEveryone"), components: [] });
   }
   if (!interaction.isRoleSelectMenu()) return;
   const roleId = interaction.values[0] || null;
-  await settingsService.updateSettings(interaction.guildId, { djRoleId: roleId });
+  await settingsService.updateSettings(interaction.guildId, await djRoleUpdate(interaction.guildId, roleId));
   return interaction.update({
     content: roleId ? i18n.__mf("settings.djrole.set", { role: "<@&" + roleId + ">" }) : i18n.__("settings.djrole.cleared"),
     components: [],

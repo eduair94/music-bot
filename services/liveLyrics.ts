@@ -17,6 +17,7 @@ import { isButton, registerComponentHandler } from "../structs/componentRouter";
 import { safeText, truncate } from "../utils/format";
 import { BotLocale, currentLocale, i18n, runWithLocale } from "../utils/i18n";
 import { lineIndexAt, liveWindow, SyncedLine } from "../utils/lyricsQuery";
+import { gate } from "../utils/permissions";
 import { DiscordPlayerService, isGuessGameQueue } from "./discordPlayer";
 import { findLyrics, LyricsResult } from "./lyrics";
 
@@ -326,6 +327,7 @@ async function handleLiveButton(interaction: ButtonInteraction): Promise<unknown
   if (isGuessGameQueue(queue)) {
     return interaction.reply({ content: `🎮 ${i18n.__("lyrics.liveNotDuringGame")}`, flags: ephemeralFlag });
   }
+  if (!(await gate(interaction, "lyrics_view"))) return;
 
   const ephemeral = interaction.message.flags.has(MessageFlags.Ephemeral);
   await interaction.deferReply(ephemeral ? { flags: ephemeralFlag } : {});

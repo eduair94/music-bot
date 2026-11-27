@@ -45,6 +45,7 @@ import { config } from "../utils/config";
 import { localeForInteraction } from "../utils/guildLocale";
 import { i18n, localizeCommandJson, runWithLocale } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
+import { commandGate } from "../utils/permissions";
 import { commands as commandRegistry, contextMenus, mention, setCommandId } from "./commandRegistry";
 import { getComponentHandler } from "./componentRouter";
 
@@ -491,7 +492,9 @@ export class Bot {
     if ((interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) && isGuessGameRunning(interaction.guildId)) {
       return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
     }
-    return null;
+
+    // The server's rule for the command's action group (DJ, admins, allow/deny lists).
+    return commandGate(interaction);
   }
 
   private checkCooldown(name: string, userId: string, seconds: number): number {

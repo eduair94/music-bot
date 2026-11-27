@@ -16,6 +16,8 @@ import { getPlaybackSettings } from "./audioSettings";
 import { formatDuration, isHttpUrl, linkLabel, safeText } from "./format";
 import { i18n } from "./i18n";
 import { hasPremiumFeature } from "./premiumCheck";
+import { isChannelAllowedForInstance } from "../shared/permissions";
+import { canUse, denialMessage, permissionConfigFor } from "./permissions";
 
 const V2 = MessageFlags.IsComponentsV2;
 
@@ -53,7 +55,9 @@ export type PlayRejectCode =
   /** An admin turned the command off. detail: name */
   | "commandDisabled"
   /** A guess-the-song game owns the player in this server. */
-  | "gameRunning";
+  | "gameRunning"
+  /** The server's "play" rule refuses this member. detail: message (already localized) */
+  | "noPermission";
 
 export class PlayRejection extends Error {
   constructor(public readonly code: PlayRejectCode, public readonly detail: Record<string, string> = {}) {
@@ -115,6 +119,8 @@ export function playRejectionMessage(rejection: PlayRejection, query: string, ch
       return `🚫 ${i18n.__mf("router.commandDisabled", { name: detail.name || "play" })}`;
     case "gameRunning":
       return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
+    case "noPermission":
+      return detail.message || `🔒 ${i18n.__("permissions.deny.hint")}`;
   }
 }
 
@@ -226,6 +232,10 @@ export async function enqueue(request: EnqueueRequest, hooks: EnqueueHooks = {})
   // Buttons, history, collections, search picks and the dashboard all land
   // here; queueing music would end (or break) a guess-the-song round.
   if (isGuessGameQueue(playerService.getQueue(guild.id))) throw new PlayRejection("gameRunning");
+  // Every way of adding songs (slash, context menu, search, history,
+  // collections, dashboard) answers to the server's "play" rule.
+  const verdict = await canUse(member, "play");
+  if (!verdict.ok) throw new PlayRejection("noPermission", { message: denialMessage(verdict) });
 
   // Already playing for people in another channel: don't hijack it.
   const existing = playerService.getQueue(guild.id);
@@ -245,6 +255,11 @@ export async function enqueue(request: EnqueueRequest, hooks: EnqueueHooks = {})
 
   const settingsService = GuildSettingsService.getInstance();
   if (!(await settingsService.isVoiceChannelAllowed(guild.id, voiceChannel.id))) {
+    throw new PlayRejection("channelNotAllowed");
+  }
+  // Per-instance channel scope from the permission rules ([] = any channel).
+  const instance = Number(process.env.BOT_INSTANCE) || 1;
+  if (!isChannelAllowedForInstance(await permissionConfigFor(guild.id), instance, voiceChannel.id)) {
     throw new PlayRejection("channelNotAllowed");
   }
 
