@@ -126,8 +126,7 @@ async function main() {
     sup: roleByName("Support")?.id as string | undefined,
     bots: roleByName("Bots")?.id as string | undefined,
     bypass: botRole(me.id)?.id as string | undefined,
-    carl: botRole(CARL_BOT)?.id as string | undefined,
-    ticketTool: botRole(TICKET_TOOL)?.id as string | undefined
+    carl: botRole(CARL_BOT)?.id as string | undefined
   };
   const staffIds = [R.admin, R.dev, R.mod, R.sup].filter(Boolean) as string[];
 
@@ -194,7 +193,7 @@ async function main() {
     await api("patch", Routes.guildRole(GUILD, r.id), { name: sepNames[i] });
   }
   // Third-party bots join the cosmetic Bots group in the member list.
-  for (const botId of [CARL_BOT, TICKET_TOOL]) {
+  for (const botId of [CARL_BOT]) {
     if (!R.bots) break;
     const member = (await rest.get(Routes.guildMember(GUILD, botId)).catch(() => null)) as Json | null;
     if (member && !member.roles.includes(R.bots)) {
@@ -225,10 +224,9 @@ async function main() {
     ...ow(R.mod, [V.UseApplicationCommands]),
     ...ow(R.dev, [V.UseApplicationCommands])
   ];
-  /** Ticket panel: nobody chats; Ticket Tool posts and opens private tickets. */
+  /** Ticket panel: nobody chats; Bypass opens a private thread per ticket (members write inside it). */
   const ticketPanel: Overwrite[] = [
     ...ow(everyone, [...READ, V.SendMessagesInThreads, V.EmbedLinks, V.AttachFiles], [V.SendMessages, V.CreatePublicThreads, V.CreatePrivateThreads, V.AddReactions, V.SendPolls, ...NO_APPS]),
-    ...ow(R.ticketTool, [...READ, V.SendMessages, V.SendMessagesInThreads, V.EmbedLinks, V.AttachFiles, V.ManageMessages, V.CreatePrivateThreads, V.ManageThreads]),
     ...ow(R.sup, [V.ManageThreads, V.UseApplicationCommands]),
     ...ow(R.mod, [V.ManageThreads, V.UseApplicationCommands]),
     ...ow(R.dev, [...POST, V.UseApplicationCommands])
@@ -308,7 +306,7 @@ async function main() {
       parent_id: ID.catSupport,
       permission_overwrites: ticketPanel,
       rate_limit_per_user: 0,
-      topic: "Private help for billing, Patreon or anything you can't post in public. Press Create ticket below: only you and staff see it."
+      topic: "Private help for billing, Patreon or anything you can't post in public. Pick a topic below: only you and staff see the ticket."
     },
     "#tickets"
   );
@@ -453,7 +451,11 @@ async function main() {
   await api("put", `/guilds/${GUILD}/onboarding`, {
     enabled: true,
     mode: 0,
-    default_channel_ids: [ID.welcome, ID.rules, ID.announcements, ID.changelog, ID.status, ID.general, ID.suggestions, ID.faq, ID.help, ID.botCommands, ID.musicLounge, ID.hangout],
+    // Every public channel: with onboarding on, channels left out are hidden from new members.
+    default_channel_ids: [
+      ID.welcome, ID.rules, ID.announcements, ID.changelog, ID.status, ID.votes, ID.github,
+      ID.faq, ID.help, ID.tickets, ID.general, ID.suggestions, ID.botCommands, ID.musicLounge, ID.hangout
+    ],
     prompts: withIds([
       {
         type: 0,
@@ -482,27 +484,9 @@ async function main() {
     ])
   }).catch((e) => warn("onboarding", e));
 
-  // Server Guide (the "home" new members see): welcome note, to-dos, resource pages.
-  log("server guide");
-  await api("put", `/guilds/${GUILD}/new-member-welcome`, {
-    enabled: true,
-    welcome_message: {
-      author_ids: [guild.owner_id],
-      message: "Welcome! Bypass is a hi-fi music bot. Ask anything in #help, try the bot in #bot-commands, and pick the pings you want in Channels & Roles."
-    },
-    new_member_actions: [
-      { channel_id: ID.rules, action_type: 0, title: "Read the rules", description: "Eight short rules that keep this place friendly.", emoji: { name: "📜" } },
-      { channel_id: ID.faq, action_type: 0, title: "Check the FAQ", description: "Most questions are answered here.", emoji: { name: "❓" } },
-      { channel_id: ID.botCommands, action_type: 0, title: "Try Bypass", description: "Join Music Lounge and use /play.", emoji: { name: "🎛️" } },
-      { channel_id: ID.general, action_type: 1, title: "Say hi", description: "Tell us what you listen to.", emoji: { name: "👋" } }
-    ],
-    resource_channels: [
-      { channel_id: ID.welcome, title: "Start here", description: "What Bypass is, roles and links.", emoji: { name: "👋" } },
-      { channel_id: ID.faq, title: "FAQ", description: "Quick answers to common questions.", emoji: { name: "❓" } },
-      { channel_id: ID.changelog, title: "Changelog", description: "Every update, newest last.", emoji: { name: "🆕" } },
-      { channel_id: ID.status, title: "Status", description: "Is the bot up right now?", emoji: { name: "📡" } }
-    ]
-  }).catch((e) => warn("server guide", e));
+  // Server Guide (welcome sign from Bypass + 5 new-member to-dos) is set in
+  // Server Settings → Onboarding → Server Guide: the endpoint rejects bot tokens
+  // ("Bots cannot use this endpoint"). Configured by the owner on 2026-11-26.
 
   // Rules screening: members accept the rules before they can talk.
   log("rules screening");
@@ -587,13 +571,13 @@ async function main() {
       t.setContent(
         [
           "**Find your way**",
-          `📜 ${ch(ID.rules)} — read before chatting`,
-          `❓ ${ch(ID.faq)} — quick answers`,
-          `🙋 ${ch(ID.help)} — one post per problem`,
-          `🎫 ${ch(ID.tickets)} — private help for billing and Patreon`,
-          `💡 ${ch(ID.suggestions)} — ideas and votes`,
-          `🎛️ ${ch(ID.botCommands)} + 🎵 ${ch(ID.musicLounge)} — try Bypass here`,
-          `📣 ${ch(ID.announcements)} · 🆕 ${ch(ID.changelog)} · 📡 ${ch(ID.status)} — news, updates and status`,
+          `${ch(ID.rules)} — read before chatting`,
+          `${ch(ID.faq)} — quick answers`,
+          `${ch(ID.help)} — one post per problem`,
+          `${ch(ID.tickets)} — private help for billing and Patreon`,
+          `${ch(ID.suggestions)} — ideas and votes`,
+          `${ch(ID.botCommands)} + ${ch(ID.musicLounge)} — try Bypass here`,
+          `${ch(ID.announcements)} · ${ch(ID.changelog)} · ${ch(ID.status)} — news, updates and status`,
           "",
           "-# Pick your pings anytime in **Channels & Roles** at the top of the channel list. Hablamos español también."
         ].join("\n")
