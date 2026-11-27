@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} 无权进入此频道",
       "invite": "再添加一个 Bypass，即可同时在更多频道播放：",
       "add": "添加 {bot}",
-      "premium": "Bypass 5 到 8 随 Premium 提供。"
+      "premium": "Bypass 5 到 8 随 Premium 提供。",
+      "servedHere": "{bot} 已经在 {channel} 播放啦。请在那里使用 /play 和控制按钮，或者加入另一个语音频道。",
+      "stay247On": "已为 {bot} 开启 24/7：它会一直待在 {channel}，重启后也会自动重新加入。",
+      "stay247Off": "已为 {bot} 关闭 24/7。"
     },
     "info": {
       "header": "{bot} 在 {channel}",

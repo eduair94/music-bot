@@ -13,6 +13,7 @@ import {
   TextChannel
 } from "discord.js";
 import type { IPlayHistory } from "../models/PlayHistory";
+import { dispatchPlay } from "../services/fleet/dispatcher";
 import { PlayHistoryService } from "../services/playHistory";
 import { registerComponentHandler } from "../structs/componentRouter";
 import { formatDuration, isHttpUrl, linkLabel, safeText, truncate } from "../utils/format";
@@ -161,6 +162,22 @@ async function playAgain(interaction: StringSelectMenuInteraction<"cached">, pag
   const member = interaction.member as GuildMember;
   const gate = await playGate(interaction.guildId, member).catch(() => null);
   if (gate) return privately(interaction, { content: playRejectionMessage(gate, "") });
+
+  // Fleet: when another Bypass instance serves (or should serve) the member's
+  // voice channel, it gets the picked songs.
+  const [first, ...more] = records;
+  const handedOff = await dispatchPlay({
+    interaction,
+    query: replayQuery(first),
+    followUp: true,
+    collection: more.length
+      ? {
+          name: i18n.__("history.title"),
+          tracks: more.map((r) => ({ title: r.title, author: r.author, url: r.url, thumbnail: r.thumbnail, duration: Math.round((r.duration || 0) / 1000) }))
+        }
+      : undefined
+  });
+  if (handedOff) return;
 
   const textChannel = (interaction.channel ?? interaction.guild.systemChannel) as TextChannel | null;
   const queued: EnqueueResult[] = [];

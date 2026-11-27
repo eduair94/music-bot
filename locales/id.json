@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} tidak diizinkan di channel ini",
       "invite": "Tambahkan Bypass lain untuk memutar di lebih banyak channel sekaligus:",
       "add": "Tambah {bot}",
-      "premium": "Bypass 5 sampai 8 tersedia dengan Premium."
+      "premium": "Bypass 5 sampai 8 tersedia dengan Premium.",
+      "servedHere": "{bot} sudah memutar musik di {channel}. Pakai /play dan kontrol di sana, atau gabung ke voice channel lain.",
+      "stay247On": "24/7 aktif untuk {bot}: bot akan tetap di {channel} dan bergabung kembali setelah restart.",
+      "stay247Off": "24/7 nonaktif untuk {bot}."
     },
     "info": {
       "header": "{bot} di {channel}",

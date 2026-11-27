@@ -1,9 +1,11 @@
 import { ChatInputCommandInteraction, EmbedBuilder, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { dispatchPlay } from "../services/fleet/dispatcher";
 import { SpotifyService } from "../services/spotify";
 import { getPlaybackSettings } from "../utils/audioSettings";
 import { i18n } from "../utils/i18n";
+import { listenersElsewhere } from "../utils/playFlow";
 
 /**
  * /play_spotify command - Search and play music from Spotify
@@ -60,8 +62,11 @@ export default {
       }).catch(console.error);
     }
 
+    // Fleet: another Bypass instance may serve the member's channel.
+    if (interaction.inCachedGuild() && (await dispatchPlay({ interaction, query }))) return;
+
     const playerService = DiscordPlayerService.getInstance();
-    
+
     if (!playerService.isInitialized()) {
       return interaction.reply({ 
         content: `❌ ${i18n.__("common.playerInitializing")}`, 
@@ -81,7 +86,16 @@ export default {
       }).catch(console.error);
     }
 
-    // Move bot to user's channel if in different channel
+    // Never pull the bot away from people listening in another channel.
+    const busyIn = listenersElsewhere(interaction.guild!, voiceChannel.id);
+    if (busyIn) {
+      return interaction.reply({
+        content: `🎧 ${i18n.__mf("play.botNotInChannel", { channel: `<#${busyIn.id}>` })}`,
+        ephemeral: true
+      }).catch(console.error);
+    }
+
+    // Move bot to user's channel if in different channel (nobody is listening there)
     if (existingQueue?.channel && existingQueue.channel.id !== voiceChannel.id) {
       try {
         existingQueue.delete();

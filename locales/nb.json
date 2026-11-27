@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} har ikke tilgang til denne kanalen",
       "invite": "Legg til en Bypass til for å spille i flere kanaler samtidig:",
       "add": "Legg til {bot}",
-      "premium": "Bypass 5 til 8 følger med Premium."
+      "premium": "Bypass 5 til 8 følger med Premium.",
+      "servedHere": "{bot} spiller allerede i {channel}. Bruk /play og kontrollene der, eller bli med i en annen talekanal.",
+      "stay247On": "24/7 på for {bot}: den blir værende i {channel} og kobler seg til igjen etter omstarter.",
+      "stay247Off": "24/7 av for {bot}."
     },
     "info": {
       "header": "{bot} i {channel}",

@@ -24,6 +24,7 @@ import { localeForGuild } from "../utils/guildLocale";
 import { BotLocale, i18n, runWithLocale } from "../utils/i18n";
 import { ensureAutoplayNext } from "./autoplay";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
+import { servedByOtherInstance } from "./fleet/dispatcher";
 import { buildChoices, CHOICES_PER_ROUND, displayTitle, pickRoundTracks, PreviewTrack, rankScores, scoreFor, shuffle } from "./guessLogic";
 import { GuildSettingsService } from "./guildSettings";
 import { stopLiveLyrics } from "./liveLyrics";
@@ -574,6 +575,9 @@ export async function startGame(interaction: ChatInputCommandInteraction<"cached
   const voice = interaction.member.voice.channel;
   if (!voice) return interaction.reply({ content: `🔇 ${i18n.__("guess.notInVoice")}`, flags: EPHEMERAL });
   if (isGuessGameRunning(guild.id)) return interaction.reply({ content: `🎮 ${i18n.__("guess.alreadyRunning")}`, flags: EPHEMERAL });
+  // Another Bypass instance plays music in this channel: the game would talk over it.
+  const servedBy = await servedByOtherInstance(interaction);
+  if (servedBy) return interaction.reply({ content: servedBy, flags: EPHEMERAL });
 
   const service = DiscordPlayerService.getInstance();
   const player = service.getPlayer();

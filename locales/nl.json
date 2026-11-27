@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} mag niet in dit kanaal",
       "invite": "Voeg nog een Bypass toe om in meer kanalen tegelijk te spelen:",
       "add": "{bot} toevoegen",
-      "premium": "Bypass 5 tot 8 zitten bij Premium."
+      "premium": "Bypass 5 tot 8 zitten bij Premium.",
+      "servedHere": "{bot} speelt al in {channel}. Gebruik /play en de bediening daar, of join een ander spraakkanaal.",
+      "stay247On": "24/7 aan voor {bot}: hij blijft in {channel} en komt terug na herstarts.",
+      "stay247Off": "24/7 uit voor {bot}."
     },
     "info": {
       "header": "{bot} in {channel}",

@@ -127,6 +127,19 @@ export function slashCommandGroup(commandName: string): Group | null {
 }
 
 /**
+ * commandGate for a slash command forwarded to another fleet instance: the
+ * same rule, with that instance's session as context (`aloneWithBot`,
+ * `isRequester`). Self-gated commands (/remove) are checked here too, since
+ * their own check never runs on the primary for a forwarded command.
+ */
+export async function forwardedCommandGate(interaction: ChatInputCommandInteraction<"cached">, ctx: PermissionContext): Promise<string | null> {
+  const group = commandGroup(interaction.commandName);
+  if (!group) return null;
+  const result = await canUse(interaction, group, ctx);
+  return result.ok ? null : denialMessage(result);
+}
+
+/**
  * Router check for slash commands and context menus (structs/Bot.ts). Returns
  * the refusal to send privately, or null when the member may go ahead.
  */

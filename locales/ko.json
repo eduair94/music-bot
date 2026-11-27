@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot}은(는) 이 채널에 들어올 수 없어요",
       "invite": "Bypass를 하나 더 추가하면 여러 채널에서 동시에 재생할 수 있어요:",
       "add": "{bot} 추가",
-      "premium": "Bypass 5~8은 Premium에 포함돼요."
+      "premium": "Bypass 5~8은 Premium에 포함돼요.",
+      "servedHere": "{bot}이(가) 이미 {channel}에서 재생 중이에요. 거기서 /play와 컨트롤을 사용하거나, 다른 음성 채널에 들어가 주세요.",
+      "stay247On": "{bot}의 24/7 모드가 켜졌어요: {channel}에 계속 머물고, 재시작 후에도 다시 들어와요.",
+      "stay247Off": "{bot}의 24/7 모드가 꺼졌어요."
     },
     "info": {
       "header": "{channel}의 {bot}",

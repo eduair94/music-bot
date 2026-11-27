@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} غير مسموح له في هذه القناة",
       "invite": "أضف Bypass آخر للتشغيل في قنوات أكثر في نفس الوقت:",
       "add": "أضف {bot}",
-      "premium": "Bypass من 5 إلى 8 متاحة مع Premium."
+      "premium": "Bypass من 5 إلى 8 متاحة مع Premium.",
+      "servedHere": "{bot} يشغّل بالفعل في {channel}. استخدم /play وأزرار التحكم هناك، أو انضم إلى قناة صوتية أخرى.",
+      "stay247On": "تم تفعيل وضع 24/7 لـ {bot}: سيبقى في {channel} ويعود إليها بعد إعادة التشغيل.",
+      "stay247Off": "تم إيقاف وضع 24/7 لـ {bot}."
     },
     "info": {
       "header": "{bot} في {channel}",

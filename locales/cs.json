@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} nemá do tohoto kanálu přístup",
       "invite": "Přidej dalšího Bypass a hraj ve více kanálech najednou:",
       "add": "Přidat {bot}",
-      "premium": "Bypass 5 až 8 jsou součástí Premium."
+      "premium": "Bypass 5 až 8 jsou součástí Premium.",
+      "servedHere": "{bot} už hraje v {channel}. Použij tam /play a ovládací prvky, nebo se připoj do jiného hlasového kanálu.",
+      "stay247On": "24/7 zapnuto pro {bot}: zůstane v {channel} a po restartu se do něj znovu připojí.",
+      "stay247Off": "24/7 vypnuto pro {bot}."
     },
     "info": {
       "header": "{bot} v {channel}",

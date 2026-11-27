@@ -2085,7 +2085,10 @@
       "notAllowed": "{bot} n'est pas autorisé dans ce salon",
       "invite": "Ajoute un autre Bypass pour jouer dans plusieurs salons à la fois :",
       "add": "Ajouter {bot}",
-      "premium": "Bypass 5 à 8 sont inclus avec Premium."
+      "premium": "Bypass 5 à 8 sont inclus avec Premium.",
+      "servedHere": "{bot} joue déjà dans {channel}. Utilise /play et les commandes là-bas, ou rejoins un autre salon vocal.",
+      "stay247On": "24/7 activé pour {bot} : il reste dans {channel} et le rejoint après chaque redémarrage.",
+      "stay247Off": "24/7 désactivé pour {bot}."
     },
     "info": {
       "header": "{bot} dans {channel}",

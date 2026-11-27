@@ -2116,7 +2116,10 @@
       "notAllowed": "{bot} isn't allowed in this channel",
       "invite": "Add another Bypass to play in more channels at once:",
       "add": "Add {bot}",
-      "premium": "Bypass 5 to 8 come with Premium."
+      "premium": "Bypass 5 to 8 come with Premium.",
+      "servedHere": "{bot} is already playing in {channel}. Use /play and the controls there, or join another voice channel.",
+      "stay247On": "24/7 on for {bot}: it stays in {channel} and rejoins it after restarts.",
+      "stay247Off": "24/7 off for {bot}."
     },
     "info": {
       "header": "{bot} in {channel}",

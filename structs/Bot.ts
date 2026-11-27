@@ -26,7 +26,8 @@ import { DashboardSyncService } from "../services/dashboardSync";
 import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { forwardSlash, routesAwayFromPrimary } from "../services/fleet/dispatcher";
+import { setBoosterClient } from "../services/boosters";
+import { forwardSlash, forwardTarget, routesAwayFromPrimary } from "../services/fleet/dispatcher";
 import { GuildSettingsService } from "../services/guildSettings";
 import { isGuessGameRunning } from "../services/guessGame";
 import { logBuffer } from "../services/logBuffer";
@@ -270,6 +271,10 @@ export class Bot {
     } catch (error) {
       console.error("⚠️ Dashboard Sync initialization skipped:", error);
     }
+
+    // Support-server boosters get their perks (audio quality, longer songs,
+    // 24/7) on every instance, not just the primary that runs the support server.
+    setBoosterClient(this.client);
 
     if (!isPrimary) {
       // Secondaries play music and run their own player cards; slash commands,
@@ -557,10 +562,14 @@ export class Bot {
     if (
       (interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) &&
       isGuessGameRunning(interaction.guildId) &&
-      !routesAwayFromPrimary(interaction, name)
+      !(await routesAwayFromPrimary(interaction, name))
     ) {
       return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
     }
+
+    // A control for a channel another Bypass instance serves is checked in
+    // forwardSlash, against that instance's session.
+    if (await forwardTarget(interaction)) return null;
 
     // The server's rule for the command's action group (DJ, admins, allow/deny lists).
     return commandGate(interaction);

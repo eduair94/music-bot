@@ -357,6 +357,8 @@ export type PlayerCommandType =
   // Playlist/Save
   | "save"
   | "playlist"
+  // 24/7 for a fleet instance (/247 in a channel another instance serves)
+  | "stay247"
   // Premium/Boost
   | "premium"
   | "claim"
@@ -375,7 +377,7 @@ export type PlayerCommandType =
  */
 export const BUS_COMMANDS = [
   "play", "pause", "resume", "skip", "previous", "stop", "volume", "seek", "shuffle", "loop",
-  "autoplay", "filter", "remove", "move", "skipto", "clear", "join", "leave", "search"
+  "autoplay", "filter", "remove", "move", "skipto", "clear", "join", "leave", "search", "stay247"
 ] as const satisfies readonly PlayerCommandType[];
 
 export type BusCommand = (typeof BUS_COMMANDS)[number];
@@ -400,6 +402,15 @@ export type BotCommandType = PlayerCommandType | LinkedBotCommandType | AdminCom
  * Command status
  */
 export type CommandStatus = "pending" | "processing" | "completed" | "failed";
+
+/** A stored collection track as the bus carries it (duration in seconds). */
+export interface BusCollectionTrack {
+  title: string;
+  author?: string;
+  url: string;
+  thumbnail?: string;
+  duration?: number;
+}
 
 /**
  * Parameters for bot commands
@@ -444,6 +455,12 @@ export interface BotCommandParams {
   radio?: { kind: "song" | "station" | "ai"; label: string; [key: string]: unknown };
   /** play: search source ("youtube" | "soundcloud") */
   source?: string;
+  /**
+   * play: several songs handed to a fleet instance (a saved collection, or
+   * picks from the history). `query` is the first song; these tracks are
+   * queued after it without searching up front. `name` titles the result.
+   */
+  savedCollection?: { name: string; tracks: BusCollectionTrack[] };
   /** Language for the result message (Discord locale of the requester) */
   locale?: string;
 }
