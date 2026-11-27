@@ -27,6 +27,7 @@ import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { GuildSettingsService } from "../services/guildSettings";
+import { isGuessGameRunning } from "../services/guessGame";
 import { logBuffer } from "../services/logBuffer";
 import { PatreonService } from "../services/patreon";
 import { collectGuildData, TelemetryService } from "../services/telemetry";
@@ -44,10 +45,17 @@ import { config } from "../utils/config";
 import { localeForInteraction } from "../utils/guildLocale";
 import { i18n, localizeCommandJson, runWithLocale } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
-import { commands as commandRegistry, contextMenus, setCommandId } from "./commandRegistry";
+import { commands as commandRegistry, contextMenus, mention, setCommandId } from "./commandRegistry";
 import { getComponentHandler } from "./componentRouter";
 
 const EPHEMERAL = MessageFlags.Ephemeral;
+
+/** Commands that would break (or spoil) a running guess-the-song round. */
+const GAME_BLOCKED_COMMANDS = new Set([
+  "play", "playnext", "playnow", "play_file", "play_spotify", "search", "radio", "autoplay", "247",
+  "skip", "voteskip", "previous", "replay", "seek", "rewind", "jump", "pause", "resume", "loop",
+  "volume", "effects", "shuffle", "move", "remove", "clear", "queuemanage", "join", "say", "grab"
+]);
 
 export class Bot {
   public readonly prefix = "/";
@@ -474,6 +482,12 @@ export class Bot {
 
     if (!isManager && settings.disabledCommands?.includes(name)) {
       return `🚫 ${i18n.__mf("router.commandDisabled", { name })}`;
+    }
+
+    // A guess-the-song round owns the player: skipping, seeking or queueing
+    // music mid-round would break it (or reveal the answer).
+    if ((interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) && isGuessGameRunning(interaction.guildId)) {
+      return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
     }
     return null;
   }

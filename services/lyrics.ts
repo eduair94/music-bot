@@ -144,7 +144,10 @@ export async function findLyrics(rawTitle: string, rawAuthor = "", options: Find
           title: found.trackName || lookup.title,
           artist: found.artist || lookup.artist,
           text: found.lines.join("\n"),
-          source: found.source || "Spotify"
+          source: found.source || "Spotify",
+          ...(found.synced?.length
+            ? { synced: found.synced, syncedSource: found.source || "Spotify", syncedDurationSec: found.durationSec }
+            : {})
         };
         break;
       }

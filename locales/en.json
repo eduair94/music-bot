@@ -2014,6 +2014,7 @@
     "joinToPlay": "Join {channel} to play.",
     "stopNotAllowed": "Only the person who started the game or someone with Manage Server can stop it.",
     "noGame": "There's no guess-the-song game running here.",
-    "stopped": "Game stopped."
+    "stopped": "Game stopped.",
+    "blockedDuringGame": "A guess-the-song game is running in this server. Wait for it to finish or end it with {stop}."
   }
 }

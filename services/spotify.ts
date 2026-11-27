@@ -80,6 +80,10 @@ export interface SpotifyLyrics {
   artist: string;
   source: string;
   lines: string[];
+  /** Line timings, when the API reports the lyrics as line-synced. */
+  synced?: { timeMs: number; line: string }[];
+  /** Length of the matched track in seconds, when reported. */
+  durationSec?: number;
 }
 
 /**
@@ -198,11 +202,26 @@ export class SpotifyService {
         return null;
       }
 
+      // Spotify-style payloads carry syncType "LINE_SYNCED" and a startTimeMs
+      // (string or number) on every line; unsynced lyrics report 0 for all.
+      let synced: { timeMs: number; line: string }[] | undefined;
+      if (String(data?.syncType ?? "").toUpperCase() === "LINE_SYNCED" && Array.isArray(data?.lines)) {
+        const timed = data.lines.map((line: { startTimeMs?: string | number; words?: string }) => ({
+          timeMs: Number(line?.startTimeMs),
+          line: String(line?.words ?? "").replace(/^♪$/, "")
+        }));
+        const valid = timed.every((l: { timeMs: number }) => Number.isFinite(l.timeMs) && l.timeMs >= 0);
+        if (valid && timed.some((l: { timeMs: number }) => l.timeMs > 0)) synced = timed;
+      }
+      const durationMs = Number(data.track?.duration_ms ?? data.track?.duration?.totalMilliseconds ?? 0);
+
       return {
         trackName: data.track?.name || "",
         artist: data.track?.artists?.[0]?.name || "",
         source: data.source || "spotify",
-        lines
+        lines,
+        synced,
+        durationSec: durationMs > 0 ? Math.round(durationMs / 1000) : undefined
       };
     } catch (error: any) {
       console.error("[SpotifyService] ❌ Lyrics error:", error.message);
