@@ -12,12 +12,14 @@ import {
   type PermissionContext,
   type PermissionResult
 } from "../../../shared/permissions";
+import { configuredInstances, type LivePlaybackState } from "../../../shared/fleet";
 import type { IGuildSettings } from "../../../shared/types";
+import { isAloneWithBot } from "./dashboard-commands";
 import { fetchUserGuilds } from "./discord";
 import { isBotInGuild } from "./discord-server";
+import { readPlayback } from "./fleet";
 import { GuildSettingsModel } from "./models/GuildSettings";
 import { connectToDatabase } from "./mongodb";
-import { getRedis } from "./redis";
 
 /**
  * Who is asking, in which server, and what the server's rules let them do.
@@ -245,43 +247,26 @@ export function requireGroup(access: GuildAccess, group: Group, ctx: PermissionC
 
 // --------------------------------------------------------- playback context
 
-interface PlaybackSnapshot {
-  voiceChannelId?: string | null;
-  listeners?: number;
-  currentTrack?: { requestedBy?: { id?: string } | null } | null;
-  queue?: { requestedBy?: { id?: string } | null }[];
-}
-
-/** The bot's live state for an instance, when published to Redis (instance key first, legacy key for instance 1). */
-export async function readPlaybackSnapshot(guildId: string, instance = 1): Promise<PlaybackSnapshot | null> {
-  const redis = getRedis();
-  if (!redis) return null;
-  const keys = [`playback:${guildId}:${instance}`, ...(instance === 1 ? [`playback:${guildId}`] : [])];
+/**
+ * The bot's live state for an instance (Redis instance key, the legacy key
+ * for instance 1, or the Mongo mirror without Redis), in the contract shape.
+ */
+export async function readPlaybackSnapshot(guildId: string, instance = 1): Promise<LivePlaybackState | null> {
   try {
-    for (const key of keys) {
-      const raw = await redis.get(key);
-      if (raw) return JSON.parse(raw) as PlaybackSnapshot;
-    }
+    return await readPlayback(guildId, instance);
   } catch (error) {
     console.warn("[guild-access] Playback lookup failed:", (error as Error)?.message ?? error);
+    return null;
   }
-  return null;
 }
 
 /**
- * Context for a dashboard command: whether the member requested the song it
- * targets (skip: the current one; remove: queue index `position`, 0-based
- * like the bot's executor) and whether they are alone with the bot.
+ * Whether the member is alone with any Bypass instance in this server (for
+ * GET /me, which is not tied to one instance). Only looked up while the
+ * member is in a voice channel.
  */
-export function commandContext(access: GuildAccess, command: string, params: Record<string, unknown>, playback: PlaybackSnapshot | null): PermissionContext {
-  if (!playback) return {};
-  let requesterId: string | undefined;
-  if (command === "skip") requesterId = playback.currentTrack?.requestedBy?.id;
-  if (command === "remove" && typeof params.position === "number") requesterId = playback.queue?.[params.position]?.requestedBy?.id;
-  return {
-    isRequester: Boolean(requesterId && requesterId === access.userId),
-    aloneWithBot: Boolean(
-      access.voiceChannelId && playback.voiceChannelId === access.voiceChannelId && playback.listeners === 1
-    )
-  };
+export async function aloneWithAnyInstance(access: GuildAccess): Promise<boolean> {
+  if (!access.voiceChannelId) return false;
+  const states = await Promise.all(configuredInstances().map((m) => readPlaybackSnapshot(access.guildId, m.instance)));
+  return states.some((state) => isAloneWithBot(access, state));
 }

@@ -27,7 +27,8 @@ function str(value: unknown): string | undefined {
   return typeof value === "string" && value !== "" ? value : undefined;
 }
 
-function toTrack(raw: unknown): LiveTrack | undefined {
+/** Any stored track (contract or pre-fleet shape) as the contract's Track. */
+export function normalizeTrack(raw: unknown): LiveTrack | undefined {
   if (!raw || typeof raw !== "object") return undefined;
   const t = raw as Record<string, any>;
   // Contract shape: duration "3:45" + durationMs; pre-fleet shape: duration in ms.
@@ -53,7 +54,7 @@ function toTrack(raw: unknown): LiveTrack | undefined {
 export function normalizePlayback(raw: Record<string, any>, guildId: string, instance: number): LivePlaybackState {
   const now = Date.now();
   const lastUpdated = epoch(raw.lastUpdated, now);
-  const queue = Array.isArray(raw.queue) ? raw.queue.map(toTrack).filter((t): t is LiveTrack => Boolean(t)) : [];
+  const queue = Array.isArray(raw.queue) ? raw.queue.map(normalizeTrack).filter((t): t is LiveTrack => Boolean(t)) : [];
   return {
     guildId,
     instance,
@@ -64,7 +65,7 @@ export function normalizePlayback(raw: Record<string, any>, guildId: string, ins
     isPlaying: Boolean(raw.isPlaying),
     isPaused: Boolean(raw.isPaused),
     volume: typeof raw.volume === "number" ? raw.volume : 80,
-    currentTrack: toTrack(raw.currentTrack),
+    currentTrack: normalizeTrack(raw.currentTrack),
     currentPosition: typeof raw.currentPosition === "number" ? raw.currentPosition : 0,
     positionAt: epoch(raw.positionAt, lastUpdated),
     queue,
