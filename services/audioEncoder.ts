@@ -53,7 +53,8 @@ interface LibopusEncoder {
   encoderCTL?(request: number, value: number): void;
 }
 
-export type ChannelCapPolicy = "channel" | "none";
+/** "channel", "none", or a fixed ceiling in kbps. */
+export type ChannelCapPolicy = "channel" | "none" | number;
 
 /**
  * Whether the encoder may go above the voice channel's bitrate setting.
@@ -61,10 +62,15 @@ export type ChannelCapPolicy = "channel" | "none";
  * Discord's own clients do, but never under CHANNEL_CAP_FLOOR_KBPS; "none"
  * ignores the channel. Set VOICE_BITRATE_CAP=none once a probe
  * (scripts/probeVoiceBitrate.cjs) shows Discord delivers more than the
- * channel setting.
+ * channel setting. A number (VOICE_BITRATE_CAP=256) is a fixed ceiling in
+ * kbps that ignores the channel.
  */
 export function capPolicy(): ChannelCapPolicy {
-  return process.env.VOICE_BITRATE_CAP === "none" ? "none" : "channel";
+  const value = process.env.VOICE_BITRATE_CAP?.trim();
+  if (value === "none") return "none";
+  const kbps = Number(value);
+  if (value && Number.isFinite(kbps) && kbps >= OPUS_MIN_KBPS) return kbps;
+  return "channel";
 }
 
 /**
@@ -76,7 +82,8 @@ export function capPolicy(): ChannelCapPolicy {
  */
 export function targetKbps(tierKbps: number, channelBps: number | null | undefined, policy: ChannelCapPolicy = capPolicy()): number {
   let kbps = Number.isFinite(tierKbps) && tierKbps > 0 ? tierKbps : 128;
-  if (policy === "channel" && channelBps && channelBps > 0) {
+  if (typeof policy === "number") kbps = Math.min(kbps, policy);
+  else if (policy === "channel" && channelBps && channelBps > 0) {
     kbps = Math.min(kbps, Math.max(CHANNEL_CAP_FLOOR_KBPS, Math.floor(channelBps / 1000)));
   }
   return Math.max(OPUS_MIN_KBPS, Math.min(OPUS_MAX_KBPS, Math.round(kbps)));

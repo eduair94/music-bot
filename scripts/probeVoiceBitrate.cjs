@@ -7,13 +7,19 @@
  * and packet sizes. If Discord capped or re-encoded the stream to the channel
  * bitrate, `kbps` shows it.
  *
- * Plain CommonJS so it runs inside the production image, which ships no
- * TypeScript sources:
- *   docker cp scripts/probeVoiceBitrate.cjs music-bot:/app/probe.cjs
- *   docker exec -e PROBE_TOKEN=... music-bot node probe.cjs <guildId> <channelId> <targetBotId> [seconds]
+ * Plain CommonJS, run in a throwaway container next to the bot (the bot's
+ * own voice library, discord-voip, cannot receive audio):
+ *   mkdir -p /tmp/probe && cp probeVoiceBitrate.cjs /tmp/probe/probe.cjs
+ *   docker run --rm -v /tmp/probe:/w -w /w node:22-slim \
+ *     npm i --no-audit --no-fund discord.js@14 @discordjs/voice@0.19.2
+ *   docker run --rm -v /tmp/probe:/w -w /w -e PROBE_TOKEN=... node:22-slim \
+ *     node probe.cjs <guildId> <channelId> <targetBotId> [seconds]
+ * Stop the fleet instance that owns PROBE_TOKEN first so the two sessions
+ * don't both act on its voice state.
  */
 const { Client, GatewayIntentBits } = require("discord.js");
-const { joinVoiceChannel, EndBehaviorType, VoiceConnectionStatus, entersState } = require("discord-voip");
+// discord-voip (discord-player's fork) has no receiver; @discordjs/voice does.
+const { joinVoiceChannel, EndBehaviorType, VoiceConnectionStatus, entersState } = require("@discordjs/voice");
 
 const [guildId, channelId, targetId, secondsArg] = process.argv.slice(2);
 const seconds = Number(secondsArg || 20);
@@ -44,11 +50,14 @@ client.once("clientReady", async () => {
 
     const stream = connection.receiver.subscribe(targetId, { end: { behavior: EndBehaviorType.Manual } });
     const sizes = [];
+    const gaps = [];
     let first = 0;
     let last = 0;
     stream.on("data", (packet) => {
       const now = Date.now();
       if (!first) first = now;
+      // A packet is due every 20 ms; anything over 60 ms means frames went missing.
+      else if (now - last > 60) gaps.push(now - last);
       last = now;
       sizes.push(packet.length);
     });
@@ -70,6 +79,8 @@ client.once("clientReady", async () => {
         packetsPerSecond: span > 0 ? Number((sizes.length / span).toFixed(1)) : 0,
         kbps: span > 0 ? Number(((bytes * 8) / span / 1000).toFixed(1)) : 0,
         packetBytes: { p10: pct(10), median: pct(50), p90: pct(90), max: sorted[sorted.length - 1] ?? 0 },
+        expectedPackets: Math.round(span * 50),
+        gaps: { count: gaps.length, longestMs: gaps.length ? Math.max(...gaps) : 0, missingMs: gaps.reduce((a, g) => a + g - 20, 0) },
       })
     );
     client.destroy();

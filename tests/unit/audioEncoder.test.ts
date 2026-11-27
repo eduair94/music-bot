@@ -23,6 +23,11 @@ describe("targetKbps", () => {
     expect(targetKbps(320, 64_000, "none")).toBe(320);
   });
 
+  it("applies a fixed ceiling and ignores the channel", () => {
+    expect(targetKbps(320, 64_000, 256)).toBe(256);
+    expect(targetKbps(128, 64_000, 256)).toBe(128);
+  });
+
   it("stays inside Opus's range and defaults a missing tier to 128", () => {
     expect(targetKbps(999, null, "none")).toBe(510);
     expect(targetKbps(8, 8_000, "none")).toBe(32);
