@@ -47,6 +47,16 @@ export function normalizeTrack(raw: unknown): LiveTrack | undefined {
   };
 }
 
+/** What the bot's encoder sends (only the fleet bot's contract shape has it). */
+function normalizeAudio(a: any): LivePlaybackState["audio"] {
+  if (!a || typeof a.kbps !== "number" || !Number.isFinite(a.kbps)) return undefined;
+  return {
+    kbps: a.kbps,
+    tierKbps: typeof a.tierKbps === "number" ? a.tierKbps : a.kbps,
+    ...(typeof a.channelKbps === "number" ? { channelKbps: a.channelKbps } : {})
+  };
+}
+
 /**
  * Any stored playback state (contract shape from the fleet bot, the legacy
  * Redis key or a Mongo document) in the dashboard v2 contract shape.
@@ -74,6 +84,7 @@ export function normalizePlayback(raw: Record<string, any>, guildId: string, ins
     autoplay: Boolean(raw.autoplay),
     filters: Array.isArray(raw.filters) ? raw.filters.filter((f: unknown): f is string => typeof f === "string") : [],
     listeners: typeof raw.listeners === "number" ? raw.listeners : 0,
+    audio: normalizeAudio(raw.audio),
     lastUpdated
   };
 }

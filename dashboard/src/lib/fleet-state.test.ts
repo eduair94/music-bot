@@ -23,6 +23,7 @@ describe("normalizePlayback", () => {
         autoplay: true,
         filters: ["nightcore"],
         listeners: 3,
+        audio: { kbps: 256, tierKbps: 256, channelKbps: 96 },
         lastUpdated: 1_700_000_000_000
       },
       GUILD,
@@ -30,6 +31,7 @@ describe("normalizePlayback", () => {
     );
     expect(state).toMatchObject({
       instance: 2,
+      audio: { kbps: 256, tierKbps: 256, channelKbps: 96 },
       volume: 60,
       loopMode: "queue",
       autoplay: true,
