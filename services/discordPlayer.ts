@@ -7,6 +7,8 @@ import { ChannelType, Client, GuildMember, TextChannel, User } from "discord.js"
 import type { IGuildSettings } from "../models/GuildSettings";
 import fs from "fs";
 import { PassThrough, Readable } from "stream";
+import { localeForGuild } from "../utils/guildLocale";
+import { i18n, runWithLocale } from "../utils/i18n";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { GuildSettingsService } from "./guildSettings";
 import { TelemetryService } from "./telemetry";
@@ -46,6 +48,19 @@ export interface QueueMetadata {
   autoplaySeen?: Set<string>;
   /** 24/7: never leave on empty/end/stop */
   stay247?: boolean;
+  /**
+   * The queue is playing a guess-the-song game (services/guessGame.ts). Set
+   * when the game creates (or takes over) the queue. While set, nothing may
+   * reveal what is playing: no player panel, no voice channel status, no
+   * autoplay, no play history/telemetry/dashboard track info, and the leave
+   * timers stay off between rounds.
+   */
+  guessGame?: boolean;
+}
+
+/** Whether a guess-the-song game owns this queue (see QueueMetadata.guessGame). */
+export function isGuessGameQueue(queue: GuildQueue | null | undefined): boolean {
+  return Boolean((queue?.metadata as QueueMetadata | null | undefined)?.guessGame);
 }
 
 export type PlayErrorCode = "noResults" | "tooLong" | "duplicate" | "queueFull";
@@ -365,6 +380,12 @@ export class DiscordPlayerService {
       metadata.currentTrack = track;
       queue.metadata = metadata;
 
+      // Guess-the-song previews: no stats, telemetry or log line naming the song.
+      if (metadata.guessGame) {
+        debug("guess game round started in", queue.guild?.id);
+        return;
+      }
+
       this.recordTrack(queue, track, "start");
       if (queue.guild?.id) void GuildSettingsService.getInstance().incrementSongPlayed(queue.guild.id);
 
@@ -375,6 +396,7 @@ export class DiscordPlayerService {
 
     // Player finish - track finished playing
     this.player.events.on("playerFinish", (queue: GuildQueue, track: Track) => {
+      if (isGuessGameQueue(queue)) return;
       console.log(`[DiscordPlayer] ✅ Finished: ${track.title} (${queue.tracks.size} left)`);
       this.recordTrack(queue, track, "finish");
       if (queue.guild?.id && track.durationMS > 0) {
@@ -385,6 +407,8 @@ export class DiscordPlayerService {
 
     // Player skip - track was skipped
     this.player.events.on("playerSkip", (queue: GuildQueue, track: Track, reason: TrackSkipReason, description: string) => {
+      // The guess game handles its own failed previews.
+      if (isGuessGameQueue(queue)) return;
       console.log(`[DiscordPlayer] ⏭️ Skipped: ${track.title} (${reason})`);
       this.recordTrack(queue, track, "skip", { reason: String(reason) });
       debug("description:", description, "queue size:", queue.tracks.size, "playing:", queue.node.isPlaying(), "idle:", queue.node.isIdle());
@@ -399,6 +423,7 @@ export class DiscordPlayerService {
 
     // Audio track add
     this.player.events.on("audioTrackAdd", (queue: GuildQueue, track: Track) => {
+      if (isGuessGameQueue(queue)) return;
       console.log(`[DiscordPlayer] ➕ Added to queue: ${track.title} (#${queue.tracks.size})`);
     });
 
@@ -421,9 +446,14 @@ export class DiscordPlayerService {
     });
 
     this.player.events.on("playerError", async (queue: GuildQueue, error: Error, track: Track) => {
-      console.error(`[DiscordPlayer] ❌ Player error on track: ${track?.title || 'unknown'}`);
+      const guessGame = isGuessGameQueue(queue);
+      console.error(`[DiscordPlayer] ❌ Player error on track: ${guessGame ? "(guess game preview)" : track?.title || 'unknown'}`);
       console.error("[DiscordPlayer] ❌ Error:", error.message);
       console.error("[DiscordPlayer] ❌ Stack:", error.stack);
+      if (guessGame) {
+        TelemetryService.getInstance().noteError("player", error);
+        return;
+      }
       this.recordTrack(queue, track, "error", { error });
       TelemetryService.getInstance().noteError("player", error);
       TelemetryService.getInstance().record(
@@ -468,8 +498,9 @@ export class DiscordPlayerService {
     if (!channel || !("send" in channel)) return;
     try {
       const title = track.title.replace(/[*_`~|]/g, "").slice(0, 80);
+      const locale = await localeForGuild(queue.guild);
       const message = await channel.send({
-        content: `⚠️ Couldn't play **${title}**, skipping it. Try another link or search.`,
+        content: `⚠️ ${runWithLocale(locale, () => i18n.__mf("player.trackFailed", { title }))}`,
         allowedMentions: { parse: [] },
       });
       setTimeout(() => void message.delete().catch(() => undefined), 30_000).unref();
@@ -742,6 +773,24 @@ export class DiscordPlayerService {
       bufferingTimeout: 3_000, // 3s — start with headroom in the buffer, not on the first bytes
       connectionTimeout: 120_000, // 120s — default; voice DAVE handshake needs time
     };
+  }
+
+  /**
+   * Put the server's leave timers / 24/7 back on a live queue (after a guess
+   * game borrowed it). Never throws.
+   */
+  public async applyServerOptions(queue: GuildQueue): Promise<void> {
+    const metadata = (queue.metadata || {}) as QueueMetadata;
+    const settings = await this.settingsFor(queue.guild.id);
+    const derived = await this.buildNodeOptions(settings, metadata);
+    queue.metadata = metadata;
+    const options = queue.options as any;
+    options.leaveOnEmpty = derived.leaveOnEmpty;
+    options.leaveOnEmptyCooldown = derived.leaveOnEmptyCooldown;
+    options.leaveOnEnd = derived.leaveOnEnd;
+    options.leaveOnEndCooldown = derived.leaveOnEndCooldown;
+    options.leaveOnStop = derived.leaveOnStop;
+    options.pauseOnEmpty = derived.pauseOnEmpty;
   }
 
   /**
