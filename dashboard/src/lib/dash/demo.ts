@@ -18,6 +18,9 @@ import { GROUPS } from "./types";
 
 export const DEMO_GUILD = "demo";
 
+/** Window event a demo "invite" fires (`detail.instance`); the demo engine has that bot join shortly after. */
+export const DEMO_INVITE_EVENT = "fest:demo-invite";
+
 export function isDemo(guildId?: string): boolean {
   return process.env.NEXT_PUBLIC_DASH_DEMO === "1" && (!guildId || guildId === DEMO_GUILD);
 }
@@ -41,7 +44,11 @@ function t(title: string, author: string, duration: string, by: keyof typeof peo
   };
 }
 
-export function demoFleet(now = Date.now()): Fleet {
+/**
+ * Night Owls' bill. "full": Bypass, Bypass 2 and 3 in the server, Bypass 4
+ * missing. "fresh": Bypass was just added, the three extra stages are not.
+ */
+export function demoFleet(now = Date.now(), variant: "full" | "fresh" = "full"): Fleet {
   const s1: PlaybackState = {
     guildId: DEMO_GUILD,
     instance: 1,
@@ -93,12 +100,13 @@ export function demoFleet(now = Date.now()): Fleet {
     audio: { kbps: 128, tierKbps: 128, channelKbps: 64 },
     lastUpdated: now,
   };
+  const fresh = variant === "fresh";
   return {
     guild: { id: DEMO_GUILD, name: "Night Owls", icon: null },
     instances: [
       { instance: 1, name: "Bypass", applicationId: "1315125264786653225", inGuild: true, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: null }, playback: s1 },
-      { instance: 2, name: "Bypass 2", applicationId: "demo-2", inGuild: true, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: "v2" }, playback: s2 },
-      { instance: 3, name: "Bypass 3", applicationId: "demo-3", inGuild: true, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: "v4" }, playback: null },
+      { instance: 2, name: "Bypass 2", applicationId: "demo-2", inGuild: !fresh, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: fresh ? null : "v2" }, playback: fresh ? null : s2 },
+      { instance: 3, name: "Bypass 3", applicationId: "demo-3", inGuild: !fresh, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: fresh ? null : "v4" }, playback: null },
       { instance: 4, name: "Bypass 4", applicationId: "demo-4", inGuild: false, online: true, premium: false, inviteUrl: "#", binding: { voiceChannelId: null }, playback: null },
     ],
     limits: { free: 4, max: 8, premiumActive: false },

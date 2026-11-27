@@ -93,7 +93,9 @@ export default async function LoginPage({
             <LoginButton callbackUrl={next} />
           </div>
           <p className="mt-4 text-[13px] leading-relaxed text-ink-3">
-            Discord shares your name, avatar, email and server list with Bypass. By signing in you agree to the{" "}
+            Discord shares your name, avatar, email and server list with Bypass. Signing in also adds you to the Bypass
+            support server, once (Discord lists this as &ldquo;Join servers for you&rdquo;); leave it whenever you like and
+            we won&apos;t add you again. By signing in you agree to the{" "}
             <Link href="/terms" className={textLink}>
               Terms
             </Link>{" "}

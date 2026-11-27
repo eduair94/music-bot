@@ -7,6 +7,8 @@ export class ApiError extends Error {
     message: string,
     public status: number,
     public reason?: string,
+    /** The JSON the server sent with the error, when there was one. */
+    public body?: unknown,
   ) {
     super(message);
   }
@@ -27,7 +29,7 @@ export async function guildApi<T>(guildId: string, path: string, init?: RequestI
   }
   if (!res.ok) {
     const b = (body ?? {}) as { error?: string; reason?: string };
-    throw new ApiError(b.reason || b.error || `Request failed (${res.status})`, res.status, b.reason);
+    throw new ApiError(b.reason || b.error || `Request failed (${res.status})`, res.status, b.reason, body ?? undefined);
   }
   return body as T;
 }
