@@ -1,6 +1,6 @@
 # 🎶 Bypass — hi-fi Discord music bot
 
-**[Add to Discord](https://music-bot.checkleaked.com/invite)** · [Website](https://music-bot.checkleaked.com) · [Commands](https://music-bot.checkleaked.com/commands) · [Support server](https://discord.gg/hjJQKp5zDU)
+**[Add to Discord](https://music-bot.checkleaked.com/invite)** · [Website](https://music-bot.checkleaked.com) · [Commands](https://music-bot.checkleaked.com/commands) · [Support server](https://discord.gg/KwKwtasGZE)
 
 Join a voice channel and type `/play`. Results appear while you type.
 
