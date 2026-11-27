@@ -684,7 +684,38 @@
     "noQueue": "目前沒有正在播放的歌曲可作為電台基礎。",
     "success": "📻 已根據 **{title}** 開始電台",
     "error": "電台啟動失敗，請再試一次。",
-    "description": "從一首歌或一位歌手開始無限電台"
+    "description": "從一首歌、曲風電台或 AI DJ 提示開始的無限電台",
+    "optionSong": "要從哪首歌或哪位歌手開始",
+    "optionStation": "曲風電台",
+    "optionPrompt": "AI DJ：描述你想聽的音樂（例如：雨夜爵士）",
+    "pickOne": "只能選一個：歌曲、電台或提示。",
+    "started": "已從 **{title}** 開始電台，相關歌曲會持續播放。",
+    "stationStarted": "**{station}** 電台已開啟，會持續播放這種風格的歌曲。",
+    "aiStarted": "AI DJ 電台已開啟：**{title}**。會依照你的提示持續加入新歌。",
+    "aiPick": "由 AI DJ 挑選",
+    "panelAi": "AI DJ 電台",
+    "panelStation": "{station} 電台",
+    "panelSong": "電台",
+    "station": {
+      "pop": "流行",
+      "rock": "搖滾",
+      "hiphop": "嘻哈",
+      "latin": "拉丁 / 雷鬼動",
+      "rockes": "西班牙語搖滾",
+      "electronic": "電子",
+      "lofi": "Lo-fi",
+      "chill": "放鬆",
+      "rnb": "R&B",
+      "indie": "獨立",
+      "metal": "金屬",
+      "jazz": "爵士",
+      "classical": "古典",
+      "eighties": "80 年代金曲",
+      "twothousands": "2000 年代金曲",
+      "kpop": "K-pop",
+      "anime": "動漫",
+      "reggae": "雷鬼"
+    }
   },
   "playrecent": {
     "description": "播放最近播過的歌曲",
@@ -1133,9 +1164,9 @@
       "title": "Premium 福利",
       "intro": "Founder 名額限 {spots} 位，價格永久鎖定。",
       "freeName": "免費 — {price}",
-      "freePerks": "128kbps 音質\n佇列、播放清單和歌詞\n所有指令",
       "founderName": "Founder／Beta 測試者 — {price}/月",
-      "founderPerks": "256kbps 音質\n音訊濾鏡\n24/7 模式\nFounder 身分組與專屬支援"
+      "freePerks": "128kbps 音質\n佇列、播放清單和歌詞\nAI DJ 試用：每個伺服器每天 3 次請求\n所有指令",
+      "founderPerks": "256kbps 音質\nAI DJ：每個伺服器每天 50 個播放清單或電台，AI 電台更長\n音效濾鏡\n24/7 模式\nFounder 身分組和專屬支援"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "無長度限制",
       "vote_features": "投票決定新功能",
       "founder_role": "Founder 身分組",
-      "direct_support": "專屬支援"
+      "direct_support": "專屬支援",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "投票跳過",
       "grab": "收藏曲目",
       "insert": "插入曲目",
-      "removecurrent": "移除目前曲目"
+      "removecurrent": "移除目前曲目",
+      "playlists": "更新了伺服器播放清單"
     },
     "detail": {
       "on": "開啟",
@@ -2095,5 +2128,124 @@
       "more": "還有 {count} 首",
       "card": "附有按鈕的播放器卡片在 {channel}。"
     }
+  },
+  "ai": {
+    "description": "AI DJ：依照描述產生播放清單和電台",
+    "promptOption": "描述音樂：心情、曲風、年代、歌手、場合…",
+    "playlist": {
+      "description": "依照描述產生播放清單並播放",
+      "countOption": "歌曲數量（5-50，預設 20）",
+      "playOption": "立即加入佇列（預設：是）",
+      "nextOption": "在目前歌曲之後立刻播放"
+    },
+    "radio": {
+      "description": "依照描述播放無限 AI 電台"
+    },
+    "notInVoice": "請先加入語音頻道，或設定 play:False 只查看播放清單。",
+    "trialUsed": "這個伺服器今天的 {limit} 次免費 AI DJ 請求已用完，將於 UTC 00:00 重置。",
+    "dailyLimit": "這個伺服器已達今天 {limit} 次 AI DJ 請求的上限，將於 UTC 00:00 重置。",
+    "trialNote": "免費試用：這個伺服器今天還剩 {left}/{limit} 次 AI DJ 請求。Founder 可解鎖更多次數和更長的 AI 電台。",
+    "unconfigured": "這個機器人尚未設定 AI DJ。",
+    "busy": "AI DJ 目前忙碌中，請幾分鐘後再試。",
+    "refused": "AI DJ 無法為此產生播放清單，試著換個方式描述音樂吧。",
+    "failed": "AI DJ 無法產生這個播放清單，請再試一次。",
+    "expired": "這個播放清單已無法使用，請用 /ai playlist 重新產生。",
+    "saved": "已儲存到你的收藏，名稱為 **{name}**。隨時可用 /collections load 播放。",
+    "savedServer": "已儲存為伺服器播放清單 **{name}**。所有人都能用 /playlists play 播放。",
+    "card": {
+      "prompt": "提示：{prompt}",
+      "more": "…還有 {count} 首",
+      "play": "播放",
+      "save": "儲存到我的收藏",
+      "saveServer": "儲存為伺服器播放清單"
+    }
+  },
+  "playlists": {
+    "description": "伺服器共用播放清單，由 DJ 管理",
+    "nameOption": "伺服器播放清單",
+    "newNameOption": "新伺服器播放清單的名稱",
+    "needDj": "只有 DJ 和伺服器管理員可以修改伺服器播放清單。",
+    "notFound": "找不到名為 **{name}** 的伺服器播放清單。",
+    "limitReached": "這個伺服器的播放清單數量已達上限，請先刪除一個。",
+    "exists": "已經有名為 **{name}** 的伺服器播放清單了。",
+    "created": "已建立伺服器播放清單 **{name}**。用 /playlists add 或 /playlists save 加入歌曲。",
+    "saved": "已將佇列（{count} 首歌）儲存為伺服器播放清單 **{name}**。",
+    "full": "這個播放清單已滿。",
+    "renamed": "已將 **{old}** 重新命名為 **{name}**。",
+    "deleted": "已刪除伺服器播放清單 **{name}**。",
+    "imported": "已匯入 **{count}** 首歌到伺服器播放清單 **{name}**。",
+    "copied": "已複製到你的收藏，名稱為 **{name}**（{count} 首歌）。",
+    "list": {
+      "description": "列出伺服器播放清單",
+      "title": "📁 伺服器播放清單",
+      "empty": "這個伺服器還沒有播放清單。DJ 可以用 /playlists create 或 /playlists save 建立。"
+    },
+    "view": {
+      "description": "顯示伺服器播放清單中的歌曲"
+    },
+    "play": {
+      "description": "將伺服器播放清單加入佇列",
+      "nextOption": "在目前歌曲之後立刻播放"
+    },
+    "create": {
+      "description": "建立空白的伺服器播放清單（DJ）"
+    },
+    "save": {
+      "description": "將目前佇列儲存為伺服器播放清單（DJ）"
+    },
+    "add": {
+      "description": "將目前歌曲或指定歌曲加入伺服器播放清單（DJ）",
+      "songOption": "歌名或連結（預設：正在播放的歌曲）",
+      "nothing": "目前沒有播放任何歌曲，請指定要加入的歌曲。"
+    },
+    "remove": {
+      "description": "從伺服器播放清單移除歌曲（DJ）"
+    },
+    "rename": {
+      "description": "重新命名伺服器播放清單（DJ）"
+    },
+    "delete": {
+      "description": "刪除伺服器播放清單（DJ）"
+    },
+    "import": {
+      "description": "將 Spotify、YouTube、Deezer 或 Apple Music 播放清單匯入為伺服器播放清單（DJ）"
+    },
+    "copy": {
+      "description": "將伺服器播放清單複製到你的收藏",
+      "asOption": "副本名稱（預設：相同名稱）"
+    },
+    "log": {
+      "create": "建立了伺服器播放清單 {name}",
+      "save": "將佇列儲存為伺服器播放清單 {name}",
+      "delete": "刪除了伺服器播放清單 {name}",
+      "import": "匯入了伺服器播放清單 {name}"
+    }
+  },
+  "library": {
+    "description": "你自己的 Spotify 和 YouTube 播放清單與喜歡的歌曲",
+    "playlistOption": "你的其中一個播放清單（請在控制面板連結帳號）",
+    "accounts": {
+      "description": "查看並管理你已連結的音樂帳號"
+    },
+    "play": {
+      "description": "播放你的播放清單或喜歡的歌曲"
+    },
+    "import": {
+      "description": "將你的播放清單儲存到你的收藏中"
+    },
+    "likedSpotify": "已按讚的歌曲",
+    "likedYouTube": "喜歡的影片",
+    "connect": "連結帳號",
+    "reconnect": "重新連結",
+    "manage": "管理連結",
+    "notLinked": "未連結",
+    "notConnected": "請先在控制面板連結你的 {service} 帳號。",
+    "revoked": "你的 {service} 帳號存取權已被移除，請在控制面板重新連結。",
+    "forbidden": "{service} 不允許讀取該播放清單。只能播放你擁有或參與協作的播放清單。",
+    "failed": "目前無法連線到你的音樂帳號，請再試一次。",
+    "pickFromList": "請從建議的播放清單中選擇一個。",
+    "empty": "該播放清單沒有可播放的歌曲。",
+    "imported": "已將 **{count}** 首歌曲匯入你的收藏 **{name}**。",
+    "howTo": "先在控制面板連結帳號，然後使用 /library play 播放你自己的播放清單和喜歡的歌曲。"
   }
 }

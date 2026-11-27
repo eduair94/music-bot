@@ -39,5 +39,17 @@ export const CHANGELOG: ChangelogEntry[] = [
       "**Private tickets:** pick a topic in #tickets and Bypass opens a thread only you and staff can see.",
       "New server guide, rules screening and cleaner channels. Invite link: discord.gg/KwKwtasGZE"
     ]
+  },
+  {
+    version: "3.2.0",
+    date: "2026-11-27",
+    title: "AI DJ, radio stations and server playlists",
+    items: [
+      "**`/ai playlist`**: describe the music (\"rainy night jazz, no vocals\") and the AI DJ builds a playlist and plays it. Save it to your collections or as a server playlist with one click.",
+      "**AI radio** with `/ai radio` or `/radio prompt:`: new songs for your description keep coming, without repeats.",
+      "Every server gets 3 free AI DJ requests a day; Founders and boosters get 50 and longer AI radio.",
+      "**`/radio station:`**: 18 genre stations (lo-fi, rock, latin, rock en español, K-pop, jazz…) that stay on genre.",
+      "**`/playlists`**: shared server playlists. DJs create, save the queue, import and edit them; everyone can play or copy them."
+    ]
   }
 ];

@@ -40,7 +40,9 @@ This document tracks all expected commands from the Jockie Music API compared ag
 | [x] | `autoplay` | Toggle autoplay mode | Implemented |
 | [x] | `play` | Play a track | Implemented |
 | [x] | `playrecent` | Play recently played tracks | Implemented |
-| [x] | `radio` | Start radio based on current track | Implemented |
+| [x] | `radio` | Endless radio: `song`, genre `station` (18), or AI `prompt`; no option = from the current song | Implemented (radio.ts, services/radio.ts) |
+| [x] | `ai playlist` | AI DJ: playlist from a description, queued, with save buttons | ⭐ Implemented (ai.ts) — 3/day free trial per server, 50/day premium |
+| [x] | `ai radio` | Endless AI radio for a description | ⭐ Implemented (ai.ts) — short sessions on the free trial |
 | [x] | `resume session` | Resume a previous session | |
 | [x] | `join` | Join voice channel | Implemented |
 | [x] | `leave` | Leave voice channel | Implemented |
@@ -189,6 +191,22 @@ This document tracks all expected commands from the Jockie Music API compared ag
 | [x] | `collections create` | Create collection | Implemented (subcommand) |
 | [x] | `collections save` | Save queue as collection | Implemented (subcommand) |
 | [x] | `collections load` | Load/play collection | Implemented (subcommand) |
+
+### Server playlists (`/playlists`, DJs edit, everyone plays)
+
+| Status | Command | Description | Notes |
+|--------|---------|-------------|-------|
+| [x] | `playlists list` / `view` / `play` | Browse and queue the server's playlists | Implemented (playlists.ts) |
+| [x] | `playlists create` / `save` / `add` / `remove` / `rename` / `delete` / `import` | Manage server playlists | DJ role or server admin |
+| [x] | `playlists copy` | Copy a server playlist into your collections | Implemented |
+
+### Connected accounts (`/library`)
+
+| Status | Command | Description | Notes |
+|--------|---------|-------------|-------|
+| [x] | `library accounts` | Show connected Spotify / YouTube accounts | Hidden until OAuth is configured (docs/connected-accounts.md) |
+| [x] | `library play` | Play your own playlist or liked songs | Spotify: only playlists you own or collaborate on |
+| [x] | `library import` | Save one of your playlists as a collection | |
 
 ### Share Subcommands
 

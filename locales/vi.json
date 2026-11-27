@@ -684,7 +684,38 @@
     "noQueue": "Không có bài nào đang phát để làm cơ sở cho radio.",
     "success": "📻 Đã bật radio dựa trên **{title}**",
     "error": "Không thể bật radio. Vui lòng thử lại.",
-    "description": "Bắt đầu radio không giới hạn từ một bài hát hoặc nghệ sĩ"
+    "description": "Radio bất tận từ một bài hát, một kênh thể loại hoặc lời mô tả cho AI DJ",
+    "optionSong": "Bài hát hoặc nghệ sĩ để bắt đầu",
+    "optionStation": "Một kênh thể loại",
+    "optionPrompt": "AI DJ: mô tả nhạc bạn muốn (vd: jazz đêm mưa)",
+    "pickOne": "Chỉ chọn một: bài hát, kênh hoặc lời mô tả.",
+    "started": "Đã bật radio từ **{title}**. Các bài liên quan sẽ tiếp tục phát.",
+    "stationStarted": "Radio **{station}** đã bật. Các bài cùng phong cách sẽ tiếp tục phát.",
+    "aiStarted": "Radio AI DJ đã bật: **{title}**. Bài mới sẽ liên tục được thêm theo mô tả của bạn.",
+    "aiPick": "do AI DJ chọn",
+    "panelAi": "Radio AI DJ",
+    "panelStation": "Radio {station}",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock tiếng Tây Ban Nha",
+      "electronic": "Nhạc điện tử",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Nhạc cổ điển",
+      "eighties": "Hit thập niên 80",
+      "twothousands": "Hit những năm 2000",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Phát các bài đã phát gần đây",
@@ -1133,9 +1164,9 @@
       "title": "Đặc quyền Premium",
       "intro": "Founder chỉ giới hạn {spots} suất và giá được giữ cố định.",
       "freeName": "Miễn phí — {price}",
-      "freePerks": "Âm thanh 128kbps\nHàng chờ, playlist và lời bài hát\nMọi lệnh",
       "founderName": "Founder / Beta Tester — {price}/tháng",
-      "founderPerks": "Âm thanh 256kbps\nBộ lọc âm thanh\nChế độ 24/7\nVai trò Founder và hỗ trợ trực tiếp"
+      "freePerks": "Âm thanh 128kbps\nHàng chờ, playlist và lời bài hát\nDùng thử AI DJ: 3 yêu cầu mỗi ngày cho mỗi server\nMọi lệnh",
+      "founderPerks": "Âm thanh 256kbps\nAI DJ: 50 playlist hoặc radio mỗi ngày cho mỗi server, radio AI dài hơn\nBộ lọc âm thanh\nChế độ 24/7\nVai trò Founder và hỗ trợ trực tiếp"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Không giới hạn thời lượng",
       "vote_features": "Bình chọn tính năng",
       "founder_role": "Vai trò Founder",
-      "direct_support": "Hỗ trợ trực tiếp"
+      "direct_support": "Hỗ trợ trực tiếp",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Đã bỏ phiếu bỏ qua",
       "grab": "Đã lưu bài",
       "insert": "Đã chèn bài",
-      "removecurrent": "Đã xóa bài hiện tại"
+      "removecurrent": "Đã xóa bài hiện tại",
+      "playlists": "đã cập nhật playlist của server"
     },
     "detail": {
       "on": "Bật",
@@ -2095,5 +2128,124 @@
       "more": "và {count} bài nữa",
       "card": "Thẻ trình phát có các nút nằm trong {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlist và radio tạo từ lời mô tả",
+    "promptOption": "Mô tả nhạc: tâm trạng, thể loại, thời kỳ, nghệ sĩ, dịp…",
+    "playlist": {
+      "description": "Tạo playlist từ lời mô tả và phát nó",
+      "countOption": "Số bài hát (5-50, mặc định 20)",
+      "playOption": "Thêm vào hàng chờ ngay (mặc định: có)",
+      "nextOption": "Phát ngay sau bài hiện tại"
+    },
+    "radio": {
+      "description": "Radio AI bất tận theo lời mô tả"
+    },
+    "notInVoice": "Hãy vào kênh thoại trước, hoặc đặt play:False để chỉ xem playlist.",
+    "trialUsed": "Server này đã dùng hết {limit} lượt AI DJ miễn phí hôm nay. Lượt sẽ được làm mới lúc 00:00 UTC.",
+    "dailyLimit": "Server này đã đạt giới hạn {limit} lượt AI DJ hôm nay. Giới hạn sẽ được làm mới lúc 00:00 UTC.",
+    "trialNote": "Dùng thử miễn phí: còn {left}/{limit} lượt AI DJ hôm nay trên server này. Founder mở khóa thêm lượt và radio AI dài hơn.",
+    "unconfigured": "AI DJ chưa được thiết lập trên bot này.",
+    "busy": "AI DJ đang bận. Thử lại sau vài phút nhé.",
+    "refused": "AI DJ không thể tạo playlist cho yêu cầu này. Hãy thử mô tả nhạc theo cách khác.",
+    "failed": "AI DJ không tạo được playlist đó. Vui lòng thử lại.",
+    "expired": "Playlist này không còn nữa. Tạo playlist mới bằng /ai playlist.",
+    "saved": "Đã lưu vào bộ sưu tập của bạn với tên **{name}**. Phát bất cứ lúc nào bằng /collections load.",
+    "savedServer": "Đã lưu thành playlist server **{name}**. Mọi người có thể phát bằng /playlists play.",
+    "card": {
+      "prompt": "Mô tả: {prompt}",
+      "more": "…và {count} bài nữa",
+      "play": "Phát",
+      "save": "Lưu vào bộ sưu tập của tôi",
+      "saveServer": "Lưu thành playlist server"
+    }
+  },
+  "playlists": {
+    "description": "Playlist chung của server, do DJ quản lý",
+    "nameOption": "Playlist server",
+    "newNameOption": "Tên cho playlist server mới",
+    "needDj": "Chỉ DJ và admin server mới có thể thay đổi playlist server.",
+    "notFound": "Không có playlist server nào tên **{name}**.",
+    "limitReached": "Server này đã đạt số playlist tối đa. Hãy xóa bớt một cái trước.",
+    "exists": "Đã có playlist server tên **{name}**.",
+    "created": "Đã tạo playlist server **{name}**. Thêm bài bằng /playlists add hoặc /playlists save.",
+    "saved": "Đã lưu hàng chờ ({count} bài) thành playlist server **{name}**.",
+    "full": "Playlist này đã đầy.",
+    "renamed": "Đã đổi tên **{old}** thành **{name}**.",
+    "deleted": "Đã xóa playlist server **{name}**.",
+    "imported": "Đã nhập **{count}** bài vào playlist server **{name}**.",
+    "copied": "Đã sao chép vào bộ sưu tập của bạn với tên **{name}** ({count} bài).",
+    "list": {
+      "description": "Liệt kê playlist của server",
+      "title": "📁 Playlist server",
+      "empty": "Server này chưa có playlist nào. DJ có thể tạo bằng /playlists create hoặc /playlists save."
+    },
+    "view": {
+      "description": "Xem các bài trong playlist server"
+    },
+    "play": {
+      "description": "Thêm playlist server vào hàng chờ",
+      "nextOption": "Phát ngay sau bài hiện tại"
+    },
+    "create": {
+      "description": "Tạo playlist server trống (DJ)"
+    },
+    "save": {
+      "description": "Lưu hàng chờ hiện tại thành playlist server (DJ)"
+    },
+    "add": {
+      "description": "Thêm bài đang phát hoặc bài bạn chọn vào playlist server (DJ)",
+      "songOption": "Tên bài hoặc link (mặc định: bài đang phát)",
+      "nothing": "Không có gì đang phát. Hãy nhập tên bài muốn thêm."
+    },
+    "remove": {
+      "description": "Xóa một bài khỏi playlist server (DJ)"
+    },
+    "rename": {
+      "description": "Đổi tên playlist server (DJ)"
+    },
+    "delete": {
+      "description": "Xóa playlist server (DJ)"
+    },
+    "import": {
+      "description": "Nhập playlist Spotify, YouTube, Deezer hoặc Apple Music thành playlist server (DJ)"
+    },
+    "copy": {
+      "description": "Sao chép playlist server vào bộ sưu tập của bạn",
+      "asOption": "Tên cho bản sao (mặc định: giữ nguyên tên)"
+    },
+    "log": {
+      "create": "đã tạo playlist server {name}",
+      "save": "đã lưu hàng chờ thành playlist server {name}",
+      "delete": "đã xóa playlist server {name}",
+      "import": "đã nhập playlist server {name}"
+    }
+  },
+  "library": {
+    "description": "Playlist và bài hát đã thích của riêng bạn trên Spotify và YouTube",
+    "playlistOption": "Một playlist của bạn (kết nối tài khoản trên dashboard)",
+    "accounts": {
+      "description": "Xem và quản lý các tài khoản nhạc đã kết nối"
+    },
+    "play": {
+      "description": "Phát một playlist của bạn hoặc các bài hát đã thích"
+    },
+    "import": {
+      "description": "Lưu một playlist của bạn vào bộ sưu tập"
+    },
+    "likedSpotify": "Bài hát đã thích",
+    "likedYouTube": "Video đã thích",
+    "connect": "Kết nối tài khoản",
+    "reconnect": "Kết nối lại",
+    "manage": "Quản lý kết nối",
+    "notLinked": "chưa kết nối",
+    "notConnected": "Hãy kết nối tài khoản {service} của bạn trên dashboard trước nhé.",
+    "revoked": "Quyền truy cập vào tài khoản {service} của bạn đã bị gỡ. Hãy kết nối lại trên dashboard.",
+    "forbidden": "{service} không cho phép đọc playlist đó. Chỉ có thể phát playlist do bạn sở hữu hoặc cùng cộng tác.",
+    "failed": "Hiện không thể kết nối tới tài khoản nhạc của bạn. Vui lòng thử lại.",
+    "pickFromList": "Hãy chọn một trong các playlist được gợi ý.",
+    "empty": "Playlist đó không có bài hát nào phát được.",
+    "imported": "Đã nhập **{count}** bài hát vào bộ sưu tập **{name}** của bạn.",
+    "howTo": "Kết nối tài khoản trên dashboard, sau đó dùng /library play để phát playlist và bài hát đã thích của bạn."
   }
 }

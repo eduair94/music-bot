@@ -684,7 +684,38 @@
     "noQueue": "라디오의 기반이 될 재생 중인 트랙이 없어요.",
     "success": "📻 **{title}** 기반 라디오를 시작했어요",
     "error": "라디오를 시작하지 못했어요. 다시 시도해 주세요.",
-    "description": "노래나 아티스트로 끝없는 라디오 시작하기"
+    "description": "노래, 장르 스테이션 또는 AI DJ 프롬프트로 끝없는 라디오 재생",
+    "optionSong": "시작할 노래 또는 아티스트",
+    "optionStation": "장르 스테이션",
+    "optionPrompt": "AI DJ: 원하는 음악을 설명해 줘 (예: 비 오는 밤 재즈)",
+    "pickOne": "노래, 스테이션, 프롬프트 중 하나만 골라 줘.",
+    "started": "**{title}**(으)로 라디오를 시작했어. 관련 노래가 계속 재생돼.",
+    "stationStarted": "**{station}** 라디오가 켜졌어. 이 스타일의 노래가 계속 재생돼.",
+    "aiStarted": "AI DJ 라디오가 켜졌어: **{title}**. 프롬프트에 맞는 새 노래가 계속 나와.",
+    "aiPick": "AI DJ의 선곡",
+    "panelAi": "AI DJ 라디오",
+    "panelStation": "{station} 라디오",
+    "panelSong": "라디오",
+    "station": {
+      "pop": "팝",
+      "rock": "록",
+      "hiphop": "힙합",
+      "latin": "라틴 / 레게톤",
+      "rockes": "스페인어 록",
+      "electronic": "일렉트로닉",
+      "lofi": "로파이",
+      "chill": "칠",
+      "rnb": "R&B",
+      "indie": "인디",
+      "metal": "메탈",
+      "jazz": "재즈",
+      "classical": "클래식",
+      "eighties": "80년대 히트곡",
+      "twothousands": "2000년대 히트곡",
+      "kpop": "K-pop",
+      "anime": "애니메이션",
+      "reggae": "레게"
+    }
   },
   "playrecent": {
     "description": "최근 재생한 트랙 재생",
@@ -1133,9 +1164,9 @@
       "title": "프리미엄 혜택",
       "intro": "Founder는 {spots}자리 한정이며 가격이 고정돼요.",
       "freeName": "무료 — {price}",
-      "freePerks": "128kbps 오디오\n대기열, 플레이리스트, 가사\n모든 명령어",
       "founderName": "Founder / 베타 테스터 — 월 {price}",
-      "founderPerks": "256kbps 오디오\n오디오 필터\n24/7 모드\nFounder 역할 및 직접 지원"
+      "freePerks": "128kbps 오디오\n대기열, 플레이리스트, 가사\nAI DJ 체험: 서버당 하루 3회 요청\n모든 명령어",
+      "founderPerks": "256kbps 오디오\nAI DJ: 서버당 하루 플레이리스트 또는 라디오 50개, 더 긴 AI 라디오\n오디오 필터\n24/7 모드\nFounder 역할 및 1:1 지원"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "재생 시간 제한 없음",
       "vote_features": "기능 투표",
       "founder_role": "Founder 역할",
-      "direct_support": "직접 지원"
+      "direct_support": "직접 지원",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "투표로 건너뜀",
       "grab": "트랙 저장",
       "insert": "트랙 삽입",
-      "removecurrent": "현재 트랙 삭제"
+      "removecurrent": "현재 트랙 삭제",
+      "playlists": "서버 플레이리스트를 업데이트함"
     },
     "detail": {
       "on": "켜짐",
@@ -2095,5 +2128,124 @@
       "more": "외 {count}곡",
       "card": "버튼이 있는 플레이어 카드는 {channel}에 있어요."
     }
+  },
+  "ai": {
+    "description": "AI DJ: 설명으로 만드는 플레이리스트와 라디오",
+    "promptOption": "음악을 설명해 줘: 분위기, 장르, 시대, 아티스트, 상황…",
+    "playlist": {
+      "description": "설명으로 플레이리스트를 만들어 재생",
+      "countOption": "노래 수 (5-50, 기본 20)",
+      "playOption": "바로 대기열에 추가 (기본: 예)",
+      "nextOption": "현재 노래 다음에 바로 재생"
+    },
+    "radio": {
+      "description": "설명에 맞는 끝없는 AI 라디오"
+    },
+    "notInVoice": "먼저 음성 채널에 들어가거나, 플레이리스트만 보려면 play:False로 설정해 줘.",
+    "trialUsed": "이 서버는 오늘 무료 AI DJ 요청 {limit}회를 모두 사용했어. 00:00 UTC에 초기화돼.",
+    "dailyLimit": "이 서버는 오늘 AI DJ 요청 한도 {limit}회에 도달했어. 00:00 UTC에 초기화돼.",
+    "trialNote": "무료 체험: 오늘 이 서버에 AI DJ 요청이 {limit}회 중 {left}회 남았어. Founder는 더 많은 요청과 더 긴 AI 라디오를 쓸 수 있어.",
+    "unconfigured": "이 봇에는 AI DJ가 설정되어 있지 않아.",
+    "busy": "지금 AI DJ가 바빠. 몇 분 후에 다시 시도해 줘.",
+    "refused": "AI DJ가 그 요청으로는 플레이리스트를 만들 수 없었어. 음악을 다르게 설명해 봐.",
+    "failed": "AI DJ가 플레이리스트를 만들지 못했어. 다시 시도해 줘.",
+    "expired": "이 플레이리스트는 더 이상 사용할 수 없어. /ai playlist로 새로 만들어 줘.",
+    "saved": "내 컬렉션에 **{name}**(으)로 저장했어. /collections load로 언제든 재생할 수 있어.",
+    "savedServer": "서버 플레이리스트 **{name}**(으)로 저장했어. 누구나 /playlists play로 재생할 수 있어.",
+    "card": {
+      "prompt": "프롬프트: {prompt}",
+      "more": "…외 {count}곡",
+      "play": "재생",
+      "save": "내 컬렉션에 저장",
+      "saveServer": "서버 플레이리스트로 저장"
+    }
+  },
+  "playlists": {
+    "description": "DJ가 관리하는 서버 공유 플레이리스트",
+    "nameOption": "서버 플레이리스트",
+    "newNameOption": "새 서버 플레이리스트 이름",
+    "needDj": "서버 플레이리스트는 DJ와 서버 관리자만 변경할 수 있어.",
+    "notFound": "**{name}**(이)라는 서버 플레이리스트가 없어.",
+    "limitReached": "이 서버는 플레이리스트 최대 개수에 도달했어. 먼저 하나를 삭제해 줘.",
+    "exists": "**{name}**(이)라는 서버 플레이리스트가 이미 있어.",
+    "created": "서버 플레이리스트 **{name}**을(를) 만들었어. /playlists add 또는 /playlists save로 노래를 추가해 줘.",
+    "saved": "대기열({count}곡)을 서버 플레이리스트 **{name}**(으)로 저장했어.",
+    "full": "이 플레이리스트는 가득 찼어.",
+    "renamed": "**{old}**의 이름을 **{name}**(으)로 바꿨어.",
+    "deleted": "서버 플레이리스트 **{name}**을(를) 삭제했어.",
+    "imported": "서버 플레이리스트 **{name}**에 **{count}**곡을 가져왔어.",
+    "copied": "내 컬렉션에 **{name}**(으)로 복사했어 ({count}곡).",
+    "list": {
+      "description": "서버 플레이리스트 목록 보기",
+      "title": "📁 서버 플레이리스트",
+      "empty": "이 서버에는 아직 플레이리스트가 없어. DJ는 /playlists create 또는 /playlists save로 만들 수 있어."
+    },
+    "view": {
+      "description": "서버 플레이리스트의 노래 보기"
+    },
+    "play": {
+      "description": "서버 플레이리스트를 대기열에 추가",
+      "nextOption": "현재 노래 다음에 바로 재생"
+    },
+    "create": {
+      "description": "빈 서버 플레이리스트 만들기 (DJ)"
+    },
+    "save": {
+      "description": "현재 대기열을 서버 플레이리스트로 저장 (DJ)"
+    },
+    "add": {
+      "description": "현재 노래나 지정한 노래를 서버 플레이리스트에 추가 (DJ)",
+      "songOption": "노래 이름 또는 링크 (기본: 지금 재생 중인 노래)",
+      "nothing": "재생 중인 노래가 없어. 추가할 노래를 입력해 줘."
+    },
+    "remove": {
+      "description": "서버 플레이리스트에서 노래 삭제 (DJ)"
+    },
+    "rename": {
+      "description": "서버 플레이리스트 이름 변경 (DJ)"
+    },
+    "delete": {
+      "description": "서버 플레이리스트 삭제 (DJ)"
+    },
+    "import": {
+      "description": "Spotify, YouTube, Deezer 또는 Apple Music 플레이리스트를 서버 플레이리스트로 가져오기 (DJ)"
+    },
+    "copy": {
+      "description": "서버 플레이리스트를 내 컬렉션으로 복사",
+      "asOption": "복사본 이름 (기본: 같은 이름)"
+    },
+    "log": {
+      "create": "서버 플레이리스트 {name}을(를) 만듦",
+      "save": "대기열을 서버 플레이리스트 {name}(으)로 저장함",
+      "delete": "서버 플레이리스트 {name}을(를) 삭제함",
+      "import": "서버 플레이리스트 {name}을(를) 가져옴"
+    }
+  },
+  "library": {
+    "description": "내 Spotify 및 YouTube 플레이리스트와 좋아요 표시한 곡",
+    "playlistOption": "내 플레이리스트 중 하나 (대시보드에서 계정 연결)",
+    "accounts": {
+      "description": "연결된 음악 계정을 확인하고 관리해"
+    },
+    "play": {
+      "description": "내 플레이리스트나 좋아요 표시한 곡 재생"
+    },
+    "import": {
+      "description": "내 플레이리스트를 컬렉션에 저장"
+    },
+    "likedSpotify": "좋아요 표시한 곡",
+    "likedYouTube": "좋아요 표시한 동영상",
+    "connect": "계정 연결",
+    "reconnect": "다시 연결",
+    "manage": "연결 관리",
+    "notLinked": "연결 안 됨",
+    "notConnected": "먼저 대시보드에서 {service} 계정을 연결해 줘.",
+    "revoked": "{service} 계정 접근 권한이 해제됐어. 대시보드에서 다시 연결해 줘.",
+    "forbidden": "{service}에서 해당 플레이리스트를 읽을 수 없어. 내가 만들었거나 공동 작업 중인 플레이리스트만 재생할 수 있어.",
+    "failed": "지금 음악 계정에 연결할 수 없어. 다시 시도해 줘.",
+    "pickFromList": "추천된 플레이리스트 중 하나를 골라 줘.",
+    "empty": "이 플레이리스트에는 재생 가능한 곡이 없어.",
+    "imported": "**{count}**곡을 컬렉션 **{name}**에 가져왔어.",
+    "howTo": "대시보드에서 계정을 연결한 다음, /library play로 내 플레이리스트와 좋아요 표시한 곡을 재생해 봐."
   }
 }

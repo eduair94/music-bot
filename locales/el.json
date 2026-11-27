@@ -684,7 +684,38 @@
     "noQueue": "Δεν παίζει κανένα κομμάτι για να βασιστεί το ραδιόφωνο.",
     "success": "📻 Ξεκίνησε ραδιόφωνο με βάση το **{title}**",
     "error": "Η έναρξη του ραδιοφώνου απέτυχε. Δοκίμασε ξανά.",
-    "description": "Ξεκίνα ένα ατελείωτο ραδιόφωνο από ένα τραγούδι ή καλλιτέχνη"
+    "description": "Ατελείωτο ραδιόφωνο από ένα τραγούδι, έναν σταθμό είδους ή μια περιγραφή για τον AI DJ",
+    "optionSong": "Τραγούδι ή καλλιτέχνης για να ξεκινήσεις",
+    "optionStation": "Σταθμός μουσικού είδους",
+    "optionPrompt": "AI DJ: περίγραψε τη μουσική (π.χ. τζαζ για βροχερή νύχτα)",
+    "pickOne": "Διάλεξε μόνο ένα: τραγούδι, σταθμό ή περιγραφή.",
+    "started": "Το ραδιόφωνο ξεκίνησε από το **{title}**. Θα συνεχίσουν να παίζουν σχετικά τραγούδια.",
+    "stationStarted": "Το ραδιόφωνο **{station}** είναι ενεργό. Θα συνεχίσουν να παίζουν τραγούδια αυτού του στιλ.",
+    "aiStarted": "Το ραδιόφωνο AI DJ είναι ενεργό: **{title}**. Θα έρχονται συνέχεια νέα τραγούδια για την περιγραφή σου.",
+    "aiPick": "επιλογή του AI DJ",
+    "panelAi": "Ραδιόφωνο AI DJ",
+    "panelStation": "Ραδιόφωνο {station}",
+    "panelSong": "Ραδιόφωνο",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Ηλεκτρονική",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Τζαζ",
+      "classical": "Κλασική",
+      "eighties": "Επιτυχίες των 80s",
+      "twothousands": "Επιτυχίες των 2000s",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Παίξε κομμάτια που έπαιξαν πρόσφατα",
@@ -1133,9 +1164,9 @@
       "title": "Προνόμια Premium",
       "intro": "Το Founder περιορίζεται σε {spots} θέσεις και η τιμή κλειδώνει.",
       "freeName": "Δωρεάν — {price}",
-      "freePerks": "Ήχος 128kbps\nΟυρά, playlist και στίχοι\nΌλες οι εντολές",
       "founderName": "Founder / Beta Tester — {price}/μήνα",
-      "founderPerks": "Ήχος 256kbps\nΦίλτρα ήχου\nΛειτουργία 24/7\nΡόλος Founder και άμεση υποστήριξη"
+      "freePerks": "Ήχος 128kbps\nΟυρά, playlists και στίχοι\nΔοκιμή AI DJ: 3 αιτήματα την ημέρα ανά server\nΌλες οι εντολές",
+      "founderPerks": "Ήχος 256kbps\nAI DJ: 50 playlists ή ραδιόφωνα την ημέρα ανά server, μεγαλύτερο AI ραδιόφωνο\nΦίλτρα ήχου\nΛειτουργία 24/7\nΡόλος Founder και άμεση υποστήριξη"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Χωρίς όριο διάρκειας",
       "vote_features": "Ψήφισε για λειτουργίες",
       "founder_role": "Ρόλος Founder",
-      "direct_support": "Άμεση υποστήριξη"
+      "direct_support": "Άμεση υποστήριξη",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Παράλειψη με ψηφοφορία",
       "grab": "Αποθήκευση κομματιού",
       "insert": "Εισαγωγή κομματιού",
-      "removecurrent": "Αφαίρεση τρέχοντος κομματιού"
+      "removecurrent": "Αφαίρεση τρέχοντος κομματιού",
+      "playlists": "ενημέρωσε τις playlist του server"
     },
     "detail": {
       "on": "Ενεργό",
@@ -2095,5 +2128,124 @@
       "more": "και {count} ακόμα",
       "card": "Η κάρτα του player με τα κουμπιά είναι στο {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlist και ραδιόφωνο από μια περιγραφή",
+    "promptOption": "Περίγραψε τη μουσική: διάθεση, είδος, εποχή, καλλιτέχνες, περίσταση…",
+    "playlist": {
+      "description": "Φτιάξε μια playlist από μια περιγραφή και παίξ' την",
+      "countOption": "Πόσα τραγούδια (5-50, προεπιλογή 20)",
+      "playOption": "Βάλ' την στην ουρά τώρα (προεπιλογή: ναι)",
+      "nextOption": "Παίξ' την αμέσως μετά το τρέχον τραγούδι"
+    },
+    "radio": {
+      "description": "Ατελείωτο ραδιόφωνο AI για μια περιγραφή"
+    },
+    "notInVoice": "Μπες πρώτα σε ένα φωνητικό κανάλι ή βάλε play:False για να δεις μόνο την playlist.",
+    "trialUsed": "Αυτός ο server χρησιμοποίησε τα {limit} δωρεάν αιτήματα AI DJ για σήμερα. Μηδενίζονται στις 00:00 UTC.",
+    "dailyLimit": "Αυτός ο server έφτασε το σημερινό όριο των {limit} αιτημάτων AI DJ. Μηδενίζεται στις 00:00 UTC.",
+    "trialNote": "Δωρεάν δοκιμή: απομένουν {left} από {limit} αιτήματα AI DJ σήμερα σε αυτόν τον server. Το Founder ξεκλειδώνει περισσότερα και μεγαλύτερο ραδιόφωνο AI.",
+    "unconfigured": "Ο AI DJ δεν έχει ρυθμιστεί σε αυτό το bot.",
+    "busy": "Ο AI DJ είναι απασχολημένος αυτή τη στιγμή. Δοκίμασε ξανά σε λίγα λεπτά.",
+    "refused": "Ο AI DJ δεν μπόρεσε να φτιάξει playlist γι' αυτό. Δοκίμασε να περιγράψεις τη μουσική διαφορετικά.",
+    "failed": "Ο AI DJ δεν μπόρεσε να φτιάξει αυτή την playlist. Δοκίμασε ξανά.",
+    "expired": "Αυτή η playlist δεν είναι πια διαθέσιμη. Φτιάξε καινούρια με /ai playlist.",
+    "saved": "Αποθηκεύτηκε στις συλλογές σου ως **{name}**. Παίξ' την όποτε θες με /collections load.",
+    "savedServer": "Αποθηκεύτηκε ως playlist του server **{name}**. Όλοι μπορούν να την παίξουν με /playlists play.",
+    "card": {
+      "prompt": "Περιγραφή: {prompt}",
+      "more": "…και {count} ακόμα",
+      "play": "Αναπαραγωγή",
+      "save": "Αποθήκευση στις συλλογές μου",
+      "saveServer": "Αποθήκευση ως playlist του server"
+    }
+  },
+  "playlists": {
+    "description": "Οι κοινές playlist του server, που τις διαχειρίζονται οι DJ",
+    "nameOption": "Playlist του server",
+    "newNameOption": "Όνομα για τη νέα playlist του server",
+    "needDj": "Μόνο οι DJ και οι διαχειριστές του server μπορούν να αλλάξουν τις playlist του server.",
+    "notFound": "Δεν υπάρχει playlist του server με όνομα **{name}**.",
+    "limitReached": "Αυτός ο server έφτασε τον μέγιστο αριθμό playlist. Διάγραψε πρώτα μία.",
+    "exists": "Υπάρχει ήδη playlist του server με όνομα **{name}**.",
+    "created": "Η playlist του server **{name}** δημιουργήθηκε. Πρόσθεσε τραγούδια με /playlists add ή /playlists save.",
+    "saved": "Η ουρά ({count} τραγούδια) αποθηκεύτηκε ως playlist του server **{name}**.",
+    "full": "Αυτή η playlist είναι γεμάτη.",
+    "renamed": "Η **{old}** μετονομάστηκε σε **{name}**.",
+    "deleted": "Η playlist του server **{name}** διαγράφηκε.",
+    "imported": "Εισήχθησαν **{count}** τραγούδια στην playlist του server **{name}**.",
+    "copied": "Αντιγράφηκε στις συλλογές σου ως **{name}** ({count} τραγούδια).",
+    "list": {
+      "description": "Δες τις playlist του server",
+      "title": "📁 Playlist του server",
+      "empty": "Αυτός ο server δεν έχει ακόμα playlist. Οι DJ μπορούν να φτιάξουν μία με /playlists create ή /playlists save."
+    },
+    "view": {
+      "description": "Δες τα τραγούδια μιας playlist του server"
+    },
+    "play": {
+      "description": "Βάλε μια playlist του server στην ουρά",
+      "nextOption": "Παίξ' την αμέσως μετά το τρέχον τραγούδι"
+    },
+    "create": {
+      "description": "Δημιούργησε μια κενή playlist του server (DJ)"
+    },
+    "save": {
+      "description": "Αποθήκευσε την τρέχουσα ουρά ως playlist του server (DJ)"
+    },
+    "add": {
+      "description": "Πρόσθεσε το τρέχον τραγούδι ή ένα που θα ονομάσεις σε μια playlist του server (DJ)",
+      "songOption": "Όνομα ή link τραγουδιού (προεπιλογή: το τραγούδι που παίζει τώρα)",
+      "nothing": "Δεν παίζει τίποτα. Γράψε ένα τραγούδι για προσθήκη."
+    },
+    "remove": {
+      "description": "Αφαίρεσε ένα τραγούδι από μια playlist του server (DJ)"
+    },
+    "rename": {
+      "description": "Μετονόμασε μια playlist του server (DJ)"
+    },
+    "delete": {
+      "description": "Διάγραψε μια playlist του server (DJ)"
+    },
+    "import": {
+      "description": "Εισήγαγε μια playlist από Spotify, YouTube, Deezer ή Apple Music ως playlist του server (DJ)"
+    },
+    "copy": {
+      "description": "Αντίγραψε μια playlist του server στις δικές σου συλλογές",
+      "asOption": "Όνομα για το αντίγραφό σου (προεπιλογή: ίδιο όνομα)"
+    },
+    "log": {
+      "create": "δημιούργησε την playlist του server {name}",
+      "save": "αποθήκευσε την ουρά ως playlist του server {name}",
+      "delete": "διέγραψε την playlist του server {name}",
+      "import": "εισήγαγε την playlist του server {name}"
+    }
+  },
+  "library": {
+    "description": "Οι δικές σου λίστες αναπαραγωγής και τα αγαπημένα σου τραγούδια από Spotify και YouTube",
+    "playlistOption": "Μία από τις λίστες σου (σύνδεσε λογαριασμούς στο dashboard)",
+    "accounts": {
+      "description": "Δες και διαχειρίσου τους συνδεδεμένους λογαριασμούς μουσικής σου"
+    },
+    "play": {
+      "description": "Παίξε μία από τις λίστες σου ή τα αγαπημένα σου τραγούδια"
+    },
+    "import": {
+      "description": "Αποθήκευσε μία από τις λίστες σου στις συλλογές σου"
+    },
+    "likedSpotify": "Αγαπημένα τραγούδια",
+    "likedYouTube": "Βίντεο που σου αρέσουν",
+    "connect": "Σύνδεσε λογαριασμό",
+    "reconnect": "Σύνδεσε ξανά",
+    "manage": "Διαχείριση συνδέσεων",
+    "notLinked": "δεν είναι συνδεδεμένος",
+    "notConnected": "Σύνδεσε πρώτα τον λογαριασμό σου {service} στο dashboard.",
+    "revoked": "Η πρόσβαση στον λογαριασμό σου {service} αφαιρέθηκε. Σύνδεσέ τον ξανά στο dashboard.",
+    "forbidden": "Το {service} δεν επέτρεψε την ανάγνωση αυτής της λίστας. Μπορείς να παίξεις μόνο λίστες που σου ανήκουν ή στις οποίες συνεργάζεσαι.",
+    "failed": "Δεν ήταν δυνατή η σύνδεση με τον λογαριασμό μουσικής σου αυτή τη στιγμή. Δοκίμασε ξανά.",
+    "pickFromList": "Διάλεξε μία από τις προτεινόμενες λίστες.",
+    "empty": "Αυτή η λίστα δεν έχει τραγούδια που μπορούν να παιχτούν.",
+    "imported": "Εισήχθησαν **{count}** τραγούδια στη συλλογή σου **{name}**.",
+    "howTo": "Σύνδεσε λογαριασμούς στο dashboard και μετά χρησιμοποίησε το /library play για να παίξεις τις δικές σου λίστες και τα αγαπημένα σου τραγούδια."
   }
 }

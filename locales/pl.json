@@ -691,7 +691,38 @@
     "noQueue": "Nic nie jest odtwarzane, więc nie ma na czym oprzeć radia.",
     "success": "📻 Uruchomiono radio na podstawie **{title}**",
     "error": "Nie udało się uruchomić radia. Spróbuj ponownie.",
-    "description": "Uruchom nieskończone radio na podstawie utworu lub wykonawcy"
+    "description": "Niekończące się radio z utworu, stacji gatunkowej lub opisu dla AI DJ-a",
+    "optionSong": "Utwór lub wykonawca na start",
+    "optionStation": "Stacja gatunkowa",
+    "optionPrompt": "AI DJ: opisz muzykę (np. jazz na deszczową noc)",
+    "pickOne": "Wybierz tylko jedno: utwór, stację lub opis.",
+    "started": "Radio wystartowało od **{title}**. Podobne utwory będą grać dalej.",
+    "stationStarted": "Radio **{station}** jest włączone. Utwory w tym stylu będą grać dalej.",
+    "aiStarted": "Radio AI DJ-a jest włączone: **{title}**. Nowe utwory do twojego opisu będą się pojawiać na bieżąco.",
+    "aiPick": "wybrane przez AI DJ-a",
+    "panelAi": "Radio AI DJ-a",
+    "panelStation": "Radio {station}",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latino / Reggaeton",
+      "rockes": "Rock po hiszpańsku",
+      "electronic": "Elektronika",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Muzyka klasyczna",
+      "eighties": "Hity lat 80.",
+      "twothousands": "Hity lat 2000.",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Odtwórz ostatnio słuchane utwory",
@@ -1140,9 +1171,9 @@
       "title": "Korzyści premium",
       "intro": "Founder jest ograniczony do {spots} miejsc, a cena jest zablokowana na stałe.",
       "freeName": "Free — {price}",
-      "freePerks": "Audio 128kbps\nKolejka, playlisty i teksty piosenek\nWszystkie komendy",
       "founderName": "Founder / Beta Tester — {price}/miesiąc",
-      "founderPerks": "Audio 256kbps\nFiltry audio\nTryb 24/7\nRola Founder i bezpośrednie wsparcie"
+      "freePerks": "Dźwięk 128kbps\nKolejka, playlisty i teksty piosenek\nWersja próbna AI DJ: 3 prośby dziennie na serwer\nWszystkie komendy",
+      "founderPerks": "Dźwięk 256kbps\nAI DJ: 50 playlist lub radií dziennie na serwer, dłuższe radio AI\nFiltry audio\nTryb 24/7\nRola Founder i bezpośrednie wsparcie"
     }
   },
   "boost": {
@@ -1624,7 +1655,8 @@
       "longer_songs": "Brak limitu długości",
       "vote_features": "Głosowanie na funkcje",
       "founder_role": "Rola Founder",
-      "direct_support": "Bezpośrednie wsparcie"
+      "direct_support": "Bezpośrednie wsparcie",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1932,7 +1964,8 @@
       "voteskip": "Pominięto głosowaniem",
       "grab": "Zapisano utwór",
       "insert": "Wstawiono utwór",
-      "removecurrent": "Usunięto bieżący utwór"
+      "removecurrent": "Usunięto bieżący utwór",
+      "playlists": "zaktualizował(a) playlisty serwera"
     },
     "detail": {
       "on": "Wł.",
@@ -2102,5 +2135,124 @@
       "more": "i {count} więcej",
       "card": "Karta odtwarzacza z przyciskami jest na {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlisty i radio tworzone na podstawie opisu",
+    "promptOption": "Opisz muzykę: nastrój, gatunek, epokę, wykonawców, okazję…",
+    "playlist": {
+      "description": "Stwórz playlistę z opisu i odtwórz ją",
+      "countOption": "Ile utworów (5-50, domyślnie 20)",
+      "playOption": "Dodaj do kolejki teraz (domyślnie: tak)",
+      "nextOption": "Odtwórz zaraz po bieżącym utworze"
+    },
+    "radio": {
+      "description": "Niekończące się radio AI na podstawie opisu"
+    },
+    "notInVoice": "Najpierw dołącz do kanału głosowego albo ustaw play:False, żeby tylko zobaczyć playlistę.",
+    "trialUsed": "Ten serwer wykorzystał już dziś {limit} darmowych zapytań do AI DJ-a. Limit resetuje się o 00:00 UTC.",
+    "dailyLimit": "Ten serwer osiągnął dzisiejszy limit {limit} zapytań do AI DJ-a. Resetuje się o 00:00 UTC.",
+    "trialNote": "Darmowy okres próbny: zostało {left} z {limit} zapytań do AI DJ-a na dziś na tym serwerze. Founder odblokowuje więcej zapytań i dłuższe radio AI.",
+    "unconfigured": "AI DJ nie jest skonfigurowany w tym bocie.",
+    "busy": "AI DJ jest teraz zajęty. Spróbuj ponownie za kilka minut.",
+    "refused": "AI DJ nie mógł stworzyć playlisty do tego opisu. Spróbuj opisać muzykę inaczej.",
+    "failed": "AI DJ nie zdołał stworzyć tej playlisty. Spróbuj ponownie.",
+    "expired": "Ta playlista nie jest już dostępna. Stwórz nową przez /ai playlist.",
+    "saved": "Zapisano w twoich kolekcjach jako **{name}**. Odtwórz ją kiedy chcesz przez /collections load.",
+    "savedServer": "Zapisano jako playlistę serwera **{name}**. Każdy może ją odtworzyć przez /playlists play.",
+    "card": {
+      "prompt": "Opis: {prompt}",
+      "more": "…i {count} więcej",
+      "play": "Odtwórz",
+      "save": "Zapisz w moich kolekcjach",
+      "saveServer": "Zapisz jako playlistę serwera"
+    }
+  },
+  "playlists": {
+    "description": "Wspólne playlisty serwera, zarządzane przez DJ-ów",
+    "nameOption": "Playlista serwera",
+    "newNameOption": "Nazwa nowej playlisty serwera",
+    "needDj": "Tylko DJ-e i administratorzy serwera mogą zmieniać playlisty serwera.",
+    "notFound": "Nie ma playlisty serwera o nazwie **{name}**.",
+    "limitReached": "Ten serwer osiągnął maksymalną liczbę playlist. Najpierw usuń jedną.",
+    "exists": "Playlista serwera o nazwie **{name}** już istnieje.",
+    "created": "Utworzono playlistę serwera **{name}**. Dodaj utwory przez /playlists add lub /playlists save.",
+    "saved": "Zapisano kolejkę (utwory: {count}) jako playlistę serwera **{name}**.",
+    "full": "Ta playlista jest pełna.",
+    "renamed": "Zmieniono nazwę **{old}** na **{name}**.",
+    "deleted": "Usunięto playlistę serwera **{name}**.",
+    "imported": "Zaimportowano utwory (**{count}**) do playlisty serwera **{name}**.",
+    "copied": "Skopiowano do twoich kolekcji jako **{name}** (utwory: {count}).",
+    "list": {
+      "description": "Pokaż playlisty serwera",
+      "title": "📁 Playlisty serwera",
+      "empty": "Ten serwer nie ma jeszcze playlist. DJ-e mogą je tworzyć przez /playlists create lub /playlists save."
+    },
+    "view": {
+      "description": "Pokaż utwory z playlisty serwera"
+    },
+    "play": {
+      "description": "Dodaj playlistę serwera do kolejki",
+      "nextOption": "Odtwórz zaraz po bieżącym utworze"
+    },
+    "create": {
+      "description": "Utwórz pustą playlistę serwera (DJ-e)"
+    },
+    "save": {
+      "description": "Zapisz bieżącą kolejkę jako playlistę serwera (DJ-e)"
+    },
+    "add": {
+      "description": "Dodaj bieżący utwór lub wskazany utwór do playlisty serwera (DJ-e)",
+      "songOption": "Nazwa utworu lub link (domyślnie: aktualnie grający utwór)",
+      "nothing": "Nic teraz nie gra. Podaj utwór do dodania."
+    },
+    "remove": {
+      "description": "Usuń utwór z playlisty serwera (DJ-e)"
+    },
+    "rename": {
+      "description": "Zmień nazwę playlisty serwera (DJ-e)"
+    },
+    "delete": {
+      "description": "Usuń playlistę serwera (DJ-e)"
+    },
+    "import": {
+      "description": "Zaimportuj playlistę ze Spotify, YouTube, Deezer lub Apple Music jako playlistę serwera (DJ-e)"
+    },
+    "copy": {
+      "description": "Skopiuj playlistę serwera do swoich kolekcji",
+      "asOption": "Nazwa twojej kopii (domyślnie: ta sama nazwa)"
+    },
+    "log": {
+      "create": "utworzył(a) playlistę serwera {name}",
+      "save": "zapisał(a) kolejkę jako playlistę serwera {name}",
+      "delete": "usunął/usunęła playlistę serwera {name}",
+      "import": "zaimportował(a) playlistę serwera {name}"
+    }
+  },
+  "library": {
+    "description": "Twoje własne playlisty i polubione utwory ze Spotify i YouTube",
+    "playlistOption": "Jedna z twoich playlist (połącz konta w panelu)",
+    "accounts": {
+      "description": "Zobacz połączone konta muzyczne i zarządzaj nimi"
+    },
+    "play": {
+      "description": "Odtwórz jedną ze swoich playlist lub polubione utwory"
+    },
+    "import": {
+      "description": "Zapisz jedną ze swoich playlist w kolekcjach"
+    },
+    "likedSpotify": "Polubione utwory",
+    "likedYouTube": "Polubione filmy",
+    "connect": "Połącz konto",
+    "reconnect": "Połącz ponownie",
+    "manage": "Zarządzaj połączeniami",
+    "notLinked": "niepołączone",
+    "notConnected": "Najpierw połącz swoje konto {service} w panelu.",
+    "revoked": "Dostęp do twojego konta {service} został cofnięty. Połącz je ponownie w panelu.",
+    "forbidden": "{service} nie pozwolił odczytać tej playlisty. Można odtwarzać tylko playlisty, których jesteś właścicielem lub współtwórcą.",
+    "failed": "Nie udało się teraz połączyć z twoim kontem muzycznym. Spróbuj ponownie.",
+    "pickFromList": "Wybierz jedną z sugerowanych playlist.",
+    "empty": "Ta playlista nie zawiera utworów do odtworzenia.",
+    "imported": "Zaimportowano **{count}** utworów do twojej kolekcji **{name}**.",
+    "howTo": "Połącz konta w panelu, a potem użyj /library play, aby odtwarzać swoje playlisty i polubione utwory."
   }
 }

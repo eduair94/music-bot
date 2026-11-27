@@ -684,7 +684,38 @@
     "noQueue": "Radyoyu temel alacak çalan bir parça yok.",
     "success": "📻 **{title}** temel alınarak radyo başlatıldı",
     "error": "Radyo başlatılamadı. Lütfen tekrar dene.",
-    "description": "Bir şarkı veya sanatçıdan sonsuz bir radyo başlat"
+    "description": "Bir şarkıdan, tür istasyonundan ya da AI DJ isteminden sonsuz radyo",
+    "optionSong": "Başlangıç için şarkı ya da sanatçı",
+    "optionStation": "Bir tür istasyonu",
+    "optionPrompt": "AI DJ: müziği tarif et (ör. yağmurlu gece cazı)",
+    "pickOne": "Sadece birini seç: şarkı, istasyon ya da istem.",
+    "started": "Radyo **{title}** ile başladı. Benzer şarkılar çalmaya devam edecek.",
+    "stationStarted": "**{station}** radyosu açık. Bu tarzda şarkılar çalmaya devam edecek.",
+    "aiStarted": "AI DJ radyosu açık: **{title}**. İstemine göre yeni şarkılar gelmeye devam edecek.",
+    "aiPick": "AI DJ'in seçimi",
+    "panelAi": "AI DJ radyosu",
+    "panelStation": "{station} radyosu",
+    "panelSong": "Radyo",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "İspanyolca Rock",
+      "electronic": "Elektronik",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Caz",
+      "classical": "Klasik",
+      "eighties": "80'ler hitleri",
+      "twothousands": "2000'ler hitleri",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Son çalınan parçaları çal",
@@ -1133,9 +1164,9 @@
       "title": "Premium avantajları",
       "intro": "Founder {spots} kişiyle sınırlı ve fiyat sabit kalır.",
       "freeName": "Ücretsiz — {price}",
-      "freePerks": "128kbps ses\nKuyruk, çalma listeleri ve şarkı sözleri\nTüm komutlar",
       "founderName": "Founder / Beta Test Kullanıcısı — {price}/ay",
-      "founderPerks": "256kbps ses\nSes filtreleri\n24/7 modu\nFounder rolü ve doğrudan destek"
+      "freePerks": "128kbps ses\nKuyruk, çalma listeleri ve şarkı sözleri\nAI DJ denemesi: sunucu başına günde 3 istek\nTüm komutlar",
+      "founderPerks": "256kbps ses\nAI DJ: sunucu başına günde 50 çalma listesi veya radyo, daha uzun AI radyo\nSes filtreleri\n7/24 modu\nFounder rolü ve doğrudan destek"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Süre Sınırı Yok",
       "vote_features": "Özelliklere Oy Ver",
       "founder_role": "Founder Rolü",
-      "direct_support": "Doğrudan Destek"
+      "direct_support": "Doğrudan Destek",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Oylamayla atladı",
       "grab": "Şarkıyı kaydetti",
       "insert": "Şarkı ekledi",
-      "removecurrent": "Çalan şarkıyı kaldırdı"
+      "removecurrent": "Çalan şarkıyı kaldırdı",
+      "playlists": "sunucu çalma listelerini güncelledi"
     },
     "detail": {
       "on": "Açık",
@@ -2095,5 +2128,124 @@
       "more": "ve {count} tane daha",
       "card": "Butonlu oynatıcı kartı {channel} kanalında."
     }
+  },
+  "ai": {
+    "description": "AI DJ: açıklamadan çalma listeleri ve radyo",
+    "promptOption": "Müziği tarif et: ruh hali, tür, dönem, sanatçılar, ortam…",
+    "playlist": {
+      "description": "Açıklamadan bir çalma listesi oluştur ve çal",
+      "countOption": "Kaç şarkı (5-50, varsayılan 20)",
+      "playOption": "Hemen sıraya ekle (varsayılan: evet)",
+      "nextOption": "Mevcut şarkıdan hemen sonra çal"
+    },
+    "radio": {
+      "description": "Bir açıklama için sonsuz AI radyosu"
+    },
+    "notInVoice": "Önce bir ses kanalına katıl ya da sadece listeyi görmek için play:False ayarla.",
+    "trialUsed": "Bu sunucu bugünkü {limit} ücretsiz AI DJ isteğini kullandı. 00:00 UTC'de sıfırlanır.",
+    "dailyLimit": "Bu sunucu bugünkü {limit} AI DJ isteği sınırına ulaştı. 00:00 UTC'de sıfırlanır.",
+    "trialNote": "Ücretsiz deneme: Bu sunucuda bugün {limit} AI DJ isteğinden {left} tane kaldı. Founder daha fazlasını ve daha uzun AI radyosunu açar.",
+    "unconfigured": "AI DJ bu botta ayarlanmamış.",
+    "busy": "AI DJ şu an meşgul. Birkaç dakika sonra tekrar dene.",
+    "refused": "AI DJ bunun için çalma listesi oluşturamadı. Müziği farklı şekilde tarif etmeyi dene.",
+    "failed": "AI DJ bu çalma listesini oluşturamadı. Lütfen tekrar dene.",
+    "expired": "Bu çalma listesi artık mevcut değil. /ai playlist ile yenisini oluştur.",
+    "saved": "Koleksiyonlarına **{name}** olarak kaydedildi. İstediğin zaman /collections load ile çal.",
+    "savedServer": "Sunucu çalma listesi **{name}** olarak kaydedildi. Herkes /playlists play ile çalabilir.",
+    "card": {
+      "prompt": "İstem: {prompt}",
+      "more": "…ve {count} tane daha",
+      "play": "Çal",
+      "save": "Koleksiyonlarıma kaydet",
+      "saveServer": "Sunucu çalma listesi olarak kaydet"
+    }
+  },
+  "playlists": {
+    "description": "DJ'lerin yönettiği ortak sunucu çalma listeleri",
+    "nameOption": "Sunucu çalma listesi",
+    "newNameOption": "Yeni sunucu çalma listesinin adı",
+    "needDj": "Sunucu çalma listelerini sadece DJ'ler ve sunucu yöneticileri değiştirebilir.",
+    "notFound": "**{name}** adında bir sunucu çalma listesi yok.",
+    "limitReached": "Bu sunucu maksimum çalma listesi sayısına ulaştı. Önce birini sil.",
+    "exists": "**{name}** adında bir sunucu çalma listesi zaten var.",
+    "created": "**{name}** sunucu çalma listesi oluşturuldu. /playlists add veya /playlists save ile şarkı ekle.",
+    "saved": "Sıra ({count} şarkı) **{name}** sunucu çalma listesi olarak kaydedildi.",
+    "full": "Bu çalma listesi dolu.",
+    "renamed": "**{old}** adı **{name}** olarak değiştirildi.",
+    "deleted": "**{name}** sunucu çalma listesi silindi.",
+    "imported": "**{name}** sunucu çalma listesine **{count}** şarkı içe aktarıldı.",
+    "copied": "Koleksiyonlarına **{name}** olarak kopyalandı ({count} şarkı).",
+    "list": {
+      "description": "Sunucu çalma listelerini listele",
+      "title": "📁 Sunucu çalma listeleri",
+      "empty": "Bu sunucunun henüz çalma listesi yok. DJ'ler /playlists create veya /playlists save ile oluşturabilir."
+    },
+    "view": {
+      "description": "Bir sunucu çalma listesindeki şarkıları göster"
+    },
+    "play": {
+      "description": "Bir sunucu çalma listesini sıraya ekle",
+      "nextOption": "Mevcut şarkıdan hemen sonra çal"
+    },
+    "create": {
+      "description": "Boş bir sunucu çalma listesi oluştur (DJ'ler)"
+    },
+    "save": {
+      "description": "Mevcut sırayı sunucu çalma listesi olarak kaydet (DJ'ler)"
+    },
+    "add": {
+      "description": "Çalan şarkıyı ya da belirttiğin bir şarkıyı sunucu çalma listesine ekle (DJ'ler)",
+      "songOption": "Şarkı adı ya da bağlantısı (varsayılan: şu an çalan şarkı)",
+      "nothing": "Şu an bir şey çalmıyor. Eklemek için bir şarkı belirt."
+    },
+    "remove": {
+      "description": "Sunucu çalma listesinden bir şarkı kaldır (DJ'ler)"
+    },
+    "rename": {
+      "description": "Bir sunucu çalma listesini yeniden adlandır (DJ'ler)"
+    },
+    "delete": {
+      "description": "Bir sunucu çalma listesini sil (DJ'ler)"
+    },
+    "import": {
+      "description": "Spotify, YouTube, Deezer veya Apple Music çalma listesini sunucu çalma listesi olarak içe aktar (DJ'ler)"
+    },
+    "copy": {
+      "description": "Bir sunucu çalma listesini kendi koleksiyonlarına kopyala",
+      "asOption": "Kopyanın adı (varsayılan: aynı ad)"
+    },
+    "log": {
+      "create": "{name} sunucu çalma listesini oluşturdu",
+      "save": "sırayı {name} sunucu çalma listesi olarak kaydetti",
+      "delete": "{name} sunucu çalma listesini sildi",
+      "import": "{name} sunucu çalma listesini içe aktardı"
+    }
+  },
+  "library": {
+    "description": "Kendi Spotify ve YouTube çalma listelerin ve beğendiğin şarkılar",
+    "playlistOption": "Çalma listelerinden biri (hesaplarını panelden bağla)",
+    "accounts": {
+      "description": "Bağlı müzik hesaplarını gör ve yönet"
+    },
+    "play": {
+      "description": "Çalma listelerinden birini veya beğendiğin şarkıları çal"
+    },
+    "import": {
+      "description": "Çalma listelerinden birini koleksiyonlarına kaydet"
+    },
+    "likedSpotify": "Beğenilen Şarkılar",
+    "likedYouTube": "Beğenilen videolar",
+    "connect": "Hesap bağla",
+    "reconnect": "Yeniden bağla",
+    "manage": "Bağlantıları yönet",
+    "notLinked": "bağlı değil",
+    "notConnected": "Önce panelden {service} hesabını bağla.",
+    "revoked": "{service} hesabına erişim kaldırıldı. Panelden yeniden bağla.",
+    "forbidden": "{service} bu çalma listesinin okunmasına izin vermedi. Yalnızca sahibi olduğun veya ortak çalıştığın çalma listeleri çalınabilir.",
+    "failed": "Şu anda müzik hesabına ulaşılamadı. Lütfen tekrar dene.",
+    "pickFromList": "Önerilen çalma listelerinden birini seç.",
+    "empty": "Bu çalma listesinde çalınabilir şarkı yok.",
+    "imported": "**{count}** şarkı **{name}** koleksiyonuna aktarıldı.",
+    "howTo": "Hesaplarını panelden bağla, ardından kendi çalma listelerini ve beğendiğin şarkıları çalmak için /library play kullan."
   }
 }

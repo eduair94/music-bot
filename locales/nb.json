@@ -684,7 +684,38 @@
     "noQueue": "Ingen spor spilles som radioen kan baseres på.",
     "success": "📻 Startet radio basert på **{title}**",
     "error": "Kunne ikke starte radioen. Prøv igjen.",
-    "description": "Start en endeløs radio fra en sang eller artist"
+    "description": "Uendelig radio fra en sang, en sjangerstasjon eller en AI DJ-beskrivelse",
+    "optionSong": "Sang eller artist å starte fra",
+    "optionStation": "En sjangerstasjon",
+    "optionPrompt": "AI DJ: beskriv musikken (f.eks. regnfull nattjazz)",
+    "pickOne": "Velg bare én: en sang, en stasjon eller en beskrivelse.",
+    "started": "Radio startet fra **{title}**. Lignende sanger fortsetter å spille.",
+    "stationStarted": "**{station}**-radio er på. Sanger i den stilen fortsetter å spille.",
+    "aiStarted": "AI DJ-radio er på: **{title}**. Nye sanger fortsetter å komme basert på beskrivelsen din.",
+    "aiPick": "valgt av AI DJ",
+    "panelAi": "AI DJ-radio",
+    "panelStation": "{station}-radio",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Elektronisk",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klassisk",
+      "eighties": "80-tallshits",
+      "twothousands": "2000-tallshits",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Spill nylig spilte spor",
@@ -1133,9 +1164,9 @@
       "title": "Premium-fordeler",
       "intro": "Founder er begrenset til {spots} plasser, og prisen er låst.",
       "freeName": "Gratis — {price}",
-      "freePerks": "128kbps lyd\nKø, spillelister og sangtekster\nAlle kommandoer",
       "founderName": "Founder / Betatester — {price}/måned",
-      "founderPerks": "256kbps lyd\nLydfiltre\n24/7-modus\nFounder-rolle og direkte support"
+      "freePerks": "128kbps-lyd\nKø, spillelister og sangtekster\nAI DJ-prøve: 3 forespørsler om dagen per server\nAlle kommandoer",
+      "founderPerks": "256kbps-lyd\nAI DJ: 50 spillelister eller radioer om dagen per server, lengre AI-radio\nLydfiltre\n24/7-modus\nFounder-rolle og direkte support"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Ingen lengdegrense",
       "vote_features": "Stem på funksjoner",
       "founder_role": "Founder-rolle",
-      "direct_support": "Direkte støtte"
+      "direct_support": "Direkte støtte",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Stemte for å hoppe over",
       "grab": "Lagret låt",
       "insert": "Satte inn låt",
-      "removecurrent": "Fjernet gjeldende låt"
+      "removecurrent": "Fjernet gjeldende låt",
+      "playlists": "oppdaterte serverens spillelister"
     },
     "detail": {
       "on": "På",
@@ -2095,5 +2128,124 @@
       "more": "og {count} til",
       "card": "Spillerkortet med knappene er i {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: spillelister og radio laget fra en beskrivelse",
+    "promptOption": "Beskriv musikken: stemning, sjanger, tiår, artister, anledning…",
+    "playlist": {
+      "description": "Lag en spilleliste fra en beskrivelse og spill den",
+      "countOption": "Hvor mange sanger (5-50, standard 20)",
+      "playOption": "Legg den i køen nå (standard: ja)",
+      "nextOption": "Spill den rett etter gjeldende sang"
+    },
+    "radio": {
+      "description": "Uendelig AI-radio fra en beskrivelse"
+    },
+    "notInVoice": "Bli med i en talekanal først, eller sett play:False for bare å se spillelisten.",
+    "trialUsed": "Denne serveren har brukt sine {limit} gratis AI DJ-forespørsler for i dag. De nullstilles kl. 00:00 UTC.",
+    "dailyLimit": "Denne serveren har nådd dagens grense på {limit} AI DJ-forespørsler. Den nullstilles kl. 00:00 UTC.",
+    "trialNote": "Gratis prøve: {left} av {limit} AI DJ-forespørsler igjen i dag på denne serveren. Founder låser opp flere og lengre AI-radio.",
+    "unconfigured": "AI DJ er ikke satt opp på denne boten.",
+    "busy": "AI DJ er opptatt akkurat nå. Prøv igjen om noen minutter.",
+    "refused": "AI DJ kunne ikke lage en spilleliste for det. Prøv å beskrive musikken på en annen måte.",
+    "failed": "AI DJ kunne ikke lage den spillelisten. Prøv igjen.",
+    "expired": "Denne spillelisten er ikke lenger tilgjengelig. Lag en ny med /ai playlist.",
+    "saved": "Lagret i samlingene dine som **{name}**. Spill den når som helst med /collections load.",
+    "savedServer": "Lagret som serverspillelisten **{name}**. Alle kan spille den med /playlists play.",
+    "card": {
+      "prompt": "Beskrivelse: {prompt}",
+      "more": "…og {count} til",
+      "play": "Spill",
+      "save": "Lagre i samlingene mine",
+      "saveServer": "Lagre som serverspilleliste"
+    }
+  },
+  "playlists": {
+    "description": "Serverens delte spillelister, administrert av DJ-er",
+    "nameOption": "Serverspilleliste",
+    "newNameOption": "Navn på den nye serverspillelisten",
+    "needDj": "Bare DJ-er og serveradministratorer kan endre serverspillelistene.",
+    "notFound": "Det finnes ingen serverspilleliste som heter **{name}**.",
+    "limitReached": "Denne serveren har nådd maks antall spillelister. Slett en først.",
+    "exists": "En serverspilleliste som heter **{name}** finnes allerede.",
+    "created": "Serverspillelisten **{name}** er opprettet. Legg til sanger med /playlists add eller /playlists save.",
+    "saved": "Lagret køen ({count} sanger) som serverspillelisten **{name}**.",
+    "full": "Denne spillelisten er full.",
+    "renamed": "Endret navn fra **{old}** til **{name}**.",
+    "deleted": "Slettet serverspillelisten **{name}**.",
+    "imported": "Importerte **{count}** sanger til serverspillelisten **{name}**.",
+    "copied": "Kopiert til samlingene dine som **{name}** ({count} sanger).",
+    "list": {
+      "description": "Vis serverspillelistene",
+      "title": "📁 Serverspillelister",
+      "empty": "Denne serveren har ingen spillelister ennå. DJ-er kan lage en med /playlists create eller /playlists save."
+    },
+    "view": {
+      "description": "Vis sangene i en serverspilleliste"
+    },
+    "play": {
+      "description": "Legg en serverspilleliste i køen",
+      "nextOption": "Spill den rett etter gjeldende sang"
+    },
+    "create": {
+      "description": "Opprett en tom serverspilleliste (DJ-er)"
+    },
+    "save": {
+      "description": "Lagre gjeldende kø som en serverspilleliste (DJ-er)"
+    },
+    "add": {
+      "description": "Legg til gjeldende sang, eller en sang du oppgir, i en serverspilleliste (DJ-er)",
+      "songOption": "Sangnavn eller lenke (standard: sangen som spilles nå)",
+      "nothing": "Ingenting spilles. Oppgi en sang å legge til."
+    },
+    "remove": {
+      "description": "Fjern en sang fra en serverspilleliste (DJ-er)"
+    },
+    "rename": {
+      "description": "Gi nytt navn til en serverspilleliste (DJ-er)"
+    },
+    "delete": {
+      "description": "Slett en serverspilleliste (DJ-er)"
+    },
+    "import": {
+      "description": "Importer en Spotify-, YouTube-, Deezer- eller Apple Music-spilleliste som serverspilleliste (DJ-er)"
+    },
+    "copy": {
+      "description": "Kopier en serverspilleliste til dine egne samlinger",
+      "asOption": "Navn på kopien din (standard: samme navn)"
+    },
+    "log": {
+      "create": "opprettet serverspillelisten {name}",
+      "save": "lagret køen som serverspillelisten {name}",
+      "delete": "slettet serverspillelisten {name}",
+      "import": "importerte serverspillelisten {name}"
+    }
+  },
+  "library": {
+    "description": "Dine egne Spotify- og YouTube-spillelister og likte sanger",
+    "playlistOption": "En av spillelistene dine (koble til kontoer i dashbordet)",
+    "accounts": {
+      "description": "Se og administrer de tilkoblede musikkontoene dine"
+    },
+    "play": {
+      "description": "Spill av en av spillelistene dine eller de likte sangene dine"
+    },
+    "import": {
+      "description": "Lagre en av spillelistene dine i samlingene dine"
+    },
+    "likedSpotify": "Likte sanger",
+    "likedYouTube": "Likte videoer",
+    "connect": "Koble til en konto",
+    "reconnect": "Koble til på nytt",
+    "manage": "Administrer tilkoblinger",
+    "notLinked": "ikke tilkoblet",
+    "notConnected": "Koble til {service}-kontoen din i dashbordet først.",
+    "revoked": "Tilgangen til {service}-kontoen din ble fjernet. Koble den til på nytt i dashbordet.",
+    "forbidden": "{service} tillot ikke å lese den spillelisten. Bare spillelister du eier eller samarbeider på kan spilles av.",
+    "failed": "Får ikke kontakt med musikkontoen din akkurat nå. Prøv igjen.",
+    "pickFromList": "Velg en av de foreslåtte spillelistene.",
+    "empty": "Den spillelisten har ingen sanger som kan spilles av.",
+    "imported": "Importerte **{count}** sanger til samlingen din **{name}**.",
+    "howTo": "Koble til kontoer i dashbordet, og bruk deretter /library play for å spille av dine egne spillelister og likte sanger."
   }
 }

@@ -1164,9 +1164,9 @@
       "title": "Premium perks",
       "intro": "Founder is limited to {spots} spots and the price is locked in.",
       "freeName": "Free — {price}",
-      "freePerks": "128kbps audio\nQueue, playlists and lyrics\nEvery command",
+      "freePerks": "128kbps audio\nQueue, playlists and lyrics\nAI DJ trial: 3 requests a day per server\nEvery command",
       "founderName": "Founder / Beta Tester — {price}/month",
-      "founderPerks": "256kbps audio\nAudio filters\n24/7 mode\nFounder role and direct support"
+      "founderPerks": "256kbps audio\nAI DJ: 50 playlists or radios a day per server, longer AI radio\nAudio filters\n24/7 mode\nFounder role and direct support"
     }
   },
   "boost": {

@@ -684,7 +684,38 @@
     "noQueue": "当前没有可用来开启电台的曲目。",
     "success": "📻 已根据 **{title}** 开启电台",
     "error": "开启电台失败。请再试一次。",
-    "description": "根据歌曲或歌手开启无限电台"
+    "description": "从一首歌、一个曲风电台或 AI DJ 提示开始的无尽电台",
+    "optionSong": "作为起点的歌曲或歌手",
+    "optionStation": "曲风电台",
+    "optionPrompt": "AI DJ：描述你想听的音乐（例如：雨夜爵士）",
+    "pickOne": "只能选一个：歌曲、电台或提示。",
+    "started": "已从 **{title}** 开启电台，相关歌曲会持续播放。",
+    "stationStarted": "**{station}** 电台已开启，会持续播放这个风格的歌曲。",
+    "aiStarted": "AI DJ 电台已开启：**{title}**。会根据你的提示不断送上新歌。",
+    "aiPick": "由 AI DJ 挑选",
+    "panelAi": "AI DJ 电台",
+    "panelStation": "{station} 电台",
+    "panelSong": "电台",
+    "station": {
+      "pop": "流行",
+      "rock": "摇滚",
+      "hiphop": "嘻哈",
+      "latin": "拉丁 / 雷鬼顿",
+      "rockes": "西班牙语摇滚",
+      "electronic": "电子",
+      "lofi": "Lo-fi",
+      "chill": "轻松",
+      "rnb": "R&B",
+      "indie": "独立",
+      "metal": "金属",
+      "jazz": "爵士",
+      "classical": "古典",
+      "eighties": "80 年代金曲",
+      "twothousands": "2000 年代金曲",
+      "kpop": "K-pop",
+      "anime": "动漫",
+      "reggae": "雷鬼"
+    }
   },
   "playrecent": {
     "description": "播放最近播放过的曲目",
@@ -1133,9 +1164,9 @@
       "title": "高级版福利",
       "intro": "Founder 名额仅限 {spots} 个，价格永久锁定。",
       "freeName": "免费 — {price}",
-      "freePerks": "128kbps 音质\n队列、歌单和歌词\n所有命令",
       "founderName": "Founder / 测试员 — {price}/月",
-      "founderPerks": "256kbps 音质\n音频滤镜\n24/7 模式\nFounder 身份组和专属支持"
+      "freePerks": "128kbps 音质\n播放队列、歌单和歌词\nAI DJ 试用：每个服务器每天 3 次请求\n所有指令",
+      "founderPerks": "256kbps 音质\nAI DJ：每个服务器每天 50 个歌单或电台，AI 电台播放更久\n音频滤镜\n24/7 模式\nFounder 身份组和专属支持"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "无时长限制",
       "vote_features": "投票决定新功能",
       "founder_role": "Founder 身份组",
-      "direct_support": "专属支持"
+      "direct_support": "专属支持",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "投票跳过",
       "grab": "收藏曲目",
       "insert": "插入曲目",
-      "removecurrent": "移除当前曲目"
+      "removecurrent": "移除当前曲目",
+      "playlists": "更新了服务器歌单"
     },
     "detail": {
       "on": "开",
@@ -2095,5 +2128,124 @@
       "more": "还有 {count} 首",
       "card": "带按钮的播放器卡片在 {channel}。"
     }
+  },
+  "ai": {
+    "description": "AI DJ：根据描述生成歌单和电台",
+    "promptOption": "描述音乐：心情、曲风、年代、歌手、场合…",
+    "playlist": {
+      "description": "根据描述生成歌单并播放",
+      "countOption": "歌曲数量（5-50，默认 20）",
+      "playOption": "立即加入队列（默认：是）",
+      "nextOption": "在当前歌曲之后立刻播放"
+    },
+    "radio": {
+      "description": "根据描述的无尽 AI 电台"
+    },
+    "notInVoice": "请先加入语音频道，或设置 play:False 只查看歌单。",
+    "trialUsed": "这个服务器今天的 {limit} 次免费 AI DJ 请求已用完，将在 00:00 UTC 重置。",
+    "dailyLimit": "这个服务器已达到今天 {limit} 次 AI DJ 请求的上限，将在 00:00 UTC 重置。",
+    "trialNote": "免费试用：这个服务器今天还剩 {left}/{limit} 次 AI DJ 请求。Founder 可解锁更多次数和更长的 AI 电台。",
+    "unconfigured": "这个机器人还没有设置 AI DJ。",
+    "busy": "AI DJ 现在很忙，请几分钟后再试。",
+    "refused": "AI DJ 无法为此生成歌单，试试换个方式描述音乐。",
+    "failed": "AI DJ 无法生成这个歌单，请再试一次。",
+    "expired": "这个歌单已失效，用 /ai playlist 重新生成一个吧。",
+    "saved": "已保存到你的收藏，名称为 **{name}**。随时用 /collections load 播放。",
+    "savedServer": "已保存为服务器歌单 **{name}**。任何人都可以用 /playlists play 播放。",
+    "card": {
+      "prompt": "提示：{prompt}",
+      "more": "…还有 {count} 首",
+      "play": "播放",
+      "save": "保存到我的收藏",
+      "saveServer": "保存为服务器歌单"
+    }
+  },
+  "playlists": {
+    "description": "服务器共享歌单，由 DJ 管理",
+    "nameOption": "服务器歌单",
+    "newNameOption": "新服务器歌单的名称",
+    "needDj": "只有 DJ 和服务器管理员可以修改服务器歌单。",
+    "notFound": "没有名为 **{name}** 的服务器歌单。",
+    "limitReached": "这个服务器的歌单数量已达上限，请先删除一个。",
+    "exists": "名为 **{name}** 的服务器歌单已存在。",
+    "created": "已创建服务器歌单 **{name}**。用 /playlists add 或 /playlists save 添加歌曲。",
+    "saved": "已将队列（{count} 首歌）保存为服务器歌单 **{name}**。",
+    "full": "这个歌单已满。",
+    "renamed": "已将 **{old}** 重命名为 **{name}**。",
+    "deleted": "已删除服务器歌单 **{name}**。",
+    "imported": "已将 **{count}** 首歌导入服务器歌单 **{name}**。",
+    "copied": "已复制到你的收藏，名称为 **{name}**（{count} 首歌）。",
+    "list": {
+      "description": "列出服务器歌单",
+      "title": "📁 服务器歌单",
+      "empty": "这个服务器还没有歌单。DJ 可以用 /playlists create 或 /playlists save 创建。"
+    },
+    "view": {
+      "description": "查看服务器歌单里的歌曲"
+    },
+    "play": {
+      "description": "将服务器歌单加入队列",
+      "nextOption": "在当前歌曲之后立刻播放"
+    },
+    "create": {
+      "description": "创建一个空的服务器歌单（DJ）"
+    },
+    "save": {
+      "description": "将当前队列保存为服务器歌单（DJ）"
+    },
+    "add": {
+      "description": "将当前歌曲或指定歌曲添加到服务器歌单（DJ）",
+      "songOption": "歌名或链接（默认：正在播放的歌曲）",
+      "nothing": "现在没有在播放，请输入要添加的歌曲。"
+    },
+    "remove": {
+      "description": "从服务器歌单移除歌曲（DJ）"
+    },
+    "rename": {
+      "description": "重命名服务器歌单（DJ）"
+    },
+    "delete": {
+      "description": "删除服务器歌单（DJ）"
+    },
+    "import": {
+      "description": "将 Spotify、YouTube、Deezer 或 Apple Music 歌单导入为服务器歌单（DJ）"
+    },
+    "copy": {
+      "description": "将服务器歌单复制到你自己的收藏",
+      "asOption": "副本名称（默认：同名）"
+    },
+    "log": {
+      "create": "创建了服务器歌单 {name}",
+      "save": "将队列保存为服务器歌单 {name}",
+      "delete": "删除了服务器歌单 {name}",
+      "import": "导入了服务器歌单 {name}"
+    }
+  },
+  "library": {
+    "description": "你自己的 Spotify 和 YouTube 歌单及喜欢的歌曲",
+    "playlistOption": "你的其中一个歌单（请在控制面板连接账号）",
+    "accounts": {
+      "description": "查看和管理你已连接的音乐账号"
+    },
+    "play": {
+      "description": "播放你的歌单或喜欢的歌曲"
+    },
+    "import": {
+      "description": "把你的歌单保存到你的收藏中"
+    },
+    "likedSpotify": "喜欢的歌曲",
+    "likedYouTube": "喜欢的视频",
+    "connect": "连接账号",
+    "reconnect": "重新连接",
+    "manage": "管理连接",
+    "notLinked": "未连接",
+    "notConnected": "请先在控制面板连接你的 {service} 账号。",
+    "revoked": "你的 {service} 账号访问权限已被移除。请在控制面板重新连接。",
+    "forbidden": "{service} 不允许读取该歌单。只能播放你自己创建或参与协作的歌单。",
+    "failed": "暂时无法连接到你的音乐账号，请稍后再试。",
+    "pickFromList": "请从推荐的歌单中选择一个。",
+    "empty": "该歌单中没有可播放的歌曲。",
+    "imported": "已将 **{count}** 首歌曲导入到你的收藏 **{name}**。",
+    "howTo": "先在控制面板连接账号，然后使用 /library play 播放你自己的歌单和喜欢的歌曲。"
   }
 }

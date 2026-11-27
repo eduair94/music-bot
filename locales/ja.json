@@ -684,7 +684,38 @@
     "noQueue": "ラジオの元になる再生中の曲がありません。",
     "success": "📻 **{title}** をもとにラジオを開始しました",
     "error": "ラジオの開始に失敗しました。もう一度試してね。",
-    "description": "曲やアーティストからエンドレスラジオを開始"
+    "description": "曲・ジャンル局・AI DJのプロンプトから流れ続けるラジオ",
+    "optionSong": "スタートする曲またはアーティスト",
+    "optionStation": "ジャンル局",
+    "optionPrompt": "AI DJ：音楽のイメージを入力（例：雨の夜のジャズ）",
+    "pickOne": "曲・局・プロンプトのどれか1つだけ選んでね。",
+    "started": "**{title}** からラジオを開始したよ。関連する曲が流れ続けます。",
+    "stationStarted": "**{station}** ラジオをオンにしたよ。このスタイルの曲が流れ続けます。",
+    "aiStarted": "AI DJラジオをオンにしたよ：**{title}**。プロンプトに合った新しい曲が流れ続けます。",
+    "aiPick": "AI DJのセレクト",
+    "panelAi": "AI DJラジオ",
+    "panelStation": "{station} ラジオ",
+    "panelSong": "ラジオ",
+    "station": {
+      "pop": "ポップ",
+      "rock": "ロック",
+      "hiphop": "ヒップホップ",
+      "latin": "ラテン / レゲトン",
+      "rockes": "スペイン語ロック",
+      "electronic": "エレクトロニック",
+      "lofi": "Lo-fi",
+      "chill": "チル",
+      "rnb": "R&B",
+      "indie": "インディー",
+      "metal": "メタル",
+      "jazz": "ジャズ",
+      "classical": "クラシック",
+      "eighties": "80年代ヒット",
+      "twothousands": "2000年代ヒット",
+      "kpop": "K-POP",
+      "anime": "アニメ",
+      "reggae": "レゲエ"
+    }
   },
   "playrecent": {
     "description": "最近再生した曲を再生する",
@@ -1133,9 +1164,9 @@
       "title": "プレミアム特典",
       "intro": "Founder は先着 {spots} 名限定で、価格はずっと固定です。",
       "freeName": "Free — {price}",
-      "freePerks": "128kbps の音質\nキュー、プレイリスト、歌詞\nすべてのコマンド",
       "founderName": "Founder / ベータテスター — {price}/月",
-      "founderPerks": "256kbps の音質\nオーディオフィルター\n24時間モード\nFounder ロールと直接サポート"
+      "freePerks": "128kbpsの音質\nキュー、プレイリスト、歌詞\nAI DJお試し：サーバーごとに1日3回まで\nすべてのコマンド",
+      "founderPerks": "256kbpsの音質\nAI DJ：サーバーごとに1日50回までプレイリストやラジオを作成、AIラジオがもっと長く\nオーディオフィルター\n24時間モード\nFounderロールと直接サポート"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "再生時間の制限なし",
       "vote_features": "新機能への投票",
       "founder_role": "Founderロール",
-      "direct_support": "直接サポート"
+      "direct_support": "直接サポート",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "投票でスキップ",
       "grab": "曲を保存",
       "insert": "曲を挿入",
-      "removecurrent": "再生中の曲を削除"
+      "removecurrent": "再生中の曲を削除",
+      "playlists": "サーバーのプレイリストを更新しました"
     },
     "detail": {
       "on": "オン",
@@ -2095,5 +2128,124 @@
       "more": "他 {count} 曲",
       "card": "ボタン付きのプレイヤーカードは {channel} にあります。"
     }
+  },
+  "ai": {
+    "description": "AI DJ：説明からプレイリストやラジオを作成",
+    "promptOption": "音楽のイメージを入力：雰囲気、ジャンル、年代、アーティスト、シーンなど…",
+    "playlist": {
+      "description": "説明からプレイリストを作って再生",
+      "countOption": "曲数（5〜50、デフォルト20）",
+      "playOption": "今すぐキューに追加（デフォルト：はい）",
+      "nextOption": "今の曲の次に再生"
+    },
+    "radio": {
+      "description": "説明に合わせたエンドレスAIラジオ"
+    },
+    "notInVoice": "先にボイスチャンネルに参加してね。プレイリストを見るだけなら play:False にしてね。",
+    "trialUsed": "このサーバーは今日の無料AI DJリクエスト{limit}回を使い切りました。00:00 UTCにリセットされます。",
+    "dailyLimit": "このサーバーは今日のAI DJリクエスト上限（{limit}回）に達しました。00:00 UTCにリセットされます。",
+    "trialNote": "無料トライアル：このサーバーの今日のAI DJリクエストは残り{left}/{limit}回。Founderならもっと多く、もっと長いAIラジオが使えます。",
+    "unconfigured": "このBotではAI DJが設定されていません。",
+    "busy": "AI DJは今混み合っています。数分後にもう一度試してね。",
+    "refused": "AI DJはその内容でプレイリストを作れませんでした。別の言い方で説明してみてね。",
+    "failed": "AI DJはプレイリストを作れませんでした。もう一度試してね。",
+    "expired": "このプレイリストはもう利用できません。/ai playlist で新しく作ってね。",
+    "saved": "コレクションに **{name}** として保存したよ。/collections load でいつでも再生できます。",
+    "savedServer": "サーバープレイリスト **{name}** として保存したよ。誰でも /playlists play で再生できます。",
+    "card": {
+      "prompt": "プロンプト：{prompt}",
+      "more": "…ほか{count}曲",
+      "play": "再生",
+      "save": "マイコレクションに保存",
+      "saveServer": "サーバープレイリストとして保存"
+    }
+  },
+  "playlists": {
+    "description": "DJが管理するサーバー共有プレイリスト",
+    "nameOption": "サーバープレイリスト",
+    "newNameOption": "新しいサーバープレイリストの名前",
+    "needDj": "サーバープレイリストを変更できるのはDJとサーバー管理者だけです。",
+    "notFound": "**{name}** というサーバープレイリストはありません。",
+    "limitReached": "このサーバーはプレイリストの上限に達しています。先に1つ削除してね。",
+    "exists": "**{name}** というサーバープレイリストはすでにあります。",
+    "created": "サーバープレイリスト **{name}** を作成したよ。/playlists add か /playlists save で曲を追加してね。",
+    "saved": "キュー（{count}曲）をサーバープレイリスト **{name}** として保存したよ。",
+    "full": "このプレイリストはいっぱいです。",
+    "renamed": "**{old}** を **{name}** に名前変更したよ。",
+    "deleted": "サーバープレイリスト **{name}** を削除したよ。",
+    "imported": "**{count}** 曲をサーバープレイリスト **{name}** にインポートしたよ。",
+    "copied": "コレクションに **{name}**（{count}曲）としてコピーしたよ。",
+    "list": {
+      "description": "サーバープレイリストを一覧表示",
+      "title": "📁 サーバープレイリスト",
+      "empty": "このサーバーにはまだプレイリストがありません。DJは /playlists create か /playlists save で作成できます。"
+    },
+    "view": {
+      "description": "サーバープレイリストの曲を表示"
+    },
+    "play": {
+      "description": "サーバープレイリストをキューに追加",
+      "nextOption": "今の曲の次に再生"
+    },
+    "create": {
+      "description": "空のサーバープレイリストを作成（DJ）"
+    },
+    "save": {
+      "description": "今のキューをサーバープレイリストとして保存（DJ）"
+    },
+    "add": {
+      "description": "再生中の曲か指定した曲をサーバープレイリストに追加（DJ）",
+      "songOption": "曲名またはリンク（デフォルト：再生中の曲）",
+      "nothing": "何も再生されていません。追加する曲名を指定してね。"
+    },
+    "remove": {
+      "description": "サーバープレイリストから曲を削除（DJ）"
+    },
+    "rename": {
+      "description": "サーバープレイリストの名前を変更（DJ）"
+    },
+    "delete": {
+      "description": "サーバープレイリストを削除（DJ）"
+    },
+    "import": {
+      "description": "Spotify、YouTube、Deezer、Apple Musicのプレイリストをサーバープレイリストとしてインポート（DJ）"
+    },
+    "copy": {
+      "description": "サーバープレイリストを自分のコレクションにコピー",
+      "asOption": "コピーの名前（デフォルト：同じ名前）"
+    },
+    "log": {
+      "create": "サーバープレイリスト {name} を作成しました",
+      "save": "キューをサーバープレイリスト {name} として保存しました",
+      "delete": "サーバープレイリスト {name} を削除しました",
+      "import": "サーバープレイリスト {name} をインポートしました"
+    }
+  },
+  "library": {
+    "description": "あなたのSpotifyとYouTubeのプレイリスト＆お気に入りの曲",
+    "playlistOption": "あなたのプレイリストのひとつ（ダッシュボードでアカウントを連携してね）",
+    "accounts": {
+      "description": "連携中の音楽アカウントを確認・管理"
+    },
+    "play": {
+      "description": "あなたのプレイリストやお気に入りの曲を再生"
+    },
+    "import": {
+      "description": "プレイリストをコレクションに保存"
+    },
+    "likedSpotify": "お気に入りの曲",
+    "likedYouTube": "高く評価した動画",
+    "connect": "アカウントを連携",
+    "reconnect": "再連携する",
+    "manage": "連携を管理",
+    "notLinked": "未連携",
+    "notConnected": "まずはダッシュボードで{service}アカウントを連携してね。",
+    "revoked": "{service}アカウントへのアクセスが解除されました。ダッシュボードでもう一度連携してね。",
+    "forbidden": "{service}がそのプレイリストの読み込みを許可しませんでした。再生できるのは、自分が作成したか共同編集しているプレイリストだけです。",
+    "failed": "今は音楽アカウントに接続できませんでした。もう一度試してね。",
+    "pickFromList": "候補のプレイリストから選んでね。",
+    "empty": "そのプレイリストには再生できる曲がありません。",
+    "imported": "**{count}**曲をコレクション**{name}**にインポートしました。",
+    "howTo": "ダッシュボードでアカウントを連携したら、/library play で自分のプレイリストやお気に入りの曲を再生できるよ。"
   }
 }

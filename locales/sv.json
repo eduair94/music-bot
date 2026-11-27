@@ -684,7 +684,38 @@
     "noQueue": "Ingen låt spelas som radion kan baseras på.",
     "success": "📻 Startade radio baserad på **{title}**",
     "error": "Kunde inte starta radion. Försök igen.",
-    "description": "Starta en oändlig radio från en låt eller artist"
+    "description": "Oändlig radio från en låt, en genrestation eller en AI DJ-prompt",
+    "optionSong": "Låt eller artist att börja från",
+    "optionStation": "En genrestation",
+    "optionPrompt": "AI DJ: beskriv musiken (t.ex. jazz en regnig natt)",
+    "pickOne": "Välj bara en: en låt, en station eller en prompt.",
+    "started": "Radio startad från **{title}**. Liknande låtar fortsätter spelas.",
+    "stationStarted": "**{station}**-radio är på. Låtar i den stilen fortsätter spelas.",
+    "aiStarted": "AI DJ-radio är på: **{title}**. Nya låtar fortsätter komma utifrån din prompt.",
+    "aiPick": "vald av AI DJ:n",
+    "panelAi": "AI DJ-radio",
+    "panelStation": "{station}-radio",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Elektroniskt",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klassiskt",
+      "eighties": "80-talshits",
+      "twothousands": "2000-talshits",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Spela nyligen spelade låtar",
@@ -1133,9 +1164,9 @@
       "title": "Premiumförmåner",
       "intro": "Founder är begränsat till {spots} platser och priset är låst.",
       "freeName": "Gratis — {price}",
-      "freePerks": "128kbps ljud\nKö, spellistor och låttexter\nAlla kommandon",
       "founderName": "Founder / Betatestare — {price}/månad",
-      "founderPerks": "256kbps ljud\nLjudfilter\n24/7-läge\nFounder-roll och direktsupport"
+      "freePerks": "128kbps-ljud\nKö, spellistor och låttexter\nTesta AI DJ: 3 förfrågningar per dag och server\nAlla kommandon",
+      "founderPerks": "256kbps-ljud\nAI DJ: 50 spellistor eller radiostationer per dag och server, längre AI-radio\nLjudfilter\n24/7-läge\nFounder-roll och direkt support"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Ingen längdgräns",
       "vote_features": "Rösta på funktioner",
       "founder_role": "Founder-roll",
-      "direct_support": "Direktsupport"
+      "direct_support": "Direktsupport",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Röstade för att hoppa över",
       "grab": "Sparade låt",
       "insert": "Infogade låt",
-      "removecurrent": "Tog bort aktuell låt"
+      "removecurrent": "Tog bort aktuell låt",
+      "playlists": "uppdaterade serverns spellistor"
     },
     "detail": {
       "on": "På",
@@ -2095,5 +2128,124 @@
       "more": "och {count} till",
       "card": "Spelarkortet med knapparna finns i {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: spellistor och radio skapade från en beskrivning",
+    "promptOption": "Beskriv musiken: stämning, genre, era, artister, tillfälle…",
+    "playlist": {
+      "description": "Skapa en spellista från en beskrivning och spela den",
+      "countOption": "Hur många låtar (5-50, standard 20)",
+      "playOption": "Lägg i kön nu (standard: ja)",
+      "nextOption": "Spela den direkt efter nuvarande låt"
+    },
+    "radio": {
+      "description": "Oändlig AI-radio utifrån en beskrivning"
+    },
+    "notInVoice": "Gå med i en röstkanal först, eller sätt play:False för att bara se spellistan.",
+    "trialUsed": "Den här servern har använt sina {limit} gratis AI DJ-förfrågningar för idag. De återställs 00:00 UTC.",
+    "dailyLimit": "Den här servern har nått dagens gräns på {limit} AI DJ-förfrågningar. Den återställs 00:00 UTC.",
+    "trialNote": "Gratis provperiod: {left} av {limit} AI DJ-förfrågningar kvar idag på den här servern. Founder låser upp fler och längre AI-radio.",
+    "unconfigured": "AI DJ:n är inte konfigurerad på den här boten.",
+    "busy": "AI DJ:n är upptagen just nu. Försök igen om några minuter.",
+    "refused": "AI DJ:n kunde inte skapa en spellista för det. Försök beskriva musiken på ett annat sätt.",
+    "failed": "AI DJ:n kunde inte skapa spellistan. Försök igen.",
+    "expired": "Den här spellistan är inte längre tillgänglig. Skapa en ny med /ai playlist.",
+    "saved": "Sparad i dina samlingar som **{name}**. Spela den när du vill med /collections load.",
+    "savedServer": "Sparad som serverspellistan **{name}**. Alla kan spela den med /playlists play.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…och {count} till",
+      "play": "Spela",
+      "save": "Spara i mina samlingar",
+      "saveServer": "Spara som serverspellista"
+    }
+  },
+  "playlists": {
+    "description": "Serverns delade spellistor, hanterade av DJ:s",
+    "nameOption": "Serverspellista",
+    "newNameOption": "Namn på den nya serverspellistan",
+    "needDj": "Bara DJ:s och serveradmins kan ändra serverns spellistor.",
+    "notFound": "Det finns ingen serverspellista som heter **{name}**.",
+    "limitReached": "Den här servern har nått maxantalet spellistor. Ta bort en först.",
+    "exists": "En serverspellista som heter **{name}** finns redan.",
+    "created": "Serverspellistan **{name}** skapad. Lägg till låtar med /playlists add eller /playlists save.",
+    "saved": "Sparade kön ({count} låtar) som serverspellistan **{name}**.",
+    "full": "Den här spellistan är full.",
+    "renamed": "Bytte namn på **{old}** till **{name}**.",
+    "deleted": "Tog bort serverspellistan **{name}**.",
+    "imported": "Importerade **{count}** låtar till serverspellistan **{name}**.",
+    "copied": "Kopierad till dina samlingar som **{name}** ({count} låtar).",
+    "list": {
+      "description": "Lista serverns spellistor",
+      "title": "📁 Serverspellistor",
+      "empty": "Den här servern har inga spellistor än. DJ:s kan skapa en med /playlists create eller /playlists save."
+    },
+    "view": {
+      "description": "Visa låtarna i en serverspellista"
+    },
+    "play": {
+      "description": "Lägg en serverspellista i kön",
+      "nextOption": "Spela den direkt efter nuvarande låt"
+    },
+    "create": {
+      "description": "Skapa en tom serverspellista (DJ:s)"
+    },
+    "save": {
+      "description": "Spara nuvarande kö som serverspellista (DJ:s)"
+    },
+    "add": {
+      "description": "Lägg till nuvarande låt, eller en låt du anger, i en serverspellista (DJ:s)",
+      "songOption": "Låtnamn eller länk (standard: låten som spelas nu)",
+      "nothing": "Inget spelas. Ange en låt att lägga till."
+    },
+    "remove": {
+      "description": "Ta bort en låt från en serverspellista (DJ:s)"
+    },
+    "rename": {
+      "description": "Byt namn på en serverspellista (DJ:s)"
+    },
+    "delete": {
+      "description": "Ta bort en serverspellista (DJ:s)"
+    },
+    "import": {
+      "description": "Importera en spellista från Spotify, YouTube, Deezer eller Apple Music som serverspellista (DJ:s)"
+    },
+    "copy": {
+      "description": "Kopiera en serverspellista till dina egna samlingar",
+      "asOption": "Namn på din kopia (standard: samma namn)"
+    },
+    "log": {
+      "create": "skapade serverspellistan {name}",
+      "save": "sparade kön som serverspellistan {name}",
+      "delete": "tog bort serverspellistan {name}",
+      "import": "importerade serverspellistan {name}"
+    }
+  },
+  "library": {
+    "description": "Dina egna Spotify- och YouTube-spellistor och gillade låtar",
+    "playlistOption": "En av dina spellistor (koppla konton på dashboarden)",
+    "accounts": {
+      "description": "Se och hantera dina kopplade musikkonton"
+    },
+    "play": {
+      "description": "Spela en av dina spellistor eller dina gillade låtar"
+    },
+    "import": {
+      "description": "Spara en av dina spellistor i dina samlingar"
+    },
+    "likedSpotify": "Gillade låtar",
+    "likedYouTube": "Gillade videor",
+    "connect": "Koppla ett konto",
+    "reconnect": "Koppla igen",
+    "manage": "Hantera kopplingar",
+    "notLinked": "inte kopplat",
+    "notConnected": "Koppla först ditt {service}-konto på dashboarden.",
+    "revoked": "Åtkomsten till ditt {service}-konto togs bort. Koppla det igen på dashboarden.",
+    "forbidden": "{service} tillät inte att den spellistan lästes. Bara spellistor du äger eller samarbetar på kan spelas.",
+    "failed": "Kunde inte nå ditt musikkonto just nu. Försök igen.",
+    "pickFromList": "Välj en av de föreslagna spellistorna.",
+    "empty": "Den spellistan har inga spelbara låtar.",
+    "imported": "Importerade **{count}** låtar till din samling **{name}**.",
+    "howTo": "Koppla konton på dashboarden och använd sedan /library play för att spela dina egna spellistor och gillade låtar."
   }
 }

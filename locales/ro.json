@@ -685,7 +685,38 @@
     "noQueue": "Nu rulează nicio piesă pe care să se bazeze radioul.",
     "success": "📻 Am pornit radioul bazat pe **{title}**",
     "error": "Nu am putut porni radioul. Te rog încearcă din nou.",
-    "description": "Pornește un radio nesfârșit pornind de la o melodie sau un artist"
+    "description": "Radio nesfârșit pornind de la o melodie, un post de gen sau un prompt pentru AI DJ",
+    "optionSong": "Melodia sau artistul de la care pornești",
+    "optionStation": "Un post de gen",
+    "optionPrompt": "AI DJ: descrie muzica (ex. jazz pentru o noapte ploioasă)",
+    "pickOne": "Alege doar una: o melodie, un post sau un prompt.",
+    "started": "Radioul a pornit de la **{title}**. Vor urma melodii similare.",
+    "stationStarted": "Radioul **{station}** e pornit. Vor urma melodii în acest stil.",
+    "aiStarted": "Radioul AI DJ e pornit: **{title}**. Vor tot veni melodii noi pentru promptul tău.",
+    "aiPick": "ales de AI DJ",
+    "panelAi": "Radio AI DJ",
+    "panelStation": "Radio {station}",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latino / Reggaeton",
+      "rockes": "Rock în spaniolă",
+      "electronic": "Electronică",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Clasică",
+      "eighties": "Hituri anii '80",
+      "twothousands": "Hituri anii 2000",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Redă piesele ascultate recent",
@@ -1134,9 +1165,9 @@
       "title": "Beneficii premium",
       "intro": "Founder e limitat la {spots} locuri, iar prețul rămâne blocat.",
       "freeName": "Gratuit — {price}",
-      "freePerks": "Audio 128kbps\nCoadă, playlisturi și versuri\nToate comenzile",
       "founderName": "Founder / Beta Tester — {price}/lună",
-      "founderPerks": "Audio 256kbps\nFiltre audio\nMod 24/7\nRol Founder și suport direct"
+      "freePerks": "Audio 128kbps\nCoadă, playlisturi și versuri\nAI DJ de probă: 3 cereri pe zi per server\nToate comenzile",
+      "founderPerks": "Audio 256kbps\nAI DJ: 50 de playlisturi sau radiouri pe zi per server, radio AI mai lung\nFiltre audio\nModul 24/7\nRolul Founder și suport direct"
     }
   },
   "boost": {
@@ -1618,7 +1649,8 @@
       "longer_songs": "Fără limită de durată",
       "vote_features": "Votează funcții noi",
       "founder_role": "Rol Founder",
-      "direct_support": "Suport direct"
+      "direct_support": "Suport direct",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1926,7 +1958,8 @@
       "voteskip": "Piesă sărită prin vot",
       "grab": "A salvat piesa",
       "insert": "A inserat o piesă",
-      "removecurrent": "A eliminat piesa curentă"
+      "removecurrent": "A eliminat piesa curentă",
+      "playlists": "a actualizat playlisturile serverului"
     },
     "detail": {
       "on": "Pornit",
@@ -2096,5 +2129,124 @@
       "more": "și încă {count}",
       "card": "Cardul playerului cu butoane e în {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlisturi și radio create dintr-o descriere",
+    "promptOption": "Descrie muzica: stare, gen, epocă, artiști, ocazie…",
+    "playlist": {
+      "description": "Creează un playlist dintr-o descriere și redă-l",
+      "countOption": "Câte melodii (5-50, implicit 20)",
+      "playOption": "Adaugă-l acum în coadă (implicit: da)",
+      "nextOption": "Redă-l imediat după melodia curentă"
+    },
+    "radio": {
+      "description": "Radio AI nesfârșit pentru o descriere"
+    },
+    "notInVoice": "Intră mai întâi într-un canal vocal sau setează play:False ca să vezi doar playlistul.",
+    "trialUsed": "Serverul a folosit cele {limit} cereri AI DJ gratuite de azi. Se resetează la 00:00 UTC.",
+    "dailyLimit": "Serverul a atins limita de azi de {limit} cereri AI DJ. Se resetează la 00:00 UTC.",
+    "trialNote": "Probă gratuită: {left} din {limit} cereri AI DJ rămase azi pe acest server. Founder deblochează mai multe cereri și radio AI mai lung.",
+    "unconfigured": "AI DJ nu e configurat pe acest bot.",
+    "busy": "AI DJ e ocupat acum. Încearcă din nou în câteva minute.",
+    "refused": "AI DJ nu a putut crea un playlist pentru asta. Încearcă să descrii muzica altfel.",
+    "failed": "AI DJ nu a putut crea playlistul. Te rog încearcă din nou.",
+    "expired": "Playlistul nu mai e disponibil. Creează unul nou cu /ai playlist.",
+    "saved": "Salvat în colecțiile tale ca **{name}**. Redă-l oricând cu /collections load.",
+    "savedServer": "Salvat ca playlist de server **{name}**. Oricine îl poate reda cu /playlists play.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…și încă {count}",
+      "play": "Redă",
+      "save": "Salvează în colecțiile mele",
+      "saveServer": "Salvează ca playlist de server"
+    }
+  },
+  "playlists": {
+    "description": "Playlisturile comune ale serverului, gestionate de DJ",
+    "nameOption": "Playlist de server",
+    "newNameOption": "Numele noului playlist de server",
+    "needDj": "Doar DJ-ii și adminii serverului pot modifica playlisturile serverului.",
+    "notFound": "Nu există niciun playlist de server numit **{name}**.",
+    "limitReached": "Serverul a atins numărul maxim de playlisturi. Șterge mai întâi unul.",
+    "exists": "Există deja un playlist de server numit **{name}**.",
+    "created": "Playlistul de server **{name}** a fost creat. Adaugă melodii cu /playlists add sau /playlists save.",
+    "saved": "Coada ({count} melodii) a fost salvată ca playlist de server **{name}**.",
+    "full": "Playlistul e plin.",
+    "renamed": "**{old}** a fost redenumit în **{name}**.",
+    "deleted": "Playlistul de server **{name}** a fost șters.",
+    "imported": "Am importat **{count}** melodii în playlistul de server **{name}**.",
+    "copied": "Copiat în colecțiile tale ca **{name}** ({count} melodii).",
+    "list": {
+      "description": "Afișează playlisturile serverului",
+      "title": "📁 Playlisturile serverului",
+      "empty": "Serverul nu are încă playlisturi. DJ-ii pot crea unul cu /playlists create sau /playlists save."
+    },
+    "view": {
+      "description": "Arată melodiile unui playlist de server"
+    },
+    "play": {
+      "description": "Adaugă în coadă un playlist de server",
+      "nextOption": "Redă-l imediat după melodia curentă"
+    },
+    "create": {
+      "description": "Creează un playlist de server gol (DJ)"
+    },
+    "save": {
+      "description": "Salvează coada curentă ca playlist de server (DJ)"
+    },
+    "add": {
+      "description": "Adaugă melodia curentă sau una aleasă de tine într-un playlist de server (DJ)",
+      "songOption": "Numele sau linkul melodiei (implicit: melodia care rulează acum)",
+      "nothing": "Nu rulează nimic. Numește o melodie de adăugat."
+    },
+    "remove": {
+      "description": "Elimină o melodie dintr-un playlist de server (DJ)"
+    },
+    "rename": {
+      "description": "Redenumește un playlist de server (DJ)"
+    },
+    "delete": {
+      "description": "Șterge un playlist de server (DJ)"
+    },
+    "import": {
+      "description": "Importă un playlist Spotify, YouTube, Deezer sau Apple Music ca playlist de server (DJ)"
+    },
+    "copy": {
+      "description": "Copiază un playlist de server în colecțiile tale",
+      "asOption": "Numele copiei tale (implicit: același nume)"
+    },
+    "log": {
+      "create": "a creat playlistul de server {name}",
+      "save": "a salvat coada ca playlistul de server {name}",
+      "delete": "a șters playlistul de server {name}",
+      "import": "a importat playlistul de server {name}"
+    }
+  },
+  "library": {
+    "description": "Playlisturile tale de pe Spotify și YouTube și melodiile apreciate",
+    "playlistOption": "Unul dintre playlisturile tale (conectează conturile în dashboard)",
+    "accounts": {
+      "description": "Vezi și gestionează conturile de muzică conectate"
+    },
+    "play": {
+      "description": "Redă unul dintre playlisturile tale sau melodiile apreciate"
+    },
+    "import": {
+      "description": "Salvează unul dintre playlisturile tale în colecțiile tale"
+    },
+    "likedSpotify": "Melodii apreciate",
+    "likedYouTube": "Videoclipuri apreciate",
+    "connect": "Conectează un cont",
+    "reconnect": "Conectează din nou",
+    "manage": "Gestionează conexiunile",
+    "notLinked": "neconectat",
+    "notConnected": "Mai întâi conectează-ți contul {service} în dashboard.",
+    "revoked": "Accesul la contul tău {service} a fost eliminat. Conectează-l din nou în dashboard.",
+    "forbidden": "{service} nu a permis citirea acelui playlist. Pot fi redate doar playlisturile pe care le deții sau la care colaborezi.",
+    "failed": "Nu ne-am putut conecta la contul tău de muzică acum. Te rugăm să încerci din nou.",
+    "pickFromList": "Alege unul dintre playlisturile sugerate.",
+    "empty": "Acel playlist nu are melodii care pot fi redate.",
+    "imported": "Am importat **{count}** melodii în colecția ta **{name}**.",
+    "howTo": "Conectează-ți conturile în dashboard, apoi folosește /library play ca să redai playlisturile tale și melodiile apreciate."
   }
 }

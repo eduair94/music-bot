@@ -684,7 +684,38 @@
     "noQueue": "Tidak ada lagu yang diputar untuk dijadikan dasar radio.",
     "success": "📻 Radio dimulai berdasarkan **{title}**",
     "error": "Gagal memulai radio. Silakan coba lagi.",
-    "description": "Mulai radio tanpa henti dari lagu atau artis"
+    "description": "Radio tanpa henti dari lagu, stasiun genre, atau prompt AI DJ",
+    "optionSong": "Lagu atau artis untuk memulai",
+    "optionStation": "Stasiun genre",
+    "optionPrompt": "AI DJ: jelaskan musiknya (misal: jazz malam hujan)",
+    "pickOne": "Pilih salah satu saja: lagu, stasiun, atau prompt.",
+    "started": "Radio dimulai dari **{title}**. Lagu-lagu serupa akan terus diputar.",
+    "stationStarted": "Radio **{station}** aktif. Lagu dengan gaya itu akan terus diputar.",
+    "aiStarted": "Radio AI DJ aktif: **{title}**. Lagu baru akan terus datang sesuai prompt-mu.",
+    "aiPick": "dipilih oleh AI DJ",
+    "panelAi": "Radio AI DJ",
+    "panelStation": "Radio {station}",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Elektronik",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klasik",
+      "eighties": "Hits 80-an",
+      "twothousands": "Hits 2000-an",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Putar lagu yang baru-baru ini diputar",
@@ -1133,9 +1164,9 @@
       "title": "Keuntungan premium",
       "intro": "Founder terbatas hanya {spots} slot dan harganya terkunci.",
       "freeName": "Gratis — {price}",
-      "freePerks": "Audio 128kbps\nAntrean, playlist, dan lirik\nSemua perintah",
       "founderName": "Founder / Beta Tester — {price}/bulan",
-      "founderPerks": "Audio 256kbps\nFilter audio\nMode 24/7\nRole Founder dan dukungan langsung"
+      "freePerks": "Audio 128kbps\nAntrean, playlist, dan lirik\nUji coba AI DJ: 3 permintaan per hari per server\nSemua perintah",
+      "founderPerks": "Audio 256kbps\nAI DJ: 50 playlist atau radio per hari per server, radio AI lebih panjang\nFilter audio\nMode 24/7\nRole Founder dan dukungan langsung"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Tanpa Batas Durasi",
       "vote_features": "Voting Fitur",
       "founder_role": "Role Founder",
-      "direct_support": "Dukungan Langsung"
+      "direct_support": "Dukungan Langsung",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Vote skip",
       "grab": "Menyimpan lagu",
       "insert": "Menyisipkan lagu",
-      "removecurrent": "Menghapus lagu saat ini"
+      "removecurrent": "Menghapus lagu saat ini",
+      "playlists": "memperbarui playlist server"
     },
     "detail": {
       "on": "Aktif",
@@ -2095,5 +2128,124 @@
       "more": "dan {count} lainnya",
       "card": "Kartu pemutar dengan tombol ada di {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlist dan radio yang dibuat dari deskripsi",
+    "promptOption": "Jelaskan musiknya: suasana, genre, era, artis, acara…",
+    "playlist": {
+      "description": "Buat playlist dari deskripsi dan putar",
+      "countOption": "Berapa lagu (5-50, default 20)",
+      "playOption": "Masukkan ke antrean sekarang (default: ya)",
+      "nextOption": "Putar tepat setelah lagu saat ini"
+    },
+    "radio": {
+      "description": "Radio AI tanpa henti dari deskripsi"
+    },
+    "notInVoice": "Masuk ke voice channel dulu, atau atur play:False untuk hanya melihat playlist.",
+    "trialUsed": "Server ini sudah memakai {limit} permintaan AI DJ gratis hari ini. Akan direset pukul 00:00 UTC.",
+    "dailyLimit": "Server ini sudah mencapai batas harian {limit} permintaan AI DJ. Akan direset pukul 00:00 UTC.",
+    "trialNote": "Uji coba gratis: sisa {left} dari {limit} permintaan AI DJ hari ini di server ini. Founder membuka lebih banyak permintaan dan radio AI yang lebih lama.",
+    "unconfigured": "AI DJ belum diatur di bot ini.",
+    "busy": "AI DJ sedang sibuk. Coba lagi dalam beberapa menit.",
+    "refused": "AI DJ tidak bisa membuat playlist untuk itu. Coba jelaskan musiknya dengan cara lain.",
+    "failed": "AI DJ gagal membuat playlist itu. Silakan coba lagi.",
+    "expired": "Playlist ini sudah tidak tersedia. Buat yang baru dengan /ai playlist.",
+    "saved": "Disimpan ke koleksimu sebagai **{name}**. Putar kapan saja dengan /collections load.",
+    "savedServer": "Disimpan sebagai playlist server **{name}**. Siapa pun bisa memutarnya dengan /playlists play.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…dan {count} lagi",
+      "play": "Putar",
+      "save": "Simpan ke koleksiku",
+      "saveServer": "Simpan sebagai playlist server"
+    }
+  },
+  "playlists": {
+    "description": "Playlist bersama server, dikelola oleh DJ",
+    "nameOption": "Playlist server",
+    "newNameOption": "Nama untuk playlist server baru",
+    "needDj": "Hanya DJ dan admin server yang bisa mengubah playlist server.",
+    "notFound": "Tidak ada playlist server bernama **{name}**.",
+    "limitReached": "Server ini sudah mencapai jumlah maksimum playlist. Hapus salah satu dulu.",
+    "exists": "Playlist server bernama **{name}** sudah ada.",
+    "created": "Playlist server **{name}** dibuat. Tambahkan lagu dengan /playlists add atau /playlists save.",
+    "saved": "Antrean ({count} lagu) disimpan sebagai playlist server **{name}**.",
+    "full": "Playlist ini sudah penuh.",
+    "renamed": "**{old}** diganti namanya menjadi **{name}**.",
+    "deleted": "Playlist server **{name}** dihapus.",
+    "imported": "**{count}** lagu diimpor ke playlist server **{name}**.",
+    "copied": "Disalin ke koleksimu sebagai **{name}** ({count} lagu).",
+    "list": {
+      "description": "Tampilkan daftar playlist server",
+      "title": "📁 Playlist server",
+      "empty": "Server ini belum punya playlist. DJ bisa membuatnya dengan /playlists create atau /playlists save."
+    },
+    "view": {
+      "description": "Tampilkan lagu-lagu di playlist server"
+    },
+    "play": {
+      "description": "Masukkan playlist server ke antrean",
+      "nextOption": "Putar tepat setelah lagu saat ini"
+    },
+    "create": {
+      "description": "Buat playlist server kosong (DJ)"
+    },
+    "save": {
+      "description": "Simpan antrean saat ini sebagai playlist server (DJ)"
+    },
+    "add": {
+      "description": "Tambahkan lagu saat ini, atau lagu yang kamu sebut, ke playlist server (DJ)",
+      "songOption": "Nama lagu atau link (default: lagu yang sedang diputar)",
+      "nothing": "Tidak ada yang diputar. Sebutkan lagu yang ingin ditambahkan."
+    },
+    "remove": {
+      "description": "Hapus lagu dari playlist server (DJ)"
+    },
+    "rename": {
+      "description": "Ganti nama playlist server (DJ)"
+    },
+    "delete": {
+      "description": "Hapus playlist server (DJ)"
+    },
+    "import": {
+      "description": "Impor playlist Spotify, YouTube, Deezer, atau Apple Music sebagai playlist server (DJ)"
+    },
+    "copy": {
+      "description": "Salin playlist server ke koleksimu sendiri",
+      "asOption": "Nama untuk salinanmu (default: nama yang sama)"
+    },
+    "log": {
+      "create": "membuat playlist server {name}",
+      "save": "menyimpan antrean sebagai playlist server {name}",
+      "delete": "menghapus playlist server {name}",
+      "import": "mengimpor playlist server {name}"
+    }
+  },
+  "library": {
+    "description": "Playlist dan lagu yang kamu sukai dari Spotify dan YouTube milikmu",
+    "playlistOption": "Salah satu playlist kamu (hubungkan akun di dashboard)",
+    "accounts": {
+      "description": "Lihat dan kelola akun musik yang terhubung"
+    },
+    "play": {
+      "description": "Putar salah satu playlist kamu atau lagu yang kamu sukai"
+    },
+    "import": {
+      "description": "Simpan salah satu playlist kamu ke koleksimu"
+    },
+    "likedSpotify": "Lagu yang Disukai",
+    "likedYouTube": "Video yang disukai",
+    "connect": "Hubungkan akun",
+    "reconnect": "Hubungkan lagi",
+    "manage": "Kelola koneksi",
+    "notLinked": "belum terhubung",
+    "notConnected": "Hubungkan dulu akun {service} kamu di dashboard.",
+    "revoked": "Akses ke akun {service} kamu telah dicabut. Hubungkan lagi di dashboard.",
+    "forbidden": "{service} tidak mengizinkan membaca playlist itu. Hanya playlist milikmu atau yang kamu ikut kolaborasi yang bisa diputar.",
+    "failed": "Tidak bisa menghubungi akun musikmu saat ini. Coba lagi ya.",
+    "pickFromList": "Pilih salah satu playlist yang disarankan.",
+    "empty": "Playlist itu tidak punya lagu yang bisa diputar.",
+    "imported": "Berhasil mengimpor **{count}** lagu ke koleksi **{name}** kamu.",
+    "howTo": "Hubungkan akun di dashboard, lalu gunakan /library play untuk memutar playlist dan lagu yang kamu sukai."
   }
 }

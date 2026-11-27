@@ -60,7 +60,7 @@ const FORWARDED = new Set([
 /** Read-only commands answered from that instance's playback state. */
 const INFO = new Set(["queue", "nowplaying"]);
 /** Commands whose play request may be dispatched to another instance. */
-const PLAY = new Set(["play", "playnext", "playnow", "radio", "search"]);
+const PLAY = new Set(["play", "playnext", "playnow", "radio", "search", "ai"]);
 
 const ACTION_LOG: Partial<Record<string, ActionType>> = {
   skip: "skip", pause: "pause", resume: "resume", stop: "stop", volume: "volume_change", loop: "loop",

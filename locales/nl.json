@@ -684,7 +684,38 @@
     "noQueue": "Er speelt geen nummer om de radio op te baseren.",
     "success": "📻 Radio gestart op basis van **{title}**",
     "error": "Radio starten mislukt. Probeer het opnieuw.",
-    "description": "Start een eindeloze radio op basis van een nummer of artiest"
+    "description": "Eindeloze radio vanaf een nummer, een genrezender of een AI DJ-prompt",
+    "optionSong": "Nummer of artiest om mee te beginnen",
+    "optionStation": "Een genrezender",
+    "optionPrompt": "AI DJ: beschrijf de muziek (bijv. jazz voor een regenachtige nacht)",
+    "pickOne": "Kies er maar één: een nummer, een zender of een prompt.",
+    "started": "Radio gestart vanaf **{title}**. Er blijven vergelijkbare nummers spelen.",
+    "stationStarted": "**{station}**-radio staat aan. Er blijven nummers in die stijl spelen.",
+    "aiStarted": "AI DJ-radio staat aan: **{title}**. Er blijven nieuwe nummers komen voor je prompt.",
+    "aiPick": "gekozen door de AI DJ",
+    "panelAi": "AI DJ-radio",
+    "panelStation": "{station}-radio",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Elektronisch",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klassiek",
+      "eighties": "Hits uit de jaren 80",
+      "twothousands": "Hits uit de jaren 2000",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Speel recent afgespeelde nummers",
@@ -1133,9 +1164,9 @@
       "title": "Premium-voordelen",
       "intro": "Founder is beperkt tot {spots} plekken en de prijs ligt vast.",
       "freeName": "Gratis — {price}",
-      "freePerks": "128kbps audio\nWachtrij, afspeellijsten en songteksten\nAlle commando's",
       "founderName": "Founder / Bètatester — {price}/maand",
-      "founderPerks": "256kbps audio\nAudiofilters\n24/7-modus\nFounder-rol en directe support"
+      "freePerks": "128kbps audio\nWachtrij, playlists en songteksten\nAI DJ-proefversie: 3 verzoeken per dag per server\nAlle commando's",
+      "founderPerks": "256kbps audio\nAI DJ: 50 playlists of radio's per dag per server, langere AI-radio\nAudiofilters\n24/7-modus\nFounder-rol en directe support"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Geen duurlimiet",
       "vote_features": "Stemmen op functies",
       "founder_role": "Founder-rol",
-      "direct_support": "Directe support"
+      "direct_support": "Directe support",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Overgeslagen via stemming",
       "grab": "Nummer opgeslagen",
       "insert": "Nummer ingevoegd",
-      "removecurrent": "Huidig nummer verwijderd"
+      "removecurrent": "Huidig nummer verwijderd",
+      "playlists": "heeft de serverafspeellijsten bijgewerkt"
     },
     "detail": {
       "on": "Aan",
@@ -2095,5 +2128,124 @@
       "more": "en nog {count}",
       "card": "De spelerkaart met de knoppen staat in {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: afspeellijsten en radio op basis van een beschrijving",
+    "promptOption": "Beschrijf de muziek: sfeer, genre, tijdperk, artiesten, gelegenheid…",
+    "playlist": {
+      "description": "Maak een afspeellijst op basis van een beschrijving en speel hem af",
+      "countOption": "Hoeveel nummers (5-50, standaard 20)",
+      "playOption": "Nu in de wachtrij zetten (standaard: ja)",
+      "nextOption": "Direct na het huidige nummer afspelen"
+    },
+    "radio": {
+      "description": "Eindeloze AI-radio op basis van een beschrijving"
+    },
+    "notInVoice": "Ga eerst in een spraakkanaal, of zet play:False om alleen de afspeellijst te zien.",
+    "trialUsed": "Deze server heeft zijn {limit} gratis AI DJ-verzoeken voor vandaag gebruikt. Ze worden om 00:00 UTC gereset.",
+    "dailyLimit": "Deze server heeft de daglimiet van {limit} AI DJ-verzoeken bereikt. Die wordt om 00:00 UTC gereset.",
+    "trialNote": "Gratis proef: nog {left} van {limit} AI DJ-verzoeken over vandaag op deze server. Founder ontgrendelt meer en langere AI-radio.",
+    "unconfigured": "De AI DJ is niet ingesteld op deze bot.",
+    "busy": "De AI DJ is nu even druk. Probeer het over een paar minuten opnieuw.",
+    "refused": "De AI DJ kon daar geen afspeellijst voor maken. Probeer de muziek anders te beschrijven.",
+    "failed": "De AI DJ kon die afspeellijst niet maken. Probeer het opnieuw.",
+    "expired": "Deze afspeellijst is niet meer beschikbaar. Maak een nieuwe met /ai playlist.",
+    "saved": "Opgeslagen in je collecties als **{name}**. Speel hem wanneer je wilt af met /collections load.",
+    "savedServer": "Opgeslagen als serverafspeellijst **{name}**. Iedereen kan hem afspelen met /playlists play.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…en nog {count}",
+      "play": "Afspelen",
+      "save": "Opslaan in mijn collecties",
+      "saveServer": "Opslaan als serverafspeellijst"
+    }
+  },
+  "playlists": {
+    "description": "De gedeelde afspeellijsten van de server, beheerd door DJ's",
+    "nameOption": "Serverafspeellijst",
+    "newNameOption": "Naam voor de nieuwe serverafspeellijst",
+    "needDj": "Alleen DJ's en serverbeheerders kunnen de serverafspeellijsten wijzigen.",
+    "notFound": "Er is geen serverafspeellijst met de naam **{name}**.",
+    "limitReached": "Deze server heeft het maximale aantal afspeellijsten bereikt. Verwijder er eerst een.",
+    "exists": "Er bestaat al een serverafspeellijst met de naam **{name}**.",
+    "created": "Serverafspeellijst **{name}** aangemaakt. Voeg nummers toe met /playlists add of /playlists save.",
+    "saved": "Wachtrij ({count} nummers) opgeslagen als serverafspeellijst **{name}**.",
+    "full": "Deze afspeellijst is vol.",
+    "renamed": "**{old}** hernoemd naar **{name}**.",
+    "deleted": "Serverafspeellijst **{name}** verwijderd.",
+    "imported": "**{count}** nummers geïmporteerd in serverafspeellijst **{name}**.",
+    "copied": "Gekopieerd naar je collecties als **{name}** ({count} nummers).",
+    "list": {
+      "description": "Toon de serverafspeellijsten",
+      "title": "📁 Serverafspeellijsten",
+      "empty": "Deze server heeft nog geen afspeellijsten. DJ's kunnen er een maken met /playlists create of /playlists save."
+    },
+    "view": {
+      "description": "Toon de nummers van een serverafspeellijst"
+    },
+    "play": {
+      "description": "Zet een serverafspeellijst in de wachtrij",
+      "nextOption": "Direct na het huidige nummer afspelen"
+    },
+    "create": {
+      "description": "Maak een lege serverafspeellijst (DJ's)"
+    },
+    "save": {
+      "description": "Sla de huidige wachtrij op als serverafspeellijst (DJ's)"
+    },
+    "add": {
+      "description": "Voeg het huidige nummer, of een nummer naar keuze, toe aan een serverafspeellijst (DJ's)",
+      "songOption": "Naam of link van het nummer (standaard: het nummer dat nu speelt)",
+      "nothing": "Er speelt niets. Geef een nummer op om toe te voegen."
+    },
+    "remove": {
+      "description": "Verwijder een nummer uit een serverafspeellijst (DJ's)"
+    },
+    "rename": {
+      "description": "Hernoem een serverafspeellijst (DJ's)"
+    },
+    "delete": {
+      "description": "Verwijder een serverafspeellijst (DJ's)"
+    },
+    "import": {
+      "description": "Importeer een Spotify-, YouTube-, Deezer- of Apple Music-afspeellijst als serverafspeellijst (DJ's)"
+    },
+    "copy": {
+      "description": "Kopieer een serverafspeellijst naar je eigen collecties",
+      "asOption": "Naam voor je kopie (standaard: dezelfde naam)"
+    },
+    "log": {
+      "create": "heeft de serverafspeellijst {name} aangemaakt",
+      "save": "heeft de wachtrij opgeslagen als serverafspeellijst {name}",
+      "delete": "heeft de serverafspeellijst {name} verwijderd",
+      "import": "heeft de serverafspeellijst {name} geïmporteerd"
+    }
+  },
+  "library": {
+    "description": "Je eigen Spotify- en YouTube-playlists en gelikete nummers",
+    "playlistOption": "Een van je playlists (koppel accounts op het dashboard)",
+    "accounts": {
+      "description": "Bekijk en beheer je gekoppelde muziekaccounts"
+    },
+    "play": {
+      "description": "Speel een van je playlists of je gelikete nummers af"
+    },
+    "import": {
+      "description": "Sla een van je playlists op in je collecties"
+    },
+    "likedSpotify": "Gelikete nummers",
+    "likedYouTube": "Gelikete video's",
+    "connect": "Account koppelen",
+    "reconnect": "Opnieuw koppelen",
+    "manage": "Koppelingen beheren",
+    "notLinked": "niet gekoppeld",
+    "notConnected": "Koppel eerst je {service}-account op het dashboard.",
+    "revoked": "De toegang tot je {service}-account is ingetrokken. Koppel het opnieuw op het dashboard.",
+    "forbidden": "{service} gaf geen toestemming om die playlist te lezen. Alleen playlists die van jou zijn of waaraan je meewerkt kunnen worden afgespeeld.",
+    "failed": "Je muziekaccount is nu niet bereikbaar. Probeer het opnieuw.",
+    "pickFromList": "Kies een van de voorgestelde playlists.",
+    "empty": "Die playlist heeft geen afspeelbare nummers.",
+    "imported": "**{count}** nummers geïmporteerd in je collectie **{name}**.",
+    "howTo": "Koppel accounts op het dashboard en gebruik daarna /library play om je eigen playlists en gelikete nummers af te spelen."
   }
 }

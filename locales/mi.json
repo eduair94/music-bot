@@ -684,7 +684,38 @@
     "noQueue": "Kāore he ara e whakatangihia ana hei tūāpapa mō te reo irirangi.",
     "success": "📻 Kua tīmata te reo irirangi e hāngai ana ki **{title}**",
     "error": "I rahua te tīmata i te reo irirangi. Whakamātauria anō.",
-    "description": "Tīmatahia he reo irirangi mutunga-kore mai i tētahi waiata, kaiwaiata rānei"
+    "description": "He reo irirangi mutunga-kore mai i tētahi waiata, i tētahi teihana momo, i tētahi tono rānei ki te AI DJ",
+    "optionSong": "Te waiata, te kaiwaiata rānei hei tīmatanga",
+    "optionStation": "He teihana momo puoro",
+    "optionPrompt": "AI DJ: whakaahuatia te puoro (hei tauira: jazz pō ua)",
+    "pickOne": "Kōwhiria kotahi anake: he waiata, he teihana, he tono rānei.",
+    "started": "Kua tīmata te reo irirangi mai i **{title}**. Ka whakatangihia tonutia ngā waiata e hāngai ana.",
+    "stationStarted": "Kua kā te reo irirangi **{station}**. Ka whakatangihia tonutia ngā waiata o taua momo.",
+    "aiStarted": "Kua kā te reo irirangi AI DJ: **{title}**. Ka tae tonu mai he waiata hou mō tō tono.",
+    "aiPick": "i kōwhiria e te AI DJ",
+    "panelAi": "Reo irirangi AI DJ",
+    "panelStation": "Reo irirangi {station}",
+    "panelSong": "Reo irirangi",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Hiko",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Puoro Tawhito",
+      "eighties": "Ngā rongonui o ngā tau 80",
+      "twothousands": "Ngā rongonui o ngā tau 2000",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Whakatangihia ngā ara i whakatangihia tata nei",
@@ -1133,9 +1164,9 @@
       "title": "Ngā painga premium",
       "intro": "E {spots} noa iho ngā tūranga Founder, ā, kua raka te utu.",
       "freeName": "Kore Utu — {price}",
-      "freePerks": "Oro 128kbps\nRārangi tatari, rārangi waiata me ngā kupu waiata\nIa whakahau",
       "founderName": "Founder / Kaiwhakamātau Beta — {price}/marama",
-      "founderPerks": "Oro 256kbps\nTātari oro\nAratau 24/7\nTūranga Founder me te tautoko tōtika"
+      "freePerks": "Ororongo 128kbps\nRārangi tatari, rārangi waiata me ngā kupu waiata\nWhakamātautau AI DJ: 3 tono ia rā mō ia tūmau\nNgā tono katoa",
+      "founderPerks": "Ororongo 256kbps\nAI DJ: 50 rārangi waiata, reo irirangi rānei ia rā mō ia tūmau, reo irirangi AI roa ake\nNgā tātari ororongo\nAratau 24/7\nTūranga Founder me te tautoko tōtika"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Kāore he Tepe Roanga",
       "vote_features": "Pōti mō ngā Āhuatanga",
       "founder_role": "Tūranga Founder",
-      "direct_support": "Tautoko Tōtika"
+      "direct_support": "Tautoko Tōtika",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "I pōti kia pekehia",
       "grab": "I tīkina te waiata",
       "insert": "I kōkuhuna te waiata",
-      "removecurrent": "I tangohia te waiata o nāianei"
+      "removecurrent": "I tangohia te waiata o nāianei",
+      "playlists": "i whakahou i ngā rārangi waiata o te tūmau"
     },
     "detail": {
       "on": "Kā",
@@ -2095,5 +2128,124 @@
       "more": "me ētahi atu {count}",
       "card": "Kei {channel} te kāri pūrei me ngā pātene."
     }
+  },
+  "ai": {
+    "description": "AI DJ: he rārangi waiata me te reo irirangi i hangaia mai i tētahi whakaahuatanga",
+    "promptOption": "Whakaahuatia te puoro: te wairua, te momo, te wā, ngā kaiwaiata, te kaupapa…",
+    "playlist": {
+      "description": "Hangaia he rārangi waiata mai i tētahi whakaahuatanga, ka whakatangi ai",
+      "countOption": "E hia ngā waiata (5-50, taunoa 20)",
+      "playOption": "Tāpiri ki te rārangi ināianei (taunoa: āe)",
+      "nextOption": "Whakatangihia i muri tonu i te waiata o nāianei"
+    },
+    "radio": {
+      "description": "He reo irirangi AI mutunga-kore mō tētahi whakaahuatanga"
+    },
+    "notInVoice": "Hono atu ki tētahi hongere reo i te tuatahi, tautuhia rānei te play:False kia kite noa i te rārangi waiata.",
+    "trialUsed": "Kua pau i tēnei tūmau āna tono AI DJ kore utu {limit} mō tēnei rā. Ka tautuhi anō ā te 00:00 UTC.",
+    "dailyLimit": "Kua tae tēnei tūmau ki te tepe o te rā, {limit} ngā tono AI DJ. Ka tautuhi anō ā te 00:00 UTC.",
+    "trialNote": "Whakamātautau kore utu: {left} o te {limit} tono AI DJ e toe ana i tēnei rā ki tēnei tūmau. Mā Founder e huaki ētahi atu, me te reo irirangi AI roa ake.",
+    "unconfigured": "Kāore anō te AI DJ kia whakaritea ki tēnei bot.",
+    "busy": "Kei te pukumahi te AI DJ ināianei. Whakamātauria anō ā ētahi meneti.",
+    "refused": "Kāore i taea e te AI DJ te hanga rārangi waiata mō tērā. Whakamātauria kia rerekē te whakaahua i te puoro.",
+    "failed": "Kāore i taea e te AI DJ te hanga i taua rārangi waiata. Tēnā whakamātauria anō.",
+    "expired": "Kua kore e wātea tēnei rārangi waiata. Hangaia he mea hou mā /ai playlist.",
+    "saved": "Kua tiakina ki ō kohinga hei **{name}**. Whakatangihia i ngā wā katoa mā /collections load.",
+    "savedServer": "Kua tiakina hei rārangi waiata tūmau **{name}**. Ka taea e te katoa te whakatangi mā /playlists play.",
+    "card": {
+      "prompt": "Tono: {prompt}",
+      "more": "…me ētahi atu {count}",
+      "play": "Whakatangihia",
+      "save": "Tiakina ki ōku kohinga",
+      "saveServer": "Tiakina hei rārangi waiata tūmau"
+    }
+  },
+  "playlists": {
+    "description": "Ngā rārangi waiata tiritahi o te tūmau, e whakahaeretia ana e ngā DJ",
+    "nameOption": "Rārangi waiata tūmau",
+    "newNameOption": "Te ingoa mō te rārangi waiata tūmau hou",
+    "needDj": "Mā ngā DJ me ngā kaiwhakahaere tūmau anake e whakarerekē ngā rārangi waiata tūmau.",
+    "notFound": "Kāore he rārangi waiata tūmau ko **{name}** te ingoa.",
+    "limitReached": "Kua tae tēnei tūmau ki te nui rawa o ngā rārangi waiata. Mukua tētahi i te tuatahi.",
+    "exists": "Kua puta kē he rārangi waiata tūmau ko **{name}** te ingoa.",
+    "created": "Kua hangaia te rārangi waiata tūmau **{name}**. Tāpirihia he waiata mā /playlists add, mā /playlists save rānei.",
+    "saved": "Kua tiakina te rārangi ({count} waiata) hei rārangi waiata tūmau **{name}**.",
+    "full": "Kua kī tēnei rārangi waiata.",
+    "renamed": "Kua tapaina anō a **{old}** hei **{name}**.",
+    "deleted": "Kua mukua te rārangi waiata tūmau **{name}**.",
+    "imported": "Kua kawemaia ngā waiata **{count}** ki te rārangi waiata tūmau **{name}**.",
+    "copied": "Kua tāruatia ki ō kohinga hei **{name}** ({count} waiata).",
+    "list": {
+      "description": "Whakarārangitia ngā rārangi waiata tūmau",
+      "title": "📁 Ngā rārangi waiata tūmau",
+      "empty": "Kāore anō he rārangi waiata i tēnei tūmau. Ka taea e ngā DJ te hanga mā /playlists create, mā /playlists save rānei."
+    },
+    "view": {
+      "description": "Whakaaturia ngā waiata o tētahi rārangi waiata tūmau"
+    },
+    "play": {
+      "description": "Tāpiri i tētahi rārangi waiata tūmau ki te rārangi",
+      "nextOption": "Whakatangihia i muri tonu i te waiata o nāianei"
+    },
+    "create": {
+      "description": "Hangaia he rārangi waiata tūmau kau (DJ)"
+    },
+    "save": {
+      "description": "Tiakina te rārangi o nāianei hei rārangi waiata tūmau (DJ)"
+    },
+    "add": {
+      "description": "Tāpiri i te waiata o nāianei, i tētahi waiata rānei ka whakaingoatia e koe, ki tētahi rārangi waiata tūmau (DJ)",
+      "songOption": "Ingoa waiata, hono rānei (taunoa: te waiata e whakatangihia ana)",
+      "nothing": "Kāore he mea e whakatangihia ana. Whakaingoatia he waiata hei tāpiri."
+    },
+    "remove": {
+      "description": "Tango i tētahi waiata i tētahi rārangi waiata tūmau (DJ)"
+    },
+    "rename": {
+      "description": "Tapa anō i tētahi rārangi waiata tūmau (DJ)"
+    },
+    "delete": {
+      "description": "Muku i tētahi rārangi waiata tūmau (DJ)"
+    },
+    "import": {
+      "description": "Kawemai i tētahi rārangi waiata Spotify, YouTube, Deezer, Apple Music rānei hei rārangi waiata tūmau (DJ)"
+    },
+    "copy": {
+      "description": "Tārua i tētahi rārangi waiata tūmau ki ō ake kohinga",
+      "asOption": "Te ingoa mō tō tārua (taunoa: he ingoa ōrite)"
+    },
+    "log": {
+      "create": "i hanga i te rārangi waiata tūmau {name}",
+      "save": "i tiaki i te rārangi hei rārangi waiata tūmau {name}",
+      "delete": "i muku i te rārangi waiata tūmau {name}",
+      "import": "i kawemai i te rārangi waiata tūmau {name}"
+    }
+  },
+  "library": {
+    "description": "Ō ake rārangi waiata Spotify me YouTube, me ō waiata e paingia ana",
+    "playlistOption": "Tētahi o ō rārangi waiata (hono atu i ō pūkete ki te papatohu)",
+    "accounts": {
+      "description": "Tirohia, whakahaeretia hoki ō pūkete puoro kua honoa"
+    },
+    "play": {
+      "description": "Whakatangihia tētahi o ō rārangi waiata, ō waiata e paingia ana rānei"
+    },
+    "import": {
+      "description": "Tiakina tētahi o ō rārangi waiata ki ō kohinga"
+    },
+    "likedSpotify": "Ngā Waiata e Paingia ana",
+    "likedYouTube": "Ngā ataata e paingia ana",
+    "connect": "Hono i tētahi pūkete",
+    "reconnect": "Hono anō",
+    "manage": "Whakahaere hononga",
+    "notLinked": "kāore i honoa",
+    "notConnected": "Me hono tuatahi i tō pūkete {service} ki te papatohu.",
+    "revoked": "Kua tangohia te uru ki tō pūkete {service}. Hono anō ki te papatohu.",
+    "forbidden": "Kāore a {service} i whakaae kia pānuitia taua rārangi waiata. Ko ngā rārangi waiata anake nāu, e mahi tahi ana koe rānei, ka taea te whakatangi.",
+    "failed": "Kāore i taea te toro atu ki tō pūkete puoro i tēnei wā. Ngana anō.",
+    "pickFromList": "Kōwhiria tētahi o ngā rārangi waiata e tūtohua ana.",
+    "empty": "Kāore he waiata e taea ana te whakatangi i taua rārangi waiata.",
+    "imported": "Kua kawemaitia ngā waiata **{count}** ki tō kohinga **{name}**.",
+    "howTo": "Hono atu i ō pūkete ki te papatohu, kātahi ka whakamahi i te /library play hei whakatangi i ō ake rārangi waiata me ō waiata e paingia ana."
   }
 }

@@ -684,7 +684,38 @@
     "noQueue": "Es läuft kein Track, auf dem das Radio basieren könnte.",
     "success": "📻 Radio basierend auf **{title}** gestartet",
     "error": "Radio konnte nicht gestartet werden. Bitte versuch es erneut.",
-    "description": "Starte ein endloses Radio basierend auf einem Song oder Künstler"
+    "description": "Endlos-Radio aus einem Song, einem Genre-Sender oder einem KI-DJ-Prompt",
+    "optionSong": "Song oder Künstler als Startpunkt",
+    "optionStation": "Ein Genre-Sender",
+    "optionPrompt": "KI-DJ: Beschreib die Musik (z. B. Jazz für eine verregnete Nacht)",
+    "pickOne": "Wähl nur eins: einen Song, einen Sender oder einen Prompt.",
+    "started": "Radio gestartet mit **{title}**. Ähnliche Songs werden weiter abgespielt.",
+    "stationStarted": "**{station}**-Radio läuft. Songs in diesem Stil werden weiter abgespielt.",
+    "aiStarted": "KI-DJ-Radio läuft: **{title}**. Passend zu deinem Prompt kommen immer neue Songs.",
+    "aiPick": "vom KI-DJ ausgewählt",
+    "panelAi": "KI-DJ-Radio",
+    "panelStation": "{station}-Radio",
+    "panelSong": "Radio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-Hop",
+      "latin": "Latin / Reggaeton",
+      "rockes": "Rock en español",
+      "electronic": "Electronic",
+      "lofi": "Lo-Fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klassik",
+      "eighties": "80er-Hits",
+      "twothousands": "2000er-Hits",
+      "kpop": "K-Pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Spiele zuletzt gespielte Tracks ab",
@@ -1133,9 +1164,9 @@
       "title": "Premium-Vorteile",
       "intro": "Founder ist auf {spots} Plätze begrenzt und der Preis bleibt fest.",
       "freeName": "Free — {price}",
-      "freePerks": "128kbps Audio\nWarteschlange, Playlists und Songtexte\nAlle Befehle",
       "founderName": "Founder / Beta-Tester — {price}/Monat",
-      "founderPerks": "256kbps Audio\nAudiofilter\n24/7-Modus\nFounder-Rolle und direkter Support"
+      "freePerks": "128kbps Audio\nWarteschlange, Playlists und Songtexte\nAI-DJ-Testversion: 3 Anfragen pro Tag pro Server\nAlle Befehle",
+      "founderPerks": "256kbps Audio\nAI DJ: 50 Playlists oder Radios pro Tag pro Server, längeres AI-Radio\nAudiofilter\n24/7-Modus\nFounder-Rolle und direkter Support"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Keine Längenbegrenzung",
       "vote_features": "Über Funktionen abstimmen",
       "founder_role": "Founder-Rolle",
-      "direct_support": "Direkter Support"
+      "direct_support": "Direkter Support",
+      "ai_dj": "KI-DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Per Abstimmung übersprungen",
       "grab": "Track gespeichert",
       "insert": "Track eingefügt",
-      "removecurrent": "Aktuellen Track entfernt"
+      "removecurrent": "Aktuellen Track entfernt",
+      "playlists": "hat die Server-Playlists aktualisiert"
     },
     "detail": {
       "on": "An",
@@ -2095,5 +2128,124 @@
       "more": "und {count} weitere",
       "card": "Die Player-Karte mit den Buttons ist in {channel}."
     }
+  },
+  "ai": {
+    "description": "KI-DJ: Playlists und Radio aus einer Beschreibung",
+    "promptOption": "Beschreib die Musik: Stimmung, Genre, Ära, Künstler, Anlass…",
+    "playlist": {
+      "description": "Erstelle eine Playlist aus einer Beschreibung und spiel sie ab",
+      "countOption": "Wie viele Songs (5-50, Standard 20)",
+      "playOption": "Jetzt zur Warteschlange hinzufügen (Standard: ja)",
+      "nextOption": "Direkt nach dem aktuellen Song abspielen"
+    },
+    "radio": {
+      "description": "Endlos-KI-Radio zu einer Beschreibung"
+    },
+    "notInVoice": "Tritt zuerst einem Sprachkanal bei oder setze play:False, um nur die Playlist zu sehen.",
+    "trialUsed": "Dieser Server hat seine {limit} kostenlosen KI-DJ-Anfragen für heute verbraucht. Sie werden um 00:00 UTC zurückgesetzt.",
+    "dailyLimit": "Dieser Server hat das heutige Limit von {limit} KI-DJ-Anfragen erreicht. Es wird um 00:00 UTC zurückgesetzt.",
+    "trialNote": "Kostenlose Testversion: Noch {left} von {limit} KI-DJ-Anfragen heute auf diesem Server. Founder schaltet mehr und längeres KI-Radio frei.",
+    "unconfigured": "Der KI-DJ ist bei diesem Bot nicht eingerichtet.",
+    "busy": "Der KI-DJ ist gerade beschäftigt. Versuch es in ein paar Minuten noch mal.",
+    "refused": "Der KI-DJ konnte dafür keine Playlist erstellen. Versuch, die Musik anders zu beschreiben.",
+    "failed": "Der KI-DJ konnte diese Playlist nicht erstellen. Bitte versuch es noch mal.",
+    "expired": "Diese Playlist ist nicht mehr verfügbar. Erstelle eine neue mit /ai playlist.",
+    "saved": "In deinen Sammlungen als **{name}** gespeichert. Spiel sie jederzeit mit /collections load ab.",
+    "savedServer": "Als Server-Playlist **{name}** gespeichert. Jeder kann sie mit /playlists play abspielen.",
+    "card": {
+      "prompt": "Prompt: {prompt}",
+      "more": "…und {count} weitere",
+      "play": "Abspielen",
+      "save": "In meinen Sammlungen speichern",
+      "saveServer": "Als Server-Playlist speichern"
+    }
+  },
+  "playlists": {
+    "description": "Die gemeinsamen Playlists des Servers, verwaltet von DJs",
+    "nameOption": "Server-Playlist",
+    "newNameOption": "Name für die neue Server-Playlist",
+    "needDj": "Nur DJs und Server-Admins können die Server-Playlists ändern.",
+    "notFound": "Es gibt keine Server-Playlist namens **{name}**.",
+    "limitReached": "Dieser Server hat die maximale Anzahl an Playlists erreicht. Lösch zuerst eine.",
+    "exists": "Eine Server-Playlist namens **{name}** existiert bereits.",
+    "created": "Server-Playlist **{name}** erstellt. Füge Songs mit /playlists add oder /playlists save hinzu.",
+    "saved": "Warteschlange ({count} Songs) als Server-Playlist **{name}** gespeichert.",
+    "full": "Diese Playlist ist voll.",
+    "renamed": "**{old}** in **{name}** umbenannt.",
+    "deleted": "Server-Playlist **{name}** gelöscht.",
+    "imported": "**{count}** Songs in die Server-Playlist **{name}** importiert.",
+    "copied": "In deine Sammlungen als **{name}** kopiert ({count} Songs).",
+    "list": {
+      "description": "Server-Playlists auflisten",
+      "title": "📁 Server-Playlists",
+      "empty": "Dieser Server hat noch keine Playlists. DJs können eine mit /playlists create oder /playlists save erstellen."
+    },
+    "view": {
+      "description": "Zeigt die Songs einer Server-Playlist"
+    },
+    "play": {
+      "description": "Eine Server-Playlist zur Warteschlange hinzufügen",
+      "nextOption": "Direkt nach dem aktuellen Song abspielen"
+    },
+    "create": {
+      "description": "Leere Server-Playlist erstellen (DJs)"
+    },
+    "save": {
+      "description": "Aktuelle Warteschlange als Server-Playlist speichern (DJs)"
+    },
+    "add": {
+      "description": "Aktuellen Song oder einen genannten Song zu einer Server-Playlist hinzufügen (DJs)",
+      "songOption": "Songname oder Link (Standard: der aktuell laufende Song)",
+      "nothing": "Es läuft gerade nichts. Nenne einen Song zum Hinzufügen."
+    },
+    "remove": {
+      "description": "Song aus einer Server-Playlist entfernen (DJs)"
+    },
+    "rename": {
+      "description": "Server-Playlist umbenennen (DJs)"
+    },
+    "delete": {
+      "description": "Server-Playlist löschen (DJs)"
+    },
+    "import": {
+      "description": "Spotify-, YouTube-, Deezer- oder Apple Music-Playlist als Server-Playlist importieren (DJs)"
+    },
+    "copy": {
+      "description": "Server-Playlist in deine eigenen Sammlungen kopieren",
+      "asOption": "Name für deine Kopie (Standard: gleicher Name)"
+    },
+    "log": {
+      "create": "hat die Server-Playlist {name} erstellt",
+      "save": "hat die Warteschlange als Server-Playlist {name} gespeichert",
+      "delete": "hat die Server-Playlist {name} gelöscht",
+      "import": "hat die Server-Playlist {name} importiert"
+    }
+  },
+  "library": {
+    "description": "Deine eigenen Spotify- und YouTube-Playlists und Lieblingssongs",
+    "playlistOption": "Eine deiner Playlists (verbinde Konten im Dashboard)",
+    "accounts": {
+      "description": "Sieh dir deine verbundenen Musikkonten an und verwalte sie"
+    },
+    "play": {
+      "description": "Spiel eine deiner Playlists oder deine Lieblingssongs ab"
+    },
+    "import": {
+      "description": "Speichere eine deiner Playlists in deinen Sammlungen"
+    },
+    "likedSpotify": "Lieblingssongs",
+    "likedYouTube": "Videos mit „Mag ich“",
+    "connect": "Konto verbinden",
+    "reconnect": "Erneut verbinden",
+    "manage": "Verbindungen verwalten",
+    "notLinked": "nicht verbunden",
+    "notConnected": "Verbinde zuerst dein {service}-Konto im Dashboard.",
+    "revoked": "Der Zugriff auf dein {service}-Konto wurde entfernt. Verbinde es im Dashboard erneut.",
+    "forbidden": "{service} hat das Lesen dieser Playlist nicht erlaubt. Nur Playlists, die dir gehören oder an denen du mitarbeitest, können abgespielt werden.",
+    "failed": "Dein Musikkonto ist gerade nicht erreichbar. Bitte versuch es erneut.",
+    "pickFromList": "Wähle eine der vorgeschlagenen Playlists.",
+    "empty": "Diese Playlist enthält keine abspielbaren Songs.",
+    "imported": "**{count}** Songs in deine Sammlung **{name}** importiert.",
+    "howTo": "Verbinde Konten im Dashboard und nutze dann /library play, um deine eigenen Playlists und Lieblingssongs abzuspielen."
   }
 }

@@ -684,7 +684,38 @@
     "noQueue": "Nehraje žádná skladba, podle které by se dalo spustit rádio.",
     "success": "📻 Spuštěno rádio podle skladby **{title}**",
     "error": "Rádio se nepodařilo spustit. Zkus to prosím znovu.",
-    "description": "Spusť nekonečné rádio podle skladby nebo interpreta"
+    "description": "Nekonečné rádio podle písničky, žánrové stanice nebo zadání pro AI DJ",
+    "optionSong": "Písnička nebo interpret, od kterého začít",
+    "optionStation": "Žánrová stanice",
+    "optionPrompt": "AI DJ: popiš hudbu (např. jazz na deštivou noc)",
+    "pickOne": "Vyber jen jedno: písničku, stanici nebo zadání.",
+    "started": "Rádio spuštěno podle **{title}**. Budou se hrát podobné písničky.",
+    "stationStarted": "Rádio **{station}** běží. Budou se hrát písničky v tomhle stylu.",
+    "aiStarted": "Rádio AI DJ běží: **{title}**. Nové písničky podle tvého zadání budou přibývat.",
+    "aiPick": "vybral AI DJ",
+    "panelAi": "Rádio AI DJ",
+    "panelStation": "Rádio {station}",
+    "panelSong": "Rádio",
+    "station": {
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latino / Reggaeton",
+      "rockes": "Španělský rock",
+      "electronic": "Elektronika",
+      "lofi": "Lo-fi",
+      "chill": "Chill",
+      "rnb": "R&B",
+      "indie": "Indie",
+      "metal": "Metal",
+      "jazz": "Jazz",
+      "classical": "Klasika",
+      "eighties": "Hity 80. let",
+      "twothousands": "Hity 2000s",
+      "kpop": "K-pop",
+      "anime": "Anime",
+      "reggae": "Reggae"
+    }
   },
   "playrecent": {
     "description": "Přehrát nedávno hrané skladby",
@@ -1133,9 +1164,9 @@
       "title": "Premium výhody",
       "intro": "Founder je omezen na {spots} míst a cena je zafixovaná.",
       "freeName": "Free — {price}",
-      "freePerks": "Zvuk 128kbps\nFronta, playlisty a texty písní\nVšechny příkazy",
       "founderName": "Founder / Beta tester — {price}/měsíc",
-      "founderPerks": "Zvuk 256kbps\nZvukové filtry\nRežim 24/7\nRole Founder a přímá podpora"
+      "freePerks": "Zvuk 128kbps\nFronta, playlisty a texty písní\nZkušební AI DJ: 3 požadavky denně na server\nVšechny příkazy",
+      "founderPerks": "Zvuk 256kbps\nAI DJ: 50 playlistů nebo rádií denně na server, delší AI rádio\nZvukové filtry\nRežim 24/7\nRole Founder a přímá podpora"
     }
   },
   "boost": {
@@ -1617,7 +1648,8 @@
       "longer_songs": "Bez limitu délky",
       "vote_features": "Hlasování o funkcích",
       "founder_role": "Role Founder",
-      "direct_support": "Přímá podpora"
+      "direct_support": "Přímá podpora",
+      "ai_dj": "AI DJ"
     }
   },
   "queuemanage": {
@@ -1925,7 +1957,8 @@
       "voteskip": "Přeskočeno hlasováním",
       "grab": "Uložil(a) si skladbu",
       "insert": "Vložil(a) skladbu",
-      "removecurrent": "Odebral(a) aktuální skladbu"
+      "removecurrent": "Odebral(a) aktuální skladbu",
+      "playlists": "upravil(a) playlisty serveru"
     },
     "detail": {
       "on": "Zapnuto",
@@ -2095,5 +2128,124 @@
       "more": "a {count} dalších",
       "card": "Karta přehrávače s tlačítky je v {channel}."
     }
+  },
+  "ai": {
+    "description": "AI DJ: playlisty a rádio podle popisu",
+    "promptOption": "Popiš hudbu: nálada, žánr, období, interpreti, příležitost…",
+    "playlist": {
+      "description": "Vytvoř playlist podle popisu a pusť ho",
+      "countOption": "Kolik písniček (5–50, výchozí 20)",
+      "playOption": "Přidat hned do fronty (výchozí: ano)",
+      "nextOption": "Pustit hned po aktuální písničce"
+    },
+    "radio": {
+      "description": "Nekonečné AI rádio podle popisu"
+    },
+    "notInVoice": "Nejdřív se připoj do hlasového kanálu, nebo nastav play:False a playlist si jen prohlédni.",
+    "trialUsed": "Tento server dnes vyčerpal {limit} bezplatných požadavků na AI DJ. Obnoví se v 00:00 UTC.",
+    "dailyLimit": "Tento server dosáhl dnešního limitu {limit} požadavků na AI DJ. Obnoví se v 00:00 UTC.",
+    "trialNote": "Zkušební verze: na tomto serveru dnes zbývá {left} z {limit} požadavků na AI DJ. Founder odemkne víc požadavků a delší AI rádio.",
+    "unconfigured": "AI DJ není na tomto botovi nastavený.",
+    "busy": "AI DJ je teď vytížený. Zkus to znovu za pár minut.",
+    "refused": "AI DJ na tohle nedokázal vytvořit playlist. Zkus hudbu popsat jinak.",
+    "failed": "AI DJ nedokázal ten playlist vytvořit. Zkus to prosím znovu.",
+    "expired": "Tento playlist už není dostupný. Vytvoř nový přes /ai playlist.",
+    "saved": "Uloženo do tvých kolekcí jako **{name}**. Pusť si ho kdykoli přes /collections load.",
+    "savedServer": "Uloženo jako serverový playlist **{name}**. Kdokoli ho může pustit přes /playlists play.",
+    "card": {
+      "prompt": "Zadání: {prompt}",
+      "more": "…a dalších {count}",
+      "play": "Přehrát",
+      "save": "Uložit do mých kolekcí",
+      "saveServer": "Uložit jako serverový playlist"
+    }
+  },
+  "playlists": {
+    "description": "Sdílené playlisty serveru, spravované DJs",
+    "nameOption": "Serverový playlist",
+    "newNameOption": "Název nového serverového playlistu",
+    "needDj": "Serverové playlisty můžou měnit jen DJs a admini serveru.",
+    "notFound": "Serverový playlist s názvem **{name}** neexistuje.",
+    "limitReached": "Tento server dosáhl maximálního počtu playlistů. Nejdřív nějaký smaž.",
+    "exists": "Serverový playlist s názvem **{name}** už existuje.",
+    "created": "Serverový playlist **{name}** vytvořen. Přidej písničky přes /playlists add nebo /playlists save.",
+    "saved": "Fronta ({count} písniček) uložena jako serverový playlist **{name}**.",
+    "full": "Tento playlist je plný.",
+    "renamed": "**{old}** přejmenován na **{name}**.",
+    "deleted": "Serverový playlist **{name}** smazán.",
+    "imported": "Do serverového playlistu **{name}** importováno **{count}** písniček.",
+    "copied": "Zkopírováno do tvých kolekcí jako **{name}** ({count} písniček).",
+    "list": {
+      "description": "Zobrazit serverové playlisty",
+      "title": "📁 Serverové playlisty",
+      "empty": "Tento server zatím nemá žádné playlisty. DJs můžou vytvořit nový přes /playlists create nebo /playlists save."
+    },
+    "view": {
+      "description": "Zobrazit písničky serverového playlistu"
+    },
+    "play": {
+      "description": "Přidat serverový playlist do fronty",
+      "nextOption": "Pustit hned po aktuální písničce"
+    },
+    "create": {
+      "description": "Vytvořit prázdný serverový playlist (DJs)"
+    },
+    "save": {
+      "description": "Uložit aktuální frontu jako serverový playlist (DJs)"
+    },
+    "add": {
+      "description": "Přidat aktuální nebo zadanou písničku do serverového playlistu (DJs)",
+      "songOption": "Název nebo odkaz písničky (výchozí: právě hrající)",
+      "nothing": "Nic nehraje. Zadej písničku, kterou chceš přidat."
+    },
+    "remove": {
+      "description": "Odebrat písničku ze serverového playlistu (DJs)"
+    },
+    "rename": {
+      "description": "Přejmenovat serverový playlist (DJs)"
+    },
+    "delete": {
+      "description": "Smazat serverový playlist (DJs)"
+    },
+    "import": {
+      "description": "Importovat playlist ze Spotify, YouTube, Deezer nebo Apple Music jako serverový playlist (DJs)"
+    },
+    "copy": {
+      "description": "Zkopírovat serverový playlist do tvých kolekcí",
+      "asOption": "Název tvé kopie (výchozí: stejný název)"
+    },
+    "log": {
+      "create": "vytvořil(a) serverový playlist {name}",
+      "save": "uložil(a) frontu jako serverový playlist {name}",
+      "delete": "smazal(a) serverový playlist {name}",
+      "import": "importoval(a) serverový playlist {name}"
+    }
+  },
+  "library": {
+    "description": "Tvoje vlastní playlisty a oblíbené skladby ze Spotify a YouTube",
+    "playlistOption": "Jeden z tvých playlistů (účty propoj na dashboardu)",
+    "accounts": {
+      "description": "Zobraz a spravuj svoje propojené hudební účty"
+    },
+    "play": {
+      "description": "Přehraj jeden ze svých playlistů nebo oblíbené skladby"
+    },
+    "import": {
+      "description": "Ulož jeden ze svých playlistů do svých kolekcí"
+    },
+    "likedSpotify": "Oblíbené skladby",
+    "likedYouTube": "Videa označená jako To se mi líbí",
+    "connect": "Propojit účet",
+    "reconnect": "Propojit znovu",
+    "manage": "Spravovat propojení",
+    "notLinked": "nepropojeno",
+    "notConnected": "Nejdřív propoj svůj účet {service} na dashboardu.",
+    "revoked": "Přístup k tvému účtu {service} byl odebrán. Propoj ho znovu na dashboardu.",
+    "forbidden": "{service} nepovolil načtení tohoto playlistu. Přehrát lze jen playlisty, které vlastníš nebo na kterých spolupracuješ.",
+    "failed": "K tvému hudebnímu účtu se teď nepodařilo připojit. Zkus to prosím znovu.",
+    "pickFromList": "Vyber jeden z navržených playlistů.",
+    "empty": "Tento playlist neobsahuje žádné přehratelné skladby.",
+    "imported": "Importováno **{count}** skladeb do tvé kolekce **{name}**.",
+    "howTo": "Propoj účty na dashboardu a pak použij /library play k přehrání svých playlistů a oblíbených skladeb."
   }
 }
