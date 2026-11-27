@@ -73,6 +73,8 @@ Slash commands only. To test: join a voice channel, run `/play song:never gonna 
 
 ## Status (2026-11-26)
 
+Support invite switched to discord.gg/KwKwtasGZE (lands in #welcome) on top.gg, discordbotlist.com, discord.bots.gg, voidbots.net, discordlist.gg and radarcord.net. Still on the old hjJQKp5zDU (works, lands in #tickets): botlist.me (pending bots can't be edited) and discord.place (Cloudflare blocks automation; edit from the owner's browser).
+
 | Site | State | Wired |
 |---|---|---|
 | top.gg | Listed; copy, tags, 18 languages, support invite and repo updated | v1 token (stats + command sync), signed vote webhook verified (200 signed / 401 forged) |
