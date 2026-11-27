@@ -11,7 +11,7 @@ import {
   SlashCommandBuilder
 } from "discord.js";
 import type { ICollection, ICollectionTrack } from "../models/Collection";
-import { aiAccess, consumeQuota, refundQuota } from "../services/ai/aiAccess";
+import { aiAccess, consumeQuota, genBucket, refundQuota } from "../services/ai/aiAccess";
 import { ClaudeCallError, claudeCredits } from "../services/ai/claudeCredits";
 import { AiPlaylist, generatePlaylist, MAX_AI_TRACKS, MAX_PROMPT_LENGTH, MIN_AI_TRACKS, songLine } from "../services/ai/playlistGenerator";
 import { collectionService } from "../services/collection";
@@ -19,7 +19,7 @@ import { loadCollection } from "../services/collectionPlayback";
 import { DatabaseService } from "../services/database";
 import { canManageServerPlaylists, serverOwnerKey } from "../services/serverPlaylists";
 import { registerComponentHandler } from "../structs/componentRouter";
-import { aiFailureMessage, aiQuotaMessage, aiTrialNote } from "../utils/aiReplies";
+import { aiFailureMessage, aiQuotaMessage, aiTrialNote, publicReply } from "../utils/aiReplies";
 import { safeText, truncate } from "../utils/format";
 import { currentLocale, descriptionLocalizations, i18n } from "../utils/i18n";
 import { startAiRadio } from "./radio";
@@ -137,27 +137,28 @@ registerComponentHandler("ai", async (interaction, args) => {
   }
   if (!DatabaseService.getInstance().isReady()) return interaction.reply({ content: `⚠️ ${i18n.__("collections.error")}`, flags: EPHEMERAL });
 
-  if (action === "save") {
-    const owner = interaction.user.id;
+  if (action === "save" || action === "server") {
+    const toServer = action === "server";
+    await interaction.deferReply(toServer ? {} : { flags: EPHEMERAL });
+    if (toServer && !(await canManageServerPlaylists(interaction.member as GuildMember))) {
+      return interaction.editReply({ content: `🔒 ${i18n.__("playlists.needDj")}` });
+    }
+    const owner = toServer ? serverOwnerKey(interaction.guildId) : interaction.user.id;
     if (!(await collectionService.canCreateCollection(owner))) {
-      return interaction.reply({ content: i18n.__("collections.create.limitReached"), flags: EPHEMERAL });
+      return interaction.editReply({ content: i18n.__(toServer ? "playlists.limitReached" : "collections.create.limitReached") });
     }
     const name = await freeName(owner, entry.playlist.title);
-    await collectionService.createFromTracks(owner, name, aiCollectionTracks(entry.playlist, owner));
-    return interaction.reply({ content: `💾 ${i18n.__mf("ai.saved", { name: safeText(name, 100) })}`, flags: EPHEMERAL, allowedMentions: { parse: [] } });
-  }
-
-  if (action === "server") {
-    if (!(await canManageServerPlaylists(interaction.member as GuildMember))) {
-      return interaction.reply({ content: `🔒 ${i18n.__("playlists.needDj")}`, flags: EPHEMERAL });
+    try {
+      await collectionService.createFromTracks(owner, name, aiCollectionTracks(entry.playlist, interaction.user.id));
+    } catch (error) {
+      // A double click raced the first save to the same free name.
+      if ((error as { code?: number })?.code !== 11000) throw error;
+      return interaction.editReply({ content: i18n.__mf("collections.create.exists", { name: safeText(name, 100) }), allowedMentions: { parse: [] } });
     }
-    const owner = serverOwnerKey(interaction.guildId);
-    if (!(await collectionService.canCreateCollection(owner))) {
-      return interaction.reply({ content: i18n.__("playlists.limitReached"), flags: EPHEMERAL });
-    }
-    const name = await freeName(owner, entry.playlist.title);
-    await collectionService.createFromTracks(owner, name, aiCollectionTracks(entry.playlist, interaction.user.id));
-    return interaction.reply({ content: `📁 ${i18n.__mf("ai.savedServer", { name: safeText(name, 100) })}`, allowedMentions: { parse: [] } });
+    const line = toServer
+      ? `📁 ${i18n.__mf("ai.savedServer", { name: safeText(name, 100) })}`
+      : `💾 ${i18n.__mf("ai.saved", { name: safeText(name, 100) })}`;
+    return interaction.editReply({ content: line, allowedMentions: { parse: [] } });
   }
   return interaction.reply({ content: i18n.__("router.expired"), flags: EPHEMERAL });
 });
@@ -211,15 +212,19 @@ async function makePlaylist(interaction: ChatInputCommandInteraction<"cached">, 
   if (play && !member.voice.channel) {
     return interaction.reply({ content: `🔇 ${i18n.__("ai.notInVoice")}`, flags: EPHEMERAL });
   }
-  const access = await aiAccess(interaction.user.id, interaction.guildId);
-  if (!(await consumeQuota("gen", interaction.guildId, access.daily))) return interaction.reply(aiQuotaMessage(access));
-
+  // Premium and quota lookups hit Mongo and Discord: defer first (3-second deadline).
   await interaction.deferReply();
+  const access = await aiAccess(interaction.user.id, interaction.guildId);
+  const bucket = genBucket(access);
+  if (!(await consumeQuota(bucket, interaction.guildId, access.daily))) {
+    return interaction.editReply(publicReply(aiQuotaMessage(access)));
+  }
+
   let playlist: AiPlaylist;
   try {
     playlist = await generatePlaylist({ prompt, count, language: currentLocale(), feature: "ai_playlist" });
   } catch (error) {
-    await refundQuota("gen", interaction.guildId);
+    await refundQuota(bucket, interaction.guildId, access);
     const reason = error instanceof ClaudeCallError ? error.reason : "error";
     if (reason === "error") console.error("[ai] playlist failed:", error);
     return interaction.editReply({ content: aiFailureMessage(reason) });

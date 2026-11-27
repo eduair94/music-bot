@@ -431,6 +431,7 @@ export class PlayerPanelService {
       case "stop":
         await interaction.deferUpdate();
         metadata.autoplay = false;
+        delete metadata.radio;
         if (metadata.stay247) {
           // 24/7 keeps the bot in the channel; just clear and stop the music.
           queue.tracks.clear();
@@ -470,6 +471,7 @@ export class PlayerPanelService {
         if (metadata.autoplay) {
           void ensureAutoplayNext(queue).then((added) => added && this.refresh(queue));
         } else {
+          delete metadata.radio;
           // Drop the song autoplay already lined up, if it's the only one queued.
           const lined = queue.tracks.toArray().filter(isAutoplayTrack);
           for (const t of lined) queue.removeTrack(t);

@@ -1,4 +1,4 @@
-import { InteractionReplyOptions, MessageFlags } from "discord.js";
+import { InteractionEditReplyOptions, InteractionReplyOptions, MessageFlags } from "discord.js";
 import { AiAccess, remainingToday } from "../services/ai/aiAccess";
 import type { ClaudeFailure } from "../services/ai/claudeCredits";
 import { i18n } from "./i18n";
@@ -33,4 +33,10 @@ export async function aiTrialNote(access: AiAccess, guildId: string): Promise<st
   const left = await remainingToday(guildId, access.daily).catch(() => null);
   if (left === null) return null;
   return i18n.__mf("ai.trialNote", { left, limit: access.daily });
+}
+
+/** A reply for an already deferred (public) interaction: the private flag can't apply there. */
+export function publicReply(reply: InteractionReplyOptions): InteractionEditReplyOptions {
+  const { flags: _flags, ephemeral: _ephemeral, ...rest } = reply as InteractionReplyOptions & { ephemeral?: boolean };
+  return rest as InteractionEditReplyOptions;
 }

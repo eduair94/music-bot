@@ -513,6 +513,7 @@ export class DashboardSyncService {
         if (enabled) {
           void ensureAutoplayNext(queue).then((added) => added && panel.refresh(queue));
         } else {
+          delete metadata.radio;
           for (const t of queue.tracks.toArray().filter(isAutoplayTrack)) queue.removeTrack(t);
         }
         panel.refresh(queue, true);

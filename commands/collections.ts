@@ -42,7 +42,9 @@ function databaseReady(): boolean {
 registerComponentHandler("collections", async (interaction, args) => {
   if (!interaction.inCachedGuild() || !interaction.isMessageComponent()) return;
   if (!databaseReady()) return interaction.reply(failed());
-  const [action, target, extra] = args;
+  const [action, , extra] = args;
+  // Server owner keys ("guild:<id>") contain the separator: rejoin them for the list menu.
+  const target = action === "open" ? args.slice(1).join(":") : args[1];
 
   // List menu: open one of the owner's collections (privately, for the owner only).
   // Server playlists (/playlists list) open for anyone in that server.

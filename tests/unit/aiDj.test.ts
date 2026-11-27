@@ -187,3 +187,28 @@ describe("server playlists", () => {
     expect(guildOfOwnerKey("456")).toBeNull();
   });
 });
+
+describe("review fixes", () => {
+  it("keeps a radio session in a fleet play command (bus schema)", async () => {
+    const { BotCommand } = await import("../../models/BotCommand");
+    const doc = new BotCommand({
+      guildId: "1",
+      command: "play",
+      params: { query: "x", autoplay: true, radio: { kind: "ai", label: "rainy jazz", pending: [{ artist: "A", title: "B" }] } },
+      status: "pending"
+    } as any);
+    expect((doc.params as any).radio).toEqual({ kind: "ai", label: "rainy jazz", pending: [{ artist: "A", title: "B" }] });
+  });
+
+  it("counts free trials apart from premium uses", async () => {
+    const { genBucket, quotaId } = await import("../../services/ai/aiAccess");
+    expect(genBucket({ premium: false, unlimited: false, daily: 3, radioBatches: 3 })).toBe("gen");
+    expect(genBucket({ premium: true, unlimited: false, daily: 50, radioBatches: 40 })).toBe("genp");
+    expect(quotaId("genp", "9", new Date("2026-11-27T23:59:00Z"))).toBe("genp:9:2026-11-27");
+  });
+
+  it("strips the private flag for edits of a deferred reply", async () => {
+    const { publicReply } = await import("../../utils/aiReplies");
+    expect(publicReply({ content: "x", flags: 64 } as any)).toEqual({ content: "x" });
+  });
+});

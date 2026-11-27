@@ -40,6 +40,8 @@ export interface PlayRequest {
   radio?: boolean | import("../services/radio").RadioRequest;
   /** Play here, skipping fleet routing: the caller already routed the request. */
   local?: boolean;
+  /** Set when fleet routing handed the request to another instance and it played there. */
+  outcome?: { handedOff: boolean };
 }
 
 /**

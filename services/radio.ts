@@ -107,6 +107,15 @@ export function startRadio(queue: GuildQueue, request: RadioRequest, firstTrack:
   metadata.autoplay = true;
   queue.metadata = metadata;
 
+  if (request.kind === "ai") {
+    // A server with autoplay on by default may have queued a YouTube-mix song when the
+    // first song started; the AI batch replaces it.
+    for (const t of queue.tracks.toArray()) {
+      const meta = t.metadata as { autoplay?: boolean; aiRadio?: boolean } | null;
+      if (meta?.autoplay && !meta.aiRadio) queue.removeTrack(t);
+    }
+  }
+
   if (request.pending?.length) {
     const tracks = request.pending.map((song) => aiQueueTrack(song, requestedBy)).filter((t): t is Track => t !== null);
     if (tracks.length) queue.addTrack(tracks);
@@ -153,7 +162,8 @@ export async function refillAiRadio(queue: GuildQueue): Promise<Track[] | null> 
       exclude: recentSongs(queue),
       feature: "ai_radio"
     });
-    if (queue.deleted || radioSession(queue) !== session) return null;
+    // Autoplay turned off (or the session replaced) while Claude was answering: drop the batch.
+    if (queue.deleted || radioSession(queue) !== session || !(queue.metadata as QueueMetadata | undefined)?.autoplay) return null;
     const me = queue.player.client.user;
     const tracks = playlist.tracks.map((song) => aiQueueTrack(song, me)).filter((t): t is Track => t !== null);
     if (!tracks.length) return null;

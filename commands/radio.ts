@@ -1,12 +1,12 @@
 import { ChatInputCommandInteraction, GuildMember, MessageFlags, PermissionsBitField, SlashCommandBuilder } from "discord.js";
-import { aiAccess, AI_RADIO_BATCH, consumeQuota, refundQuota } from "../services/ai/aiAccess";
+import { aiAccess, AI_RADIO_BATCH, consumeQuota, genBucket, refundQuota } from "../services/ai/aiAccess";
 import { ClaudeCallError } from "../services/ai/claudeCredits";
 import { generatePlaylist, MAX_PROMPT_LENGTH, songLine } from "../services/ai/playlistGenerator";
 import { ensureAutoplayNext } from "../services/autoplay";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { PlayerPanelService } from "../services/playerPanel";
 import { isStationId, RADIO_STATIONS, RadioRequest, shuffledSeeds, startRadio, STATION_IDS } from "../services/radio";
-import { aiFailureMessage, aiQuotaMessage, aiTrialNote } from "../utils/aiReplies";
+import { aiFailureMessage, aiQuotaMessage, aiTrialNote, publicReply } from "../utils/aiReplies";
 import { currentLocale, i18n } from "../utils/i18n";
 import { runPlay } from "../utils/playFlow";
 import play from "./play";
@@ -61,8 +61,13 @@ async function confirm(interaction: ChatInputCommandInteraction<"cached">, line:
   await interaction.followUp({ content: line, allowedMentions: { parse: [] } }).catch(() => undefined);
 }
 
-async function begin(interaction: ChatInputCommandInteraction<"cached">, query: string, request: RadioRequest) {
-  const result = await runPlay({ interaction, query, radio: request });
+async function begin(
+  interaction: ChatInputCommandInteraction<"cached">,
+  query: string,
+  request: RadioRequest,
+  outcome?: { handedOff: boolean }
+) {
+  const result = await runPlay({ interaction, query, radio: request, outcome });
   if (!result) return null;
   startRadio(result.queue, request, result.track, interaction.user);
   void ensureAutoplayNext(result.queue).then((added) => added && PlayerPanelService.getInstance().refresh(result.queue));
@@ -104,24 +109,27 @@ export async function startAiRadio(interaction: ChatInputCommandInteraction<"cac
   if (!member.voice.channel) {
     return interaction.reply({ content: `🔇 ${i18n.__("radio.notInVoice")}`, flags: MessageFlags.Ephemeral });
   }
+  // Premium and quota lookups hit Mongo and Discord: defer first (3-second deadline).
+  await interaction.deferReply();
   const access = await aiAccess(interaction.user.id, interaction.guildId);
-  if (!(await consumeQuota("gen", interaction.guildId, access.daily))) {
-    return interaction.reply(aiQuotaMessage(access));
+  const bucket = genBucket(access);
+  if (!(await consumeQuota(bucket, interaction.guildId, access.daily))) {
+    return interaction.editReply(publicReply(aiQuotaMessage(access)));
   }
 
-  await interaction.deferReply();
   const language = currentLocale();
   let playlist;
   try {
     playlist = await generatePlaylist({ prompt, count: AI_RADIO_BATCH, language, feature: "ai_radio" });
   } catch (error) {
-    await refundQuota("gen", interaction.guildId);
+    await refundQuota(bucket, interaction.guildId, access);
     const reason = error instanceof ClaudeCallError ? error.reason : "error";
     if (reason === "error") console.error("[radio] AI radio failed:", error);
     return interaction.editReply({ content: aiFailureMessage(reason) });
   }
 
   const [first, ...rest] = playlist.tracks;
+  const outcome = { handedOff: false };
   const result = await begin(interaction, songLine(first), {
     kind: "ai",
     label: prompt,
@@ -130,9 +138,10 @@ export async function startAiRadio(interaction: ChatInputCommandInteraction<"cac
     batchLimit: access.radioBatches,
     language,
     startedBy: interaction.user.id
-  });
+  }, outcome);
   if (!result) {
-    await refundQuota("gen", interaction.guildId);
+    // Refused (or nothing found): give the use back. Played by another fleet instance: it counts.
+    if (!outcome.handedOff) await refundQuota(bucket, interaction.guildId, access);
     return;
   }
   const lines = [`🤖 ${i18n.__mf("radio.aiStarted", { title: playlist.title })}`];

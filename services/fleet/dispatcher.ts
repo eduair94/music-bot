@@ -308,6 +308,8 @@ export interface DispatchRequest {
    * answer only with a private follow-up once the instance has answered.
    */
   followUp?: boolean;
+  /** Filled in when the request was handed to another instance: whether that instance played it. */
+  outcome?: { handedOff: boolean };
 }
 
 /**
@@ -375,6 +377,7 @@ async function handOff(request: DispatchRequest, instance: number, voice: VoiceB
     timeoutMs: 25_000
   });
 
+  if (request.outcome) request.outcome.handedOff = result.status === "completed";
   let content = resultLine(name, result, "🎶");
   if (result.status === "completed" && request.radio) content += `\n-# 📻 ${i18n.__("player.autoplayEnabled")}`;
   if (followUp) await privately(interaction, content);

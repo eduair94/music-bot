@@ -85,6 +85,8 @@ const botCommandSchema = new Schema<IBotCommand>(
       next: { type: Boolean },
       now: { type: Boolean },
       autoplay: { type: Boolean },
+      // play: /radio station or AI DJ session to start on the instance (services/radio.ts RadioRequest).
+      radio: { type: Schema.Types.Mixed, default: undefined },
       source: { type: String },
       locale: { type: String },
       // play: a saved collection handed to a fleet instance (first song = query).

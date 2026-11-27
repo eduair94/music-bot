@@ -44,6 +44,7 @@ export default {
       if (enabled) {
         void ensureAutoplayNext(queue).then((added) => added && PlayerPanelService.getInstance().refresh(queue));
       } else {
+        delete metadata.radio;
         for (const t of queue.tracks.toArray().filter(isAutoplayTrack)) queue.removeTrack(t);
       }
       PlayerPanelService.getInstance().refresh(queue, true);

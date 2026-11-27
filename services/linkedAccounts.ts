@@ -52,6 +52,9 @@ export async function connectedAccounts(userId: string): Promise<Array<Pick<Link
   return LinkedAccount.find({ userId }, { provider: 1, displayName: 1 }).lean().exec();
 }
 
+/** Refreshes in flight, so autocomplete bursts share one token request per account. */
+const refreshing = new Map<string, Promise<{ token: string; account: LinkedAccountDoc }>>();
+
 /** A working access token for the user's account, refreshed (and saved) when expired. */
 async function accessToken(userId: string, provider: LinkProvider): Promise<{ token: string; account: LinkedAccountDoc }> {
   const account = await LinkedAccount.findOne({ userId, provider }).lean().exec();
@@ -59,6 +62,16 @@ async function accessToken(userId: string, provider: LinkProvider): Promise<{ to
   if (new Date(account.expiresAt).getTime() > Date.now() + 30_000) {
     return { token: decryptToken(account.accessToken), account };
   }
+  const key = `${userId}:${provider}`;
+  let pending = refreshing.get(key);
+  if (!pending) {
+    pending = refreshAccount(userId, provider, account).finally(() => refreshing.delete(key));
+    refreshing.set(key, pending);
+  }
+  return pending;
+}
+
+async function refreshAccount(userId: string, provider: LinkProvider, account: LinkedAccountDoc): Promise<{ token: string; account: LinkedAccountDoc }> {
   try {
     const fresh = await refreshTokens(provider, decryptToken(account.refreshToken));
     await LinkedAccount.updateOne(
@@ -73,7 +86,9 @@ async function accessToken(userId: string, provider: LinkProvider): Promise<{ to
     ).exec();
     return { token: fresh.accessToken, account };
   } catch (error) {
-    if (error instanceof OAuthError && (error.code === "invalid_grant" || error.status === 400 || error.status === 401)) {
+    // Only a dead refresh token removes the account. A misconfigured client
+    // (invalid_client) must not wipe everyone's connections.
+    if (error instanceof OAuthError && error.code === "invalid_grant") {
       // The user revoked access (or the token was rotated elsewhere): they must connect again.
       await LinkedAccount.deleteOne({ userId, provider }).exec();
       throw new LibraryError("revoked");

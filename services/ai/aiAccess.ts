@@ -53,7 +53,13 @@ export async function aiAccess(userId: string, guildId: string): Promise<AiAcces
   };
 }
 
-export type QuotaBucket = "gen" | "refill";
+/** "gen": free-trial uses, "genp": premium uses, "refill": AI radio batches. */
+export type QuotaBucket = "gen" | "genp" | "refill";
+
+/** The generation bucket for someone with this access (free trials don't share premium's counter). */
+export function genBucket(access: AiAccess): QuotaBucket {
+  return access.premium ? "genp" : "gen";
+}
 
 /** Pure: the counter id for a bucket, server and UTC day. */
 export function quotaId(bucket: QuotaBucket, guildId: string, now = new Date()): string {
@@ -68,27 +74,33 @@ export function quotaId(bucket: QuotaBucket, guildId: string, now = new Date()):
 export async function consumeQuota(bucket: QuotaBucket, guildId: string, limit: number): Promise<boolean> {
   if (limit === Infinity) return true;
   if (limit <= 0) return false;
-  try {
-    await AiQuota.findOneAndUpdate(
-      { _id: quotaId(bucket, guildId), count: { $lt: limit } },
-      { $inc: { count: 1 }, $setOnInsert: { createdAt: new Date() } },
-      { upsert: true, new: true }
-    );
-    return true;
-  } catch (error: any) {
-    if (error?.code === 11000) return false;
-    // The counter is a cost guard; if Mongo is down, AI is too risky to run blind.
-    console.warn("[AI] quota check failed:", error?.message || error);
-    return false;
+  // Two first uses of the day can race on the insert: the loser retries once and
+  // then matches the new counter (or the counter really is full).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await AiQuota.findOneAndUpdate(
+        { _id: quotaId(bucket, guildId), count: { $lt: limit } },
+        { $inc: { count: 1 }, $setOnInsert: { createdAt: new Date() } },
+        { upsert: true, new: true }
+      );
+      return true;
+    } catch (error: any) {
+      if (error?.code === 11000) continue;
+      // The counter is a cost guard; if Mongo is down, AI is too risky to run blind.
+      console.warn("[AI] quota check failed:", error?.message || error);
+      return false;
+    }
   }
+  return false;
 }
 
-/** Give back a use when the generation failed (the user got nothing). */
-export async function refundQuota(bucket: QuotaBucket, guildId: string): Promise<void> {
+/** Give back a use when the generation failed (the user got nothing). Unlimited callers never took one. */
+export async function refundQuota(bucket: QuotaBucket, guildId: string, access?: AiAccess): Promise<void> {
+  if (access?.unlimited) return;
   await AiQuota.updateOne({ _id: quotaId(bucket, guildId), count: { $gt: 0 } }, { $inc: { count: -1 } }).catch(() => undefined);
 }
 
-/** Uses left today in the generation bucket. */
+/** Free-trial uses left today on this server. */
 export async function remainingToday(guildId: string, limit: number): Promise<number> {
   if (limit === Infinity) return Infinity;
   const doc = await AiQuota.findById(quotaId("gen", guildId)).lean().catch(() => null);
