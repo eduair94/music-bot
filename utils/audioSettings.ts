@@ -3,6 +3,7 @@ import { PremiumGuildService } from "../services/premiumGuild";
 import { hasActiveVote } from "../services/votes";
 import { isSupportBooster } from "../services/boosters";
 import { config } from "./config";
+import { INSTANCE_NAME, isLinked } from "./instance";
 
 /**
  * Audio quality tier information
@@ -11,7 +12,7 @@ export interface AudioQualityInfo {
   bitrate: number;
   qualityBadge: string;
   tier: "free" | "basic" | "premium" | "ultra";
-  source: "user" | "guild" | "owner" | "default";
+  source: "user" | "guild" | "owner" | "linked" | "default";
 }
 
 /**
@@ -54,6 +55,8 @@ export function isOwner(userId: string): boolean {
  * Priority: Owner override > User Patreon > Guild Premium > Default (128kbps)
  */
 export async function getAudioQuality(userId: string, guildId: string): Promise<AudioQualityInfo> {
+  // Private bots play at the Hi-Fi tier for everyone: their owner pays for it.
+  if (isLinked) return { bitrate: 320, qualityBadge: getQualityBadge(320), tier: getQualityTier(320), source: "linked" };
   const patreonService = PatreonService.getInstance();
   const premiumService = PremiumGuildService.getInstance();
   
@@ -107,6 +110,7 @@ export async function getAudioQuality(userId: string, guildId: string): Promise<
  * Get bot identity/branding for a guild
  */
 export async function getBotIdentity(guildId: string): Promise<BotIdentityInfo> {
+  if (isLinked) return { name: INSTANCE_NAME, displayName: INSTANCE_NAME, isCustom: true };
   const premiumService = PremiumGuildService.getInstance();
   const customBotName = await premiumService.getGuildBotName(guildId);
   

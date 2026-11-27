@@ -7,7 +7,7 @@ import {
   setPlaybackState as setRedisPlaybackState
 } from "../../shared/services/redis";
 import type { ITrack, TrackSource } from "../../shared/types";
-import { INSTANCE } from "../../utils/instance";
+import { INSTANCE, isLinked } from "../../utils/instance";
 import { DatabaseService } from "../database";
 import { isGuessGameQueue, QueueMetadata } from "../discordPlayer";
 import { targetKbps } from "../audioEncoder";
@@ -137,6 +137,8 @@ export function toLegacyState(state: LivePlaybackState, audioBitrate: number) {
  * the Mongo mirror when `persist` (player events; the 5 s refresh skips it).
  */
 export async function publishPlayback(queue: GuildQueue, persist = true): Promise<LivePlaybackState | null> {
+  // A private bot is not part of the fleet: no dashboard state, no Mongo mirror.
+  if (isLinked) return null;
   if (!queue.guild) return null;
   const guildId = queue.guild.id;
   const state = buildLiveState(queue);
@@ -168,6 +170,7 @@ export async function publishPlayback(queue: GuildQueue, persist = true): Promis
 
 /** The instance left (or its queue ended): drop its state and tell live dashboards. */
 export async function clearPlayback(guildId: string | undefined): Promise<void> {
+  if (isLinked) return;
   if (!guildId) return;
   try {
     if (await isRedisAvailable()) await clearRedisPlaybackState(guildId, INSTANCE);

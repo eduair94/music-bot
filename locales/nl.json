@@ -24,7 +24,8 @@
     "embedDescription": "Lijst van alle commands"
   },
   "invite": {
-    "description": "Verstuur bot invite link"
+    "description": "Verstuur bot invite link",
+    "fleet": "Extra spelers: Bypass 2, 3 en 4 spelen tegelijk in andere spraakkanalen, met dezelfde /play."
   },
   "loop": {
     "description": "Toggle music loop",
@@ -1240,7 +1241,8 @@
     "dashboard": "Dashboard",
     "support": "Supportserver",
     "vote": "Stemmen",
-    "voiceStatusHint": "Wil je het nummer dat speelt onder de naam van het spraakkanaal zien? [Autoriseer me opnieuw]({url}) om de machtiging Spraakkanaalstatus instellen te geven."
+    "voiceStatusHint": "Wil je het nummer dat speelt onder de naam van het spraakkanaal zien? [Autoriseer me opnieuw]({url}) om de machtiging Spraakkanaalstatus instellen te geven.",
+    "fleet": "Wil je muziek in meer dan één spraakkanaal tegelijk? Voeg dan ook {bots} toe. Ze zijn gratis en nemen /play over als Bypass bezig is in een ander kanaal."
   },
   "router": {
     "guildOnly": "Dit commando werkt alleen in een server.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 tot 8 zitten bij Premium.",
       "servedHere": "{bot} speelt al in {channel}. Gebruik /play en de bediening daar, of join een ander spraakkanaal.",
       "stay247On": "24/7 aan voor {bot}: hij blijft in {channel} en komt terug na herstarts.",
-      "stay247Off": "24/7 uit voor {bot}."
+      "stay247Off": "24/7 uit voor {bot}.",
+      "inviteFree": "Voeg {bots} toe om hier tegelijk te spelen. Ze zijn gratis, met één klik per bot:",
+      "askAdmin": "Vraag iemand met **Server beheren** om {bots} toe te voegen. Ze zijn gratis en laten Bypass in meer spraakkanalen tegelijk spelen.",
+      "publicNotice": "{user} wilde muziek in {channel}, maar elke Bypass-bot in deze server is bezig. Iemand met **Server beheren** kan gratis {bots} toevoegen, zodat meer spraakkanalen tegelijk muziek kunnen hebben.",
+      "addAll": "Voeg ze allemaal toe"
     },
     "info": {
       "header": "{bot} in {channel}",
@@ -2095,5 +2101,8 @@
       "more": "en nog {count}",
       "card": "De spelerkaart met de knoppen staat in {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Deze privébot is niet ingeschakeld in deze server. De eigenaar kan dat aanpassen in het Bypass-dashboard."
   }
 }

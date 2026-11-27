@@ -39,11 +39,18 @@ async function shutdown(signal: string) {
 
   TelemetryService.getInstance().stop();
 
-  const { INSTANCE, isPrimary } = await import("./utils/instance");
+  const { INSTANCE, isLinked, isPrimary } = await import("./utils/instance");
   if (isPrimary) {
     try {
       const { SupportServerService } = await import("./services/supportServer");
       await SupportServerService.getInstance().markRestarting();
+    } catch {
+      // best effort
+    }
+    // Private bots are this process's children: end them cleanly (they start again with the primary).
+    try {
+      const { BotManagerService } = await import("./services/botManager");
+      await Promise.race([BotManagerService.getInstance().shutdown(), new Promise((resolve) => setTimeout(resolve, 5000).unref())]);
     } catch {
       // best effort
     }
@@ -53,7 +60,7 @@ async function shutdown(signal: string) {
   try {
     const { isRedisAvailable, publishGuildEvent } = await import("./shared/services/redis");
     const publish = (async () => {
-      if (!(await isRedisAvailable())) return;
+      if (isLinked || !(await isRedisAvailable())) return;
       await Promise.allSettled(
         bot.client.guilds.cache.map((guild) =>
           publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online: false, inGuild: true })
@@ -102,6 +109,8 @@ process.on("SIGTERM", () => void shutdown("SIGTERM"));
 process.on("message", (msg) => {
   if (msg === "shutdown") void shutdown("pm2 shutdown");
 });
+// A private bot whose manager (the primary) died must not keep playing unsupervised.
+if (process.env.LINKED_BOT_ID) process.on("disconnect", () => void shutdown("manager disconnected"));
 
 export const bot = new Bot(
   new Client({

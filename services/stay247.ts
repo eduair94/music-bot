@@ -3,7 +3,7 @@ import { ChannelType, Client, Guild, TextChannel, VoiceBasedChannel } from "disc
 import { GuildSettings, IGuildSettings } from "../models/GuildSettings";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
-import { INSTANCE, stay247Of, stay247Update } from "../utils/instance";
+import { STAY247_SLOT, stay247Of, stay247Update } from "../utils/instance";
 import { hasPremiumFeature } from "../utils/premiumCheck";
 import { DatabaseService } from "./database";
 import { DiscordPlayerService, QueueMetadata } from "./discordPlayer";
@@ -113,10 +113,10 @@ export class Stay247Service {
 
   /** Servers where this instance has 24/7 on. */
   private async stay247Guilds(): Promise<IGuildSettings[]> {
-    if (INSTANCE === 1) return GuildSettingsService.getInstance().getStay247Guilds();
+    if (STAY247_SLOT === 1) return GuildSettingsService.getInstance().getStay247Guilds();
     if (!DatabaseService.getInstance().isConnected()) return [];
     try {
-      return (await GuildSettings.find({ [`fleet.stay247.${INSTANCE}.enabled`]: true }).lean()) as IGuildSettings[];
+      return (await GuildSettings.find({ [`fleet.stay247.${STAY247_SLOT}.enabled`]: true }).lean()) as IGuildSettings[];
     } catch (error) {
       console.error("[24/7] Error fetching 24/7 guilds:", error);
       return [];

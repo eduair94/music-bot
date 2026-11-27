@@ -9,10 +9,11 @@ import {
   PermissionFlagsBits,
   SeparatorSpacingSize
 } from "discord.js";
+import { configuredInstances, inviteUrl } from "../shared/fleet";
 import { botInviteUrl, SITE_URL, SUPPORT_INVITE_URL } from "../shared/links";
 import { mention } from "../structs/commandRegistry";
 import { localeForGuild } from "../utils/guildLocale";
-import { i18n, runWithLocale } from "../utils/i18n";
+import { currentLocale, i18n, runWithLocale } from "../utils/i18n";
 
 /**
  * First-run message when the bot joins a server: how to start, where the
@@ -42,6 +43,25 @@ export interface WelcomeOptions {
   missingVoiceStatus?: boolean;
   /** Re-authorization link for this server (defaults to the generic invite). */
   inviteUrl?: string;
+  /** The other Bypass bots this server can add, with invite links for it. */
+  fleet?: { name: string; url: string }[];
+}
+
+/** Bypass 2-4 with invite links pre-selecting `guildId`: what a new server can add next. */
+export function fleetInvites(guildId?: string): { name: string; url: string }[] {
+  return configuredInstances()
+    .filter((m) => m.instance > 1 && !m.premium)
+    .map((m) => ({ name: m.name, url: inviteUrl(m.instance, guildId) }))
+    .filter((m): m is { name: string; url: string } => Boolean(m.url));
+}
+
+/** "Bypass 2, Bypass 3 and Bypass 4" in the current language. */
+function joinNames(names: string[]): string {
+  try {
+    return new Intl.ListFormat(currentLocale(), { style: "long", type: "conjunction" }).format(names);
+  } catch {
+    return names.join(", ");
+  }
 }
 
 export function buildWelcome(botName: string, options: WelcomeOptions = {}): ContainerBuilder {
@@ -56,7 +76,7 @@ export function buildWelcome(botName: string, options: WelcomeOptions = {}): Con
     tips.push(`-# 🔑 ${i18n.__mf("welcome.voiceStatusHint", { url: options.inviteUrl ?? botInviteUrl() })}`);
   }
 
-  return new ContainerBuilder()
+  const container = new ContainerBuilder()
     .setAccentColor(0xf8aa2a)
     .addTextDisplayComponents((t) => t.setContent(`## 🎶 ${i18n.__mf("welcome.title", { bot: botName })}`))
     .addTextDisplayComponents((t) =>
@@ -71,6 +91,22 @@ export function buildWelcome(botName: string, options: WelcomeOptions = {}): Con
         new ButtonBuilder().setURL(SUPPORT_INVITE_URL).setEmoji("💬").setLabel(i18n.__("welcome.support")).setStyle(ButtonStyle.Link)
       )
     );
+
+  // Music in several voice channels at once needs the other Bypass bots: offer them right away.
+  const fleet = (options.fleet ?? []).slice(0, 5);
+  if (fleet.length) {
+    container
+      .addSeparatorComponents((s) => s.setDivider(true).setSpacing(SeparatorSpacingSize.Small))
+      .addTextDisplayComponents((t) =>
+        t.setContent(`➕ ${i18n.__mf("welcome.fleet", { bots: joinNames(fleet.map((f) => `**${f.name}**`)) })}`)
+      )
+      .addActionRowComponents((row) =>
+        row.setComponents(
+          fleet.map((f) => new ButtonBuilder().setURL(f.url).setLabel(i18n.__mf("fleet.dispatch.add", { bot: f.name })).setStyle(ButtonStyle.Link))
+        )
+      );
+  }
+  return container;
 }
 
 export async function sendWelcome(guild: Guild): Promise<void> {
@@ -83,7 +119,8 @@ export async function sendWelcome(guild: Guild): Promise<void> {
     const container = runWithLocale(locale, () =>
       buildWelcome(guild.client.user.username, {
         missingVoiceStatus,
-        inviteUrl: botInviteUrl(guild.client.user.id, guild.id)
+        inviteUrl: botInviteUrl(guild.client.user.id, guild.id),
+        fleet: fleetInvites(guild.id)
       })
     );
     await channel.send({ components: [container], flags: MessageFlags.IsComponentsV2, allowedMentions: { parse: [] } });

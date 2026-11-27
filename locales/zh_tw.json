@@ -24,7 +24,8 @@
     "embedDescription": "所有的指令清單"
   },
   "invite": {
-    "description": "傳送邀請連結"
+    "description": "傳送邀請連結",
+    "fleet": "額外播放器：Bypass 2、3 和 4 可以同時在其他語音頻道播放，一樣用 /play 就好。"
   },
   "loop": {
     "description": "變更音樂重複設定",
@@ -1240,7 +1241,8 @@
     "dashboard": "控制面板",
     "support": "支援伺服器",
     "vote": "投票",
-    "voiceStatusHint": "想讓正在播放的歌曲顯示在語音頻道名稱下方嗎？[重新授權我]({url})以授予「設定語音頻道狀態」權限。"
+    "voiceStatusHint": "想讓正在播放的歌曲顯示在語音頻道名稱下方嗎？[重新授權我]({url})以授予「設定語音頻道狀態」權限。",
+    "fleet": "想同時在多個語音頻道播音樂嗎？把 {bots} 也加進來吧。它們完全免費，當 Bypass 在其他頻道忙碌時，會自動接手 /play。"
   },
   "router": {
     "guildOnly": "這個指令只能在伺服器中使用。",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 到 8 需要 Premium。",
       "servedHere": "{bot} 已經在 {channel} 播放中。請在那裡使用 /play 和控制按鈕，或加入其他語音頻道。",
       "stay247On": "已為 {bot} 開啟 24/7：它會留在 {channel}，並在重新啟動後自動重新加入。",
-      "stay247Off": "已為 {bot} 關閉 24/7。"
+      "stay247Off": "已為 {bot} 關閉 24/7。",
+      "inviteFree": "加入 {bots} 就能同時在這裡播放。完全免費，每個只要點一下：",
+      "askAdmin": "請擁有 **管理伺服器** 權限的人加入 {bots}。它們完全免費，能讓 Bypass 同時在更多語音頻道播放。",
+      "publicNotice": "{user} 想在 {channel} 播音樂，但這個伺服器裡的所有 Bypass 機器人都在忙。擁有 **管理伺服器** 權限的人可以免費加入 {bots}，讓更多語音頻道同時播放音樂。",
+      "addAll": "全部加入"
     },
     "info": {
       "header": "{bot} 在 {channel}",
@@ -2095,5 +2101,8 @@
       "more": "還有 {count} 首",
       "card": "附有按鈕的播放器卡片在 {channel}。"
     }
+  },
+  "linkedBot": {
+    "notHere": "這個私人機器人尚未在此伺服器啟用。擁有者可以在 Bypass 控制面板中變更設定。"
   }
 }

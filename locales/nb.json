@@ -24,7 +24,8 @@
     "embedDescription": "Liste over alle kommandoer"
   },
   "invite": {
-    "description": "Send invitasjonslenke til bot"
+    "description": "Send invitasjonslenke til bot",
+    "fleet": "Ekstra spillere: Bypass 2, 3 og 4 spiller i andre talekanaler samtidig, med samme /play."
   },
   "loop": {
     "description": "Slå på loop",
@@ -1240,7 +1241,8 @@
     "dashboard": "Dashbord",
     "support": "Supportserver",
     "vote": "Stem",
-    "voiceStatusHint": "Vil du vise sangen som spilles under navnet på talekanalen? [Autoriser meg på nytt]({url}) for å gi tillatelsen Angi status for talekanal."
+    "voiceStatusHint": "Vil du vise sangen som spilles under navnet på talekanalen? [Autoriser meg på nytt]({url}) for å gi tillatelsen Angi status for talekanal.",
+    "fleet": "Vil du ha musikk i flere talekanaler samtidig? Legg til {bots} også. De er gratis og tar over /play når Bypass er opptatt i en annen kanal."
   },
   "router": {
     "guildOnly": "Denne kommandoen fungerer bare i en server.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 til 8 følger med Premium.",
       "servedHere": "{bot} spiller allerede i {channel}. Bruk /play og kontrollene der, eller bli med i en annen talekanal.",
       "stay247On": "24/7 på for {bot}: den blir værende i {channel} og kobler seg til igjen etter omstarter.",
-      "stay247Off": "24/7 av for {bot}."
+      "stay247Off": "24/7 av for {bot}.",
+      "inviteFree": "Legg til {bots} for å spille her samtidig. De er gratis, ett klikk hver:",
+      "askAdmin": "Be noen med **Administrer server** om å legge til {bots}. De er gratis og lar Bypass spille i flere talekanaler samtidig.",
+      "publicNotice": "{user} ville ha musikk i {channel}, men alle Bypass-botene på denne serveren er opptatt. Noen med **Administrer server** kan legge til {bots} gratis, så flere talekanaler kan ha musikk samtidig.",
+      "addAll": "Legg til alle"
     },
     "info": {
       "header": "{bot} i {channel}",
@@ -2095,5 +2101,8 @@
       "more": "og {count} til",
       "card": "Spillerkortet med knappene er i {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Denne private boten er ikke aktivert på denne serveren. Eieren kan endre det i Bypass-dashbordet."
   }
 }

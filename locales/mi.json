@@ -24,7 +24,8 @@
     "embedDescription": "Listo de tadda kamod"
   },
   "invite": {
-    "description": "Si bot invite ami"
+    "description": "Si bot invite ami",
+    "fleet": "Ētahi kaipāho anō: Ka pāho a Bypass 2, 3 me 4 i ētahi atu hongere reo i te wā kotahi, me te /play anō."
   },
   "loop": {
     "description": "Toggle bocami wab",
@@ -1240,7 +1241,8 @@
     "dashboard": "Papatohu",
     "support": "Tūmau tautoko",
     "vote": "Pōti",
-    "voiceStatusHint": "Kei te hiahia koe kia whakaaturia te waiata e pūrei ana i raro i te ingoa o te hongere reo? [Whakamana anō i ahau]({url}) kia whakaaetia te mana Set Voice Channel Status."
+    "voiceStatusHint": "Kei te hiahia koe kia whakaaturia te waiata e pūrei ana i raro i te ingoa o te hongere reo? [Whakamana anō i ahau]({url}) kia whakaaetia te mana Set Voice Channel Status.",
+    "fleet": "Kei te hiahia waiata koe i ngā hongere reo maha i te wā kotahi? Tāpirihia hoki a {bots}. He kore utu rātou, ā, ka riro mā rātou te /play ina pukumahi a Bypass i tētahi atu hongere."
   },
   "router": {
     "guildOnly": "Ka mahi noa tēnei tono i roto i tētahi tūmau.",
@@ -2086,7 +2088,11 @@
       "premium": "Ka haere mai a Bypass 5 ki 8 me Premium.",
       "servedHere": "Kei te pūrei kē a {bot} i {channel}. Whakamahia te /play me ngā mana whakahaere i reira, kia uru rānei koe ki tētahi atu hongere reo.",
       "stay247On": "Kua whakakāngia te 24/7 mō {bot}: ka noho tonu ia i {channel}, ā, ka hoki anō ia ki reira i muri i ngā tīmata anō.",
-      "stay247Off": "Kua whakawetongia te 24/7 mō {bot}."
+      "stay247Off": "Kua whakawetongia te 24/7 mō {bot}.",
+      "inviteFree": "Tāpirihia a {bots} kia pāho i konei i te wā kotahi. He kore utu, kotahi pāwhiri mō ia mea:",
+      "askAdmin": "Pātai atu ki tētahi he **Manage Server** tōna kia tāpiri i a {bots}. He kore utu rātou, ā, ka taea e Bypass te pāho i ētahi atu hongere reo i te wā kotahi.",
+      "publicNotice": "I hiahia a {user} ki te waiata i {channel}, engari kei te pukumahi ngā bot Bypass katoa i tēnei tūmau. Ka taea e tētahi he **Manage Server** tōna te tāpiri i a {bots} mō te kore utu, kia whai waiata ai ētahi atu hongere reo i te wā kotahi.",
+      "addAll": "Tāpirihia katoa"
     },
     "info": {
       "header": "{bot} i {channel}",
@@ -2095,5 +2101,8 @@
       "more": "me ētahi atu {count}",
       "card": "Kei {channel} te kāri pūrei me ngā pātene."
     }
+  },
+  "linkedBot": {
+    "notHere": "Kāore tēnei bot tūmataiti i whakahohea i tēnei tūmau. Ka taea e tōna kaipupuri te huri i tēnā i te papatohu Bypass."
   }
 }

@@ -24,7 +24,8 @@
     "embedDescription": "Liste de toutes les commandes"
   },
   "invite": {
-    "description": "Envoyer le lien d'invitation du bot"
+    "description": "Envoyer le lien d'invitation du bot",
+    "fleet": "Lecteurs en plus : Bypass 2, 3 et 4 jouent dans d’autres salons vocaux en même temps, avec le même /play."
   },
   "loop": {
     "description": "Activer/désactiver la boucle de la musique",
@@ -1242,7 +1243,8 @@
     "dashboard": "Tableau de bord",
     "support": "Serveur d'aide",
     "vote": "Voter",
-    "voiceStatusHint": "Tu veux afficher la chanson en cours sous le nom du salon vocal ? [Réautorise-moi]({url}) pour accorder la permission Définir le statut du salon vocal."
+    "voiceStatusHint": "Tu veux afficher la chanson en cours sous le nom du salon vocal ? [Réautorise-moi]({url}) pour accorder la permission Définir le statut du salon vocal.",
+    "fleet": "Tu veux de la musique dans plusieurs salons vocaux à la fois ? Ajoute aussi {bots}. Ils sont gratuits et prennent le relais de /play quand Bypass est occupé dans un autre salon."
   },
   "router": {
     "guildOnly": "Cette commande ne fonctionne que dans un serveur.",
@@ -2088,7 +2090,11 @@
       "premium": "Bypass 5 à 8 sont inclus avec Premium.",
       "servedHere": "{bot} joue déjà dans {channel}. Utilise /play et les commandes là-bas, ou rejoins un autre salon vocal.",
       "stay247On": "24/7 activé pour {bot} : il reste dans {channel} et le rejoint après chaque redémarrage.",
-      "stay247Off": "24/7 désactivé pour {bot}."
+      "stay247Off": "24/7 désactivé pour {bot}.",
+      "inviteFree": "Ajoute {bots} pour jouer ici en même temps. Ils sont gratuits, un clic chacun :",
+      "askAdmin": "Demande à quelqu’un avec la permission **Gérer le serveur** d’ajouter {bots}. Ils sont gratuits et permettent à Bypass de jouer dans plus de salons vocaux à la fois.",
+      "publicNotice": "{user} voulait de la musique dans {channel}, mais tous les bots Bypass de ce serveur sont occupés. Quelqu’un avec la permission **Gérer le serveur** peut ajouter {bots} gratuitement, pour que plus de salons vocaux aient de la musique en même temps.",
+      "addAll": "Tous les ajouter"
     },
     "info": {
       "header": "{bot} dans {channel}",
@@ -2097,5 +2103,8 @@
       "more": "et {count} de plus",
       "card": "La carte du lecteur avec les boutons est dans {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Ce bot privé n’est pas activé sur ce serveur. Son propriétaire peut changer ça dans le tableau de bord Bypass."
   }
 }

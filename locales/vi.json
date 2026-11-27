@@ -24,7 +24,8 @@
     "embedDescription": "Danh sách tất cả các lệnh"
   },
   "invite": {
-    "description": "Gửi liên kết mời bot."
+    "description": "Gửi liên kết mời bot.",
+    "fleet": "Bot phụ: Bypass 2, 3 và 4 phát nhạc ở các kênh thoại khác cùng lúc, với cùng lệnh /play."
   },
   "loop": {
     "description": "Bật tắt chức năng lặp lại",
@@ -1240,7 +1241,8 @@
     "dashboard": "Bảng điều khiển",
     "support": "Server hỗ trợ",
     "vote": "Bình chọn",
-    "voiceStatusHint": "Muốn hiển thị bài đang phát dưới tên kênh thoại? [Cấp quyền lại cho mình]({url}) để cho phép quyền Đặt trạng thái kênh thoại."
+    "voiceStatusHint": "Muốn hiển thị bài đang phát dưới tên kênh thoại? [Cấp quyền lại cho mình]({url}) để cho phép quyền Đặt trạng thái kênh thoại.",
+    "fleet": "Muốn có nhạc ở nhiều kênh thoại cùng lúc? Hãy thêm cả {bots}. Chúng miễn phí và sẽ đảm nhận /play khi Bypass đang bận ở kênh khác."
   },
   "router": {
     "guildOnly": "Lệnh này chỉ dùng được trong server.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 đến 8 đi kèm với Premium.",
       "servedHere": "{bot} đang phát nhạc trong {channel} rồi. Hãy dùng /play và các nút điều khiển ở đó, hoặc vào một kênh thoại khác nhé.",
       "stay247On": "Đã bật 24/7 cho {bot}: bot sẽ ở lại {channel} và tự vào lại sau khi khởi động lại.",
-      "stay247Off": "Đã tắt 24/7 cho {bot}."
+      "stay247Off": "Đã tắt 24/7 cho {bot}.",
+      "inviteFree": "Thêm {bots} để phát nhạc ở đây cùng lúc. Chúng miễn phí, mỗi bot chỉ cần một cú nhấp:",
+      "askAdmin": "Hãy nhờ người có quyền **Quản Lý Máy Chủ** thêm {bots}. Chúng miễn phí và giúp Bypass phát nhạc ở nhiều kênh thoại cùng lúc.",
+      "publicNotice": "{user} muốn nghe nhạc ở {channel}, nhưng tất cả bot Bypass trong máy chủ này đều đang bận. Người có quyền **Quản Lý Máy Chủ** có thể thêm {bots} miễn phí để nhiều kênh thoại có nhạc cùng lúc.",
+      "addAll": "Thêm tất cả"
     },
     "info": {
       "header": "{bot} trong {channel}",
@@ -2095,5 +2101,8 @@
       "more": "và {count} bài nữa",
       "card": "Thẻ trình phát có các nút nằm trong {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Bot riêng này chưa được bật trong máy chủ này. Chủ sở hữu có thể thay đổi điều đó trong bảng điều khiển Bypass."
   }
 }

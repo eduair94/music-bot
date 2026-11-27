@@ -3,7 +3,7 @@ import { Client, version as discordJsVersion } from "discord.js";
 import { BotEvent as BotEventModel } from "../models/BotEvent";
 import { GuildData, isRedisAvailable, setBotStatus, syncBotGuildsWithData, syncInstanceGuilds } from "../shared/services/redis";
 import type { BotEvent, ErrorScope, IBotHeartbeat } from "../shared/types";
-import { INSTANCE, isPrimary } from "../utils/instance";
+import { INSTANCE, isLinked, isPrimary } from "../utils/instance";
 import { DatabaseService } from "./database";
 import { DiscordPlayerService } from "./discordPlayer";
 import { PatreonService } from "./patreon";
@@ -18,6 +18,8 @@ const HEARTBEAT_MS = 20_000;
  * and the per-guild metadata (`bot:guild:<id>`).
  */
 export async function syncGuildPresence(client: Client): Promise<number> {
+  // A private bot never appears in Bypass's guild lists.
+  if (isLinked) return client.guilds.cache.size;
   const guilds = collectGuildData(client);
   if (isPrimary) await syncBotGuildsWithData(guilds);
   await syncInstanceGuilds(INSTANCE, guilds.map((g) => g.id));
@@ -74,6 +76,8 @@ export class TelemetryService {
   }
 
   public start(client: Client): void {
+    // Private bots publish no heartbeat: the admin console tracks Bypass's own processes.
+    if (isLinked) return;
     this.client = client;
     void this.resolveYtDlpVersion();
     void this.tick();
@@ -89,6 +93,7 @@ export class TelemetryService {
 
   /** Publish an explicit offline status (gateway closed / session invalidated). Never throws. */
   public async markOffline(reason: string): Promise<void> {
+    if (isLinked) return;
     try {
       await setBotStatus({ online: false, reason, ts: new Date().toISOString() }, INSTANCE);
     } catch (error) {
@@ -121,7 +126,7 @@ export class TelemetryService {
 
   /** Fire-and-forget event write. Drops silently when Mongo is not ready. */
   public record(event: BotEvent): void {
-    if (!DatabaseService.getInstance().isReady()) return;
+    if (isLinked || !DatabaseService.getInstance().isReady()) return;
     BotEventModel.create(event).then(
       () => undefined,
       (err: unknown) => {

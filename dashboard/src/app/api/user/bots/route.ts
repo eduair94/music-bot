@@ -1,170 +1,137 @@
 import { auth } from "@/auth";
+import { botInviteUrl } from "../../../../../../shared/links";
+import { BotCommand } from "@/lib/models/BotCommand";
 import { LinkedBotModel } from "@/lib/models/LinkedBot";
-import { getLinkedBotLimit, getUserTier, IPatreonUser, PatreonUserModel, TIER_LIMITS } from "@/lib/models/PatreonUser";
+import { getUserTier, IPatreonUser, PatreonUserModel } from "@/lib/models/PatreonUser";
+import { inspectBotToken, linkedBotAllowanceFor } from "@/lib/linked-bots";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 /**
  * GET /api/user/bots
- * List all linked bots for the authenticated user
+ * The signed-in user's private bots and how many they may have.
  */
 export async function GET() {
   const session = await auth();
-  
   if (!session?.user?.discordId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     await connectToDatabase();
-    
-    // Get user's tier info
-    const patreonUser = await PatreonUserModel.findOne({ 
-      discordId: session.user.discordId 
-    }).lean() as IPatreonUser | null;
-    
-    const pledgeAmount = patreonUser?.pledgeAmountCents ?? 0;
-    const tier = getUserTier(pledgeAmount);
-    const limit = TIER_LIMITS[tier];
-    
-    // Get user's linked bots (exclude sensitive fields)
-    const bots = await LinkedBotModel.find({ 
-      ownerId: session.user.discordId 
-    }).select("-encryptedToken -tokenIv").sort({ createdAt: -1 }).lean();
+    const discordId = session.user.discordId;
+    const [patron, limit, bots] = await Promise.all([
+      PatreonUserModel.findOne({ discordId }).lean() as Promise<IPatreonUser | null>,
+      linkedBotAllowanceFor(discordId),
+      LinkedBotModel.find({ ownerId: discordId }).select("-encryptedToken -tokenIv").sort({ createdAt: 1 }).lean()
+    ]);
+    const tier = patron?.isPremium ? getUserTier(patron.pledgeAmountCents ?? 0) : "free";
 
     return NextResponse.json({
-      bots,
+      bots: bots.map((bot) => ({ ...bot, inviteUrl: botInviteUrl(bot.botId) })),
       tier,
       limit,
       count: bots.length,
-      canLinkMore: bots.length < limit,
+      canLinkMore: bots.length < limit
     });
   } catch (error) {
-    console.error("Error fetching linked bots:", error);
+    console.error("[bots] list failed:", (error as Error)?.message ?? error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 
 /**
  * POST /api/user/bots
- * Link a new bot for the authenticated user
+ * Link a private bot: check the token with Discord, store it encrypted and
+ * ask the bot process to start it.
  */
 export async function POST(request: Request) {
   const session = await auth();
-  
-  if (!session?.user?.discordId || !session?.user?.name) {
+  if (!session?.user?.discordId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { token } = await request.json();
-    
-    if (!token || typeof token !== 'string') {
-      return NextResponse.json({ error: "Bot token is required" }, { status: 400 });
+    const { token } = (await request.json().catch(() => ({}))) as { token?: unknown };
+    const value = typeof token === "string" ? token.trim() : "";
+    if (!value) return NextResponse.json({ error: "Bot token is required" }, { status: 400 });
+    // A bot token is three dot-separated base64url parts; anything else is a paste mistake.
+    if (!/^[\w-]{20,}\.[\w-]{4,}\.[\w-]{20,}$/.test(value)) {
+      return NextResponse.json({ error: "That doesn't look like a bot token. Copy it from the Bot page of your application" }, { status: 400 });
     }
 
     await connectToDatabase();
-    
-    // Get user's tier info
-    const patreonUser = await PatreonUserModel.findOne({ 
-      discordId: session.user.discordId 
-    }).lean() as IPatreonUser | null;
-    
-    const pledgeAmount = patreonUser?.pledgeAmountCents ?? 0;
-    const tier = getUserTier(pledgeAmount);
-    const limit = getLinkedBotLimit(pledgeAmount);
-    
-    // Count existing bots
-    const currentCount = await LinkedBotModel.countDocuments({ 
-      ownerId: session.user.discordId 
-    });
-    
-    if (currentCount >= limit) {
-      return NextResponse.json({ 
-        error: limit === 0 
-          ? "Your plan does not support linking bots. Please upgrade to a paid tier."
-          : `You have reached your limit of ${limit} linked bot(s). Please upgrade to link more.`,
-        tier,
-        limit,
-        count: currentCount,
-      }, { status: 403 });
+    const discordId = session.user.discordId;
+    const limit = await linkedBotAllowanceFor(discordId);
+    const count = await LinkedBotModel.countDocuments({ ownerId: discordId });
+    if (count >= limit) {
+      return NextResponse.json(
+        {
+          error:
+            limit === 0
+              ? "Private bots come with Premium. Become a Founder on Patreon to run one"
+              : `You already have ${limit} private bot${limit === 1 ? "" : "s"}, the most your plan allows`,
+          limit,
+          count
+        },
+        { status: 403 }
+      );
     }
 
-    // Validate the token with Discord API
-    const discordResponse = await fetch("https://discord.com/api/v10/users/@me", {
-      headers: {
-        Authorization: `Bot ${token}`,
-      },
-    });
+    const check = await inspectBotToken(value);
+    if (!check.ok) return NextResponse.json({ error: check.error }, { status: 400 });
 
-    if (!discordResponse.ok) {
-      if (discordResponse.status === 401) {
-        return NextResponse.json({ error: "Invalid bot token" }, { status: 400 });
-      }
-      return NextResponse.json({ error: "Failed to validate token with Discord" }, { status: 400 });
+    const existing = await LinkedBotModel.findOne({ botId: check.botId }, { ownerId: 1 }).lean<{ ownerId: string }>();
+    if (existing) {
+      return NextResponse.json(
+        { error: existing.ownerId === discordId ? "You already linked this bot" : "Another account already linked this bot" },
+        { status: 409 }
+      );
     }
 
-    const botData = await discordResponse.json();
-    
-    // Verify it's actually a bot account
-    if (!botData.bot) {
-      return NextResponse.json({ error: "Token is not a bot token" }, { status: 400 });
+    const key = process.env.BOT_ENCRYPTION_KEY ?? "";
+    if (!/^[0-9a-f]{64}$/i.test(key)) {
+      console.error("[bots] BOT_ENCRYPTION_KEY is missing or not 64 hex characters");
+      return NextResponse.json({ error: "Private bots aren't available right now" }, { status: 503 });
     }
+    // AES-256-CBC, the scheme services/botManager.ts decrypts.
+    const crypto = await import("crypto");
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv("aes-256-cbc", new Uint8Array(Buffer.from(key, "hex")), new Uint8Array(iv));
+    const encryptedToken = cipher.update(value, "utf8", "hex") + cipher.final("hex");
 
-    // Check if bot is already linked
-    const existingBot = await LinkedBotModel.findOne({ botId: botData.id });
-    if (existingBot) {
-      if (existingBot.ownerId === session.user.discordId) {
-        return NextResponse.json({ error: "You have already linked this bot" }, { status: 400 });
-      }
-      return NextResponse.json({ error: "This bot is already linked by another user" }, { status: 400 });
-    }
-
-    // Encrypt the token using the encryption key from environment
-    const encryptionKey = process.env.BOT_ENCRYPTION_KEY;
-    if (!encryptionKey || encryptionKey.length !== 64) {
-      console.error("BOT_ENCRYPTION_KEY not properly configured");
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-    }
-
-    // Import crypto functions
-    const crypto = await import('crypto');
-    const keyBuffer = new Uint8Array(Buffer.from(encryptionKey, 'hex'));
-    const ivBuffer = crypto.randomBytes(16);
-    const iv = new Uint8Array(ivBuffer);
-    
-    const cipher = crypto.createCipheriv('aes-256-cbc', keyBuffer, iv);
-    let encryptedToken = cipher.update(token, 'utf8', 'hex');
-    encryptedToken += cipher.final('hex');
-    const tokenIv = ivBuffer.toString('hex');
-
-    // Create the linked bot record
-    const linkedBot = await LinkedBotModel.create({
-      ownerId: session.user.discordId,
-      ownerUsername: session.user.name,
-      botId: botData.id,
-      botUsername: botData.username,
-      botAvatar: botData.avatar,
+    const linked = await LinkedBotModel.create({
+      ownerId: discordId,
+      ownerUsername: session.user.name || "Dashboard user",
+      botId: check.botId,
+      botUsername: check.username,
+      botAvatar: check.avatar,
       encryptedToken,
-      tokenIv,
-      status: "offline",
+      tokenIv: iv.toString("hex"),
+      status: "starting",
+      lastStatusChange: new Date()
+    });
+    // Start it right away: the bot process picks this up within seconds.
+    await BotCommand.create({
+      type: "linked_bot_start",
+      botId: check.botId,
+      status: "pending",
+      createdAt: new Date(),
+      requestedBy: { id: discordId, username: session.user.name || "Dashboard user" }
     });
 
-    // Return bot info without sensitive data
-    const { encryptedToken: _, tokenIv: __, ...botInfo } = linkedBot.toObject();
-
+    const { encryptedToken: _secret, tokenIv: _iv, ...bot } = linked.toObject();
     return NextResponse.json({
       success: true,
-      bot: botInfo,
-      tier,
+      bot: { ...bot, inviteUrl: botInviteUrl(check.botId) },
+      isPublic: check.isPublic,
       limit,
-      count: currentCount + 1,
+      count: count + 1
     });
   } catch (error) {
-    console.error("Error linking bot:", error);
+    console.error("[bots] link failed:", (error as Error)?.message ?? error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

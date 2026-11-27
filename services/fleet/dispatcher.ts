@@ -21,8 +21,10 @@ import {
   instanceName,
   inviteUrl,
   LivePlaybackState,
+  missingInstances,
   RouteCandidate
 } from "../../shared/fleet";
+import { SITE_URL } from "../../shared/links";
 import {
   getInstancePlaybackState,
   getInstanceStatus,
@@ -420,20 +422,65 @@ async function refuse(interaction: RepliableInteraction<"cached">, voice: VoiceB
     }
   }
 
-  const missing = snapshot.filter((s) => !s.inGuild && (!s.premium || premium));
-  const buttons = missing
-    .map((s) => ({ s, url: inviteUrl(s.instance, interaction.guildId) }))
-    .filter((m): m is { s: InstanceSnapshot; url: string } => Boolean(m.url))
-    .slice(0, 5)
-    .map(({ s, url }) =>
-      new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(url).setEmoji("➕").setLabel(i18n.__mf("fleet.dispatch.add", { bot: s.name }))
-    );
-  if (buttons.length) lines.push("", i18n.__("fleet.dispatch.invite"));
+  // Bots the server never added: the usual reason nobody can come.
+  const missing = missingInstances(snapshot, premium).filter((s) => inviteUrl(s.instance, interaction.guildId));
+  const bots = listFormat(missing.map((s) => `**${s.name}**`));
+  const canInvite = interaction.memberPermissions.has(PermissionFlagsBits.ManageGuild);
+  const components = missing.length ? [inviteRow(missing, interaction.guildId)] : [];
+
+  if (missing.length && canInvite) {
+    lines.push("", `➕ ${i18n.__mf("fleet.dispatch.inviteFree", { bots })}`);
+  } else if (missing.length) {
+    lines.push("", `🔑 ${i18n.__mf("fleet.dispatch.askAdmin", { bots })}`);
+  }
   // Only once the Premium bots exist (claims follow production).
   if (!premium && snapshot.some((s) => s.premium)) lines.push(`-# 💎 ${i18n.__("fleet.dispatch.premium")}`);
 
-  const components = buttons.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)] : [];
   await privately(interaction, lines.join("\n"), components);
+
+  // The member can't add bots: tell the channel once in a while so a manager sees it.
+  if (missing.length && !canInvite && shouldPostNotice(interaction.guildId)) {
+    const content = `🎧 ${i18n.__mf("fleet.dispatch.publicNotice", { user: `<@${interaction.user.id}>`, channel: `<#${voice.id}>`, bots })}`;
+    await interaction.followUp({ content, components, allowedMentions: NO_MENTIONS }).catch((error) => {
+      console.warn("[Fleet] Could not post the missing-bots notice:", (error as Error)?.message ?? error);
+    });
+  }
+}
+
+/** "Bypass 2, Bypass 3 and Bypass 4" in the member's language. */
+function listFormat(items: string[]): string {
+  try {
+    return new Intl.ListFormat(currentLocale(), { style: "long", type: "conjunction" }).format(items);
+  } catch {
+    return items.join(", ");
+  }
+}
+
+/** One "Add Bypass N" button per missing bot, then the dashboard page that adds them one after another. */
+function inviteRow(missing: InstanceSnapshot[], guildId: string): ActionRowBuilder<ButtonBuilder> {
+  const buttons = missing.slice(0, 4).map((s) =>
+    new ButtonBuilder()
+      .setStyle(ButtonStyle.Link)
+      .setURL(inviteUrl(s.instance, guildId)!)
+      .setEmoji("➕")
+      .setLabel(i18n.__mf("fleet.dispatch.add", { bot: s.name }))
+  );
+  if (missing.length > 1) {
+    buttons.push(
+      new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(`${SITE_URL}/servers/${guildId}`).setEmoji("🎛️").setLabel(i18n.__("fleet.dispatch.addAll"))
+    );
+  }
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);
+}
+
+/** Public "add the other bots" notices: at most one per server every 6 hours. */
+const NOTICE_EVERY_MS = 6 * 60 * 60 * 1000;
+const lastNotice = new Map<string, number>();
+function shouldPostNotice(guildId: string, now = Date.now()): boolean {
+  const last = lastNotice.get(guildId);
+  if (last && now - last < NOTICE_EVERY_MS) return false;
+  lastNotice.set(guildId, now);
+  return true;
 }
 
 // ------------------------------------------------------- forwarded slash

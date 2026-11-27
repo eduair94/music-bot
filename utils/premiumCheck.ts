@@ -4,6 +4,7 @@ import { PremiumFeature } from "./premiumFeatures";
 import { premiumUpsell } from "./upsell";
 import { hasActiveVote, isVotePerk } from "../services/votes";
 import { isBoosterPerk, isSupportBooster } from "../services/boosters";
+import { isLinked } from "./instance";
 
 export { PREMIUM_FEATURES, type PremiumFeature } from "./premiumFeatures";
 
@@ -14,6 +15,8 @@ export async function hasPremiumFeature(
   userId: string,
   feature: PremiumFeature
 ): Promise<boolean> {
+  // A private bot is a paid perk of its owner: everyone it plays for gets the Premium features.
+  if (isLinked) return true;
   const patreonService = PatreonService.getInstance();
   const premiumInfo = await patreonService.getPremiumFeatures(userId);
   if (premiumInfo.features.includes(feature)) return true;

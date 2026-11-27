@@ -24,7 +24,8 @@
     "embedDescription": "Daftar semua perintah"
   },
   "invite": {
-    "description": "Mengirim tautan undangan bot"
+    "description": "Mengirim tautan undangan bot",
+    "fleet": "Pemutar tambahan: Bypass 2, 3, dan 4 bisa memutar di voice channel lain secara bersamaan, dengan /play yang sama."
   },
   "loop": {
     "description": "Mengatur ulang musik (Loop)",
@@ -1240,7 +1241,8 @@
     "dashboard": "Dasbor",
     "support": "Server dukungan",
     "vote": "Vote",
-    "voiceStatusHint": "Mau lagu yang sedang diputar tampil di bawah nama voice channel? [Otorisasi ulang aku]({url}) untuk memberi izin Set Voice Channel Status."
+    "voiceStatusHint": "Mau lagu yang sedang diputar tampil di bawah nama voice channel? [Otorisasi ulang aku]({url}) untuk memberi izin Set Voice Channel Status.",
+    "fleet": "Mau musik di lebih dari satu voice channel sekaligus? Tambahkan juga {bots}. Gratis, dan mereka akan mengambil alih /play saat Bypass sedang sibuk di channel lain."
   },
   "router": {
     "guildOnly": "Perintah ini hanya bisa digunakan di server.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 sampai 8 tersedia dengan Premium.",
       "servedHere": "{bot} sudah memutar musik di {channel}. Pakai /play dan kontrol di sana, atau gabung ke voice channel lain.",
       "stay247On": "24/7 aktif untuk {bot}: bot akan tetap di {channel} dan bergabung kembali setelah restart.",
-      "stay247Off": "24/7 nonaktif untuk {bot}."
+      "stay247Off": "24/7 nonaktif untuk {bot}.",
+      "inviteFree": "Tambahkan {bots} untuk memutar di sini secara bersamaan. Gratis, cukup satu klik masing-masing:",
+      "askAdmin": "Minta seseorang dengan izin **Manage Server** untuk menambahkan {bots}. Gratis, dan Bypass jadi bisa memutar di lebih banyak voice channel sekaligus.",
+      "publicNotice": "{user} ingin memutar musik di {channel}, tapi semua bot Bypass di server ini sedang sibuk. Seseorang dengan izin **Manage Server** bisa menambahkan {bots} secara gratis, supaya lebih banyak voice channel bisa memutar musik sekaligus.",
+      "addAll": "Tambahkan semua"
     },
     "info": {
       "header": "{bot} di {channel}",
@@ -2095,5 +2101,8 @@
       "more": "dan {count} lainnya",
       "card": "Kartu pemutar dengan tombol ada di {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Bot pribadi ini tidak diaktifkan di server ini. Pemiliknya bisa mengubahnya di dashboard Bypass."
   }
 }

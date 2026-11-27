@@ -24,7 +24,8 @@
     "embedDescription": "Listado de comandos"
   },
   "invite": {
-    "description": "Envía un link de invitación para el bot"
+    "description": "Envía un link de invitación para el bot",
+    "fleet": "Reproductores extra: Bypass 2, 3 y 4 suenan en otros canales de voz al mismo tiempo, con el mismo /play."
   },
   "loop": {
     "description": "Activa el modo de reproducción en bucle",
@@ -1240,7 +1241,8 @@
     "dashboard": "Panel",
     "support": "Servidor de soporte",
     "vote": "Votar",
-    "voiceStatusHint": "¿Quieres que la canción que suena aparezca bajo el nombre del canal de voz? [Vuelve a autorizarme]({url}) para conceder el permiso Establecer estado del canal de voz."
+    "voiceStatusHint": "¿Quieres que la canción que suena aparezca bajo el nombre del canal de voz? [Vuelve a autorizarme]({url}) para conceder el permiso Establecer estado del canal de voz.",
+    "fleet": "¿Quieres música en más de un canal de voz a la vez? Añade también {bots}. Son gratis y se encargan de /play cuando Bypass está ocupado en otro canal."
   },
   "router": {
     "guildOnly": "Este comando solo funciona en un servidor.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 a 8 vienen con Premium.",
       "servedHere": "{bot} ya está reproduciendo en {channel}. Usa /play y los controles de ahí, o únete a otro canal de voz.",
       "stay247On": "24/7 activado para {bot}: se queda en {channel} y vuelve a entrar tras los reinicios.",
-      "stay247Off": "24/7 desactivado para {bot}."
+      "stay247Off": "24/7 desactivado para {bot}.",
+      "inviteFree": "Añade {bots} para reproducir aquí al mismo tiempo. Son gratis, un clic cada uno:",
+      "askAdmin": "Pídele a alguien con **Gestionar servidor** que añada {bots}. Son gratis y permiten que Bypass suene en más canales de voz a la vez.",
+      "publicNotice": "{user} quería música en {channel}, pero todos los bots de Bypass de este servidor están ocupados. Alguien con **Gestionar servidor** puede añadir {bots} gratis, para que más canales de voz tengan música a la vez.",
+      "addAll": "Añadirlos todos"
     },
     "info": {
       "header": "{bot} en {channel}",
@@ -2095,5 +2101,8 @@
       "more": "y {count} más",
       "card": "La tarjeta del reproductor con los botones está en {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Este bot privado no está activado en este servidor. Su dueño puede cambiarlo en el panel de Bypass."
   }
 }

@@ -24,7 +24,8 @@
     "embedDescription": "Tüm komutlar"
   },
   "invite": {
-    "description": "Bot davet bağlantısı gönder"
+    "description": "Bot davet bağlantısı gönder",
+    "fleet": "Ekstra botlar: Bypass 2, 3 ve 4 aynı anda başka ses kanallarında, aynı /play ile çalar."
   },
   "loop": {
     "description": "Müzik döngüsünü aç/kapa",
@@ -1240,7 +1241,8 @@
     "dashboard": "Panel",
     "support": "Destek sunucusu",
     "vote": "Oy ver",
-    "voiceStatusHint": "Çalan şarkının ses kanalı adının altında görünmesini ister misin? Ses Kanalı Durumunu Ayarla iznini vermek için [beni yeniden yetkilendir]({url})."
+    "voiceStatusHint": "Çalan şarkının ses kanalı adının altında görünmesini ister misin? Ses Kanalı Durumunu Ayarla iznini vermek için [beni yeniden yetkilendir]({url}).",
+    "fleet": "Aynı anda birden fazla ses kanalında müzik mi istiyorsun? {bots} botlarını da ekle. Ücretsizler ve Bypass başka bir kanalda meşgulken /play komutunu devralırlar."
   },
   "router": {
     "guildOnly": "Bu komut yalnızca bir sunucuda çalışır.",
@@ -2086,7 +2088,11 @@
       "premium": "Bypass 5 ile 8 arası Premium ile gelir.",
       "servedHere": "{bot} zaten {channel} kanalında çalıyor. Oradaki /play komutunu ve kontrolleri kullan ya da başka bir ses kanalına katıl.",
       "stay247On": "{bot} için 24/7 açık: {channel} kanalında kalır ve yeniden başlatmalardan sonra tekrar katılır.",
-      "stay247Off": "{bot} için 24/7 kapalı."
+      "stay247Off": "{bot} için 24/7 kapalı.",
+      "inviteFree": "Burada aynı anda çalmak için {bots} botlarını ekle. Ücretsizler, her biri tek tıkla eklenir:",
+      "askAdmin": "**Sunucuyu Yönet** yetkisi olan birinden {bots} botlarını eklemesini iste. Ücretsizler ve Bypass'ın aynı anda daha fazla ses kanalında çalmasını sağlarlar.",
+      "publicNotice": "{user}, {channel} kanalında müzik istedi ama bu sunucudaki tüm Bypass botları meşgul. **Sunucuyu Yönet** yetkisi olan biri {bots} botlarını ücretsiz ekleyebilir, böylece daha fazla ses kanalında aynı anda müzik çalabilir.",
+      "addAll": "Hepsini ekle"
     },
     "info": {
       "header": "{bot} - {channel}",
@@ -2095,5 +2101,8 @@
       "more": "ve {count} tane daha",
       "card": "Butonlu oynatıcı kartı {channel} kanalında."
     }
+  },
+  "linkedBot": {
+    "notHere": "Bu özel bot bu sunucuda etkin değil. Sahibi bunu Bypass panelinden değiştirebilir."
   }
 }

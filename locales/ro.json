@@ -24,7 +24,8 @@
     "embedDescription": "Listă de toate comenzile"
   },
   "invite": {
-    "description": "Trimite linkul de invitație al botului"
+    "description": "Trimite linkul de invitație al botului",
+    "fleet": "Playere extra: Bypass 2, 3 și 4 cântă în alte canale vocale în același timp, cu același /play."
   },
   "loop": {
     "description": "Comută repetarea melodiilor",
@@ -1241,7 +1242,8 @@
     "dashboard": "Panou de control",
     "support": "Server de suport",
     "vote": "Votează",
-    "voiceStatusHint": "Vrei ca melodia care rulează să apară sub numele canalului vocal? [Reautorizează-mă]({url}) ca să acorzi permisiunea Set Voice Channel Status."
+    "voiceStatusHint": "Vrei ca melodia care rulează să apară sub numele canalului vocal? [Reautorizează-mă]({url}) ca să acorzi permisiunea Set Voice Channel Status.",
+    "fleet": "Vrei muzică în mai multe canale vocale deodată? Adaugă și {bots}. Sunt gratuiți și preiau /play când Bypass e ocupat în alt canal."
   },
   "router": {
     "guildOnly": "Această comandă funcționează doar pe un server.",
@@ -2087,7 +2089,11 @@
       "premium": "Bypass 5 până la 8 vin cu Premium.",
       "servedHere": "{bot} cântă deja în {channel}. Folosește /play și controalele de acolo sau intră pe alt canal vocal.",
       "stay247On": "24/7 activat pentru {bot}: rămâne în {channel} și revine acolo după reporniri.",
-      "stay247Off": "24/7 dezactivat pentru {bot}."
+      "stay247Off": "24/7 dezactivat pentru {bot}.",
+      "inviteFree": "Adaugă {bots} ca să cânte și aici în același timp. Sunt gratuiți, un singur click pentru fiecare:",
+      "askAdmin": "Roagă pe cineva cu **Manage Server** să adauge {bots}. Sunt gratuiți și îi permit lui Bypass să cânte în mai multe canale vocale deodată.",
+      "publicNotice": "{user} voia muzică în {channel}, dar toți boții Bypass de pe acest server sunt ocupați. Cineva cu **Manage Server** poate adăuga gratuit {bots}, ca mai multe canale vocale să aibă muzică deodată.",
+      "addAll": "Adaugă-i pe toți"
     },
     "info": {
       "header": "{bot} în {channel}",
@@ -2096,5 +2102,8 @@
       "more": "și încă {count}",
       "card": "Cardul playerului cu butoane e în {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Acest bot privat nu este activat pe acest server. Proprietarul lui poate schimba asta din dashboard-ul Bypass."
   }
 }

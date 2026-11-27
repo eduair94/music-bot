@@ -24,7 +24,8 @@
     "embedDescription": "Lista de todos os comandos."
   },
   "invite": {
-    "description": "Envia o link de convite do bot."
+    "description": "Envia o link de convite do bot.",
+    "fleet": "Players extras: Bypass 2, 3 e 4 tocam em outros canais de voz ao mesmo tempo, com o mesmo /play."
   },
   "loop": {
     "description": "Ativa o modo de repetição.",
@@ -1240,7 +1241,8 @@
     "dashboard": "Painel",
     "support": "Servidor de suporte",
     "vote": "Votar",
-    "voiceStatusHint": "Quer mostrar a música tocando embaixo do nome do canal de voz? [Me autorize de novo]({url}) para dar a permissão Definir status do canal de voz."
+    "voiceStatusHint": "Quer mostrar a música tocando embaixo do nome do canal de voz? [Me autorize de novo]({url}) para dar a permissão Definir status do canal de voz.",
+    "fleet": "Quer música em mais de um canal de voz ao mesmo tempo? Adicione {bots} também. Eles são grátis e assumem o /play quando o Bypass está ocupado em outro canal."
   },
   "router": {
     "guildOnly": "Este comando só funciona em um servidor.",
@@ -2086,7 +2088,11 @@
       "premium": "Os Bypass 5 a 8 vêm com o Premium.",
       "servedHere": "{bot} já está tocando em {channel}. Use /play e os controles de lá, ou entre em outro canal de voz.",
       "stay247On": "24/7 ativado para {bot}: ele fica em {channel} e volta pra lá depois de reinicializações.",
-      "stay247Off": "24/7 desativado para {bot}."
+      "stay247Off": "24/7 desativado para {bot}.",
+      "inviteFree": "Adicione {bots} pra tocar aqui ao mesmo tempo. Eles são grátis, é só um clique cada:",
+      "askAdmin": "Peça pra alguém com **Gerenciar Servidor** adicionar {bots}. Eles são grátis e deixam o Bypass tocar em mais canais de voz ao mesmo tempo.",
+      "publicNotice": "{user} queria música em {channel}, mas todos os bots Bypass deste servidor estão ocupados. Alguém com **Gerenciar Servidor** pode adicionar {bots} de graça, pra que mais canais de voz tenham música ao mesmo tempo.",
+      "addAll": "Adicionar todos"
     },
     "info": {
       "header": "{bot} em {channel}",
@@ -2095,5 +2101,8 @@
       "more": "e mais {count}",
       "card": "O card do player com os botões está em {channel}."
     }
+  },
+  "linkedBot": {
+    "notHere": "Este bot privado não está ativado neste servidor. O dono dele pode mudar isso no painel do Bypass."
   }
 }
