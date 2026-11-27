@@ -1,5 +1,6 @@
 import { GuildSettings, IGuildSettings } from "../models/GuildSettings";
 import { DatabaseService } from "./database";
+import { publishSettingsChanged, startSettingsInvalidation } from "./settingsBus";
 
 /**
  * GuildSettingsService - Manages guild settings with caching
@@ -138,6 +139,7 @@ export class GuildSettingsService {
         if (settings) {
           // Update cache
           this.cache.set(guildId, settings as IGuildSettings);
+          publishSettingsChanged(guildId, Object.keys(updates));
         }
 
         return settings as IGuildSettings;
@@ -283,6 +285,7 @@ export class GuildSettingsService {
         
         // Update cache
         this.cache.set(guildId, settings);
+        publishSettingsChanged(guildId, ["*"]);
         return settings;
       } catch (error) {
         console.error(`[GuildSettings] Error resetting settings for ${guildId}:`, error);
@@ -292,6 +295,14 @@ export class GuildSettingsService {
     // Reset in-memory cache
     this.cache.set(guildId, defaults);
     return defaults;
+  }
+
+  /**
+   * Drop a server's cached settings whenever another process (the dashboard,
+   * another bot instance) changes them. Call once Redis is reachable.
+   */
+  public async listenForChanges(): Promise<void> {
+    await startSettingsInvalidation((guildId) => this.clearCache(guildId));
   }
 
   /**

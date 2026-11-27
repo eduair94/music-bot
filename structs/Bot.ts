@@ -184,6 +184,11 @@ export class Bot {
         await syncBotGuildsWithData(collectGuildData(this.client));
         console.log("✅ Redis sync completed");
 
+        // Dashboard edits apply at once: drop a server's cached settings when they change.
+        await GuildSettingsService.getInstance()
+          .listenForChanges()
+          .catch((error) => console.error("[Redis] Settings listener failed:", error));
+
         // Periodic guild refresh (every 3 minutes to prevent key expiration).
         // The online status itself is the TelemetryService heartbeat.
         setInterval(async () => {
