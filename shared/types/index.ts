@@ -366,6 +366,18 @@ export type PlayerCommandType =
   | "search";
 
 /**
+ * Player commands the bot executes from the `botcommands` bus (dashboard v2
+ * contract, also used by the primary to forward work to fleet instances).
+ * Both BotCommand models validate `command` against this list.
+ */
+export const BUS_COMMANDS = [
+  "play", "pause", "resume", "skip", "previous", "stop", "volume", "seek", "shuffle", "loop",
+  "autoplay", "filter", "remove", "move", "skipto", "clear", "join", "leave", "search"
+] as const satisfies readonly PlayerCommandType[];
+
+export type BusCommand = (typeof BUS_COMMANDS)[number];
+
+/**
  * Linked bot control command types
  */
 export type LinkedBotCommandType =
