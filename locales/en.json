@@ -1133,7 +1133,167 @@
     "description": "Advanced queue management"
   },
   "settings": {
-    "description": "Configure bot settings for this server (Admin only)"
+    "description": "Configure bot settings for this server (Admin only)",
+    "noPermission": "You don't have permission to manage bot settings.",
+    "unknownSubcommand": "Unknown subcommand.",
+    "current": "**Current:** {value}",
+    "allChannels": "All channels allowed",
+    "allAllowed": "All allowed",
+    "on": "On",
+    "off": "Off",
+    "yes": "Yes",
+    "no": "No",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "view": {
+      "description": "View current settings",
+      "title": "Bot Settings",
+      "roles": "Roles",
+      "djRole": "DJ Role",
+      "djNotSet": "Not set (everyone can DJ)",
+      "adminRole": "Admin Role",
+      "adminNotSet": "Server admins only",
+      "volume": "Volume",
+      "default": "Default",
+      "maximum": "Maximum",
+      "queue": "Queue",
+      "maxSize": "Max Size",
+      "songs": "{count} songs",
+      "preventDuplicates": "Prevent Duplicates",
+      "behavior": "Behavior",
+      "announcements": "Announcements",
+      "autoLeave": "Auto Leave",
+      "leaveTimeout": "Leave Timeout",
+      "channels": "Channels",
+      "voiceChannels": "Voice Channels",
+      "textChannels": "Text Channels",
+      "logChannel": "Log Channel",
+      "logDefault": "Default (#bot-commands)",
+      "blacklist": "Blacklist",
+      "noBlacklist": "No users blacklisted",
+      "premium": "Premium",
+      "tier": "Tier",
+      "expires": "Expires",
+      "never": "Never",
+      "notActive": "Not active",
+      "customization": "Customization",
+      "language": "Language",
+      "embedColor": "Embed Color",
+      "footer": "Use /settings <option> to change settings"
+    },
+    "djrole": {
+      "description": "Set the DJ role for music control",
+      "prompt": "Select the DJ role. Users with this role can control music playback.",
+      "placeholder": "Select DJ role",
+      "clear": "Clear DJ Role (Everyone can DJ)",
+      "set": "DJ role set to {role}",
+      "cleared": "DJ role cleared.",
+      "clearedEveryone": "DJ role cleared. Everyone can now use DJ commands."
+    },
+    "adminrole": {
+      "description": "Set the admin role for settings management",
+      "prompt": "Select the Admin role. Users with this role can change bot settings.",
+      "placeholder": "Select Admin role",
+      "clear": "Clear Admin Role (Server admins only)",
+      "set": "Admin role set to {role}",
+      "cleared": "Admin role cleared.",
+      "clearedAdmins": "Admin role cleared. Only server administrators can change settings."
+    },
+    "volume": {
+      "description": "Set default and maximum volume",
+      "optionDefault": "Default volume (0-100)",
+      "optionMax": "Maximum allowed volume (0-100)",
+      "currentTitle": "Current Volume Settings",
+      "defaultSet": "Default volume set to {value}%",
+      "maxSet": "Maximum volume set to {value}%",
+      "logDefault": "Default Volume",
+      "logMax": "Maximum Volume"
+    },
+    "queue": {
+      "description": "Configure queue settings",
+      "optionMaxSize": "Maximum queue size (1-1000)",
+      "optionPreventDuplicates": "Prevent duplicate songs in queue",
+      "currentTitle": "Current Queue Settings",
+      "maxSet": "Max queue size set to {value} songs",
+      "duplicatesSet": "Prevent duplicates: {value}"
+    },
+    "behavior": {
+      "description": "Configure bot behavior",
+      "optionAnnouncements": "Announce now playing in text channel",
+      "optionAutoLeave": "Leave voice channel when empty",
+      "optionLeaveTimeout": "Seconds before leaving empty channel (30-3600)",
+      "currentTitle": "Current Behavior Settings",
+      "announcementsSet": "Now playing announcements: {value}",
+      "autoLeaveSet": "Auto leave when empty: {value}",
+      "timeoutSet": "Leave timeout set to {value} seconds"
+    },
+    "voicechannels": {
+      "description": "Set allowed voice channels",
+      "prompt": "Select which voice channels the bot is allowed to join.",
+      "placeholder": "Select allowed voice channels",
+      "allowAll": "Allow All Channels",
+      "set": "Allowed voice channels: {channels}",
+      "cleared": "All voice channels are now allowed."
+    },
+    "textchannels": {
+      "description": "Set allowed text channels for commands",
+      "prompt": "Select which text channels can use bot commands.",
+      "placeholder": "Select allowed text channels",
+      "allowAll": "Allow All Channels",
+      "set": "Allowed text channels: {channels}",
+      "cleared": "All text channels are now allowed."
+    },
+    "logchannel": {
+      "description": "Set the channel for bot logs (now playing, etc.)",
+      "prompt": "Select a channel for bot log messages (now playing, queue finished, etc.).",
+      "note": "**Note:** If no log channel is set, the bot will look for a channel named #bot-commands. If that doesn't exist, no log messages will be sent.",
+      "placeholder": "Select log channel for bot messages",
+      "useDefault": "Use Default (bot-commands)",
+      "disable": "Disable Log Messages",
+      "statusDefault": "Using default behavior (looks for #bot-commands)",
+      "statusDisabled": "Log messages are disabled",
+      "set": "Log channel set to {channel}",
+      "reset": "Log channel reset to default (will use #bot-commands if it exists).",
+      "disabled": "Log messages have been disabled."
+    },
+    "blacklist": {
+      "description": "Manage user blacklist",
+      "optionAdd": "Add user to blacklist",
+      "optionRemove": "Remove user from blacklist",
+      "title": "Blacklisted Users",
+      "none": "No users are blacklisted.",
+      "already": "{user} is already blacklisted.",
+      "added": "{user} has been blacklisted from using the bot.",
+      "notListed": "{user} is not blacklisted.",
+      "removed": "{user} has been removed from the blacklist."
+    },
+    "language": {
+      "description": "Set bot language for this server",
+      "prompt": "Select the bot language for this server.",
+      "placeholder": "Select a language",
+      "more": "Every language the bot speaks is available with {command}."
+    },
+    "embedcolor": {
+      "description": "Set custom embed color",
+      "optionColor": "Hex color code (e.g., #FF5500)",
+      "invalid": "Invalid hex color. Please use format: #RRGGBB (e.g., #FF5500)",
+      "set": "Embed color set to: {color}"
+    },
+    "reset": {
+      "description": "Reset all settings to default",
+      "prompt": "Are you sure you want to reset ALL settings to default? This cannot be undone.",
+      "confirm": "Yes, Reset All Settings",
+      "cancel": "Cancel",
+      "done": "All settings have been reset to default.",
+      "cancelled": "Reset cancelled."
+    },
+    "stats": {
+      "description": "View server music statistics",
+      "title": "Music Statistics",
+      "songsPlayed": "Total Songs Played",
+      "playtime": "Total Playtime",
+      "playtimeValue": "{hours}h {minutes}m"
+    }
   },
   "stats": {
     "description": "View bot and session statistics"

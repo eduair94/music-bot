@@ -1,5 +1,11 @@
+import { MessageFlags } from "discord.js";
 import { logSettingChange } from "../../utils/actionLog";
+import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
+
+const onOff = (value: boolean) => i18n.__(value ? "settings.on" : "settings.off");
+const enabledDisabled = (value: boolean) => i18n.__(value ? "settings.enabled" : "settings.disabled");
+const label = (key: string) => i18n.__(`settings.view.${key}`);
 
 export async function handleVolume({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
   const defaultVol = interaction.options.getInteger("default");
@@ -7,8 +13,12 @@ export async function handleVolume({ interaction, guildId, settings, settingsSer
 
   if (defaultVol === null && maxVol === null) {
     return interaction.reply({
-      content: "**Current Volume Settings:**\nDefault: " + settings.defaultVolume + "%\nMaximum: " + settings.maxVolume + "%",
-      ephemeral: true,
+      content: [
+        `**${i18n.__("settings.volume.currentTitle")}:**`,
+        `${label("default")}: ${settings.defaultVolume}%`,
+        `${label("maximum")}: ${settings.maxVolume}%`
+      ].join("\n"),
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -17,13 +27,13 @@ export async function handleVolume({ interaction, guildId, settings, settingsSer
 
   if (defaultVol !== null) {
     updates.defaultVolume = defaultVol;
-    messages.push("Default volume set to " + defaultVol + "%");
+    messages.push(i18n.__mf("settings.volume.defaultSet", { value: defaultVol }));
     // Log the change
     if (interaction.guild) {
       await logSettingChange(
         interaction.guild,
         interaction.user,
-        "Default Volume",
+        i18n.__("settings.volume.logDefault"),
         settings.defaultVolume + "%",
         defaultVol + "%"
       );
@@ -31,13 +41,13 @@ export async function handleVolume({ interaction, guildId, settings, settingsSer
   }
   if (maxVol !== null) {
     updates.maxVolume = maxVol;
-    messages.push("Maximum volume set to " + maxVol + "%");
+    messages.push(i18n.__mf("settings.volume.maxSet", { value: maxVol }));
     // Log the change
     if (interaction.guild) {
       await logSettingChange(
         interaction.guild,
         interaction.user,
-        "Maximum Volume",
+        i18n.__("settings.volume.logMax"),
         settings.maxVolume + "%",
         maxVol + "%"
       );
@@ -47,7 +57,7 @@ export async function handleVolume({ interaction, guildId, settings, settingsSer
   await settingsService.updateSettings(guildId, updates);
   return interaction.reply({
     content: messages.join("\n"),
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }
 
@@ -57,8 +67,12 @@ export async function handleQueue({ interaction, guildId, settings, settingsServ
 
   if (maxSize === null && preventDuplicates === null) {
     return interaction.reply({
-      content: "**Current Queue Settings:**\nMax Size: " + settings.maxQueueSize + " songs\nPrevent Duplicates: " + (settings.preventDuplicates ? "Yes" : "No"),
-      ephemeral: true,
+      content: [
+        `**${i18n.__("settings.queue.currentTitle")}:**`,
+        `${label("maxSize")}: ${i18n.__mf("settings.view.songs", { count: settings.maxQueueSize })}`,
+        `${label("preventDuplicates")}: ${i18n.__(settings.preventDuplicates ? "settings.yes" : "settings.no")}`
+      ].join("\n"),
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -67,17 +81,17 @@ export async function handleQueue({ interaction, guildId, settings, settingsServ
 
   if (maxSize !== null) {
     updates.maxQueueSize = maxSize;
-    messages.push("Max queue size set to " + maxSize + " songs");
+    messages.push(i18n.__mf("settings.queue.maxSet", { value: maxSize }));
   }
   if (preventDuplicates !== null) {
     updates.preventDuplicates = preventDuplicates;
-    messages.push("Prevent duplicates: " + (preventDuplicates ? "Enabled" : "Disabled"));
+    messages.push(i18n.__mf("settings.queue.duplicatesSet", { value: enabledDisabled(preventDuplicates) }));
   }
 
   await settingsService.updateSettings(guildId, updates);
   return interaction.reply({
     content: messages.join("\n"),
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }
 
@@ -88,8 +102,13 @@ export async function handleBehavior({ interaction, guildId, settings, settingsS
 
   if (announcements === null && autoLeave === null && leaveTimeout === null) {
     return interaction.reply({
-      content: "**Current Behavior Settings:**\nAnnouncements: " + (settings.announceNowPlaying ? "On" : "Off") + "\nAuto Leave: " + (settings.autoLeaveEmpty ? "On" : "Off") + "\nLeave Timeout: " + settings.autoLeaveTimeout + "s",
-      ephemeral: true,
+      content: [
+        `**${i18n.__("settings.behavior.currentTitle")}:**`,
+        `${label("announcements")}: ${onOff(settings.announceNowPlaying)}`,
+        `${label("autoLeave")}: ${onOff(settings.autoLeaveEmpty)}`,
+        `${label("leaveTimeout")}: ${settings.autoLeaveTimeout}s`
+      ].join("\n"),
+      flags: MessageFlags.Ephemeral,
     });
   }
 
@@ -98,20 +117,20 @@ export async function handleBehavior({ interaction, guildId, settings, settingsS
 
   if (announcements !== null) {
     updates.announceNowPlaying = announcements;
-    messages.push("Now playing announcements: " + (announcements ? "Enabled" : "Disabled"));
+    messages.push(i18n.__mf("settings.behavior.announcementsSet", { value: enabledDisabled(announcements) }));
   }
   if (autoLeave !== null) {
     updates.autoLeaveEmpty = autoLeave;
-    messages.push("Auto leave when empty: " + (autoLeave ? "Enabled" : "Disabled"));
+    messages.push(i18n.__mf("settings.behavior.autoLeaveSet", { value: enabledDisabled(autoLeave) }));
   }
   if (leaveTimeout !== null) {
     updates.autoLeaveTimeout = leaveTimeout;
-    messages.push("Leave timeout set to " + leaveTimeout + " seconds");
+    messages.push(i18n.__mf("settings.behavior.timeoutSet", { value: leaveTimeout }));
   }
 
   await settingsService.updateSettings(guildId, updates);
   return interaction.reply({
     content: messages.join("\n"),
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral,
   });
 }

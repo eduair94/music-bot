@@ -2,92 +2,86 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  RoleSelectMenuBuilder,
+  MessageComponentInteraction,
+  MessageFlags,
+  RoleSelectMenuBuilder
 } from "discord.js";
+import { GuildSettingsService } from "../../services/guildSettings";
+import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
-export async function handleDJRole({ interaction, guildId, settingsService }: SettingsHandlerContext) {
+export async function handleDJRole({ interaction }: SettingsHandlerContext) {
   const roleSelect = new RoleSelectMenuBuilder()
-    .setCustomId("djrole_select")
-    .setPlaceholder("Select DJ role")
+    .setCustomId("settings:djrole")
+    .setPlaceholder(i18n.__("settings.djrole.placeholder"))
     .setMinValues(0)
     .setMaxValues(1);
 
   const clearButton = new ButtonBuilder()
-    .setCustomId("djrole_clear")
-    .setLabel("Clear DJ Role (Everyone can DJ)")
+    .setCustomId("settings:djrole:clear")
+    .setLabel(i18n.__("settings.djrole.clear"))
     .setStyle(ButtonStyle.Secondary);
 
   const row1 = new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(roleSelect);
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(clearButton);
 
-  const response = await interaction.reply({
-    content: "Select the DJ role. Users with this role can control music playback.",
+  return interaction.reply({
+    content: i18n.__("settings.djrole.prompt"),
     components: [row1, row2],
-    ephemeral: true,
-  });
-
-  const collector = response.createMessageComponentCollector({
-    time: 60000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "djrole_select" && i.isRoleSelectMenu()) {
-      const roleId = i.values[0] || null;
-      await settingsService.updateSettings(guildId, { djRoleId: roleId });
-      await i.update({
-        content: roleId ? "DJ role set to <@&" + roleId + ">" : "DJ role cleared.",
-        components: [],
-      });
-    } else if (i.customId === "djrole_clear") {
-      await settingsService.updateSettings(guildId, { djRoleId: null });
-      await i.update({
-        content: "DJ role cleared. Everyone can now use DJ commands.",
-        components: [],
-      });
-    }
+    flags: MessageFlags.Ephemeral
   });
 }
 
-export async function handleAdminRole({ interaction, guildId, settingsService }: SettingsHandlerContext) {
+export async function onDJRoleComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  const settingsService = GuildSettingsService.getInstance();
+  if (action === "clear") {
+    await settingsService.updateSettings(interaction.guildId, { djRoleId: null });
+    return interaction.update({ content: i18n.__("settings.djrole.clearedEveryone"), components: [] });
+  }
+  if (!interaction.isRoleSelectMenu()) return;
+  const roleId = interaction.values[0] || null;
+  await settingsService.updateSettings(interaction.guildId, { djRoleId: roleId });
+  return interaction.update({
+    content: roleId ? i18n.__mf("settings.djrole.set", { role: "<@&" + roleId + ">" }) : i18n.__("settings.djrole.cleared"),
+    components: [],
+    allowedMentions: { parse: [] }
+  });
+}
+
+export async function handleAdminRole({ interaction }: SettingsHandlerContext) {
   const roleSelect = new RoleSelectMenuBuilder()
-    .setCustomId("adminrole_select")
-    .setPlaceholder("Select Admin role")
+    .setCustomId("settings:adminrole")
+    .setPlaceholder(i18n.__("settings.adminrole.placeholder"))
     .setMinValues(0)
     .setMaxValues(1);
 
   const clearButton = new ButtonBuilder()
-    .setCustomId("adminrole_clear")
-    .setLabel("Clear Admin Role (Server admins only)")
+    .setCustomId("settings:adminrole:clear")
+    .setLabel(i18n.__("settings.adminrole.clear"))
     .setStyle(ButtonStyle.Secondary);
 
   const row1 = new ActionRowBuilder<RoleSelectMenuBuilder>().addComponents(roleSelect);
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(clearButton);
 
-  const response = await interaction.reply({
-    content: "Select the Admin role. Users with this role can change bot settings.",
+  return interaction.reply({
+    content: i18n.__("settings.adminrole.prompt"),
     components: [row1, row2],
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral
   });
+}
 
-  const collector = response.createMessageComponentCollector({
-    time: 60000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "adminrole_select" && i.isRoleSelectMenu()) {
-      const roleId = i.values[0] || null;
-      await settingsService.updateSettings(guildId, { adminRoleId: roleId });
-      await i.update({
-        content: roleId ? "Admin role set to <@&" + roleId + ">" : "Admin role cleared.",
-        components: [],
-      });
-    } else if (i.customId === "adminrole_clear") {
-      await settingsService.updateSettings(guildId, { adminRoleId: null });
-      await i.update({
-        content: "Admin role cleared. Only server administrators can change settings.",
-        components: [],
-      });
-    }
+export async function onAdminRoleComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  const settingsService = GuildSettingsService.getInstance();
+  if (action === "clear") {
+    await settingsService.updateSettings(interaction.guildId, { adminRoleId: null });
+    return interaction.update({ content: i18n.__("settings.adminrole.clearedAdmins"), components: [] });
+  }
+  if (!interaction.isRoleSelectMenu()) return;
+  const roleId = interaction.values[0] || null;
+  await settingsService.updateSettings(interaction.guildId, { adminRoleId: roleId });
+  return interaction.update({
+    content: roleId ? i18n.__mf("settings.adminrole.set", { role: "<@&" + roleId + ">" }) : i18n.__("settings.adminrole.cleared"),
+    components: [],
+    allowedMentions: { parse: [] }
   });
 }

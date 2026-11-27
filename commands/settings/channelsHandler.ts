@@ -4,165 +4,153 @@ import {
   ButtonStyle,
   ChannelSelectMenuBuilder,
   ChannelType,
+  MessageComponentInteraction,
+  MessageFlags
 } from "discord.js";
+import { GuildSettingsService } from "../../services/guildSettings";
+import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
-export async function handleVoiceChannels({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
+const channelList = (ids: string[]) => ids.map((c) => "<#" + c + ">").join(", ");
+
+export async function handleVoiceChannels({ interaction, settings }: SettingsHandlerContext) {
   const channelSelect = new ChannelSelectMenuBuilder()
-    .setCustomId("voicechannel_select")
-    .setPlaceholder("Select allowed voice channels")
+    .setCustomId("settings:voice")
+    .setPlaceholder(i18n.__("settings.voicechannels.placeholder"))
     .setChannelTypes(ChannelType.GuildVoice)
     .setMinValues(0)
     .setMaxValues(10);
 
   const clearButton = new ButtonBuilder()
-    .setCustomId("voicechannel_clear")
-    .setLabel("Allow All Channels")
+    .setCustomId("settings:voice:clear")
+    .setLabel(i18n.__("settings.voicechannels.allowAll"))
     .setStyle(ButtonStyle.Secondary);
 
   const row1 = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(channelSelect);
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(clearButton);
 
-  const response = await interaction.reply({
-    content: "Select which voice channels the bot is allowed to join.\n**Current:** " + 
-      (settings.allowedVoiceChannels.length > 0 
-        ? settings.allowedVoiceChannels.map((c) => "<#" + c + ">").join(", ") 
-        : "All channels allowed"),
+  const current = settings.allowedVoiceChannels.length > 0 ? channelList(settings.allowedVoiceChannels) : i18n.__("settings.allChannels");
+  return interaction.reply({
+    content: i18n.__("settings.voicechannels.prompt") + "\n" + i18n.__mf("settings.current", { value: current }),
     components: [row1, row2],
-    ephemeral: true,
-  });
-
-  const collector = response.createMessageComponentCollector({
-    time: 60000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "voicechannel_select" && i.isChannelSelectMenu()) {
-      const channels = i.values;
-      await settingsService.updateSettings(guildId, { allowedVoiceChannels: channels });
-      await i.update({
-        content: channels.length > 0 
-          ? "Allowed voice channels: " + channels.map((c) => "<#" + c + ">").join(", ") 
-          : "All voice channels are now allowed.",
-        components: [],
-      });
-    } else if (i.customId === "voicechannel_clear") {
-      await settingsService.updateSettings(guildId, { allowedVoiceChannels: [] });
-      await i.update({
-        content: "All voice channels are now allowed.",
-        components: [],
-      });
-    }
+    flags: MessageFlags.Ephemeral
   });
 }
 
-export async function handleTextChannels({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
+export async function onVoiceChannelsComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  const settingsService = GuildSettingsService.getInstance();
+  if (action === "clear") {
+    await settingsService.updateSettings(interaction.guildId, { allowedVoiceChannels: [] });
+    return interaction.update({ content: i18n.__("settings.voicechannels.cleared"), components: [] });
+  }
+  if (!interaction.isChannelSelectMenu()) return;
+  const channels = interaction.values;
+  await settingsService.updateSettings(interaction.guildId, { allowedVoiceChannels: channels });
+  return interaction.update({
+    content:
+      channels.length > 0
+        ? i18n.__mf("settings.voicechannels.set", { channels: channelList(channels) })
+        : i18n.__("settings.voicechannels.cleared"),
+    components: []
+  });
+}
+
+export async function handleTextChannels({ interaction, settings }: SettingsHandlerContext) {
   const channelSelect = new ChannelSelectMenuBuilder()
-    .setCustomId("textchannel_select")
-    .setPlaceholder("Select allowed text channels")
+    .setCustomId("settings:text")
+    .setPlaceholder(i18n.__("settings.textchannels.placeholder"))
     .setChannelTypes(ChannelType.GuildText)
     .setMinValues(0)
     .setMaxValues(10);
 
   const clearButton = new ButtonBuilder()
-    .setCustomId("textchannel_clear")
-    .setLabel("Allow All Channels")
+    .setCustomId("settings:text:clear")
+    .setLabel(i18n.__("settings.textchannels.allowAll"))
     .setStyle(ButtonStyle.Secondary);
 
   const row1 = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(channelSelect);
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(clearButton);
 
-  const response = await interaction.reply({
-    content: "Select which text channels can use bot commands.\n**Current:** " + 
-      (settings.allowedTextChannels.length > 0 
-        ? settings.allowedTextChannels.map((c) => "<#" + c + ">").join(", ") 
-        : "All channels allowed"),
+  const current = settings.allowedTextChannels.length > 0 ? channelList(settings.allowedTextChannels) : i18n.__("settings.allChannels");
+  return interaction.reply({
+    content: i18n.__("settings.textchannels.prompt") + "\n" + i18n.__mf("settings.current", { value: current }),
     components: [row1, row2],
-    ephemeral: true,
-  });
-
-  const collector = response.createMessageComponentCollector({
-    time: 60000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "textchannel_select" && i.isChannelSelectMenu()) {
-      const channels = i.values;
-      await settingsService.updateSettings(guildId, { allowedTextChannels: channels });
-      await i.update({
-        content: channels.length > 0 
-          ? "Allowed text channels: " + channels.map((c) => "<#" + c + ">").join(", ") 
-          : "All text channels are now allowed.",
-        components: [],
-      });
-    } else if (i.customId === "textchannel_clear") {
-      await settingsService.updateSettings(guildId, { allowedTextChannels: [] });
-      await i.update({
-        content: "All text channels are now allowed.",
-        components: [],
-      });
-    }
+    flags: MessageFlags.Ephemeral
   });
 }
 
-export async function handleLogChannel({ interaction, guildId, settings, settingsService }: SettingsHandlerContext) {
+export async function onTextChannelsComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  const settingsService = GuildSettingsService.getInstance();
+  if (action === "clear") {
+    await settingsService.updateSettings(interaction.guildId, { allowedTextChannels: [] });
+    return interaction.update({ content: i18n.__("settings.textchannels.cleared"), components: [] });
+  }
+  if (!interaction.isChannelSelectMenu()) return;
+  const channels = interaction.values;
+  await settingsService.updateSettings(interaction.guildId, { allowedTextChannels: channels });
+  return interaction.update({
+    content:
+      channels.length > 0
+        ? i18n.__mf("settings.textchannels.set", { channels: channelList(channels) })
+        : i18n.__("settings.textchannels.cleared"),
+    components: []
+  });
+}
+
+export async function handleLogChannel({ interaction, settings }: SettingsHandlerContext) {
   const channelSelect = new ChannelSelectMenuBuilder()
-    .setCustomId("logchannel_select")
-    .setPlaceholder("Select log channel for bot messages")
+    .setCustomId("settings:log")
+    .setPlaceholder(i18n.__("settings.logchannel.placeholder"))
     .setChannelTypes(ChannelType.GuildText)
     .setMinValues(1)
     .setMaxValues(1);
 
   const clearButton = new ButtonBuilder()
-    .setCustomId("logchannel_clear")
-    .setLabel("Use Default (bot-commands)")
+    .setCustomId("settings:log:default")
+    .setLabel(i18n.__("settings.logchannel.useDefault"))
     .setStyle(ButtonStyle.Secondary);
 
   const disableButton = new ButtonBuilder()
-    .setCustomId("logchannel_disable")
-    .setLabel("Disable Log Messages")
+    .setCustomId("settings:log:disable")
+    .setLabel(i18n.__("settings.logchannel.disable"))
     .setStyle(ButtonStyle.Danger);
 
   const row1 = new ActionRowBuilder<ChannelSelectMenuBuilder>().addComponents(channelSelect);
   const row2 = new ActionRowBuilder<ButtonBuilder>().addComponents(clearButton, disableButton);
 
-  let currentStatus = "Using default behavior (looks for #bot-commands)";
+  let currentStatus = i18n.__("settings.logchannel.statusDefault");
   if (settings.logChannelId === "disabled") {
-    currentStatus = "Log messages are disabled";
+    currentStatus = i18n.__("settings.logchannel.statusDisabled");
   } else if (settings.logChannelId) {
     currentStatus = "<#" + settings.logChannelId + ">";
   }
 
-  const response = await interaction.reply({
-    content: "Select a channel for bot log messages (now playing, queue finished, etc.).\n\n**Current:** " + currentStatus + "\n\n**Note:** If no log channel is set, the bot will look for a channel named 'bot-commands'. If that doesn't exist, no log messages will be sent.",
+  return interaction.reply({
+    content: [
+      i18n.__("settings.logchannel.prompt"),
+      "",
+      i18n.__mf("settings.current", { value: currentStatus }),
+      "",
+      i18n.__("settings.logchannel.note")
+    ].join("\n"),
     components: [row1, row2],
-    ephemeral: true,
+    flags: MessageFlags.Ephemeral
   });
+}
 
-  const collector = response.createMessageComponentCollector({
-    time: 60000,
-  });
-
-  collector.on("collect", async (i) => {
-    if (i.customId === "logchannel_select" && i.isChannelSelectMenu()) {
-      const channelId = i.values[0];
-      await settingsService.updateSettings(guildId, { logChannelId: channelId });
-      await i.update({
-        content: "Log channel set to <#" + channelId + ">",
-        components: [],
-      });
-    } else if (i.customId === "logchannel_clear") {
-      await settingsService.updateSettings(guildId, { logChannelId: null });
-      await i.update({
-        content: "Log channel reset to default (will use #bot-commands if it exists).",
-        components: [],
-      });
-    } else if (i.customId === "logchannel_disable") {
-      await settingsService.updateSettings(guildId, { logChannelId: "disabled" });
-      await i.update({
-        content: "Log messages have been disabled.",
-        components: [],
-      });
-    }
-  });
+export async function onLogChannelComponent(interaction: MessageComponentInteraction<"cached">, action: string | undefined) {
+  const settingsService = GuildSettingsService.getInstance();
+  if (action === "default") {
+    await settingsService.updateSettings(interaction.guildId, { logChannelId: null });
+    return interaction.update({ content: i18n.__("settings.logchannel.reset"), components: [] });
+  }
+  if (action === "disable") {
+    await settingsService.updateSettings(interaction.guildId, { logChannelId: "disabled" });
+    return interaction.update({ content: i18n.__("settings.logchannel.disabled"), components: [] });
+  }
+  if (!interaction.isChannelSelectMenu()) return;
+  const channelId = interaction.values[0];
+  if (!channelId) return;
+  await settingsService.updateSettings(interaction.guildId, { logChannelId: channelId });
+  return interaction.update({ content: i18n.__mf("settings.logchannel.set", { channel: "<#" + channelId + ">" }), components: [] });
 }

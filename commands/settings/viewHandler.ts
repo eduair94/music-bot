@@ -1,90 +1,93 @@
-import { ColorResolvable, EmbedBuilder } from "discord.js";
+import { ColorResolvable, EmbedBuilder, MessageFlags } from "discord.js";
+import { BotLocale, LOCALE_NAMES, i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
+
+const label = (key: string) => i18n.__(`settings.view.${key}`);
+const line = (key: string, value: string | number) => `**${label(key)}:** ${value}`;
+const onOff = (value: boolean) => i18n.__(value ? "settings.on" : "settings.off");
+const channelList = (ids: string[]) => ids.map((c) => "<#" + c + ">").join(", ");
+
+function languageName(value: string): string {
+  if (value === "auto") return i18n.__("language.auto");
+  return LOCALE_NAMES[value as BotLocale] ?? value;
+}
 
 export async function handleView({ interaction, settings }: SettingsHandlerContext) {
   // Get log channel display value
-  let logChannelDisplay = "Default (#bot-commands)";
+  let logChannelDisplay = label("logDefault");
   if (settings.logChannelId === "disabled") {
-    logChannelDisplay = "Disabled";
+    logChannelDisplay = i18n.__("settings.disabled");
   } else if (settings.logChannelId) {
     logChannelDisplay = "<#" + settings.logChannelId + ">";
   }
 
   const embed = new EmbedBuilder()
-    .setTitle("Bot Settings")
+    .setTitle(label("title"))
     .setColor(settings.embedColor as ColorResolvable)
     .addFields(
       {
-        name: "Roles",
+        name: label("roles"),
         value: [
-          "**DJ Role:** " + (settings.djRoleId ? "<@&" + settings.djRoleId + ">" : "Not set (everyone can DJ)"),
-          "**Admin Role:** " + (settings.adminRoleId ? "<@&" + settings.adminRoleId + ">" : "Server admins only"),
+          line("djRole", settings.djRoleId ? "<@&" + settings.djRoleId + ">" : label("djNotSet")),
+          line("adminRole", settings.adminRoleId ? "<@&" + settings.adminRoleId + ">" : label("adminNotSet")),
         ].join("\n"),
         inline: false,
       },
       {
-        name: "Volume",
+        name: label("volume"),
+        value: [line("default", settings.defaultVolume + "%"), line("maximum", settings.maxVolume + "%")].join("\n"),
+        inline: true,
+      },
+      {
+        name: label("queue"),
         value: [
-          "**Default:** " + settings.defaultVolume + "%",
-          "**Maximum:** " + settings.maxVolume + "%",
+          line("maxSize", i18n.__mf("settings.view.songs", { count: settings.maxQueueSize })),
+          line("preventDuplicates", i18n.__(settings.preventDuplicates ? "settings.yes" : "settings.no")),
         ].join("\n"),
         inline: true,
       },
       {
-        name: "Queue",
+        name: label("behavior"),
         value: [
-          "**Max Size:** " + settings.maxQueueSize + " songs",
-          "**Prevent Duplicates:** " + (settings.preventDuplicates ? "Yes" : "No"),
+          line("announcements", onOff(settings.announceNowPlaying)),
+          line("autoLeave", onOff(settings.autoLeaveEmpty)),
+          line("leaveTimeout", settings.autoLeaveTimeout + "s"),
         ].join("\n"),
         inline: true,
       },
       {
-        name: "Behavior",
+        name: label("channels"),
         value: [
-          "**Announcements:** " + (settings.announceNowPlaying ? "On" : "Off"),
-          "**Auto Leave:** " + (settings.autoLeaveEmpty ? "On" : "Off"),
-          "**Leave Timeout:** " + settings.autoLeaveTimeout + "s",
-        ].join("\n"),
-        inline: true,
-      },
-      {
-        name: "Channels",
-        value: [
-          "**Voice Channels:** " + (settings.allowedVoiceChannels.length > 0 
-            ? settings.allowedVoiceChannels.map((c) => "<#" + c + ">").join(", ") 
-            : "All allowed"),
-          "**Text Channels:** " + (settings.allowedTextChannels.length > 0 
-            ? settings.allowedTextChannels.map((c) => "<#" + c + ">").join(", ") 
-            : "All allowed"),
-          "**Log Channel:** " + logChannelDisplay,
+          line("voiceChannels", settings.allowedVoiceChannels.length > 0 ? channelList(settings.allowedVoiceChannels) : i18n.__("settings.allAllowed")),
+          line("textChannels", settings.allowedTextChannels.length > 0 ? channelList(settings.allowedTextChannels) : i18n.__("settings.allAllowed")),
+          line("logChannel", logChannelDisplay),
         ].join("\n"),
         inline: false,
       },
       {
-        name: "Blacklist",
+        name: label("blacklist"),
         value: settings.blacklistedUsers.length > 0
           ? settings.blacklistedUsers.map((u) => "<@" + u + ">").join(", ")
-          : "No users blacklisted",
+          : label("noBlacklist"),
         inline: false,
       },
       {
-        name: "Premium",
+        name: label("premium"),
         value: settings.premium.enabled
-          ? "**Tier:** " + settings.premium.tier.toUpperCase() + "\n**Expires:** " + (settings.premium.expiresAt ? settings.premium.expiresAt.toLocaleDateString() : "Never")
-          : "Not active",
+          ? line("tier", settings.premium.tier.toUpperCase()) +
+            "\n" +
+            line("expires", settings.premium.expiresAt ? new Date(settings.premium.expiresAt).toLocaleDateString() : label("never"))
+          : label("notActive"),
         inline: true,
       },
       {
-        name: "Customization",
-        value: [
-          "**Language:** " + settings.language,
-          "**Embed Color:** " + settings.embedColor,
-        ].join("\n"),
+        name: label("customization"),
+        value: [line("language", languageName(settings.language)), line("embedColor", settings.embedColor)].join("\n"),
         inline: true,
       }
     )
-    .setFooter({ text: "Use /settings <option> to change settings" })
+    .setFooter({ text: label("footer") })
     .setTimestamp();
 
-  return interaction.reply({ embeds: [embed], ephemeral: true });
+  return interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral, allowedMentions: { parse: [] } });
 }
