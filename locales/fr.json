@@ -1029,7 +1029,27 @@
     "reset_title": "🔄 Permissions réinitialisées",
     "reset_success": "Toutes les permissions personnalisées ont été réinitialisées par défaut.",
     "allowall_success": "Toutes les permissions sont maintenant autorisées pour {role}",
-    "denyall_success": "Toutes les permissions sont maintenant refusées pour {role}"
+    "denyall_success": "Toutes les permissions sont maintenant refusées pour {role}",
+    "groups": {
+      "play": "Ajouter des morceaux",
+      "playback": "Pause, reprise, avance et précédent",
+      "skip": "Passer",
+      "queue": "Modifier la file d'attente",
+      "volume": "Volume",
+      "effects": "Effets audio",
+      "loop_autoplay": "Boucle et lecture auto",
+      "stop_leave": "Arrêter, quitter et rejoindre",
+      "lyrics_view": "Paroles",
+      "settings": "Paramètres du serveur"
+    },
+    "deny": {
+      "denied_user": "Tu es sur la liste d'exclusion pour **{group}**.",
+      "denied_role": "Un de tes rôles est sur la liste d'exclusion pour **{group}**.",
+      "needs_dj": "**{group}** est réservé aux DJ sur ce serveur.",
+      "needs_admin": "**{group}** est réservé aux admins du serveur.",
+      "hint": "Les admins du serveur peuvent changer ça sur le tableau de bord."
+    },
+    "voteSkipOff": "Le vote pour passer est désactivé sur ce serveur. Les admins du serveur peuvent changer ça sur le tableau de bord."
   },
   "setsettings": {
     "updated": "✅ Paramètres mis à jour",
@@ -2022,5 +2042,57 @@
     "noGame": "Aucun blind test en cours ici.",
     "stopped": "Partie arrêtée.",
     "blockedDuringGame": "Un blind test est en cours sur ce serveur. Attends qu'il se termine ou arrête-le avec {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Ce bot n'est pas sur le serveur.",
+      "nothingPlaying": "Rien n'est en cours de lecture.",
+      "paused": "En pause.",
+      "resumed": "Lecture reprise.",
+      "skipped": "{title} passé.",
+      "noPrevious": "Il n'y a pas de morceau précédent.",
+      "previous": "Lecture du morceau précédent.",
+      "stopped": "Lecture arrêtée et file d'attente vidée.",
+      "left": "{channel} quitté.",
+      "volume": "Volume réglé à {volume} %.",
+      "volumeCapped": "Volume réglé à {volume} %, le maximum de ce serveur.",
+      "badVolume": "Choisis un volume entre 0 et {max}.",
+      "shuffled": "File d'attente mélangée.",
+      "badLoop": "Le mode boucle doit être off, track ou queue.",
+      "effectOn": "{effect} activé.",
+      "effectOff": "{effect} désactivé.",
+      "bassBoost": "Boost des basses : {level}.",
+      "bassBoostName": "Boost des basses",
+      "removed": "{title} retiré.",
+      "badPosition": "Choisis une position entre 1 et {max}.",
+      "moved": "{title} déplacé en position {position}.",
+      "skippedTo": "Passage direct à {title}.",
+      "cleared": "File d'attente vidée.",
+      "seeked": "Saut à {time}.",
+      "badSeek": "Choisis un moment entre 0:00 et {duration}.",
+      "joined": "{channel} rejoint.",
+      "searchResults": "{count} résultats.",
+      "searchFailed": "La recherche n'a pas marché. Réessaie.",
+      "unknownCommand": "Commande inconnue : {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} rejoint {channel}",
+      "slow": "{bot} est encore en train de charger. Le morceau démarre dès qu'il est prêt.",
+      "noAnswer": "{bot} n'a pas répondu. Réessaie dans un instant.",
+      "noneFree": "Aucun bot Bypass n'est libre pour rejoindre {channel} pour le moment.",
+      "busyIn": "{bot} joue dans {channel}",
+      "offline": "{bot} est hors ligne",
+      "notAllowed": "{bot} n'est pas autorisé dans ce salon",
+      "invite": "Ajoute un autre Bypass pour jouer dans plusieurs salons à la fois :",
+      "add": "Ajouter {bot}",
+      "premium": "Bypass 5 à 8 sont inclus avec Premium."
+    },
+    "info": {
+      "header": "{bot} dans {channel}",
+      "nothing": "{bot} ne joue rien ici.",
+      "upNext": "À suivre",
+      "more": "et {count} de plus",
+      "card": "La carte du lecteur avec les boutons est dans {channel}."
+    }
   }
 }

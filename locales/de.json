@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Berechtigungen zurückgesetzt",
     "reset_success": "Alle benutzerdefinierten Berechtigungen wurden auf Standard zurückgesetzt.",
     "allowall_success": "Alle Berechtigungen sind jetzt für {role} erlaubt",
-    "denyall_success": "Alle Berechtigungen sind jetzt für {role} verweigert"
+    "denyall_success": "Alle Berechtigungen sind jetzt für {role} verweigert",
+    "groups": {
+      "play": "Songs hinzufügen",
+      "playback": "Pausieren, fortsetzen, spulen und zurück",
+      "skip": "Überspringen",
+      "queue": "Warteschlange bearbeiten",
+      "volume": "Lautstärke",
+      "effects": "Audioeffekte",
+      "loop_autoplay": "Wiederholen und Autoplay",
+      "stop_leave": "Stoppen, verlassen und beitreten",
+      "lyrics_view": "Songtexte",
+      "settings": "Servereinstellungen"
+    },
+    "deny": {
+      "denied_user": "Du stehst auf der Sperrliste für **{group}**.",
+      "denied_role": "Eine deiner Rollen steht auf der Sperrliste für **{group}**.",
+      "needs_dj": "**{group}** ist auf diesem Server nur für DJs verfügbar.",
+      "needs_admin": "**{group}** ist nur für Server-Admins verfügbar.",
+      "hint": "Server-Admins können das im Dashboard ändern."
+    },
+    "voteSkipOff": "Vote-Skip ist auf diesem Server deaktiviert. Server-Admins können das im Dashboard ändern."
   },
   "setsettings": {
     "updated": "✅ Einstellungen aktualisiert",
@@ -2020,5 +2040,57 @@
     "noGame": "Hier läuft kein Song-Raten-Spiel.",
     "stopped": "Spiel beendet.",
     "blockedDuringGame": "Auf diesem Server läuft ein Song-Raten-Spiel. Warte, bis es vorbei ist, oder beende es mit {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Dieser Bot ist nicht auf dem Server.",
+      "nothingPlaying": "Gerade läuft nichts.",
+      "paused": "Pausiert.",
+      "resumed": "Fortgesetzt.",
+      "skipped": "{title} übersprungen.",
+      "noPrevious": "Es gibt keinen vorherigen Song.",
+      "previous": "Spiele den vorherigen Song.",
+      "stopped": "Gestoppt und Warteschlange geleert.",
+      "left": "{channel} verlassen.",
+      "volume": "Lautstärke auf {volume}% gesetzt.",
+      "volumeCapped": "Lautstärke auf {volume}% gesetzt, das Maximum dieses Servers.",
+      "badVolume": "Wähle eine Lautstärke zwischen 0 und {max}.",
+      "shuffled": "Warteschlange gemischt.",
+      "badLoop": "Der Wiederholungsmodus muss off, track oder queue sein.",
+      "effectOn": "{effect} an.",
+      "effectOff": "{effect} aus.",
+      "bassBoost": "Bass-Boost: {level}.",
+      "bassBoostName": "Bass-Boost",
+      "removed": "{title} entfernt.",
+      "badPosition": "Wähle eine Position zwischen 1 und {max}.",
+      "moved": "{title} auf Position {position} verschoben.",
+      "skippedTo": "Zu {title} gesprungen.",
+      "cleared": "Warteschlange geleert.",
+      "seeked": "Zu {time} gesprungen.",
+      "badSeek": "Wähle eine Zeit zwischen 0:00 und {duration}.",
+      "joined": "{channel} beigetreten.",
+      "searchResults": "{count} Ergebnisse.",
+      "searchFailed": "Die Suche hat nicht geklappt. Versuch es nochmal.",
+      "unknownCommand": "Unbekannter Befehl: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} tritt {channel} bei",
+      "slow": "{bot} lädt noch. Der Song startet, sobald er bereit ist.",
+      "noAnswer": "{bot} hat nicht geantwortet. Versuch es gleich nochmal.",
+      "noneFree": "Gerade ist kein Bypass-Bot frei, um {channel} beizutreten.",
+      "busyIn": "{bot} spielt in {channel}",
+      "offline": "{bot} ist offline",
+      "notAllowed": "{bot} darf nicht in diesen Kanal",
+      "invite": "Füge einen weiteren Bypass hinzu, um in mehreren Kanälen gleichzeitig zu spielen:",
+      "add": "{bot} hinzufügen",
+      "premium": "Bypass 5 bis 8 gibt es mit Premium."
+    },
+    "info": {
+      "header": "{bot} in {channel}",
+      "nothing": "{bot} spielt hier gerade nichts.",
+      "upNext": "Als Nächstes",
+      "more": "und {count} weitere",
+      "card": "Die Player-Karte mit den Buttons ist in {channel}."
+    }
   }
 }

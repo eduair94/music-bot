@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Permessi ripristinati",
     "reset_success": "Tutti i permessi personalizzati sono stati ripristinati ai valori predefiniti.",
     "allowall_success": "Tutti i permessi sono ora consentiti per {role}",
-    "denyall_success": "Tutti i permessi sono ora negati per {role}"
+    "denyall_success": "Tutti i permessi sono ora negati per {role}",
+    "groups": {
+      "play": "Aggiungere brani",
+      "playback": "Pausa, riprendi, salta a un punto e precedente",
+      "skip": "Salta",
+      "queue": "Modificare la coda",
+      "volume": "Volume",
+      "effects": "Effetti audio",
+      "loop_autoplay": "Ripetizione e riproduzione automatica",
+      "stop_leave": "Stop, uscita e ingresso",
+      "lyrics_view": "Testi",
+      "settings": "Impostazioni del server"
+    },
+    "deny": {
+      "denied_user": "Sei nella lista dei bloccati per **{group}**.",
+      "denied_role": "Uno dei tuoi ruoli è nella lista dei bloccati per **{group}**.",
+      "needs_dj": "**{group}** è riservato ai DJ su questo server.",
+      "needs_admin": "**{group}** è riservato agli admin del server.",
+      "hint": "Gli admin del server possono cambiarlo dalla dashboard."
+    },
+    "voteSkipOff": "Il voto per saltare è disattivato su questo server. Gli admin del server possono cambiarlo dalla dashboard."
   },
   "setsettings": {
     "updated": "✅ Impostazioni aggiornate",
@@ -2020,5 +2040,57 @@
     "noGame": "Qui non c'è nessuna partita di indovina la canzone in corso.",
     "stopped": "Partita fermata.",
     "blockedDuringGame": "In questo server è in corso una partita di indovina la canzone. Aspetta che finisca o terminala con {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Questo bot non è nel server.",
+      "nothingPlaying": "Non c'è niente in riproduzione.",
+      "paused": "In pausa.",
+      "resumed": "Ripreso.",
+      "skipped": "Saltato {title}.",
+      "noPrevious": "Non c'è un brano precedente.",
+      "previous": "Riproduco il brano precedente.",
+      "stopped": "Fermato e coda svuotata.",
+      "left": "Uscito da {channel}.",
+      "volume": "Volume impostato al {volume}%.",
+      "volumeCapped": "Volume impostato al {volume}%, il massimo di questo server.",
+      "badVolume": "Scegli un volume tra 0 e {max}.",
+      "shuffled": "Coda mescolata.",
+      "badLoop": "La modalità ripetizione deve essere off, brano o coda.",
+      "effectOn": "{effect} attivato.",
+      "effectOff": "{effect} disattivato.",
+      "bassBoost": "Bass boost: {level}.",
+      "bassBoostName": "Bass boost",
+      "removed": "Rimosso {title}.",
+      "badPosition": "Scegli una posizione tra 1 e {max}.",
+      "moved": "Spostato {title} in posizione {position}.",
+      "skippedTo": "Passato a {title}.",
+      "cleared": "Coda svuotata.",
+      "seeked": "Saltato a {time}.",
+      "badSeek": "Scegli un tempo tra 0:00 e {duration}.",
+      "joined": "Entrato in {channel}.",
+      "searchResults": "{count} risultati.",
+      "searchFailed": "La ricerca non è riuscita. Riprova.",
+      "unknownCommand": "Comando sconosciuto: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} sta entrando in {channel}",
+      "slow": "{bot} lo sta ancora caricando. Il brano parte appena è pronto.",
+      "noAnswer": "{bot} non ha risposto. Riprova tra un attimo.",
+      "noneFree": "Nessun bot Bypass è libero di entrare in {channel} al momento.",
+      "busyIn": "{bot} sta suonando in {channel}",
+      "offline": "{bot} è offline",
+      "notAllowed": "{bot} non ha accesso a questo canale",
+      "invite": "Aggiungi un altro Bypass per suonare in più canali contemporaneamente:",
+      "add": "Aggiungi {bot}",
+      "premium": "Bypass da 5 a 8 sono inclusi con Premium."
+    },
+    "info": {
+      "header": "{bot} in {channel}",
+      "nothing": "{bot} non sta riproducendo niente qui.",
+      "upNext": "Prossimi brani",
+      "more": "e altri {count}",
+      "card": "La scheda del player con i pulsanti è in {channel}."
+    }
   }
 }

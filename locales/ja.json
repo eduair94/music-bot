@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 権限をリセットしました",
     "reset_success": "すべてのカスタム権限をデフォルトに戻したよ。",
     "allowall_success": "{role} にすべての権限を許可したよ",
-    "denyall_success": "{role} のすべての権限を拒否したよ"
+    "denyall_success": "{role} のすべての権限を拒否したよ",
+    "groups": {
+      "play": "曲の追加",
+      "playback": "一時停止・再開・シーク・前の曲",
+      "skip": "スキップ",
+      "queue": "キューの編集",
+      "volume": "音量",
+      "effects": "オーディオエフェクト",
+      "loop_autoplay": "ループと自動再生",
+      "stop_leave": "停止・退出・参加",
+      "lyrics_view": "歌詞",
+      "settings": "サーバー設定"
+    },
+    "deny": {
+      "denied_user": "あなたは **{group}** の拒否リストに入っています。",
+      "denied_role": "あなたのロールのひとつが **{group}** の拒否リストに入っています。",
+      "needs_dj": "このサーバーでは **{group}** はDJのみ使えます。",
+      "needs_admin": "**{group}** はサーバー管理者のみ使えます。",
+      "hint": "サーバー管理者はダッシュボードでこの設定を変更できます。"
+    },
+    "voteSkipOff": "このサーバーでは投票スキップがオフになっています。サーバー管理者はダッシュボードで変更できます。"
   },
   "setsettings": {
     "updated": "✅ 設定を更新しました",
@@ -2020,5 +2040,57 @@
     "noGame": "ここでは曲当てゲームは行われていません。",
     "stopped": "ゲームを停止しました。",
     "blockedDuringGame": "このサーバーで曲当てゲームが進行中です。終わるまで待つか、{stop} で終了してね。"
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "このBotはサーバーにいません。",
+      "nothingPlaying": "何も再生していません。",
+      "paused": "一時停止しました。",
+      "resumed": "再開しました。",
+      "skipped": "{title} をスキップしました。",
+      "noPrevious": "前の曲がありません。",
+      "previous": "前の曲を再生しています。",
+      "stopped": "停止してキューをクリアしました。",
+      "left": "{channel} から退出しました。",
+      "volume": "音量を {volume}% に設定しました。",
+      "volumeCapped": "音量をこのサーバーの上限の {volume}% に設定しました。",
+      "badVolume": "0〜{max} の音量を選んでね。",
+      "shuffled": "キューをシャッフルしました。",
+      "badLoop": "ループモードは off、track、queue のいずれかにしてください。",
+      "effectOn": "{effect} オン。",
+      "effectOff": "{effect} オフ。",
+      "bassBoost": "低音ブースト：{level}。",
+      "bassBoostName": "低音ブースト",
+      "removed": "{title} を削除しました。",
+      "badPosition": "1〜{max} の位置を選んでね。",
+      "moved": "{title} を {position} 番目に移動しました。",
+      "skippedTo": "{title} までスキップしました。",
+      "cleared": "キューをクリアしました。",
+      "seeked": "{time} に移動しました。",
+      "badSeek": "0:00〜{duration} の時間を選んでね。",
+      "joined": "{channel} に参加しました。",
+      "searchResults": "{count} 件の結果。",
+      "searchFailed": "検索に失敗しました。もう一度試してね。",
+      "unknownCommand": "不明なコマンド：{command}。"
+    },
+    "dispatch": {
+      "joining": "{bot} が {channel} に参加中",
+      "slow": "{bot} がまだ読み込み中です。準備ができ次第、曲が始まります。",
+      "noAnswer": "{bot} から応答がありません。少し待ってからもう一度試してね。",
+      "noneFree": "今 {channel} に参加できる Bypass Botがありません。",
+      "busyIn": "{bot} は {channel} で再生中",
+      "offline": "{bot} はオフラインです",
+      "notAllowed": "{bot} はこのチャンネルに入れません",
+      "invite": "別の Bypass を追加すれば、複数のチャンネルで同時に再生できます：",
+      "add": "{bot} を追加",
+      "premium": "Bypass 5〜8 は Premium で使えます。"
+    },
+    "info": {
+      "header": "{channel} の {bot}",
+      "nothing": "{bot} はここで何も再生していません。",
+      "upNext": "次の曲",
+      "more": "他 {count} 曲",
+      "card": "ボタン付きのプレイヤーカードは {channel} にあります。"
+    }
   }
 }

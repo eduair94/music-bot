@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 بازنشانی دسترسی‌ها",
     "reset_success": "همه دسترسی‌های سفارشی به حالت پیش‌فرض برگشتن.",
     "allowall_success": "همه دسترسی‌ها حالا برای {role} مجازه",
-    "denyall_success": "همه دسترسی‌ها حالا برای {role} غیرمجازه"
+    "denyall_success": "همه دسترسی‌ها حالا برای {role} غیرمجازه",
+    "groups": {
+      "play": "افزودن آهنگ",
+      "playback": "توقف موقت، ادامه، جابه‌جایی و قبلی",
+      "skip": "رد کردن",
+      "queue": "ویرایش صف",
+      "volume": "صدا",
+      "effects": "افکت‌های صوتی",
+      "loop_autoplay": "تکرار و پخش خودکار",
+      "stop_leave": "توقف، خروج و ورود",
+      "lyrics_view": "متن آهنگ",
+      "settings": "تنظیمات سرور"
+    },
+    "deny": {
+      "denied_user": "تو در لیست ممنوعه‌ی **{group}** هستی.",
+      "denied_role": "یکی از نقش‌هات در لیست ممنوعه‌ی **{group}** است.",
+      "needs_dj": "**{group}** در این سرور فقط برای DJها مجازه.",
+      "needs_admin": "**{group}** فقط برای ادمین‌های سرور مجازه.",
+      "hint": "ادمین‌های سرور می‌تونن این رو از داشبورد تغییر بدن."
+    },
+    "voteSkipOff": "رأی‌گیری برای رد کردن در این سرور خاموشه. ادمین‌های سرور می‌تونن این رو از داشبورد تغییر بدن."
   },
   "setsettings": {
     "updated": "✅ تنظیمات به‌روز شد",
@@ -2020,5 +2040,57 @@
     "noGame": "اینجا هیچ بازی حدس آهنگی در جریان نیست.",
     "stopped": "بازی متوقف شد.",
     "blockedDuringGame": "یه بازی حدس آهنگ توی این سرور در جریانه. صبر کن تموم بشه یا با {stop} تمومش کن."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "این بات در سرور نیست.",
+      "nothingPlaying": "چیزی در حال پخش نیست.",
+      "paused": "متوقف شد.",
+      "resumed": "ادامه پیدا کرد.",
+      "skipped": "{title} رد شد.",
+      "noPrevious": "آهنگ قبلی وجود نداره.",
+      "previous": "در حال پخش آهنگ قبلی.",
+      "stopped": "پخش متوقف و صف پاک شد.",
+      "left": "از {channel} خارج شد.",
+      "volume": "صدا روی {volume}% تنظیم شد.",
+      "volumeCapped": "صدا روی {volume}% تنظیم شد، که حداکثر این سروره.",
+      "badVolume": "یه عدد بین 0 و {max} برای صدا انتخاب کن.",
+      "shuffled": "صف به‌هم ریخته شد.",
+      "badLoop": "حالت تکرار باید off، track یا queue باشه.",
+      "effectOn": "{effect} روشن شد.",
+      "effectOff": "{effect} خاموش شد.",
+      "bassBoost": "تقویت بیس: {level}.",
+      "bassBoostName": "تقویت بیس",
+      "removed": "{title} حذف شد.",
+      "badPosition": "یه جایگاه بین 1 و {max} انتخاب کن.",
+      "moved": "{title} به جایگاه {position} منتقل شد.",
+      "skippedTo": "رفتیم سراغ {title}.",
+      "cleared": "صف پاک شد.",
+      "seeked": "رفت به {time}.",
+      "badSeek": "یه زمان بین 0:00 و {duration} انتخاب کن.",
+      "joined": "به {channel} وصل شد.",
+      "searchResults": "{count} نتیجه.",
+      "searchFailed": "جستجو انجام نشد. دوباره امتحان کن.",
+      "unknownCommand": "دستور ناشناخته: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} داره به {channel} وصل می‌شه",
+      "slow": "{bot} هنوز داره بارگذاری می‌کنه. آهنگ به‌محض آماده شدن پخش می‌شه.",
+      "noAnswer": "{bot} جواب نداد. چند لحظه دیگه دوباره امتحان کن.",
+      "noneFree": "الان هیچ بات Bypass آزادی برای ورود به {channel} نیست.",
+      "busyIn": "{bot} در {channel} در حال پخشه",
+      "offline": "{bot} آفلاینه",
+      "notAllowed": "{bot} اجازه‌ی ورود به این کانال رو نداره",
+      "invite": "یه Bypass دیگه اضافه کن تا همزمان در کانال‌های بیشتری پخش کنی:",
+      "add": "افزودن {bot}",
+      "premium": "Bypass 5 تا 8 با Premium در دسترسن."
+    },
+    "info": {
+      "header": "{bot} در {channel}",
+      "nothing": "{bot} اینجا چیزی پخش نمی‌کنه.",
+      "upNext": "بعدی",
+      "more": "و {count} مورد دیگه",
+      "card": "کارت پخش‌کننده با دکمه‌ها در {channel} است."
+    }
   }
 }

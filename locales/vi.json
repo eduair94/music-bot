@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Đã đặt lại quyền",
     "reset_success": "Tất cả quyền tùy chỉnh đã được đặt lại về mặc định.",
     "allowall_success": "Tất cả quyền hiện đã được cho phép với {role}",
-    "denyall_success": "Tất cả quyền hiện đã bị từ chối với {role}"
+    "denyall_success": "Tất cả quyền hiện đã bị từ chối với {role}",
+    "groups": {
+      "play": "Thêm bài hát",
+      "playback": "Tạm dừng, tiếp tục, tua và quay lại",
+      "skip": "Bỏ qua",
+      "queue": "Chỉnh sửa hàng chờ",
+      "volume": "Âm lượng",
+      "effects": "Hiệu ứng âm thanh",
+      "loop_autoplay": "Lặp lại và tự động phát",
+      "stop_leave": "Dừng, rời và tham gia",
+      "lyrics_view": "Lời bài hát",
+      "settings": "Cài đặt máy chủ"
+    },
+    "deny": {
+      "denied_user": "Bạn nằm trong danh sách bị chặn cho **{group}**.",
+      "denied_role": "Một trong các vai trò của bạn nằm trong danh sách bị chặn cho **{group}**.",
+      "needs_dj": "**{group}** chỉ dành cho DJ trên máy chủ này.",
+      "needs_admin": "**{group}** chỉ dành cho quản trị viên máy chủ.",
+      "hint": "Quản trị viên máy chủ có thể thay đổi điều này trên bảng điều khiển."
+    },
+    "voteSkipOff": "Bỏ phiếu bỏ qua đang tắt trên máy chủ này. Quản trị viên máy chủ có thể thay đổi điều này trên bảng điều khiển."
   },
   "setsettings": {
     "updated": "✅ Đã cập nhật cài đặt",
@@ -2020,5 +2040,57 @@
     "noGame": "Không có trò đoán bài hát nào đang chạy ở đây.",
     "stopped": "Trò chơi đã dừng.",
     "blockedDuringGame": "Đang có trò đoán bài hát trong server này. Đợi trò chơi kết thúc hoặc dừng nó bằng {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Bot này không có trong máy chủ.",
+      "nothingPlaying": "Không có gì đang phát.",
+      "paused": "Đã tạm dừng.",
+      "resumed": "Đã tiếp tục phát.",
+      "skipped": "Đã bỏ qua {title}.",
+      "noPrevious": "Không có bài hát trước đó.",
+      "previous": "Đang phát bài hát trước đó.",
+      "stopped": "Đã dừng và xóa hàng chờ.",
+      "left": "Đã rời {channel}.",
+      "volume": "Đã đặt âm lượng thành {volume}%.",
+      "volumeCapped": "Đã đặt âm lượng thành {volume}%, mức tối đa của máy chủ này.",
+      "badVolume": "Hãy chọn âm lượng từ 0 đến {max}.",
+      "shuffled": "Đã trộn hàng chờ.",
+      "badLoop": "Chế độ lặp phải là tắt, bài hát hoặc hàng chờ.",
+      "effectOn": "Đã bật {effect}.",
+      "effectOff": "Đã tắt {effect}.",
+      "bassBoost": "Tăng bass: {level}.",
+      "bassBoostName": "Tăng bass",
+      "removed": "Đã xóa {title}.",
+      "badPosition": "Hãy chọn vị trí từ 1 đến {max}.",
+      "moved": "Đã chuyển {title} đến vị trí {position}.",
+      "skippedTo": "Đã chuyển đến {title}.",
+      "cleared": "Đã xóa hàng chờ.",
+      "seeked": "Đã tua đến {time}.",
+      "badSeek": "Hãy chọn thời điểm từ 0:00 đến {duration}.",
+      "joined": "Đã tham gia {channel}.",
+      "searchResults": "{count} kết quả.",
+      "searchFailed": "Tìm kiếm không thành công. Thử lại nhé.",
+      "unknownCommand": "Lệnh không xác định: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} đang vào {channel}",
+      "slow": "{bot} vẫn đang tải. Bài hát sẽ bắt đầu ngay khi sẵn sàng.",
+      "noAnswer": "{bot} không phản hồi. Thử lại sau giây lát nhé.",
+      "noneFree": "Hiện không có bot Bypass nào rảnh để vào {channel}.",
+      "busyIn": "{bot} đang phát trong {channel}",
+      "offline": "{bot} đang ngoại tuyến",
+      "notAllowed": "{bot} không được phép vào kênh này",
+      "invite": "Thêm một Bypass khác để phát ở nhiều kênh cùng lúc:",
+      "add": "Thêm {bot}",
+      "premium": "Bypass 5 đến 8 đi kèm với Premium."
+    },
+    "info": {
+      "header": "{bot} trong {channel}",
+      "nothing": "{bot} không phát gì ở đây.",
+      "upNext": "Tiếp theo",
+      "more": "và {count} bài nữa",
+      "card": "Thẻ trình phát có các nút nằm trong {channel}."
+    }
   }
 }

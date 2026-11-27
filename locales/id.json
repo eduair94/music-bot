@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Izin Direset",
     "reset_success": "Semua izin kustom telah direset ke default.",
     "allowall_success": "Semua izin sekarang diizinkan untuk {role}",
-    "denyall_success": "Semua izin sekarang ditolak untuk {role}"
+    "denyall_success": "Semua izin sekarang ditolak untuk {role}",
+    "groups": {
+      "play": "Tambah lagu",
+      "playback": "Jeda, lanjutkan, lompat waktu, dan sebelumnya",
+      "skip": "Lewati",
+      "queue": "Edit antrean",
+      "volume": "Volume",
+      "effects": "Efek audio",
+      "loop_autoplay": "Ulangi dan putar otomatis",
+      "stop_leave": "Berhenti, keluar, dan bergabung",
+      "lyrics_view": "Lirik",
+      "settings": "Pengaturan server"
+    },
+    "deny": {
+      "denied_user": "Kamu ada di daftar larangan untuk **{group}**.",
+      "denied_role": "Salah satu role kamu ada di daftar larangan untuk **{group}**.",
+      "needs_dj": "**{group}** hanya untuk DJ di server ini.",
+      "needs_admin": "**{group}** hanya untuk admin server.",
+      "hint": "Admin server bisa mengubah ini di dasbor."
+    },
+    "voteSkipOff": "Vote-skip dimatikan di server ini. Admin server bisa mengubah ini di dasbor."
   },
   "setsettings": {
     "updated": "✅ Pengaturan Diperbarui",
@@ -2020,5 +2040,57 @@
     "noGame": "Tidak ada game tebak lagu yang berlangsung di sini.",
     "stopped": "Game dihentikan.",
     "blockedDuringGame": "Game tebak lagu sedang berlangsung di server ini. Tunggu sampai selesai atau hentikan dengan {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Bot ini tidak ada di server.",
+      "nothingPlaying": "Tidak ada yang diputar.",
+      "paused": "Dijeda.",
+      "resumed": "Dilanjutkan.",
+      "skipped": "{title} dilewati.",
+      "noPrevious": "Tidak ada lagu sebelumnya.",
+      "previous": "Memutar lagu sebelumnya.",
+      "stopped": "Dihentikan dan antrean dikosongkan.",
+      "left": "Keluar dari {channel}.",
+      "volume": "Volume diatur ke {volume}%.",
+      "volumeCapped": "Volume diatur ke {volume}%, batas maksimal server ini.",
+      "badVolume": "Pilih volume antara 0 dan {max}.",
+      "shuffled": "Antrean diacak.",
+      "badLoop": "Mode ulang harus off, track, atau queue.",
+      "effectOn": "{effect} aktif.",
+      "effectOff": "{effect} nonaktif.",
+      "bassBoost": "Bass boost: {level}.",
+      "bassBoostName": "Bass boost",
+      "removed": "{title} dihapus.",
+      "badPosition": "Pilih posisi antara 1 dan {max}.",
+      "moved": "{title} dipindahkan ke posisi {position}.",
+      "skippedTo": "Lompat ke {title}.",
+      "cleared": "Antrean dikosongkan.",
+      "seeked": "Lompat ke {time}.",
+      "badSeek": "Pilih waktu antara 0:00 dan {duration}.",
+      "joined": "Bergabung ke {channel}.",
+      "searchResults": "{count} hasil.",
+      "searchFailed": "Pencarian gagal. Coba lagi.",
+      "unknownCommand": "Perintah tidak dikenal: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} sedang bergabung ke {channel}",
+      "slow": "{bot} masih memuatnya. Lagu akan mulai begitu siap.",
+      "noAnswer": "{bot} tidak merespons. Coba lagi sebentar lagi.",
+      "noneFree": "Tidak ada bot Bypass yang bisa bergabung ke {channel} saat ini.",
+      "busyIn": "{bot} sedang memutar di {channel}",
+      "offline": "{bot} sedang offline",
+      "notAllowed": "{bot} tidak diizinkan di channel ini",
+      "invite": "Tambahkan Bypass lain untuk memutar di lebih banyak channel sekaligus:",
+      "add": "Tambah {bot}",
+      "premium": "Bypass 5 sampai 8 tersedia dengan Premium."
+    },
+    "info": {
+      "header": "{bot} di {channel}",
+      "nothing": "{bot} tidak memutar apa pun di sini.",
+      "upNext": "Berikutnya",
+      "more": "dan {count} lainnya",
+      "card": "Kartu pemutar dengan tombol ada di {channel}."
+    }
   }
 }

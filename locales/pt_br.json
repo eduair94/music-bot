@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Permissões redefinidas",
     "reset_success": "Todas as permissões personalizadas foram redefinidas para o padrão.",
     "allowall_success": "Todas as permissões agora estão permitidas para {role}",
-    "denyall_success": "Todas as permissões agora estão negadas para {role}"
+    "denyall_success": "Todas as permissões agora estão negadas para {role}",
+    "groups": {
+      "play": "Adicionar músicas",
+      "playback": "Pausar, retomar, avançar e voltar",
+      "skip": "Pular",
+      "queue": "Editar a fila",
+      "volume": "Volume",
+      "effects": "Efeitos de áudio",
+      "loop_autoplay": "Repetição e reprodução automática",
+      "stop_leave": "Parar, sair e entrar",
+      "lyrics_view": "Letras",
+      "settings": "Configurações do servidor"
+    },
+    "deny": {
+      "denied_user": "Você está na lista de bloqueio de **{group}**.",
+      "denied_role": "Um dos seus cargos está na lista de bloqueio de **{group}**.",
+      "needs_dj": "**{group}** é restrito a DJs neste servidor.",
+      "needs_admin": "**{group}** é restrito aos admins do servidor.",
+      "hint": "Os admins do servidor podem mudar isso no painel."
+    },
+    "voteSkipOff": "A votação para pular está desativada neste servidor. Os admins do servidor podem mudar isso no painel."
   },
   "setsettings": {
     "updated": "✅ Configurações atualizadas",
@@ -2020,5 +2040,57 @@
     "noGame": "Não tem nenhum jogo de adivinhar a música rolando aqui.",
     "stopped": "Jogo parado.",
     "blockedDuringGame": "Tem um jogo de adivinhar a música rolando neste servidor. Espera ele terminar ou encerra com {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Este bot não está no servidor.",
+      "nothingPlaying": "Nada tocando.",
+      "paused": "Pausado.",
+      "resumed": "Retomado.",
+      "skipped": "{title} pulada.",
+      "noPrevious": "Não há música anterior.",
+      "previous": "Tocando a música anterior.",
+      "stopped": "Parado e fila limpa.",
+      "left": "Saí de {channel}.",
+      "volume": "Volume definido para {volume}%.",
+      "volumeCapped": "Volume definido para {volume}%, o máximo deste servidor.",
+      "badVolume": "Escolha um volume entre 0 e {max}.",
+      "shuffled": "Fila embaralhada.",
+      "badLoop": "O modo de repetição deve ser off, track ou queue.",
+      "effectOn": "{effect} ativado.",
+      "effectOff": "{effect} desativado.",
+      "bassBoost": "Reforço de graves: {level}.",
+      "bassBoostName": "Reforço de graves",
+      "removed": "{title} removida.",
+      "badPosition": "Escolha uma posição entre 1 e {max}.",
+      "moved": "{title} movida para a posição {position}.",
+      "skippedTo": "Pulou para {title}.",
+      "cleared": "Fila limpa.",
+      "seeked": "Pulou para {time}.",
+      "badSeek": "Escolha um tempo entre 0:00 e {duration}.",
+      "joined": "Entrei em {channel}.",
+      "searchResults": "{count} resultados.",
+      "searchFailed": "A busca não funcionou. Tente de novo.",
+      "unknownCommand": "Comando desconhecido: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} está entrando em {channel}",
+      "slow": "{bot} ainda está carregando. A música começa assim que estiver pronta.",
+      "noAnswer": "{bot} não respondeu. Tente de novo daqui a pouco.",
+      "noneFree": "Nenhum bot Bypass está livre para entrar em {channel} agora.",
+      "busyIn": "{bot} está tocando em {channel}",
+      "offline": "{bot} está offline",
+      "notAllowed": "{bot} não tem permissão neste canal",
+      "invite": "Adicione outro Bypass para tocar em mais canais ao mesmo tempo:",
+      "add": "Adicionar {bot}",
+      "premium": "Os Bypass 5 a 8 vêm com o Premium."
+    },
+    "info": {
+      "header": "{bot} em {channel}",
+      "nothing": "{bot} não está tocando nada aqui.",
+      "upNext": "A seguir",
+      "more": "e mais {count}",
+      "card": "O card do player com os botões está em {channel}."
+    }
   }
 }

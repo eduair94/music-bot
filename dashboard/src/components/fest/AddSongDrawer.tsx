@@ -122,7 +122,7 @@ export function AddSongDrawer() {
     <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Add to the bill">
       <button type="button" aria-label="Close" onClick={() => setOpen(false)} className="absolute inset-0 bg-ink/35 animate-[stub-in_200ms_ease-out]" />
       <aside
-        className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col rounded-t-[6px] border-t-2 border-ink bg-stock sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[min(30rem,100vw)] sm:rounded-none sm:border-l-2 sm:border-t-0"
+        className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] flex-col rounded-t-[6px] border-t border-ink bg-stock shadow-[0_-12px_40px_-16px_rgb(21_21_21/0.45)] sm:inset-y-0 sm:left-auto sm:right-0 sm:max-h-none sm:w-[min(30rem,100vw)] sm:rounded-none sm:border-l sm:border-t-0 sm:shadow-[-16px_0_40px_-20px_rgb(21_21_21/0.45)]"
         style={{ animation: "stub-in 320ms cubic-bezier(0.16,1,0.3,1)" }}
       >
         <div className="flex items-center gap-3 border-b border-rule px-5 py-4" style={{ boxShadow: `inset 0 6px 0 ${s.color}` }}>

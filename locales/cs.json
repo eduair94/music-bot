@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Oprávnění resetována",
     "reset_success": "Všechna vlastní oprávnění byla obnovena na výchozí.",
     "allowall_success": "Všechna oprávnění jsou nyní povolena pro {role}",
-    "denyall_success": "Všechna oprávnění jsou nyní zakázána pro {role}"
+    "denyall_success": "Všechna oprávnění jsou nyní zakázána pro {role}",
+    "groups": {
+      "play": "Přidávání skladeb",
+      "playback": "Pauza, pokračování, přetáčení a předchozí",
+      "skip": "Přeskočení",
+      "queue": "Úprava fronty",
+      "volume": "Hlasitost",
+      "effects": "Zvukové efekty",
+      "loop_autoplay": "Opakování a automatické přehrávání",
+      "stop_leave": "Zastavení, odchod a připojení",
+      "lyrics_view": "Texty písní",
+      "settings": "Nastavení serveru"
+    },
+    "deny": {
+      "denied_user": "Jsi na seznamu zakázaných pro **{group}**.",
+      "denied_role": "Jedna z tvých rolí je na seznamu zakázaných pro **{group}**.",
+      "needs_dj": "**{group}** je na tomto serveru jen pro DJe.",
+      "needs_admin": "**{group}** je jen pro adminy serveru.",
+      "hint": "Admini serveru to můžou změnit na dashboardu."
+    },
+    "voteSkipOff": "Hlasování o přeskočení je na tomto serveru vypnuté. Admini serveru to můžou změnit na dashboardu."
   },
   "setsettings": {
     "updated": "✅ Nastavení aktualizováno",
@@ -2020,5 +2040,57 @@
     "noGame": "Tady neběží žádná hra Hádej písničku.",
     "stopped": "Hra zastavena.",
     "blockedDuringGame": "Na tomhle serveru běží hra Hádej písničku. Počkej, až skončí, nebo ji ukonči pomocí {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Tento bot není na serveru.",
+      "nothingPlaying": "Nic nehraje.",
+      "paused": "Pozastaveno.",
+      "resumed": "Pokračuje se.",
+      "skipped": "Přeskočeno: {title}.",
+      "noPrevious": "Žádná předchozí skladba není.",
+      "previous": "Hraje předchozí skladba.",
+      "stopped": "Zastaveno a fronta vymazána.",
+      "left": "Odpojeno z {channel}.",
+      "volume": "Hlasitost nastavena na {volume} %.",
+      "volumeCapped": "Hlasitost nastavena na {volume} %, maximum tohoto serveru.",
+      "badVolume": "Vyber hlasitost mezi 0 a {max}.",
+      "shuffled": "Fronta zamíchána.",
+      "badLoop": "Režim opakování musí být off, track nebo queue.",
+      "effectOn": "{effect} zapnuto.",
+      "effectOff": "{effect} vypnuto.",
+      "bassBoost": "Zesílení basů: {level}.",
+      "bassBoostName": "Zesílení basů",
+      "removed": "Odstraněno: {title}.",
+      "badPosition": "Vyber pozici mezi 1 a {max}.",
+      "moved": "{title} přesunuto na pozici {position}.",
+      "skippedTo": "Přeskočeno na {title}.",
+      "cleared": "Fronta vymazána.",
+      "seeked": "Přetočeno na {time}.",
+      "badSeek": "Vyber čas mezi 0:00 a {duration}.",
+      "joined": "Připojeno do {channel}.",
+      "searchResults": "Počet výsledků: {count}.",
+      "searchFailed": "Hledání se nepovedlo. Zkus to znovu.",
+      "unknownCommand": "Neznámý příkaz: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} se připojuje do {channel}",
+      "slow": "{bot} to ještě načítá. Skladba začne hned, jak bude připravená.",
+      "noAnswer": "{bot} neodpověděl. Zkus to za chvíli znovu.",
+      "noneFree": "Žádný Bypass bot se teď nemůže připojit do {channel}.",
+      "busyIn": "{bot} hraje v {channel}",
+      "offline": "{bot} je offline",
+      "notAllowed": "{bot} nemá do tohoto kanálu přístup",
+      "invite": "Přidej dalšího Bypass a hraj ve více kanálech najednou:",
+      "add": "Přidat {bot}",
+      "premium": "Bypass 5 až 8 jsou součástí Premium."
+    },
+    "info": {
+      "header": "{bot} v {channel}",
+      "nothing": "{bot} tady nic nehraje.",
+      "upNext": "Další na řadě",
+      "more": "a {count} dalších",
+      "card": "Karta přehrávače s tlačítky je v {channel}."
+    }
   }
 }

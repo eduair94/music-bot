@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Tillatelser tilbakestilt",
     "reset_success": "Alle egendefinerte tillatelser er tilbakestilt til standard.",
     "allowall_success": "Alle tillatelser er nå tillatt for {role}",
-    "denyall_success": "Alle tillatelser er nå nektet for {role}"
+    "denyall_success": "Alle tillatelser er nå nektet for {role}",
+    "groups": {
+      "play": "Legge til sanger",
+      "playback": "Pause, fortsett, spol og forrige",
+      "skip": "Hopp over",
+      "queue": "Redigere køen",
+      "volume": "Volum",
+      "effects": "Lydeffekter",
+      "loop_autoplay": "Gjenta og autoavspilling",
+      "stop_leave": "Stopp, forlat og bli med",
+      "lyrics_view": "Sangtekster",
+      "settings": "Serverinnstillinger"
+    },
+    "deny": {
+      "denied_user": "Du står på blokkeringslisten for **{group}**.",
+      "denied_role": "En av rollene dine står på blokkeringslisten for **{group}**.",
+      "needs_dj": "**{group}** er begrenset til DJ-er på denne serveren.",
+      "needs_admin": "**{group}** er begrenset til serveradministratorer.",
+      "hint": "Serveradministratorer kan endre dette i dashbordet."
+    },
+    "voteSkipOff": "Stemmeskipping er slått av på denne serveren. Serveradministratorer kan endre dette i dashbordet."
   },
   "setsettings": {
     "updated": "✅ Innstillinger oppdatert",
@@ -2020,5 +2040,57 @@
     "noGame": "Det pågår ikke noe gjett sangen-spill her.",
     "stopped": "Spillet er stoppet.",
     "blockedDuringGame": "Et gjett sangen-spill pågår på denne serveren. Vent til det er ferdig, eller avslutt det med {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Denne boten er ikke på serveren.",
+      "nothingPlaying": "Ingenting spilles.",
+      "paused": "Satt på pause.",
+      "resumed": "Fortsetter.",
+      "skipped": "Hoppet over {title}.",
+      "noPrevious": "Det finnes ingen forrige sang.",
+      "previous": "Spiller forrige sang.",
+      "stopped": "Stoppet og tømte køen.",
+      "left": "Forlot {channel}.",
+      "volume": "Volum satt til {volume} %.",
+      "volumeCapped": "Volum satt til {volume} %, maksimum på denne serveren.",
+      "badVolume": "Velg et volum mellom 0 og {max}.",
+      "shuffled": "Køen er stokket.",
+      "badLoop": "Gjentakelse må være av, spor eller kø.",
+      "effectOn": "{effect} på.",
+      "effectOff": "{effect} av.",
+      "bassBoost": "Bassforsterkning: {level}.",
+      "bassBoostName": "Bassforsterkning",
+      "removed": "Fjernet {title}.",
+      "badPosition": "Velg en posisjon mellom 1 og {max}.",
+      "moved": "Flyttet {title} til posisjon {position}.",
+      "skippedTo": "Hoppet til {title}.",
+      "cleared": "Køen er tømt.",
+      "seeked": "Hoppet til {time}.",
+      "badSeek": "Velg et tidspunkt mellom 0:00 og {duration}.",
+      "joined": "Ble med i {channel}.",
+      "searchResults": "{count} resultater.",
+      "searchFailed": "Søket fungerte ikke. Prøv igjen.",
+      "unknownCommand": "Ukjent kommando: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} blir med i {channel}",
+      "slow": "{bot} laster fortsatt. Sangen starter så snart den er klar.",
+      "noAnswer": "{bot} svarte ikke. Prøv igjen om litt.",
+      "noneFree": "Ingen Bypass-bot er ledig til å bli med i {channel} akkurat nå.",
+      "busyIn": "{bot} spiller i {channel}",
+      "offline": "{bot} er frakoblet",
+      "notAllowed": "{bot} har ikke tilgang til denne kanalen",
+      "invite": "Legg til en Bypass til for å spille i flere kanaler samtidig:",
+      "add": "Legg til {bot}",
+      "premium": "Bypass 5 til 8 følger med Premium."
+    },
+    "info": {
+      "header": "{bot} i {channel}",
+      "nothing": "{bot} spiller ingenting her.",
+      "upNext": "Neste",
+      "more": "og {count} til",
+      "card": "Spillerkortet med knappene er i {channel}."
+    }
   }
 }

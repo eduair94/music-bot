@@ -1032,7 +1032,27 @@
     "reset_title": "🔄 Permisos restablecidos",
     "reset_success": "Todos los permisos personalizados se han restablecido a los valores predeterminados.",
     "allowall_success": "Todos los permisos ahora están permitidos para {role}",
-    "denyall_success": "Todos los permisos ahora están denegados para {role}"
+    "denyall_success": "Todos los permisos ahora están denegados para {role}",
+    "groups": {
+      "play": "Añadir canciones",
+      "playback": "Pausar, reanudar, adelantar y anterior",
+      "skip": "Saltar",
+      "queue": "Editar la cola",
+      "volume": "Volumen",
+      "effects": "Efectos de audio",
+      "loop_autoplay": "Repetición y reproducción automática",
+      "stop_leave": "Detener, salir y unirse",
+      "lyrics_view": "Letras",
+      "settings": "Ajustes del servidor"
+    },
+    "deny": {
+      "denied_user": "Estás en la lista de bloqueo de **{group}**.",
+      "denied_role": "Uno de tus roles está en la lista de bloqueo de **{group}**.",
+      "needs_dj": "**{group}** está limitado a los DJs en este servidor.",
+      "needs_admin": "**{group}** está limitado a los administradores del servidor.",
+      "hint": "Los administradores del servidor pueden cambiar esto en el panel."
+    },
+    "voteSkipOff": "La votación para saltar está desactivada en este servidor. Los administradores pueden cambiar esto en el panel."
   },
   "setsettings": {
     "updated": "✅ Ajustes actualizados",
@@ -2020,5 +2040,57 @@
     "noGame": "No hay ningún juego de adivinar la canción aquí.",
     "stopped": "Juego detenido.",
     "blockedDuringGame": "Hay un juego de adivinar la canción en este servidor. Espera a que termine o finalízalo con {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Este bot no está en el servidor.",
+      "nothingPlaying": "No se está reproduciendo nada.",
+      "paused": "En pausa.",
+      "resumed": "Reanudado.",
+      "skipped": "Se saltó {title}.",
+      "noPrevious": "No hay canción anterior.",
+      "previous": "Reproduciendo la canción anterior.",
+      "stopped": "Detenido y cola vaciada.",
+      "left": "Salí de {channel}.",
+      "volume": "Volumen ajustado a {volume}%.",
+      "volumeCapped": "Volumen ajustado a {volume}%, el máximo de este servidor.",
+      "badVolume": "Elige un volumen entre 0 y {max}.",
+      "shuffled": "Cola mezclada.",
+      "badLoop": "El modo de repetición debe ser off, track o queue.",
+      "effectOn": "{effect} activado.",
+      "effectOff": "{effect} desactivado.",
+      "bassBoost": "Refuerzo de graves: {level}.",
+      "bassBoostName": "Refuerzo de graves",
+      "removed": "Se quitó {title}.",
+      "badPosition": "Elige una posición entre 1 y {max}.",
+      "moved": "{title} movida a la posición {position}.",
+      "skippedTo": "Saltando a {title}.",
+      "cleared": "Cola vaciada.",
+      "seeked": "Saltando a {time}.",
+      "badSeek": "Elige un tiempo entre 0:00 y {duration}.",
+      "joined": "Me uní a {channel}.",
+      "searchResults": "{count} resultados.",
+      "searchFailed": "La búsqueda falló. Inténtalo de nuevo.",
+      "unknownCommand": "Comando desconocido: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} se está uniendo a {channel}",
+      "slow": "{bot} todavía lo está cargando. La canción empezará en cuanto esté lista.",
+      "noAnswer": "{bot} no respondió. Inténtalo de nuevo en un momento.",
+      "noneFree": "Ahora mismo no hay ningún bot de Bypass libre para unirse a {channel}.",
+      "busyIn": "{bot} está reproduciendo en {channel}",
+      "offline": "{bot} está desconectado",
+      "notAllowed": "{bot} no tiene permiso en este canal",
+      "invite": "Añade otro Bypass para reproducir en más canales a la vez:",
+      "add": "Añadir {bot}",
+      "premium": "Bypass 5 a 8 vienen con Premium."
+    },
+    "info": {
+      "header": "{bot} en {channel}",
+      "nothing": "{bot} no está reproduciendo nada aquí.",
+      "upNext": "A continuación",
+      "more": "y {count} más",
+      "card": "La tarjeta del reproductor con los botones está en {channel}."
+    }
   }
 }

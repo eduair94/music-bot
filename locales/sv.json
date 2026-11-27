@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Behörigheter återställda",
     "reset_success": "Alla anpassade behörigheter har återställts till standard.",
     "allowall_success": "Alla behörigheter är nu tillåtna för {role}",
-    "denyall_success": "Alla behörigheter är nu nekade för {role}"
+    "denyall_success": "Alla behörigheter är nu nekade för {role}",
+    "groups": {
+      "play": "Lägga till låtar",
+      "playback": "Pausa, återuppta, spola och föregående",
+      "skip": "Hoppa över",
+      "queue": "Redigera kön",
+      "volume": "Volym",
+      "effects": "Ljudeffekter",
+      "loop_autoplay": "Upprepning och autoplay",
+      "stop_leave": "Stoppa, lämna och ansluta",
+      "lyrics_view": "Låttexter",
+      "settings": "Serverinställningar"
+    },
+    "deny": {
+      "denied_user": "Du står på blocklistan för **{group}**.",
+      "denied_role": "En av dina roller står på blocklistan för **{group}**.",
+      "needs_dj": "**{group}** är begränsat till DJs på den här servern.",
+      "needs_admin": "**{group}** är begränsat till serveradmins.",
+      "hint": "Serveradmins kan ändra detta i dashboarden."
+    },
+    "voteSkipOff": "Röstskippning är avstängd på den här servern. Serveradmins kan ändra detta i dashboarden."
   },
   "setsettings": {
     "updated": "✅ Inställningar uppdaterade",
@@ -2020,5 +2040,57 @@
     "noGame": "Inget gissa låten-spel pågår här.",
     "stopped": "Spelet stoppades.",
     "blockedDuringGame": "Ett gissa låten-spel pågår på den här servern. Vänta tills det är klart eller avsluta det med {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Boten finns inte på servern.",
+      "nothingPlaying": "Inget spelas just nu.",
+      "paused": "Pausad.",
+      "resumed": "Återupptagen.",
+      "skipped": "Hoppade över {title}.",
+      "noPrevious": "Det finns ingen föregående låt.",
+      "previous": "Spelar föregående låt.",
+      "stopped": "Stoppade och rensade kön.",
+      "left": "Lämnade {channel}.",
+      "volume": "Volymen är satt till {volume}%.",
+      "volumeCapped": "Volymen är satt till {volume}%, serverns maxnivå.",
+      "badVolume": "Välj en volym mellan 0 och {max}.",
+      "shuffled": "Kön är blandad.",
+      "badLoop": "Upprepningsläget måste vara av, låt eller kö.",
+      "effectOn": "{effect} på.",
+      "effectOff": "{effect} av.",
+      "bassBoost": "Basförstärkning: {level}.",
+      "bassBoostName": "Basförstärkning",
+      "removed": "Tog bort {title}.",
+      "badPosition": "Välj en position mellan 1 och {max}.",
+      "moved": "Flyttade {title} till position {position}.",
+      "skippedTo": "Hoppade till {title}.",
+      "cleared": "Kön är rensad.",
+      "seeked": "Hoppade till {time}.",
+      "badSeek": "Välj en tid mellan 0:00 och {duration}.",
+      "joined": "Gick med i {channel}.",
+      "searchResults": "{count} resultat.",
+      "searchFailed": "Sökningen misslyckades. Försök igen.",
+      "unknownCommand": "Okänt kommando: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} går med i {channel}",
+      "slow": "{bot} laddar fortfarande. Låten startar så snart den är redo.",
+      "noAnswer": "{bot} svarade inte. Försök igen om en stund.",
+      "noneFree": "Ingen Bypass-bot är ledig att gå med i {channel} just nu.",
+      "busyIn": "{bot} spelar i {channel}",
+      "offline": "{bot} är offline",
+      "notAllowed": "{bot} har inte behörighet i den här kanalen",
+      "invite": "Lägg till en till Bypass för att spela i fler kanaler samtidigt:",
+      "add": "Lägg till {bot}",
+      "premium": "Bypass 5 till 8 ingår i Premium."
+    },
+    "info": {
+      "header": "{bot} i {channel}",
+      "nothing": "{bot} spelar inget här.",
+      "upNext": "Näst på tur",
+      "more": "och {count} till",
+      "card": "Spelarkortet med knapparna finns i {channel}."
+    }
   }
 }

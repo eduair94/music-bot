@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 İzinler Sıfırlandı",
     "reset_success": "Tüm özel izinler varsayılana sıfırlandı.",
     "allowall_success": "{role} için artık tüm izinler verildi",
-    "denyall_success": "{role} için artık tüm izinler reddedildi"
+    "denyall_success": "{role} için artık tüm izinler reddedildi",
+    "groups": {
+      "play": "Şarkı ekleme",
+      "playback": "Duraklatma, devam ettirme, sarma ve önceki",
+      "skip": "Geçme",
+      "queue": "Sırayı düzenleme",
+      "volume": "Ses seviyesi",
+      "effects": "Ses efektleri",
+      "loop_autoplay": "Döngü ve otomatik oynatma",
+      "stop_leave": "Durdurma, ayrılma ve katılma",
+      "lyrics_view": "Şarkı sözleri",
+      "settings": "Sunucu ayarları"
+    },
+    "deny": {
+      "denied_user": "**{group}** için engel listesindesin.",
+      "denied_role": "Rollerinden biri **{group}** için engel listesinde.",
+      "needs_dj": "**{group}** bu sunucuda sadece DJ'lere açık.",
+      "needs_admin": "**{group}** sadece sunucu yöneticilerine açık.",
+      "hint": "Sunucu yöneticileri bunu panelden değiştirebilir."
+    },
+    "voteSkipOff": "Bu sunucuda oylamayla geçme kapalı. Sunucu yöneticileri bunu panelden değiştirebilir."
   },
   "setsettings": {
     "updated": "✅ Ayarlar Güncellendi",
@@ -2020,5 +2040,57 @@
     "noGame": "Burada süren bir şarkı tahmin oyunu yok.",
     "stopped": "Oyun durduruldu.",
     "blockedDuringGame": "Bu sunucuda bir şarkı tahmin oyunu sürüyor. Bitmesini bekle ya da {stop} ile sonlandır."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Bu bot sunucuda değil.",
+      "nothingPlaying": "Şu an hiçbir şey çalmıyor.",
+      "paused": "Duraklatıldı.",
+      "resumed": "Devam ediyor.",
+      "skipped": "{title} geçildi.",
+      "noPrevious": "Önceki şarkı yok.",
+      "previous": "Önceki şarkı çalınıyor.",
+      "stopped": "Durduruldu ve sıra temizlendi.",
+      "left": "{channel} kanalından ayrıldı.",
+      "volume": "Ses seviyesi %{volume} olarak ayarlandı.",
+      "volumeCapped": "Ses seviyesi bu sunucunun üst sınırı olan %{volume} olarak ayarlandı.",
+      "badVolume": "0 ile {max} arasında bir ses seviyesi seç.",
+      "shuffled": "Sıra karıştırıldı.",
+      "badLoop": "Döngü modu off, track veya queue olmalı.",
+      "effectOn": "{effect} açık.",
+      "effectOff": "{effect} kapalı.",
+      "bassBoost": "Bas güçlendirme: {level}.",
+      "bassBoostName": "Bas güçlendirme",
+      "removed": "{title} kaldırıldı.",
+      "badPosition": "1 ile {max} arasında bir sıra seç.",
+      "moved": "{title}, {position}. sıraya taşındı.",
+      "skippedTo": "{title} şarkısına geçildi.",
+      "cleared": "Sıra temizlendi.",
+      "seeked": "{time} konumuna atlandı.",
+      "badSeek": "0:00 ile {duration} arasında bir zaman seç.",
+      "joined": "{channel} kanalına katıldı.",
+      "searchResults": "{count} sonuç.",
+      "searchFailed": "Arama başarısız oldu. Tekrar dene.",
+      "unknownCommand": "Bilinmeyen komut: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot}, {channel} kanalına katılıyor",
+      "slow": "{bot} hâlâ yüklüyor. Şarkı hazır olur olmaz başlayacak.",
+      "noAnswer": "{bot} yanıt vermedi. Birazdan tekrar dene.",
+      "noneFree": "Şu an {channel} kanalına katılabilecek boşta bir Bypass botu yok.",
+      "busyIn": "{bot}, {channel} kanalında çalıyor",
+      "offline": "{bot} çevrimdışı",
+      "notAllowed": "{bot} bu kanala giremiyor",
+      "invite": "Aynı anda daha fazla kanalda çalmak için başka bir Bypass ekle:",
+      "add": "{bot} ekle",
+      "premium": "Bypass 5 ile 8 arası Premium ile gelir."
+    },
+    "info": {
+      "header": "{bot} - {channel}",
+      "nothing": "{bot} burada hiçbir şey çalmıyor.",
+      "upNext": "Sıradaki",
+      "more": "ve {count} tane daha",
+      "card": "Butonlu oynatıcı kartı {channel} kanalında."
+    }
   }
 }

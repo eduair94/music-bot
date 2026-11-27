@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Kua Tautuhi Anō ngā Whakaaetanga",
     "reset_success": "Kua whakahokia ngā whakaaetanga ritenga katoa ki te taunoa.",
     "allowall_success": "Kua whakaaetia ināianei ngā whakaaetanga katoa mō {role}",
-    "denyall_success": "Kua whakakāhoretia ināianei ngā whakaaetanga katoa mō {role}"
+    "denyall_success": "Kua whakakāhoretia ināianei ngā whakaaetanga katoa mō {role}",
+    "groups": {
+      "play": "Tāpiri waiata",
+      "playback": "Tatari, haere tonu, peke, me te mea o mua",
+      "skip": "Peke",
+      "queue": "Whakatika i te rārangi",
+      "volume": "Rahi oro",
+      "effects": "Pānga oro",
+      "loop_autoplay": "Koromeke me te pūrei aunoa",
+      "stop_leave": "Tū, wehe, me te uru",
+      "lyrics_view": "Kupu waiata",
+      "settings": "Tautuhinga tūmau"
+    },
+    "deny": {
+      "denied_user": "Kei te rārangi whakakāhore koe mō **{group}**.",
+      "denied_role": "Kei te rārangi whakakāhore tētahi o ō tūranga mō **{group}**.",
+      "needs_dj": "Mā ngā DJ anake **{group}** i tēnei tūmau.",
+      "needs_admin": "Mā ngā kaiwhakahaere tūmau anake **{group}**.",
+      "hint": "Ka taea e ngā kaiwhakahaere tūmau te huri i tēnei i te papatohu."
+    },
+    "voteSkipOff": "Kua whakawetohia te pōti-peke i tēnei tūmau. Ka taea e ngā kaiwhakahaere tūmau te huri i tēnei i te papatohu."
   },
   "setsettings": {
     "updated": "✅ Kua Whakahōuhia ngā Tautuhinga",
@@ -2020,5 +2040,57 @@
     "noGame": "Kāore he kēmu matapae waiata e haere ana i konei.",
     "stopped": "Kua katia te kēmu.",
     "blockedDuringGame": "He kēmu matapae waiata e haere ana i tēnei tūmau. Tatari kia mutu, katia rānei mā {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Kāore tēnei bot i te tūmau.",
+      "nothingPlaying": "Kāore he mea e pūrei ana.",
+      "paused": "Kua tatari.",
+      "resumed": "Kua haere tonu.",
+      "skipped": "Kua pekea {title}.",
+      "noPrevious": "Kāore he waiata o mua.",
+      "previous": "E pūrei ana i te waiata o mua.",
+      "stopped": "Kua tū, kua ūkuia te rārangi.",
+      "left": "Kua wehe i {channel}.",
+      "volume": "Kua tautuhia te rahi oro ki {volume}%.",
+      "volumeCapped": "Kua tautuhia te rahi oro ki {volume}%, te mōrahi o tēnei tūmau.",
+      "badVolume": "Kōwhiria he rahi oro i waenga i te 0 me {max}.",
+      "shuffled": "Kua kōrapuhia te rārangi.",
+      "badLoop": "Me off, track, queue rānei te aratau koromeke.",
+      "effectOn": "{effect} kua kā.",
+      "effectOff": "{effect} kua weto.",
+      "bassBoost": "Whakakaha bass: {level}.",
+      "bassBoostName": "Whakakaha bass",
+      "removed": "Kua tangohia {title}.",
+      "badPosition": "Kōwhiria he tūnga i waenga i te 1 me {max}.",
+      "moved": "Kua nekehia {title} ki te tūnga {position}.",
+      "skippedTo": "Kua peke ki {title}.",
+      "cleared": "Kua ūkuia te rārangi.",
+      "seeked": "Kua peke ki {time}.",
+      "badSeek": "Kōwhiria he wā i waenga i te 0:00 me {duration}.",
+      "joined": "Kua uru ki {channel}.",
+      "searchResults": "{count} hua.",
+      "searchFailed": "Kāore i angitu te rapu. Whakamātauria anō.",
+      "unknownCommand": "Tohutohu tē mōhiotia: {command}."
+    },
+    "dispatch": {
+      "joining": "Kei te uru {bot} ki {channel}",
+      "slow": "Kei te uta tonu {bot}. Ka tīmata te waiata ina rite.",
+      "noAnswer": "Kāore {bot} i whakautu. Whakamātauria anō ākuanei.",
+      "noneFree": "Kāore he bot Bypass wātea hei uru ki {channel} ināianei.",
+      "busyIn": "Kei te pūrei {bot} i {channel}",
+      "offline": "Kua tuimotu {bot}",
+      "notAllowed": "Kāore {bot} e whakaaetia i tēnei hongere",
+      "invite": "Tāpiria tētahi atu Bypass hei pūrei i ētahi atu hongere i te wā kotahi:",
+      "add": "Tāpiri {bot}",
+      "premium": "Ka haere mai a Bypass 5 ki 8 me Premium."
+    },
+    "info": {
+      "header": "{bot} i {channel}",
+      "nothing": "Kāore {bot} e pūrei ana i tētahi mea i konei.",
+      "upNext": "Ka whai ake",
+      "more": "me ētahi atu {count}",
+      "card": "Kei {channel} te kāri pūrei me ngā pātene."
+    }
   }
 }

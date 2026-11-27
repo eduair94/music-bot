@@ -1028,7 +1028,27 @@
     "reset_title": "🔄 Permisiuni resetate",
     "reset_success": "Toate permisiunile personalizate au fost resetate la valorile implicite.",
     "allowall_success": "Toate permisiunile sunt acum permise pentru {role}",
-    "denyall_success": "Toate permisiunile sunt acum interzise pentru {role}"
+    "denyall_success": "Toate permisiunile sunt acum interzise pentru {role}",
+    "groups": {
+      "play": "Adăugare melodii",
+      "playback": "Pauză, reluare, derulare și melodia anterioară",
+      "skip": "Sărire",
+      "queue": "Editarea cozii",
+      "volume": "Volum",
+      "effects": "Efecte audio",
+      "loop_autoplay": "Repetare și redare automată",
+      "stop_leave": "Oprire, ieșire și intrare",
+      "lyrics_view": "Versuri",
+      "settings": "Setările serverului"
+    },
+    "deny": {
+      "denied_user": "Ești pe lista de interdicții pentru **{group}**.",
+      "denied_role": "Unul dintre rolurile tale e pe lista de interdicții pentru **{group}**.",
+      "needs_dj": "**{group}** e disponibil doar pentru DJ pe acest server.",
+      "needs_admin": "**{group}** e disponibil doar pentru adminii serverului.",
+      "hint": "Adminii serverului pot schimba asta din dashboard."
+    },
+    "voteSkipOff": "Votul pentru sărire e dezactivat pe acest server. Adminii serverului pot schimba asta din dashboard."
   },
   "setsettings": {
     "updated": "✅ Setări actualizate",
@@ -2021,5 +2041,57 @@
     "noGame": "Aici nu rulează niciun joc de ghicit melodia.",
     "stopped": "Joc oprit.",
     "blockedDuringGame": "Pe acest server rulează un joc de ghicit melodia. Așteaptă să se termine sau oprește-l cu {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Botul ăsta nu e pe server.",
+      "nothingPlaying": "Nu se redă nimic.",
+      "paused": "Pus pe pauză.",
+      "resumed": "Redare reluată.",
+      "skipped": "Am sărit peste {title}.",
+      "noPrevious": "Nu există o melodie anterioară.",
+      "previous": "Se redă melodia anterioară.",
+      "stopped": "Am oprit redarea și am golit coada.",
+      "left": "Am ieșit din {channel}.",
+      "volume": "Volum setat la {volume}%.",
+      "volumeCapped": "Volum setat la {volume}%, maximul acestui server.",
+      "badVolume": "Alege un volum între 0 și {max}.",
+      "shuffled": "Coada a fost amestecată.",
+      "badLoop": "Modul de repetare trebuie să fie off, track sau queue.",
+      "effectOn": "{effect} activat.",
+      "effectOff": "{effect} dezactivat.",
+      "bassBoost": "Bass boost: {level}.",
+      "bassBoostName": "Bass boost",
+      "removed": "Am scos {title}.",
+      "badPosition": "Alege o poziție între 1 și {max}.",
+      "moved": "Am mutat {title} pe poziția {position}.",
+      "skippedTo": "Am sărit la {title}.",
+      "cleared": "Coada a fost golită.",
+      "seeked": "Am sărit la {time}.",
+      "badSeek": "Alege un moment între 0:00 și {duration}.",
+      "joined": "Am intrat în {channel}.",
+      "searchResults": "{count} rezultate.",
+      "searchFailed": "Căutarea n-a mers. Încearcă din nou.",
+      "unknownCommand": "Comandă necunoscută: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} intră în {channel}",
+      "slow": "{bot} încă se încarcă. Melodia pornește imediat ce e gata.",
+      "noAnswer": "{bot} n-a răspuns. Încearcă din nou în câteva momente.",
+      "noneFree": "Niciun bot Bypass nu e liber să intre în {channel} acum.",
+      "busyIn": "{bot} redă în {channel}",
+      "offline": "{bot} e offline",
+      "notAllowed": "{bot} nu are acces în acest canal",
+      "invite": "Adaugă încă un Bypass ca să redai în mai multe canale deodată:",
+      "add": "Adaugă {bot}",
+      "premium": "Bypass 5 până la 8 vin cu Premium."
+    },
+    "info": {
+      "header": "{bot} în {channel}",
+      "nothing": "{bot} nu redă nimic aici.",
+      "upNext": "Urmează",
+      "more": "și încă {count}",
+      "card": "Cardul playerului cu butoane e în {channel}."
+    }
   }
 }

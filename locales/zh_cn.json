@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 权限已重置",
     "reset_success": "所有自定义权限已重置为默认值。",
     "allowall_success": "已为 {role} 允许所有权限",
-    "denyall_success": "已为 {role} 拒绝所有权限"
+    "denyall_success": "已为 {role} 拒绝所有权限",
+    "groups": {
+      "play": "添加歌曲",
+      "playback": "暂停、继续、跳转和上一首",
+      "skip": "跳过",
+      "queue": "编辑队列",
+      "volume": "音量",
+      "effects": "音效",
+      "loop_autoplay": "循环和自动播放",
+      "stop_leave": "停止、离开和加入",
+      "lyrics_view": "歌词",
+      "settings": "服务器设置"
+    },
+    "deny": {
+      "denied_user": "你在 **{group}** 的禁止名单上。",
+      "denied_role": "你的某个身份组在 **{group}** 的禁止名单上。",
+      "needs_dj": "在此服务器上，**{group}** 仅限 DJ 使用。",
+      "needs_admin": "**{group}** 仅限服务器管理员使用。",
+      "hint": "服务器管理员可以在控制面板中更改此设置。"
+    },
+    "voteSkipOff": "此服务器已关闭投票跳过。服务器管理员可以在控制面板中更改此设置。"
   },
   "setsettings": {
     "updated": "✅ 设置已更新",
@@ -2020,5 +2040,57 @@
     "noGame": "这里没有正在进行的猜歌游戏。",
     "stopped": "游戏已停止。",
     "blockedDuringGame": "这个服务器正在进行猜歌游戏。请等游戏结束，或用 {stop} 结束游戏。"
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "这个机器人不在该服务器中。",
+      "nothingPlaying": "当前没有在播放。",
+      "paused": "已暂停。",
+      "resumed": "已继续播放。",
+      "skipped": "已跳过 {title}。",
+      "noPrevious": "没有上一首歌。",
+      "previous": "正在播放上一首歌。",
+      "stopped": "已停止并清空队列。",
+      "left": "已离开 {channel}。",
+      "volume": "音量已设为 {volume}%。",
+      "volumeCapped": "音量已设为 {volume}%，这是此服务器的上限。",
+      "badVolume": "请选择 0 到 {max} 之间的音量。",
+      "shuffled": "队列已随机打乱。",
+      "badLoop": "循环模式必须是 off、track 或 queue。",
+      "effectOn": "{effect} 已开启。",
+      "effectOff": "{effect} 已关闭。",
+      "bassBoost": "低音增强：{level}。",
+      "bassBoostName": "低音增强",
+      "removed": "已移除 {title}。",
+      "badPosition": "请选择 1 到 {max} 之间的位置。",
+      "moved": "已将 {title} 移到第 {position} 位。",
+      "skippedTo": "已跳到 {title}。",
+      "cleared": "队列已清空。",
+      "seeked": "已跳转到 {time}。",
+      "badSeek": "请选择 0:00 到 {duration} 之间的时间。",
+      "joined": "已加入 {channel}。",
+      "searchResults": "{count} 个结果。",
+      "searchFailed": "搜索失败，请重试。",
+      "unknownCommand": "未知命令：{command}。"
+    },
+    "dispatch": {
+      "joining": "{bot} 正在加入 {channel}",
+      "slow": "{bot} 仍在加载中，准备好后歌曲会立即开始播放。",
+      "noAnswer": "{bot} 没有响应，请稍后再试。",
+      "noneFree": "目前没有空闲的 Bypass 机器人可以加入 {channel}。",
+      "busyIn": "{bot} 正在 {channel} 播放",
+      "offline": "{bot} 已离线",
+      "notAllowed": "{bot} 无权进入此频道",
+      "invite": "再添加一个 Bypass，即可同时在更多频道播放：",
+      "add": "添加 {bot}",
+      "premium": "Bypass 5 到 8 随 Premium 提供。"
+    },
+    "info": {
+      "header": "{bot} 在 {channel}",
+      "nothing": "{bot} 在这里没有播放任何内容。",
+      "upNext": "即将播放",
+      "more": "还有 {count} 首",
+      "card": "带按钮的播放器卡片在 {channel} 中。"
+    }
   }
 }

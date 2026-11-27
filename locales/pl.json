@@ -1034,7 +1034,27 @@
     "reset_title": "🔄 Uprawnienia zresetowane",
     "reset_success": "Wszystkie własne uprawnienia zostały przywrócone do domyślnych.",
     "allowall_success": "Wszystkie uprawnienia są teraz dozwolone dla {role}",
-    "denyall_success": "Wszystkie uprawnienia są teraz zabronione dla {role}"
+    "denyall_success": "Wszystkie uprawnienia są teraz zabronione dla {role}",
+    "groups": {
+      "play": "Dodawanie utworów",
+      "playback": "Pauza, wznawianie, przewijanie i poprzedni utwór",
+      "skip": "Pomijanie",
+      "queue": "Edycja kolejki",
+      "volume": "Głośność",
+      "effects": "Efekty dźwiękowe",
+      "loop_autoplay": "Zapętlanie i autoodtwarzanie",
+      "stop_leave": "Zatrzymywanie, wychodzenie i dołączanie",
+      "lyrics_view": "Teksty piosenek",
+      "settings": "Ustawienia serwera"
+    },
+    "deny": {
+      "denied_user": "Jesteś na liście zablokowanych dla **{group}**.",
+      "denied_role": "Jedna z twoich ról jest na liście zablokowanych dla **{group}**.",
+      "needs_dj": "**{group}** jest na tym serwerze dostępne tylko dla DJ-ów.",
+      "needs_admin": "**{group}** jest dostępne tylko dla adminów serwera.",
+      "hint": "Admini serwera mogą to zmienić w panelu."
+    },
+    "voteSkipOff": "Głosowanie nad pominięciem jest wyłączone na tym serwerze. Admini serwera mogą to zmienić w panelu."
   },
   "setsettings": {
     "updated": "✅ Ustawienia zaktualizowane",
@@ -2027,5 +2047,57 @@
     "noGame": "Nie trwa tu żadna gra w zgadywanie piosenek.",
     "stopped": "Gra zatrzymana.",
     "blockedDuringGame": "Na tym serwerze trwa gra w zgadywanie piosenek. Poczekaj, aż się skończy, albo zakończ ją przez {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Tego bota nie ma na serwerze.",
+      "nothingPlaying": "Nic nie jest odtwarzane.",
+      "paused": "Wstrzymano.",
+      "resumed": "Wznowiono.",
+      "skipped": "Pominięto {title}.",
+      "noPrevious": "Nie ma poprzedniego utworu.",
+      "previous": "Odtwarzam poprzedni utwór.",
+      "stopped": "Zatrzymano i wyczyszczono kolejkę.",
+      "left": "Opuszczono {channel}.",
+      "volume": "Ustawiono głośność na {volume}%.",
+      "volumeCapped": "Ustawiono głośność na {volume}%, czyli maksimum tego serwera.",
+      "badVolume": "Wybierz głośność od 0 do {max}.",
+      "shuffled": "Kolejka przetasowana.",
+      "badLoop": "Tryb zapętlania musi być ustawiony na off, track lub queue.",
+      "effectOn": "{effect} włączony.",
+      "effectOff": "{effect} wyłączony.",
+      "bassBoost": "Wzmocnienie basu: {level}.",
+      "bassBoostName": "Wzmocnienie basu",
+      "removed": "Usunięto {title}.",
+      "badPosition": "Wybierz pozycję od 1 do {max}.",
+      "moved": "Przeniesiono {title} na pozycję {position}.",
+      "skippedTo": "Przeskoczono do {title}.",
+      "cleared": "Kolejka wyczyszczona.",
+      "seeked": "Przewinięto do {time}.",
+      "badSeek": "Wybierz czas od 0:00 do {duration}.",
+      "joined": "Dołączono do {channel}.",
+      "searchResults": "Wyniki: {count}.",
+      "searchFailed": "Wyszukiwanie nie powiodło się. Spróbuj ponownie.",
+      "unknownCommand": "Nieznana komenda: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} dołącza do {channel}",
+      "slow": "{bot} wciąż to ładuje. Utwór zacznie się, gdy tylko będzie gotowy.",
+      "noAnswer": "{bot} nie odpowiedział. Spróbuj ponownie za chwilę.",
+      "noneFree": "Żaden bot Bypass nie może teraz dołączyć do {channel}.",
+      "busyIn": "{bot} gra na {channel}",
+      "offline": "{bot} jest offline",
+      "notAllowed": "{bot} nie ma dostępu do tego kanału",
+      "invite": "Dodaj kolejnego Bypass, aby grać na wielu kanałach jednocześnie:",
+      "add": "Dodaj {bot}",
+      "premium": "Bypass 5 do 8 są dostępne w Premium."
+    },
+    "info": {
+      "header": "{bot} na {channel}",
+      "nothing": "{bot} niczego tu nie odtwarza.",
+      "upNext": "Następne",
+      "more": "i {count} więcej",
+      "card": "Karta odtwarzacza z przyciskami jest na {channel}."
+    }
   }
 }

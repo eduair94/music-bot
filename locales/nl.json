@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Rechten gereset",
     "reset_success": "Alle aangepaste rechten zijn teruggezet naar de standaard.",
     "allowall_success": "Alle rechten zijn nu toegestaan voor {role}",
-    "denyall_success": "Alle rechten zijn nu geweigerd voor {role}"
+    "denyall_success": "Alle rechten zijn nu geweigerd voor {role}",
+    "groups": {
+      "play": "Nummers toevoegen",
+      "playback": "Pauzeren, hervatten, spoelen en vorige",
+      "skip": "Overslaan",
+      "queue": "Wachtrij bewerken",
+      "volume": "Volume",
+      "effects": "Audio-effecten",
+      "loop_autoplay": "Herhalen en autoplay",
+      "stop_leave": "Stoppen, verlaten en joinen",
+      "lyrics_view": "Songteksten",
+      "settings": "Serverinstellingen"
+    },
+    "deny": {
+      "denied_user": "Je staat op de blokkeerlijst voor **{group}**.",
+      "denied_role": "Een van je rollen staat op de blokkeerlijst voor **{group}**.",
+      "needs_dj": "**{group}** is op deze server alleen voor DJ's.",
+      "needs_admin": "**{group}** is alleen voor serverbeheerders.",
+      "hint": "Serverbeheerders kunnen dit aanpassen op het dashboard."
+    },
+    "voteSkipOff": "Stemmen om over te slaan staat uit op deze server. Serverbeheerders kunnen dit aanpassen op het dashboard."
   },
   "setsettings": {
     "updated": "✅ Instellingen bijgewerkt",
@@ -2020,5 +2040,57 @@
     "noGame": "Er is hier geen raad-het-nummer-spel bezig.",
     "stopped": "Spel gestopt.",
     "blockedDuringGame": "Er is een raad-het-nummer-spel bezig in deze server. Wacht tot het klaar is of beëindig het met {stop}."
+  },
+  "fleet": {
+    "bus": {
+      "notInGuild": "Deze bot zit niet in de server.",
+      "nothingPlaying": "Er speelt niets.",
+      "paused": "Gepauzeerd.",
+      "resumed": "Hervat.",
+      "skipped": "{title} overgeslagen.",
+      "noPrevious": "Er is geen vorig nummer.",
+      "previous": "Vorig nummer wordt afgespeeld.",
+      "stopped": "Gestopt en wachtrij gewist.",
+      "left": "{channel} verlaten.",
+      "volume": "Volume ingesteld op {volume}%.",
+      "volumeCapped": "Volume ingesteld op {volume}%, het maximum van deze server.",
+      "badVolume": "Kies een volume tussen 0 en {max}.",
+      "shuffled": "Wachtrij geshuffeld.",
+      "badLoop": "Herhaalmodus moet uit, nummer of wachtrij zijn.",
+      "effectOn": "{effect} aan.",
+      "effectOff": "{effect} uit.",
+      "bassBoost": "Bass boost: {level}.",
+      "bassBoostName": "Bass boost",
+      "removed": "{title} verwijderd.",
+      "badPosition": "Kies een positie tussen 1 en {max}.",
+      "moved": "{title} verplaatst naar positie {position}.",
+      "skippedTo": "Doorgegaan naar {title}.",
+      "cleared": "Wachtrij gewist.",
+      "seeked": "Gesprongen naar {time}.",
+      "badSeek": "Kies een tijd tussen 0:00 en {duration}.",
+      "joined": "{channel} gejoind.",
+      "searchResults": "{count} resultaten.",
+      "searchFailed": "Zoeken is mislukt. Probeer het opnieuw.",
+      "unknownCommand": "Onbekend commando: {command}."
+    },
+    "dispatch": {
+      "joining": "{bot} komt naar {channel}",
+      "slow": "{bot} is nog aan het laden. Het nummer begint zodra het klaar is.",
+      "noAnswer": "{bot} reageerde niet. Probeer het zo opnieuw.",
+      "noneFree": "Er is nu geen Bypass-bot vrij om {channel} te joinen.",
+      "busyIn": "{bot} speelt in {channel}",
+      "offline": "{bot} is offline",
+      "notAllowed": "{bot} mag niet in dit kanaal",
+      "invite": "Voeg nog een Bypass toe om in meer kanalen tegelijk te spelen:",
+      "add": "{bot} toevoegen",
+      "premium": "Bypass 5 tot 8 zitten bij Premium."
+    },
+    "info": {
+      "header": "{bot} in {channel}",
+      "nothing": "{bot} speelt hier niets af.",
+      "upNext": "Hierna",
+      "more": "en nog {count}",
+      "card": "De spelerkaart met de knoppen staat in {channel}."
+    }
   }
 }
