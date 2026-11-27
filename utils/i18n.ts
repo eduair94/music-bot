@@ -127,9 +127,12 @@ base.configure({
     return value;
   },
 
+  // No locale string uses {{mustache}}; left on, i18n would run Mustache over
+  // the finished text, so a song title or collection name like "{{#a}}"
+  // makes every reply that names it throw.
   mustacheConfig: {
     tags: ["{{", "}}"],
-    disable: false
+    disable: true
   }
 });
 

@@ -1,6 +1,6 @@
 import { AttachmentExtractor } from "@discord-player/extractor";
 import { randomBytes } from "crypto";
-import { GuildQueue, QueryType, Track } from "discord-player";
+import { GuildQueue, QueryType, QueueRepeatMode, Track } from "discord-player";
 import {
   ButtonBuilder,
   ButtonInteraction,
@@ -87,6 +87,12 @@ interface SavedOptions {
   disableFallbackStream: boolean;
 }
 
+/** Loop mode and audio filters of a borrowed (24/7) queue, put back after the game. */
+interface SavedPlayback {
+  repeatMode: QueueRepeatMode;
+  filters: string[];
+}
+
 interface Game {
   id: string;
   guildId: string;
@@ -104,6 +110,7 @@ interface Game {
   queue: GuildQueue;
   /** Options to put back on a queue the game borrowed; null when the game created the queue. */
   saved: SavedOptions | null;
+  savedPlayback: SavedPlayback | null;
   introMessage: Message | null;
   timers: Set<NodeJS.Timeout>;
   emptyTimer: NodeJS.Timeout | null;
@@ -466,7 +473,11 @@ async function releaseQueue(game: Game): Promise<void> {
   metadata.guessGame = false;
   queue.metadata = metadata;
   if (game.saved) Object.assign(queue.options as any, game.saved);
-  else {
+  if (game.savedPlayback) {
+    queue.setRepeatMode(game.savedPlayback.repeatMode);
+    if (game.savedPlayback.filters.length) await queue.filters.ffmpeg.setFilters(game.savedPlayback.filters).catch(() => undefined);
+  }
+  if (!game.saved) {
     Object.assign(queue.options as any, { disableHistory: false, disableFallbackStream: false });
     await DiscordPlayerService.getInstance().applyServerOptions(queue);
   }
@@ -599,17 +610,24 @@ export async function startGame(interaction: ChatInputCommandInteraction<"cached
     }
     const totalRounds = Math.min(rounds, pool.length);
 
-    // An idle queue in another channel (not 24/7) is simply replaced.
-    if (borrowed && !borrowedMeta?.stay247 && botChannelId && botChannelId !== voice.id) {
+    // Only a 24/7 queue is borrowed. Any other idle queue is replaced: after
+    // music ends naturally discord-player arms a leave timer it doesn't track
+    // in queue.timeouts, which would disconnect mid-game whatever the options
+    // say; it would also carry its loop mode and audio filters into the game.
+    if (borrowed && !borrowedMeta?.stay247) {
       borrowed.delete();
       borrowed = null;
     }
 
     let queue: GuildQueue;
     let saved: SavedOptions | null = null;
+    let savedPlayback: SavedPlayback | null = null;
     if (borrowed && !borrowed.deleted) {
       queue = borrowed;
       saved = snapshotOptions(queue);
+      savedPlayback = { repeatMode: queue.repeatMode, filters: [...queue.filters.ffmpeg.getFiltersEnabled()] };
+      queue.setRepeatMode(QueueRepeatMode.OFF);
+      if (savedPlayback.filters.length) await queue.filters.ffmpeg.setFilters(false).catch(() => undefined);
       const metadata = (queue.metadata || {}) as QueueMetadata;
       metadata.guessGame = true;
       queue.metadata = metadata;
@@ -634,6 +652,10 @@ export async function startGame(interaction: ChatInputCommandInteraction<"cached
       console.warn("[GuessGame] Could not join voice:", (error as Error)?.message ?? error);
       if (saved) {
         Object.assign(queue.options as any, saved);
+        if (savedPlayback) {
+          queue.setRepeatMode(savedPlayback.repeatMode);
+          if (savedPlayback.filters.length) await queue.filters.ffmpeg.setFilters(savedPlayback.filters).catch(() => undefined);
+        }
         ((queue.metadata || {}) as QueueMetadata).guessGame = false;
       } else if (!queue.deleted) {
         queue.delete();
@@ -657,17 +679,33 @@ export async function startGame(interaction: ChatInputCommandInteraction<"cached
       locale: await localeForGuild(guild),
       queue,
       saved,
+      savedPlayback,
       introMessage: null,
       timers: new Set(),
       emptyTimer: null,
       ended: false
     };
+    try {
+      game.introMessage = await interaction.editReply({ components: [renderIntro(game)], flags: V2, allowedMentions: NO_MENTIONS } as any);
+    } catch (error) {
+      // No intro, no game: give the queue back instead of blocking music commands.
+      console.warn("[GuessGame] Could not post the intro:", (error as Error)?.message ?? error);
+      if (saved) {
+        Object.assign(queue.options as any, saved);
+        if (savedPlayback) {
+          queue.setRepeatMode(savedPlayback.repeatMode);
+          if (savedPlayback.filters.length) await queue.filters.ffmpeg.setFilters(savedPlayback.filters).catch(() => undefined);
+        }
+        ((queue.metadata || {}) as QueueMetadata).guessGame = false;
+      } else if (!queue.deleted) {
+        queue.delete();
+      }
+      return;
+    }
     games.set(guild.id, game);
     byId.set(game.id, game);
     ensureListeners(interaction.client);
     console.log(`[GuessGame] Game ${game.id} started in ${guild.id}: ${totalRounds} rounds of ${genre} (${pool.length} songs)`);
-
-    game.introMessage = await interaction.editReply({ components: [renderIntro(game)], flags: V2, allowedMentions: NO_MENTIONS } as any);
     schedule(game, () => startRound(game, 1), INTRO_MS);
   } finally {
     starting.delete(guild.id);

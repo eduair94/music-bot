@@ -161,6 +161,9 @@ function stop(view: LiveView, reason: StopReason, by?: string): void {
   if (view.timer) clearInterval(view.timer);
   view.timer = null;
   if (views.get(view.guildId) === view) views.delete(view.guildId);
+  // Not sent yet: "@original" would still point at the message the button is
+  // on (the player panel). openLiveLyrics closes it once it exists.
+  if (!view.messageId) return;
 
   if (reason === "ended" || reason === "replaced" || reason === "stopped") {
     const note = runWithLocale(view.locale, () =>
@@ -286,6 +289,11 @@ export async function openLiveLyrics(interaction: LiveInteraction, options: Open
 
   view.messageId = message.id;
   view.channelId = message.channelId;
+  if (view.stopped) {
+    // Replaced (or the game took over) while this one was being sent.
+    void edit(view, renderEnded(view, i18n.__("lyrics.liveEnded"))).catch(() => undefined);
+    return;
+  }
   view.lastKey = `${index}|${paused ? 1 : 0}`;
   view.lastEditAt = Date.now();
   view.timer = setInterval(() => void tick(view), TICK_MS);

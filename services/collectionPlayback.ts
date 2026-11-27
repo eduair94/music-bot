@@ -10,9 +10,9 @@ import {
 import type { ICollection, ICollectionTrack } from "../models/Collection";
 import { formatDuration, safeText } from "../utils/format";
 import { i18n } from "../utils/i18n";
-import { runPlay } from "../utils/playFlow";
+import { PlayRejection, playRejectionMessage, runPlay } from "../utils/playFlow";
 import { hasPremiumFeature } from "../utils/premiumCheck";
-import { DiscordPlayerService } from "./discordPlayer";
+import { DiscordPlayerService, isGuessGameQueue } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
 
 /**
@@ -121,6 +121,7 @@ async function blockedReason(interaction: RepliableInteraction<"cached">): Promi
 
   if (!voiceChannel) return `🔇 ${i18n.__("play.errorNotChannel")}`;
   if (!playerService.isInitialized()) return `⏳ ${i18n.__("play.initializing")}`;
+  if (isGuessGameQueue(playerService.getQueue(guild.id))) return playRejectionMessage(new PlayRejection("gameRunning"), "");
 
   const existing = playerService.getQueue(guild.id);
   const live = existing && !existing.deleted ? existing : null;

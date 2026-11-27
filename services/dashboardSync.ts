@@ -29,7 +29,7 @@ import {
     PlayRejection,
     playRejectionMessage
 } from "../utils/playFlow";
-import { DiscordPlayerService, PlayError, QueueMetadata } from "./discordPlayer";
+import { DiscordPlayerService, isGuessGameQueue, PlayError, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
 
 /** Outcome of a dashboard play request, already in the server's language. */
@@ -484,6 +484,13 @@ export class DashboardSyncService {
       const player = this.playerService?.getPlayer();
       if (!player) {
         throw new Error("Player not initialized");
+      }
+
+      // A guess-the-song round owns the player: skip/pause/seek/previous from
+      // the web would silence or end it. /guess stop ends the game.
+      if (isGuessGameQueue(player.nodes.get(guildId))) {
+        const locale = await localeForGuild(guild);
+        throw new Error(runWithLocale(locale, () => i18n.__mf("guess.blockedDuringGame", { stop: "/guess stop" })));
       }
 
       let result: string = "Command executed";

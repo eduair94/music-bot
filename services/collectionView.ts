@@ -30,7 +30,7 @@ function sourceName(url: string): string {
 
 function trackLine(n: number, title: string, author: string, url: string, durationSec: number): string {
   const label =
-    isHttpUrl(url) && url.length <= 300 ? `[${linkLabel(title, 60)}](${url.replace(/\)/g, "%29")})` : safeText(title, 60);
+    isHttpUrl(url) && url.length <= 150 ? `[${linkLabel(title, 60)}](${url.replace(/\)/g, "%29")})` : safeText(title, 60);
   const by = author && author !== "Unknown" ? ` · ${safeText(author, 40)}` : "";
   const length = durationSec > 0 ? ` · \`${formatDuration(durationSec * 1000)}\`` : "";
   return `\`${String(n).padStart(2, " ")}.\` ${label}${by}${length}`;
@@ -64,7 +64,7 @@ export function buildCollectionView(collection: ICollection, page: number, notic
   const totalSeconds = tracks.reduce((sum, t) => sum + (t.duration || 0), 0);
   const footer = [i18n.__mf("collections.view.summary", { count: tracks.length, duration: formatDuration(totalSeconds * 1000) })];
   if (collection.shareCode) footer.push(`🔗 ${i18n.__("collections.view.shareCodeField")}: \`${collection.shareCode}\``);
-  if (collection.sourceUrl && isHttpUrl(collection.sourceUrl)) {
+  if (collection.sourceUrl && isHttpUrl(collection.sourceUrl) && collection.sourceUrl.length <= 300) {
     footer.push(`[${linkLabel(i18n.__mf("collections.view.importedFrom", { source: sourceName(collection.sourceUrl) }), 60)}](${collection.sourceUrl.replace(/\)/g, "%29")})`);
   }
   if (pages > 1) footer.push(i18n.__mf("collections.view.page", { page: current + 1, pages }));

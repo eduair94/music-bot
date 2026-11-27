@@ -9,7 +9,8 @@ import {
   TextChannel,
   VoiceBasedChannel
 } from "discord.js";
-import { DiscordPlayerService, PlayError, PlayResult } from "../services/discordPlayer";
+import { DiscordPlayerService, isGuessGameQueue, PlayError, PlayResult } from "../services/discordPlayer";
+import { mention } from "../structs/commandRegistry";
 import { GuildSettingsService } from "../services/guildSettings";
 import { getPlaybackSettings } from "./audioSettings";
 import { formatDuration, isHttpUrl, linkLabel, safeText } from "./format";
@@ -50,7 +51,9 @@ export type PlayRejectCode =
   /** The requester is on the server's blacklist. */
   | "blacklisted"
   /** An admin turned the command off. detail: name */
-  | "commandDisabled";
+  | "commandDisabled"
+  /** A guess-the-song game owns the player in this server. */
+  | "gameRunning";
 
 export class PlayRejection extends Error {
   constructor(public readonly code: PlayRejectCode, public readonly detail: Record<string, string> = {}) {
@@ -110,6 +113,8 @@ export function playRejectionMessage(rejection: PlayRejection, query: string, ch
       return `❌ ${i18n.__("router.blacklisted")}`;
     case "commandDisabled":
       return `🚫 ${i18n.__mf("router.commandDisabled", { name: detail.name || "play" })}`;
+    case "gameRunning":
+      return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
   }
 }
 
@@ -218,6 +223,9 @@ export async function enqueue(request: EnqueueRequest, hooks: EnqueueHooks = {})
   if (!voiceChannel) throw new PlayRejection("notInVoice");
   if (!query) throw new PlayRejection("emptyQuery");
   if (!playerService.isInitialized()) throw new PlayRejection("initializing");
+  // Buttons, history, collections, search picks and the dashboard all land
+  // here; queueing music would end (or break) a guess-the-song round.
+  if (isGuessGameQueue(playerService.getQueue(guild.id))) throw new PlayRejection("gameRunning");
 
   // Already playing for people in another channel: don't hijack it.
   const existing = playerService.getQueue(guild.id);
