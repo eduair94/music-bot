@@ -73,7 +73,7 @@ export default async function LoginPage({
             and every server setting.
           </p>
           <p className="mt-3 text-[17px] leading-relaxed text-ink-2">
-            Extra stages, so one server can play in several voice channels at once, are coming next.
+            Bypass 2, 3 and 4 are extra stages: add them and one server plays music in several voice channels at once.
           </p>
 
           {errorType ? (
