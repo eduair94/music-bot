@@ -376,8 +376,11 @@ export class SupportServerService {
 
   /** The member who opened the ticket or anyone who can manage threads may close it. */
   private async closeTicket(interaction: ComponentInteraction): Promise<void> {
-    const thread = interaction.channel;
-    if (!thread?.isThread() || thread.type !== ChannelType.PrivateThread) return;
+    const thread = interaction.channel ?? (interaction.channelId ? await this.client!.channels.fetch(interaction.channelId).catch(() => null) : null);
+    if (!thread?.isThread() || thread.type !== ChannelType.PrivateThread) {
+      await interaction.reply({ content: "This button only works inside a ticket.", flags: MessageFlags.Ephemeral });
+      return;
+    }
     const isOpener = thread.name.endsWith(` · ${interaction.user.username}`);
     const isStaff = interaction.memberPermissions?.has(PermissionFlagsBits.ManageThreads) ?? false;
     if (!isOpener && !isStaff) {
