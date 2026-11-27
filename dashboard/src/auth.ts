@@ -3,12 +3,16 @@ import Discord from "next-auth/providers/discord";
 
 /**
  * Auth.js configuration for Discord OAuth
- * 
+ *
  * Scopes:
  * - identify: Basic user info (username, avatar)
  * - guilds: List of guilds the user is in
  * - email: User's email address
+ * - guilds.join: add the user to the Bypass support server, once, at sign-in
+ *   (Discord's consent screen shows it as "Join servers for you")
  */
+const DISCORD_SCOPES ="identify guilds email guilds.join";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true, // Trust the host (required for production behind proxies)
   providers: [
@@ -21,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       issuer: "https://discord.com",
       authorization: {
         params: {
-          scope: "identify guilds email",
+          scope: DISCORD_SCOPES,
         },
       },
     }),
@@ -40,6 +44,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.accessToken = token.accessToken as string;
       session.user.discordId = token.discordId as string;
       return session;
+    },
+  },
+  events: {
+    // Auth.js awaits events, so the join is started and left running: sign-in
+    // never waits on Mongo or Discord for it.
+    signIn({ account, profile }) {
+      if (account?.provider !== "discord" || !account.access_token) return;
+      // The middleware imports this file on the edge runtime, where sign-ins never
+      // happen. NEXT_RUNTIME is a build-time constant there, so this branch (and
+      // mongoose with it) is dropped from the edge bundle; keep it a plain `if`.
+      if (process.env.NEXT_RUNTIME !== "edge") {
+        const discordId = account.providerAccountId || (profile as { id?: string } | undefined)?.id;
+        const accessToken = account.access_token;
+        const scope = typeof account.scope === "string" ? account.scope : null;
+        void import("./lib/support-join")
+          .then(({ joinSupportServerOnce }) => joinSupportServerOnce({ discordId, accessToken, scope }))
+          .catch(() => undefined);
+      }
     },
   },
   pages: {

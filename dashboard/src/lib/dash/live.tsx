@@ -7,12 +7,24 @@
  * the bill so the UI can be built and verified offline.
  */
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { guildApi, postCommand } from "./api";
-import { demoFleet, demoMe, demoSearch, isDemo } from "./demo";
+import { ApiError, guildApi, postCommand } from "./api";
+import { DEMO_INVITE_EVENT, demoFleet, demoMe, demoSearch, isDemo } from "./demo";
 import { livePosition, trackMs } from "./format";
 import type { CommandName, CommandResult, Fleet, Me, PlaybackState, Track } from "./types";
 
 type Link = "connecting" | "live" | "polling" | "offline";
+
+/** Why the server can't be opened, as the API explained it (status + optional details). */
+export interface AccessProblem {
+  status: number;
+  /** "bot_missing": Bypass (instance 1) isn't in the server yet. */
+  code?: string;
+  guildName?: string;
+  /** The member has Manage Server (or owns the server), so they can add Bypass. */
+  canManage?: boolean;
+  /** Bypass's invite, pre-selecting this server (only sent to members who can add it). */
+  inviteUrl?: string | null;
+}
 
 interface GuildLive {
   guildId: string;
@@ -20,11 +32,15 @@ interface GuildLive {
   me: Me | null;
   link: Link;
   error: string | null;
+  problem: AccessProblem | null;
+  /** Bypass joined the server while this page was open (it was missing on the first load). */
+  arrived: boolean;
   /** Bumps when settings changed elsewhere, so pages can refetch. */
   settingsVersion: number;
   send: (instance: number, command: CommandName, params?: Record<string, unknown>) => Promise<CommandResult>;
   playbackOf: (instance: number) => PlaybackState | null;
-  refresh: () => Promise<void>;
+  /** Refetch fleet and member; resolves true when both loaded. */
+  refresh: () => Promise<boolean>;
 }
 
 const Ctx = createContext<GuildLive | null>(null);
@@ -43,6 +59,18 @@ export function useTicker(ms = 1000): number {
     return () => clearInterval(id);
   }, [ms]);
   return now;
+}
+
+function problemFrom(e: unknown): AccessProblem | null {
+  if (!(e instanceof ApiError)) return null;
+  const b = (e.body ?? {}) as { code?: unknown; guild?: { name?: unknown }; canManage?: unknown; inviteUrl?: unknown };
+  return {
+    status: e.status,
+    code: typeof b.code === "string" ? b.code : undefined,
+    guildName: typeof b.guild?.name === "string" ? b.guild.name : undefined,
+    canManage: b.canManage === true,
+    inviteUrl: typeof b.inviteUrl === "string" && b.inviteUrl ? b.inviteUrl : null,
+  };
 }
 
 function withPlayback(fleet: Fleet, instance: number, playback: PlaybackState | null): Fleet {
@@ -189,19 +217,32 @@ export function GuildLiveProvider({ guildId, children }: { guildId: string; chil
   const [me, setMe] = useState<Me | null>(null);
   const [link, setLink] = useState<Link>(demo ? "live" : "connecting");
   const [error, setError] = useState<string | null>(null);
+  const [problem, setProblem] = useState<AccessProblem | null>(null);
+  const [arrived, setArrived] = useState(false);
   const [settingsVersion, setSettingsVersion] = useState(0);
   const fleetRef = useRef(fleet);
   fleetRef.current = fleet;
+  const missingRef = useRef(false);
 
   const refresh = useCallback(async () => {
-    if (demo) return;
+    if (demo) return true;
     try {
       const [f, m] = await Promise.all([guildApi<Fleet>(guildId, "fleet"), guildApi<Me>(guildId, "me")]);
       setFleet(f);
       setMe(m);
       setError(null);
+      setProblem(null);
+      if (missingRef.current) {
+        missingRef.current = false;
+        setArrived(true);
+      }
+      return true;
     } catch (e) {
+      const p = problemFrom(e);
+      if (p?.code === "bot_missing" && !fleetRef.current) missingRef.current = true;
       setError(e instanceof Error ? e.message : "Could not load this server");
+      setProblem(p);
+      return false;
     }
   }, [demo, guildId]);
 
@@ -218,7 +259,17 @@ export function GuildLiveProvider({ guildId, children }: { guildId: string; chil
     const startPolling = () => {
       if (poll) return;
       setLink("polling");
-      poll = setInterval(() => void refresh(), 4000);
+      let lastOk = true;
+      poll = setInterval(() => {
+        void refresh().then((ok) => {
+          // Back from an outage (or Bypass just joined): try the live stream again.
+          if (ok && !lastOk && !closed) {
+            failures = 0;
+            connect();
+          }
+          lastOk = ok;
+        });
+      }, 4000);
     };
 
     const connect = () => {
@@ -275,10 +326,38 @@ export function GuildLiveProvider({ guildId, children }: { guildId: string; chil
   }, [demo, guildId, refresh]);
 
   // Demo engine: load on the client (the clock differs from the server's), then songs end and sets advance.
+  // `?preview=fresh` opens with only Bypass in the server; `?preview=missing` without it, until it is "invited".
   useEffect(() => {
     if (!demo) return;
-    setFleet(demoFleet());
-    setMe(demoMe());
+    const preview = new URLSearchParams(window.location.search).get("preview");
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    if (preview === "missing") {
+      setError("Bypass is not in this server");
+      setProblem({ status: 404, code: "bot_missing", guildName: "Night Owls", canManage: true, inviteUrl: "#" });
+    } else {
+      setFleet(demoFleet(Date.now(), preview === "fresh" ? "fresh" : "full"));
+      setMe(demoMe());
+    }
+    // A demo invite "arrives" a few seconds after Discord would have opened.
+    const onInvite = (ev: Event) => {
+      const instance = Number((ev as CustomEvent<{ instance: number }>).detail?.instance);
+      timers.push(
+        setTimeout(() => {
+          if (instance === 1 && !fleetRef.current) {
+            setFleet(demoFleet(Date.now(), "fresh"));
+            setMe(demoMe());
+            setError(null);
+            setProblem(null);
+            setArrived(true);
+            return;
+          }
+          setFleet((f) =>
+            f ? { ...f, instances: f.instances.map((i) => (i.instance === instance ? { ...i, inGuild: true, online: true } : i)) } : f,
+          );
+        }, 3200),
+      );
+    };
+    window.addEventListener(DEMO_INVITE_EVENT, onInvite);
     const id = setInterval(() => {
       const now = Date.now();
       setFleet((f) =>
@@ -287,7 +366,11 @@ export function GuildLiveProvider({ guildId, children }: { guildId: string; chil
           : f,
       );
     }, 1000);
-    return () => clearInterval(id);
+    return () => {
+      clearInterval(id);
+      timers.forEach(clearTimeout);
+      window.removeEventListener(DEMO_INVITE_EVENT, onInvite);
+    };
   }, [demo]);
 
   const send = useCallback(
@@ -316,8 +399,8 @@ export function GuildLiveProvider({ guildId, children }: { guildId: string; chil
   );
 
   const value = useMemo<GuildLive>(
-    () => ({ guildId, fleet, me, link, error, settingsVersion, send, playbackOf, refresh }),
-    [guildId, fleet, me, link, error, settingsVersion, send, playbackOf, refresh],
+    () => ({ guildId, fleet, me, link, error, problem, arrived, settingsVersion, send, playbackOf, refresh }),
+    [guildId, fleet, me, link, error, problem, arrived, settingsVersion, send, playbackOf, refresh],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

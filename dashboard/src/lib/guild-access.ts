@@ -12,7 +12,7 @@ import {
   type PermissionContext,
   type PermissionResult
 } from "../../../shared/permissions";
-import { configuredInstances, type LivePlaybackState } from "../../../shared/fleet";
+import { configuredInstances, inviteUrl, type LivePlaybackState } from "../../../shared/fleet";
 import type { IGuildSettings } from "../../../shared/types";
 import { isAloneWithBot } from "./dashboard-commands";
 import { fetchUserGuilds } from "./discord";
@@ -54,7 +54,9 @@ export interface GuildAccess {
 export class GuildAccessError extends Error {
   constructor(
     public readonly status: number,
-    message: string
+    message: string,
+    /** Extra fields for the JSON error body (never secrets). */
+    public readonly details?: Record<string, unknown>
   ) {
     super(message);
     this.name = "GuildAccessError";
@@ -182,7 +184,17 @@ export async function resolveGuildAccess(session: Session | null, guildId: strin
   }
   const guild = guilds.find((g) => g.id === guildId);
   if (!guild) throw new GuildAccessError(403, "You are not a member of this server");
-  if (!(await isBotInGuild(guildId))) throw new GuildAccessError(404, "Bypass is not in this server");
+  const bits = permissionBits(guild.permissions);
+  if (!(await isBotInGuild(guildId))) {
+    // The page can then offer the invite (to members who may add bots) and wait for Bypass to arrive.
+    const canManage = Boolean(guild.owner) || (bits & ADMINISTRATOR) === ADMINISTRATOR || (bits & MANAGE_GUILD) === MANAGE_GUILD;
+    throw new GuildAccessError(404, "Bypass is not in this server", {
+      code: "bot_missing",
+      guild: { id: guild.id, name: guild.name },
+      canManage,
+      inviteUrl: canManage ? inviteUrl(1, guildId) : null
+    });
+  }
 
   await connectToDatabase();
   const [settings, member, voiceChannelId] = await Promise.all([
@@ -193,7 +205,6 @@ export async function resolveGuildAccess(session: Session | null, guildId: strin
   if (member === null) throw new GuildAccessError(403, "You are not a member of this server");
 
   const roleIds = Array.isArray(member?.roles) ? member!.roles.filter(isSnowflake) : [];
-  const bits = permissionBits(guild.permissions);
   const adminRoleId = settings?.adminRoleId ?? null;
   const isAdmin =
     Boolean(guild.owner) ||
@@ -224,7 +235,7 @@ export async function getGuildAccess(
     return { access: await resolveGuildAccess(session, guildId) };
   } catch (error) {
     if (error instanceof GuildAccessError) {
-      return { response: NextResponse.json({ error: error.message }, { status: error.status }) };
+      return { response: NextResponse.json({ ...error.details, error: error.message }, { status: error.status }) };
     }
     console.error("[guild-access] Failed to resolve access:", error);
     return { response: NextResponse.json({ error: "Internal server error" }, { status: 500 }) };
