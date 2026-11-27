@@ -255,7 +255,7 @@ function Row({
                   {checked ? null : implied ? (
                     <Check size={16} strokeWidth={2.25} className="text-ink-3/70" />
                   ) : (
-                    <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-3/80 md:opacity-0 md:transition-opacity md:group-hover:opacity-100">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-ink-3/80 md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:group-focus-visible:opacity-100">
                       {m.name}
                     </span>
                   )}

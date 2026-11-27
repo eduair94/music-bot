@@ -25,7 +25,7 @@ const MIN_PX_PER_MIN = 17;
 const CUR_MIN_PX = 96;
 const MIN = 60_000;
 const toPx = (ms: number, scale: number) => (ms / MIN) * scale;
-const QUEUE_END_PX = 168;
+const QUEUE_END_PX = 112;
 
 function openAdd(instance?: number) {
   window.dispatchEvent(new CustomEvent("fest:add-song", { detail: { instance } }));
@@ -90,7 +90,8 @@ export function FleetBill() {
   const scale = useMemo(() => {
     if (!laneH || !lastEnd) return MAX_PX_PER_MIN;
     const minutes = (lastEnd - origin) / MIN;
-    const fit = (laneH - QUEUE_END_PX - CUR_MIN_PX / 2 - 24) / Math.max(minutes, 1);
+    // The queue-end block (with its action row) and the on-stage stretch must both fit above the strip.
+    const fit = (laneH - QUEUE_END_PX - CUR_MIN_PX - 16) / Math.max(minutes, 1);
     return Math.max(MIN_PX_PER_MIN, Math.min(MAX_PX_PER_MIN, Math.floor(fit * 2) / 2));
   }, [laneH, lastEnd, origin]);
   const px = (ms: number) => toPx(ms, scale);
@@ -194,7 +195,8 @@ export function FleetBill() {
             {ticks.map((t) => {
               const major = new Date(t).getMinutes() % 10 === 0;
               const y = px(t - origin);
-              if (y < 10 || Math.abs(y - nowY) < 16) return null;
+              // Leave the NOW tag clear: no label within its height, none for the current minute.
+              if (y < 10 || Math.abs(y - nowY) < 24 || fmtClock(t) === fmtClock(now)) return null;
               return (
                 <span
                   key={t}
@@ -481,15 +483,17 @@ function StageColumn({
         className="absolute inset-x-1.5 z-[3] rounded-[3px] border-[1.5px] border-dashed bg-stock/80 p-3"
         style={{ top: endTop + 4, height: QUEUE_END_PX, borderColor: s.color }}
       >
-        <p className="clock text-[34px] leading-none" style={{ color: s.color === "#f5b700" ? "#9a7300" : s.color }}>
-          {fmtClock(cursor)}
-        </p>
+        <div className="flex items-center gap-2">
+          <p className="clock text-[34px] leading-none" style={{ color: s.color === "#f5b700" ? "#9a7300" : s.color }}>
+            {fmtClock(cursor)}
+          </p>
+          <Button size="sm" variant="outline" className="ml-auto" onClick={() => openAdd(inst.instance)}>
+            <Plus size={14} /> Add songs
+          </Button>
+        </div>
         <p className="mt-1.5 text-[13px] leading-snug text-ink-2">
           Queue ends. {p.autoplay ? "Autoplay is on, similar songs follow." : "Autoplay is off, the stage goes quiet."}
         </p>
-        <Button size="sm" variant="outline" className="mt-2.5" onClick={() => openAdd(inst.instance)}>
-          <Plus size={14} /> Add songs
-        </Button>
       </div>
     </div>
   );
