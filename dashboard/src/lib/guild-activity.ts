@@ -26,10 +26,13 @@ interface ActivityFacets {
   sources: { _id: string | null; plays: number }[];
 }
 
+/** Guess-the-song previews (Deezer CDN clips) recorded before the game was excluded from history. */
+const GUESS_PREVIEW = /cdn-preview|dzcdn\.net/;
+
 export async function guildActivity(guildId: string, days: number, now: Date = new Date()) {
   const since = new Date(now.getTime() - days * 86_400_000);
   const [facets] = (await PlayHistoryModel.aggregate([
-    { $match: { guildId, playedAt: { $gte: since } } },
+    { $match: { guildId, playedAt: { $gte: since }, url: { $not: GUESS_PREVIEW } } },
     {
       $facet: {
         totals: [
@@ -138,7 +141,7 @@ export async function guildActivity(guildId: string, days: number, now: Date = n
 }
 
 export async function guildHistory(guildId: string, limit: number) {
-  const rows = (await PlayHistoryModel.find({ guildId }).sort({ playedAt: -1 }).limit(limit).lean()) as unknown as IPlayHistory[];
+  const rows = (await PlayHistoryModel.find({ guildId, url: { $not: GUESS_PREVIEW } }).sort({ playedAt: -1 }).limit(limit).lean()) as unknown as IPlayHistory[];
   return rows.map((row) => ({
     title: row.title,
     author: row.author ?? "",

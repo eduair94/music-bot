@@ -379,7 +379,7 @@ function StageColumn({
     return (
       <div className="relative border-r border-rule" style={{ height, background: `color-mix(in srgb, ${s.tint} 45%, transparent)` }}>
         <div
-          className="absolute inset-x-3 z-[3] rounded-[4px] border-2 bg-stock/90 p-4"
+          className="absolute left-3 right-3 z-[3] mx-auto max-w-[26rem] rounded-[4px] border-2 bg-stock/90 p-4"
           style={{ top: Math.max(12, nowY + 16), borderColor: s.color }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
