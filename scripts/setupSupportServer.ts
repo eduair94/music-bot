@@ -33,6 +33,7 @@ import {
   SeparatorSpacingSize,
   StringSelectMenuBuilder
 } from "discord.js";
+import { configuredInstances } from "../shared/fleet";
 import { botInviteUrl, PATREON_URL, SITE_URL, SUPPORT_INVITE_URL, TOPGG_VOTE_URL } from "../shared/links";
 import { TICKET_TOPICS } from "../shared/tickets";
 
@@ -129,6 +130,14 @@ async function main() {
     carl: botRole(CARL_BOT)?.id as string | undefined
   };
   const staffIds = [R.admin, R.dev, R.mod, R.sup].filter(Boolean) as string[];
+  // Fleet instances (Bypass 2, 3, …) run on plain managed roles, not Administrator, so
+  // rooms that deny Speak to @everyone need an explicit allow for them. Found by
+  // FLEET_APPLICATION_IDS and, when that is not set, by their managed role name.
+  const fleetIds = new Set(configuredInstances().filter((m) => m.instance > 1).map((m) => m.applicationId));
+  const fleetRoles = roles.filter(
+    (r) => r.tags?.bot_id && r.tags.bot_id !== me.id && (fleetIds.size ? fleetIds.has(r.tags.bot_id) : /^Bypass [2-8]$/.test(r.name))
+  );
+  const fleetBotIds = fleetRoles.map((r) => r.tags.bot_id as string);
 
   // Bypass's own role takes over Administrator before "Bots" gives it up.
   if (R.bypass && !(BigInt(botRole(me.id)!.permissions) & V.Administrator)) {
@@ -192,8 +201,8 @@ async function main() {
     log(`separator → ${sepNames[i]}`);
     await api("patch", Routes.guildRole(GUILD, r.id), { name: sepNames[i] });
   }
-  // Third-party bots join the cosmetic Bots group in the member list.
-  for (const botId of [CARL_BOT]) {
+  // Third-party bots and the fleet instances join the cosmetic Bots group in the member list.
+  for (const botId of [CARL_BOT, ...fleetBotIds]) {
     if (!R.bots) break;
     const member = (await rest.get(Routes.guildMember(GUILD, botId)).catch(() => null)) as Json | null;
     if (member && !member.roles.includes(R.bots)) {
@@ -242,9 +251,10 @@ async function main() {
   const playground: Overwrite[] = [
     ...ow(everyone, [...READ, ...POST, V.UseApplicationCommands, V.UseExternalApps, V.Connect, V.Speak, V.UseVAD, V.Stream], [V.CreatePublicThreads, V.CreatePrivateThreads, V.SendPolls])
   ];
-  /** Listening room: members hear Bypass and chat in the voice text, only the bot talks. */
+  /** Listening room: members hear Bypass and chat in the voice text, only the bots talk. */
   const listeningRoom: Overwrite[] = [
     ...ow(everyone, [...READ, V.SendMessages, V.EmbedLinks, V.UseApplicationCommands, V.Connect], [V.Speak, V.Stream, V.UseSoundboard, V.UseEmbeddedActivities, V.CreatePublicThreads, V.CreatePrivateThreads]),
+    ...fleetRoles.flatMap((r) => ow(r.id, [V.ViewChannel, V.Connect, V.Speak])),
     ...ow(R.mod, [V.Speak, V.MuteMembers, V.MoveMembers]),
     ...ow(R.dev, [V.Speak, V.MuteMembers, V.MoveMembers])
   ];
