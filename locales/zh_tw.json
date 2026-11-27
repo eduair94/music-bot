@@ -29,13 +29,31 @@
   "loop": {
     "description": "變更音樂重複設定",
     "errorNotQueue": "現在沒有任何歌曲正在播放",
-    "result": "重複播放已經 {loop}"
+    "result": "重複播放已經 {loop}",
+    "optionMode": "要重複什麼",
+    "mode": {
+      "off": "關閉",
+      "track": "這首歌",
+      "queue": "整個佇列"
+    }
   },
   "lyrics": {
     "errorNotQueue": "現在沒有任何歌曲正在播放",
     "lyricsNotFound": "沒有找到 {title} 的歌詞",
     "embedTitle": "{title} - 歌詞",
-    "description": "顯示目前歌曲或任何歌曲的歌詞"
+    "description": "顯示目前歌曲或任何歌曲的歌詞",
+    "liveTitle": "即時歌詞",
+    "liveButton": "即時歌詞",
+    "liveHint": "有同步歌詞可用：按下「即時歌詞」就能跟著唱。",
+    "liveStop": "停止",
+    "livePaused": "已暫停",
+    "liveEnded": "即時歌詞已結束。",
+    "liveReplaced": "即時歌詞已移到較新的訊息。",
+    "liveStoppedBy": "即時歌詞已被 {user} 停止。",
+    "liveNoSync": "這首歌沒有同步歌詞，所以無法使用即時模式。",
+    "liveNoPermission": "只有開啟即時歌詞的人或擁有「管理訊息」權限的人才能停止。",
+    "liveNotDuringGame": "猜歌遊戲進行中，歌詞會被隱藏。",
+    "liveVersionHint": "時間軸對應的是這首歌的其他版本，歌詞可能會有些偏移"
   },
   "move": {
     "description": "移動歌曲到隊列的其他位置",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **現在沒有任何歌曲正在播放**",
     "currentPage": "目前頁面 - ",
     "embedTitle": "伺服器音樂隊列\n",
-    "embedCurrentSong": "**當前歌曲 - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**當前歌曲 - [{title}]({url})**\n\n{info}",
+    "optionPage": "頁碼"
   },
   "remove": {
     "description": "從音樂隊列移除歌曲",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 當前音量為: **{volume}%**",
     "errorNotNumber": "請使用數字來變更音量",
     "errorNotValid": "請使用 0 - 100 的數字!",
-    "result": "音量設置為: **{arg}%**"
+    "result": "音量設置為: **{arg}%**",
+    "errorRange": "音量必須介於 0 到 {max} 之間。"
   },
   "common": {
     "on": "**啟動**",
@@ -208,14 +228,49 @@
     "disabled": "**關閉**",
     "errorNotChannel": "你必須先加入語音頻道!",
     "cooldownMessage": "請等待 {time} 秒後再使用 `{name}` 指令",
-    "errorCommand": "執行指令時發生錯誤"
+    "errorCommand": "執行指令時發生錯誤",
+    "djRequired": "你需要 DJ 身分組才能使用這個指令。",
+    "guild_only": "這個指令只能在伺服器中使用。",
+    "unknown": "未知",
+    "unknownError": "未知錯誤",
+    "unknownSubcommand": "未知的子指令。",
+    "voiceChannel": "語音頻道",
+    "playerInitializing": "音樂播放器還在初始化中，請幾秒後再試一次。",
+    "voiceChannelNotAllowed": "機器人不允許在這個語音頻道播放，請使用允許的頻道。",
+    "queueFull": "佇列已滿！最多只能有 {max} 首歌。",
+    "invalidFileType": "檔案類型無效。支援的格式：{formats}",
+    "fileTooLarge": "檔案太大（{size}MB）。上限為 {max}MB。",
+    "optionToggle": "開啟或關閉（預設：切換）",
+    "requestedBy": "由 {user} 點播",
+    "yes": "是",
+    "no": "否",
+    "loop": {
+      "off": "關閉",
+      "track": "單曲",
+      "queue": "佇列"
+    },
+    "field": {
+      "title": "標題",
+      "artist": "演出者",
+      "duration": "長度",
+      "tracks": "曲目",
+      "source": "來源",
+      "requestedBy": "點播者",
+      "loopMode": "循環模式",
+      "volume": "音量",
+      "loadTime": "載入時間",
+      "positionInQueue": "佇列位置",
+      "status": "狀態",
+      "tier": "方案等級"
+    }
   },
   "seek": {
     "description": "跳到歌曲的指定時間",
     "errorNotQueue": "目前沒有播放任何東西。",
     "errorInvalidTime": "時間格式無效。請使用像 1:30、90、1m30s 的格式",
     "errorOutOfRange": "時間必須介於 0:00 到 {duration} 之間",
-    "result": "<@{author}> ⏩ 已跳到 **{time}**"
+    "result": "<@{author}> ⏩ 已跳到 **{time}**",
+    "optionTime": "要跳轉到的時間（例如：1:30、90、1m30s）"
   },
   "forward": {
     "description": "將歌曲快轉指定秒數",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "將歌曲倒轉指定秒數",
     "errorNotQueue": "目前沒有播放任何東西。",
-    "result": "<@{author}> ⏪ 倒轉了 **{seconds} 秒**（目前在 {position}）"
+    "result": "<@{author}> ⏪ 倒轉了 **{seconds} 秒**（目前在 {position}）",
+    "optionSeconds": "要倒轉的秒數"
   },
   "replay": {
     "description": "從頭重新播放目前歌曲",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "切換自動播放（佇列結束時播放相似歌曲）",
     "errorNotQueue": "目前沒有播放佇列。",
-    "result": "🔄 自動播放現在為 {status}"
+    "result": "🔄 自動播放現在為 {status}",
+    "optionDefault": "同時設為這個伺服器的預設值（需管理伺服器權限）"
   },
   "history": {
     "description": "顯示最近播放的歌曲",
     "errorNotQueue": "目前沒有播放佇列。",
     "errorEmpty": "還沒有播放紀錄。",
     "embedTitle": "最近播放",
-    "footer": "顯示最近 {count} 首歌"
+    "footer": "顯示最近 {count} 首歌",
+    "title": "最近播放",
+    "titleUser": "最近播放 · {user} 點播",
+    "empty": "過去 30 天內這個伺服器沒有播放過任何歌曲。",
+    "emptyUser": "{user} 過去 30 天內沒有在這裡點播過任何歌曲。",
+    "summary": "最近 {count} 次播放",
+    "playAgain": "再播一次…",
+    "optionUser": "只顯示這位成員點播的歌曲",
+    "unavailable": "播放紀錄目前無法使用，請稍後再試。",
+    "gone": "那首歌已經不在播放紀錄中了。"
   },
   "previous": {
     "description": "播放上一首歌",
@@ -283,7 +349,8 @@
     "errorNotQueue": "目前沒有佇列。",
     "errorInvalidPosition": "位置無效。佇列只有 {max} 首歌。",
     "errorNotFound": "該位置找不到歌曲。",
-    "result": "<@{author}> ⏭️ 已跳到 **{title}**"
+    "result": "<@{author}> ⏭️ 已跳到 **{title}**",
+    "optionPosition": "要跳到的佇列位置"
   },
   "Invite me to your server!": "邀請我到你的伺服器！",
   "Invite": "邀請",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "取得控制面板連結",
     "embedDescription": "前往網頁控制面板管理伺服器設定、查看播放佇列等等！",
-    "footer": "打造你的音樂體驗"
+    "footer": "打造你的音樂體驗",
+    "title": "機器人控制台",
+    "features": "功能",
+    "featuresList": "• 設定伺服器選項\n• 查看佇列與播放控制\n• 管理播放清單與收藏\n• 查看收聽統計\n• 管理 Premium 功能",
+    "open": "開啟控制台"
   },
   "clean": {
     "description": "刪除頻道中的機器人訊息",
@@ -377,7 +448,9 @@
       "description": "查看你所有的收藏",
       "title": "📁 你的收藏",
       "empty": "你還沒有任何收藏。使用 `/collections create` 建立一個吧！",
-      "footer": "共 {count} 個收藏"
+      "footer": "共 {count} 個收藏",
+      "select": "開啟收藏…",
+      "more": "…還有 {count} 個。用 /collections view 開啟。"
     },
     "create": {
       "description": "建立新的收藏",
@@ -399,7 +472,12 @@
       "tracksField": "曲目",
       "durationField": "總長度",
       "shareCodeField": "分享代碼",
-      "andMore": "……還有 {count} 首曲目"
+      "andMore": "……還有 {count} 首曲目",
+      "play": "播放",
+      "addToQueue": "加入佇列",
+      "summary": "{count} 首曲目 · {duration}",
+      "page": "第 {page}/{pages} 頁",
+      "importedFrom": "匯入自 {source}"
     },
     "save": {
       "description": "將目前佇列儲存為收藏",
@@ -411,7 +489,9 @@
       "description": "將收藏載入佇列",
       "nameOption": "要載入的收藏名稱",
       "empty": "這個收藏是空的。",
-      "success": "📂 已從收藏 **{name}** 載入 **{count}** 首曲目！"
+      "success": "📂 已從收藏 **{name}** 載入 **{count}** 首曲目！",
+      "queuedNext": "會在目前歌曲結束後接著播放。",
+      "skipped": "已略過 {count} 首（超過伺服器允許的長度、超出佇列上限或找不到）。"
     },
     "rename": {
       "description": "重新命名收藏",
@@ -435,7 +515,8 @@
       "shareCodeOption": "要複製的分享代碼",
       "nameOption": "新收藏的名稱",
       "invalidCode": "分享代碼無效或已過期。",
-      "success": "📋 已將 **{count}** 首歌曲複製到新收藏 **{name}**！"
+      "success": "📋 已將 **{count}** 首歌曲複製到新收藏 **{name}**！",
+      "clonedFrom": "複製自 {name}"
     },
     "merge": {
       "description": "將一個收藏合併到另一個收藏",
@@ -457,6 +538,21 @@
       "positionOption": "要移除的歌曲位置（從 1 開始）",
       "invalidPosition": "位置無效。這個收藏有 {max} 首歌曲。",
       "success": "🗑️ 已從收藏 **{name}** 移除 **{track}**。"
+    },
+    "error": "你的收藏發生錯誤，請再試一次。",
+    "trackCount": "{count} 首曲目",
+    "gone": "那個收藏已經不存在了。",
+    "notYours": "這個選單屬於其他人。使用 /collections list 查看你自己的收藏。",
+    "import": {
+      "description": "從 Spotify、YouTube、Deezer 或 Apple Music 匯入播放清單",
+      "urlOption": "播放清單連結（Spotify、YouTube、Deezer、Apple Music 專輯）",
+      "nameOption": "新收藏的名稱（預設：播放清單標題）",
+      "invalidUrl": "這看起來不像連結。請貼上 Spotify、YouTube、Deezer 的播放清單網址或 Apple Music 專輯網址。",
+      "failed": "我無法讀取那個播放清單。請確認它是公開的，且連結來自 Spotify、YouTube、Deezer 或 Apple Music 專輯。",
+      "exists": "你已經有一個名為 **{name}** 的收藏了。請用 `name` 選項換個名稱。",
+      "success": "📥 已從 {source} 匯入 **{count}** 首曲目到 **{name}**。",
+      "skipped": "已略過 {count} 首（超過每個收藏 {max} 首的上限，或無法播放）。",
+      "spotifyCap": "Spotify 只會分享播放清單連結中的前 100 首歌。"
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "將文字轉成語音並在語音頻道播放",
     "errorNotAvailable": "❌ TTS 服務目前無法使用。請聯絡機器人管理員。",
     "errorGenerate": "❌ 語音產生失敗，請再試一次。",
-    "success": "🎤 正在播放：「{text}」（{language}，{voice}）"
+    "success": "🎤 正在播放：「{text}」（{language}，{voice}）",
+    "optionText": "要轉換成語音的文字",
+    "optionLanguage": "語音的語言（未指定時使用已儲存的設定）",
+    "optionVoice": "要使用的聲音（未指定時使用已儲存的設定）"
   },
   "sayconfig": {
-    "description": "設定你的 TTS（文字轉語音）選項"
+    "description": "設定你的 TTS（文字轉語音）選項",
+    "view": {
+      "description": "查看你目前的 TTS 設定",
+      "title": "TTS 設定",
+      "noConfig": "尚未自訂設定，正在使用預設值。",
+      "mode": "模式",
+      "language": "語言",
+      "voice": "聲音",
+      "voiceDescription": "聲音描述",
+      "styleInstruction": "風格指示",
+      "referenceAudio": "參考音訊",
+      "referenceAudioSet": "已設定",
+      "referenceText": "參考文字"
+    },
+    "mode": {
+      "description": "設定 TTS 模式（custom_voice 或 voice_clone）",
+      "option": "TTS 模式",
+      "customVoice": "自訂語音（預設）",
+      "voiceClone": "語音複製",
+      "set": "TTS 模式已設為 **{mode}**"
+    },
+    "language": {
+      "description": "設定預設語言",
+      "option": "語音使用的語言",
+      "set": "預設語言已設為 **{language}**"
+    },
+    "voice": {
+      "description": "設定預設語音／說話者",
+      "option": "要使用的語音",
+      "set": "預設語音已設為 **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "設定自訂語音生成的語音描述",
+      "option": "語音描述（例如：「低沉、語氣平靜的男聲」）",
+      "set": "語音描述已設為：「{text}」"
+    },
+    "style": {
+      "description": "設定語音生成的風格指示",
+      "option": "風格指示（例如：「說得慢一點、清楚一點」）",
+      "set": "風格指示已設為：「{text}」"
+    },
+    "reference": {
+      "description": "設定語音複製用的參考音訊與文字",
+      "optionAudio": "參考音訊檔（MP3、WAV 等）",
+      "optionText": "參考音訊的逐字稿",
+      "saved": "參考音訊已上傳並儲存！",
+      "text": "參考文字：「{text}」",
+      "modeSet": "模式已自動設為 **{mode}**",
+      "failed": "參考音訊上傳失敗，請再試一次。"
+    },
+    "reset": {
+      "description": "將你的 TTS 設定重設為預設值",
+      "done": "TTS 設定已重設為預設值。",
+      "none": "沒有可重設的自訂設定。"
+    }
   },
   "radio": {
     "notInVoice": "你需要先加入語音頻道。",
@@ -649,7 +802,8 @@
     "body": "投票能讓更多伺服器發現這個機器人。每次在 top.gg 投票，就能為你解鎖 12 小時的 **24/7 模式**和**錄音室音質**。",
     "active": "你的投票獎勵還有 {time} 有效。",
     "inactive": "目前沒有有效的投票。在下方投票後，獎勵會在一分鐘內生效。",
-    "notListed": "機器人上架後就會開放投票。感謝你願意幫忙！"
+    "notListed": "機器人上架後就會開放投票。感謝你願意幫忙！",
+    "heading": "為 {bot} 投票"
   },
   "leaderboard": {
     "description": "查看本次播放的歌曲排行榜",
@@ -742,7 +896,8 @@
     "noQueue": "目前沒有進行中的佇列。",
     "invalidChannel": "無效的頻道，請選擇文字頻道。",
     "title": "📢 頻道已重新綁定",
-    "success": "現在會將通知傳送到 {channel}。"
+    "success": "現在會將通知傳送到 {channel}。",
+    "optionChannel": "要重新綁定的頻道（預設為目前頻道）"
   },
   "disabledcommands": {
     "description": "查看此伺服器中所有已停用的指令",
@@ -939,7 +1094,28 @@
     "user_free": "你目前是 **免費** 方案。",
     "upgrade": "升級進階版",
     "upgrade_message": "在 Patreon 上支持我們，即可取得進階功能！",
-    "description": "查看進階版福利"
+    "description": "查看進階版福利",
+    "view": {
+      "description": "查看可用的福利"
+    },
+    "user": {
+      "description": "查看你目前的福利",
+      "title": "你的福利",
+      "premium": "你擁有 **{tier}**！",
+      "premiumTier": "Premium",
+      "audio": "音質：{bitrate}kbps",
+      "audioFilters": "音訊濾鏡",
+      "stay247": "24/7 模式",
+      "free": "你目前是**免費**方案。到 Patreon 取得 Premium 吧！"
+    },
+    "overview": {
+      "title": "Premium 福利",
+      "intro": "Founder 名額限 {spots} 位，價格永久鎖定。",
+      "freeName": "免費 — {price}",
+      "freePerks": "128kbps 音質\n佇列、播放清單和歌詞\n所有指令",
+      "founderName": "Founder／Beta 測試者 — {price}/月",
+      "founderPerks": "320kbps 音質\n音訊濾鏡\n24/7 模式\n優先佇列\nFounder 身分組與專屬支援"
+    }
   },
   "boost": {
     "no_premium_title": "❌ 沒有進階版",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "自動播放已關閉。",
     "volumeLimit": "這個伺服器的音量上限是 {max}%。",
     "lyricsButton": "歌詞",
-    "saveButton": "儲存"
+    "saveButton": "儲存",
+    "trackFailed": "無法播放 **{title}**，已跳過。試試其他連結或搜尋。",
+    "guessRunning": "這裡正在進行猜歌遊戲，遊戲結束後播放器就會回來。"
   },
   "queueView": {
     "title": "播放佇列",
@@ -1040,7 +1218,8 @@
     "commands": "指令",
     "dashboard": "控制面板",
     "support": "支援伺服器",
-    "vote": "投票"
+    "vote": "投票",
+    "voiceStatusHint": "想讓正在播放的歌曲顯示在語音頻道名稱下方嗎？[重新授權我]({url})以授予「設定語音頻道狀態」權限。"
   },
   "router": {
     "guildOnly": "這個指令只能在伺服器中使用。",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "語言（自動會依照每位成員的 Discord 語言）",
     "auto": "自動（每位成員的 Discord 語言）",
     "set": "語言已設為 {language}。",
-    "needManage": "你需要「管理伺服器」權限才能變更語言。"
+    "needManage": "你需要「管理伺服器」權限才能變更語言。",
+    "unknown": "未知的語言。"
   },
   "links": {
     "website": "網站",
@@ -1100,45 +1280,741 @@
     "invite": "邀請"
   },
   "commanddisable": {
-    "description": "在這個伺服器停用指令"
+    "description": "在這個伺服器停用指令",
+    "optionCommand": "要停用的指令",
+    "protected": "無法停用必要指令：{command}",
+    "notFound": "找不到指令：{command}",
+    "alreadyDisabled": "指令 {command} 已經停用了。",
+    "title": "指令已停用",
+    "done": "已在此伺服器停用指令 {command}。\n\n使用 `/commandenable` 重新啟用。"
   },
   "commanddisableall": {
-    "description": "停用所有指令（必要指令除外）"
+    "description": "停用所有指令（必要指令除外）",
+    "title": "已停用所有指令",
+    "done": "已停用 **{count}** 個指令。\n\n仍可使用的受保護指令：\n{commands}\n\n使用 `/commandenableall` 恢復所有指令。"
   },
   "commandenable": {
-    "description": "啟用已停用的指令"
+    "description": "啟用已停用的指令",
+    "optionCommand": "要啟用的指令",
+    "notDisabled": "指令 {command} 並未停用。",
+    "title": "指令已啟用",
+    "done": "已在此伺服器重新啟用指令 {command}。"
   },
   "commandenableall": {
-    "description": "啟用所有已停用的指令"
+    "description": "啟用所有已停用的指令",
+    "title": "已啟用所有指令",
+    "done": "已重新啟用 **{count}** 個指令。\n\n現在所有指令都可以使用了。",
+    "none": "沒有被停用的指令。"
   },
   "effects": {
-    "description": "管理音效"
+    "description": "管理音效",
+    "optionEnabled": "啟用或停用",
+    "nothingPlaying": "目前沒有播放任何音樂。",
+    "unknown": "未知的效果。",
+    "enabledBy": "{user} 已啟用 {effect} 效果",
+    "disabledBy": "{user} 已停用 {effect} 效果",
+    "8d": {
+      "description": "套用 8D 音效（環繞旋轉聲音）",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "套用重低音增強效果",
+      "optionLevel": "低音強度",
+      "level": {
+        "off": "關閉",
+        "low": "低",
+        "medium": "中",
+        "high": "高"
+      },
+      "disabledBy": "{user} 已關閉重低音增強",
+      "alreadyOff": "重低音增強已經是關閉的。",
+      "setBy": "{user} 已將重低音增強設為 **{level}**"
+    },
+    "distortion": {
+      "description": "套用失真效果",
+      "name": "失真"
+    },
+    "haas": {
+      "description": "套用 Haas 效果（空間音訊）",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "降低人聲（卡拉 OK 模式）",
+      "name": "卡拉 OK"
+    },
+    "nightcore": {
+      "description": "套用 Nightcore 效果（提高音調與速度）",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "套用 Vaporwave 效果（降低音調與速度）",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "套用脈動效果",
+      "name": "脈動"
+    },
+    "reverse": {
+      "description": "倒轉播放音訊",
+      "name": "倒轉"
+    },
+    "tremolo": {
+      "description": "套用顫音效果",
+      "name": "顫音"
+    },
+    "vibrato": {
+      "description": "套用抖音效果",
+      "name": "抖音"
+    },
+    "lofi": {
+      "description": "套用 Lofi 效果",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "套用環繞音效",
+      "name": "環繞音效"
+    },
+    "list": {
+      "description": "顯示啟用中的效果",
+      "title": "啟用中的效果",
+      "empty": "目前沒有啟用任何效果"
+    },
+    "clear": {
+      "description": "清除所有效果",
+      "done": "已清除所有效果。"
+    }
   },
   "info": {
-    "description": "機器人資訊與說明"
+    "description": "機器人資訊與說明",
+    "about": {
+      "description": "關於這個機器人",
+      "statistics": "統計資料",
+      "servers": "伺服器",
+      "commands": "指令",
+      "uptime": "運行時間",
+      "system": "系統",
+      "memory": "記憶體"
+    },
+    "faq": {
+      "description": "常見問題"
+    },
+    "support": {
+      "description": "取得支援伺服器連結",
+      "title": "支援",
+      "body": "需要幫忙嗎？加入我們的支援伺服器：",
+      "join": "點擊加入",
+      "reportIssues": "回報問題",
+      "reportIssuesValue": "請先使用 `/info faq`，再到支援伺服器詢問",
+      "suggestions": "建議",
+      "suggestionsValue": "到我們的建議頻道分享你的想法"
+    },
+    "queue": {
+      "description": "詳細的佇列資訊",
+      "noQueue": "目前沒有佇列。",
+      "title": "佇列資訊",
+      "contributors": "貢獻者"
+    },
+    "song": {
+      "description": "目前歌曲的詳細資訊",
+      "noTrack": "目前沒有播放任何歌曲。",
+      "title": "正在播放"
+    },
+    "nextup": {
+      "description": "顯示佇列中的下一首歌",
+      "empty": "佇列中沒有歌曲。",
+      "title": "即將播放",
+      "footer": "佇列中有 {count} 首歌"
+    },
+    "changelogs": {
+      "description": "最近的更新與變更",
+      "title": "最近更新",
+      "intro": "最新的變更與改進：",
+      "newFeatures": "新功能",
+      "newFeaturesList": "• 整合指令，分類更清楚\n• 改進音效系統\n• 強化佇列管理",
+      "improvements": "改進",
+      "improvementsList": "• 指令回應更快\n• 更好的錯誤處理\n• 降低記憶體用量",
+      "bugFixes": "錯誤修正",
+      "bugFixesList": "• 修正播放問題\n• 解決佇列同步問題"
+    }
   },
   "patreon": {
-    "description": "查看你的 Patreon 狀態並同步福利"
+    "description": "查看你的 Patreon 狀態並同步福利",
+    "notConfigured": "這個機器人尚未設定 Patreon 整合。",
+    "howToLink": "如何連結",
+    "premiumActive": "Premium 已啟用",
+    "patronStatus": {
+      "active": "有效贊助者",
+      "declined": "付款遭拒",
+      "former": "前贊助者",
+      "none": "非贊助者"
+    },
+    "status": {
+      "description": "查看你目前的 Patreon 狀態與福利",
+      "title": "Patreon 狀態",
+      "yourTitle": "你的 Patreon 狀態",
+      "notLinked": "你目前尚未連結 Patreon 帳號。",
+      "howToLinkSteps": "1. 前往 [Patreon]({patreon})\n2. 在「設定 → 連結」中連結你的 Discord 帳號\n3. 訂閱我們的 Patreon 頁面\n4. 使用 `/patreon sync` 更新你的福利",
+      "pledgeAmount": "贊助金額",
+      "perMonth": "{amount}/月",
+      "lifetimeSupport": "累計贊助",
+      "lastCharge": "上次扣款",
+      "thanks": "感謝你的支持！你可以使用 Premium 功能。",
+      "declined": "你上次的付款遭拒。請到 Patreon 更新付款方式以恢復福利。",
+      "former": "你的贊助已結束。到 Patreon 續訂即可恢復福利！",
+      "error": "檢查 Patreon 狀態時發生錯誤，請稍後再試。"
+    },
+    "sync": {
+      "description": "同步你的 Patreon 資料以更新福利",
+      "completeTitle": "Patreon 同步完成",
+      "success": "已成功同步你的 Patreon 資料！",
+      "title": "Patreon 同步",
+      "notFound": "找不到連結到你 Discord 的 Patreon 帳號。",
+      "howToLinkSteps": "1. 前往 [Patreon 設定]({settings})\n2. 點擊 **連結**\n3. 連結你的 **Discord** 帳號\n4. 確認你有贊助我們的方案\n5. 再次執行 `/patreon sync`",
+      "error": "同步 Patreon 資料時發生錯誤，請稍後再試。"
+    },
+    "info": {
+      "description": "了解 Patreon 福利以及如何連結帳號",
+      "title": "Patreon 福利",
+      "intro": "在 Patreon 支持我們，解鎖專屬福利！",
+      "benefits": "Premium 福利",
+      "benefitsList": "• 更高音質\n• 更長的播放清單\n• 優先佇列\n• 專屬指令\n• 搶先體驗新功能",
+      "howToGet": "如何取得 Premium",
+      "howToGetSteps": "1. 前往我們的 [Patreon 頁面]({patreon})\n2. 選擇適合你的方案\n3. 在 Patreon「設定 → 連結」中連結你的 Discord\n4. 使用 `/patreon sync` 啟用福利",
+      "troubleshooting": "疑難排解",
+      "troubleshootingList": "• 確認已在 Patreon 設定中連結 Discord\n• 付款必須成功（未遭拒）\n• 連結後試試 `/patreon sync`\n• 福利每 30 分鐘會自動更新"
+    }
   },
   "play_file": {
-    "description": "播放附件中的音訊檔案"
+    "description": "播放附件中的音訊檔案",
+    "optionFile": "要播放的音訊檔案（MP3、WAV、FLAC、M4A、OGG 等）",
+    "optionTitle": "自訂歌曲標題（選填）",
+    "cantPlay": "無法播放檔案：{name}",
+    "nowPlayingTitle": "正在播放檔案",
+    "addedTitle": "檔案已加入佇列",
+    "format": "格式",
+    "size": "大小",
+    "error": {
+      "load": "無法載入檔案：{name}\n\n可能原因：\n• 不支援此檔案格式\n• 檔案已損毀\n• 檔案網址已過期",
+      "timeout": "檔案下載逾時。檔案可能太大或連線速度太慢。",
+      "forbidden": "無法存取檔案。請重新上傳後再試一次。",
+      "notFound": "找不到檔案。附件網址可能已過期。",
+      "generic": "播放檔案時發生錯誤。"
+    }
   },
   "play_spotify": {
-    "description": "從 Spotify 搜尋並播放歌曲"
+    "description": "從 Spotify 搜尋並播放歌曲",
+    "optionQuery": "要搜尋的歌名、歌手或 Spotify 網址",
+    "cantPlayLink": "無法播放 Spotify 連結：{query}",
+    "playlistFallback": "Spotify 播放清單",
+    "playlistAdded": "已加入 Spotify 播放清單",
+    "songs": "{count} 首歌",
+    "nowPlaying": "正在播放",
+    "trackBy": "{title} - {author}",
+    "nowPlayingTitle": "正在播放 Spotify 歌曲",
+    "addedTitle": "已從 Spotify 加入佇列",
+    "noResults": "在 Spotify 上找不到結果：{query}\n\n試試看：\n• 換個關鍵字\n• 加上歌手名稱\n• 使用 Spotify 直接連結",
+    "notOnYoutube": "在 YouTube 上找不到：{title} - {artist}",
+    "error": {
+      "auth": "這首 Spotify 歌曲需要驗證。請試試其他歌曲。",
+      "premium": "這首歌需要 Spotify Premium。",
+      "private": "這首 Spotify 歌曲為私人內容，無法播放。",
+      "region": "這首歌在你的地區無法使用。",
+      "generic": "播放 Spotify 歌曲時發生錯誤。"
+    }
   },
   "premium": {
-    "description": "管理進階版功能與伺服器連結"
+    "description": "管理進階版功能與伺服器連結",
+    "audioQuality": "音質",
+    "botIdentity": "機器人身分",
+    "serverSlots": "伺服器名額",
+    "patreonTier": "Patreon 方案",
+    "supporter": "支持者",
+    "dbUnavailable": "**資料庫暫時無法使用**\n\n機器人目前無法連線到資料庫。請稍後再試一次。\n\n如果問題持續發生，已通知機器人管理員。",
+    "error": "發生錯誤：{error}",
+    "link": {
+      "description": "將此伺服器連結到你的 Patreon 帳號",
+      "successTitle": "伺服器已連結",
+      "failTitle": "連結失敗"
+    },
+    "unlink": {
+      "description": "將此伺服器與你的 Patreon 帳號解除連結",
+      "successTitle": "伺服器已解除連結",
+      "failTitle": "解除連結失敗"
+    },
+    "list": {
+      "description": "列出所有連結到你 Patreon 帳號的伺服器",
+      "title": "你已連結的伺服器",
+      "empty": "你還沒有連結任何伺服器。\n\n使用 `/premium link` 連結此伺服器！",
+      "linkedAt": "連結時間：{time}",
+      "slotsUsed": "已使用 {used}/{max}",
+      "noMembership": "你目前沒有有效的 Patreon 會員資格。\n\n在 Patreon 上支持我們來解鎖進階功能！"
+    },
+    "status": {
+      "description": "顯示此伺服器的進階狀態",
+      "premiumTitle": "進階伺服器",
+      "freeTitle": "免費伺服器",
+      "premiumBody": "此伺服器已啟用進階功能！",
+      "freeBody": "此伺服器正在使用免費方案。\n\n使用 `/premium link` 啟用進階功能。",
+      "linked": "已連結",
+      "lastUsed": "上次使用",
+      "ownFooter": "這個進階連結屬於你",
+      "otherFooter": "進階功能由其他使用者提供",
+      "freeQuality": "128kbps（免費）"
+    },
+    "config": {
+      "description": "設定此伺服器的進階設定",
+      "optionBitrate": "音訊位元率（kbps）",
+      "optionIdentity": "此伺服器的自訂機器人身分",
+      "nothing": "請至少指定一項要設定的項目。\n\n範例：`/premium config bitrate:320 identity:indie`",
+      "successTitle": "設定已更新",
+      "failTitle": "更新失敗"
+    },
+    "service": {
+      "needMembership": "你需要有效的 Patreon 會員資格才能連結伺服器。\n\n在 Patreon 上支持我們來解鎖進階功能！",
+      "limitReached": "你已達到伺服器上限（{max} 個伺服器）。\n\n目前方案：**{tier}**\n已連結伺服器：**{current}/{max}**\n\n升級方案即可連結更多伺服器！",
+      "patron": "贊助者",
+      "alreadyLinkedYou": "此伺服器已連結到你的帳號。",
+      "alreadyLinkedOther": "此伺服器已連結到另一個 Patreon 帳號。\n\n每個伺服器只能由一個 Patreon 帳號啟用進階功能。",
+      "linked": "伺服器連結成功！",
+      "servers": "伺服器",
+      "linkedActive": "此伺服器的進階功能已啟用！",
+      "linkError": "連結伺服器時發生錯誤：{error}",
+      "notLinked": "此伺服器未連結到你的帳號。",
+      "unlinked": "伺服器已成功解除連結！",
+      "unlinkedBody": "此伺服器的進階功能已停用。\n你可以用剩餘名額連結其他伺服器。",
+      "unlinkError": "解除連結伺服器時發生錯誤：{error}",
+      "invalidBitrate": "位元率無效。請選擇：128、192、256 或 320 kbps",
+      "updated": "伺服器設定已成功更新！",
+      "updateError": "更新設定時發生錯誤：{error}"
+    },
+    "feature": {
+      "audio_filters": "音效濾鏡",
+      "stay_24_7": "24/7 模式",
+      "max_quality": "最高音質",
+      "priority_queue": "優先佇列",
+      "unlimited_playlists": "無限播放清單",
+      "longer_songs": "無長度限制",
+      "vote_features": "投票決定新功能",
+      "founder_role": "Founder 身分組",
+      "direct_support": "專屬支援"
+    }
   },
   "queuemanage": {
-    "description": "進階佇列管理"
+    "description": "進階佇列管理",
+    "empty": "佇列是空的。",
+    "invalidPosition": "位置無效。佇列共有 {count} 首歌。",
+    "removedupes": {
+      "description": "移除佇列中重複的歌曲",
+      "none": "沒有找到重複的歌曲！",
+      "title": "已移除重複歌曲",
+      "result": "已移除 **{count}** 首重複歌曲"
+    },
+    "sort": {
+      "description": "排序播放佇列",
+      "optionBy": "排序方式",
+      "choice": {
+        "title_asc": "標題 (A-Z)",
+        "title_desc": "標題 (Z-A)",
+        "duration_asc": "長度（短到長）",
+        "duration_desc": "長度（長到短）"
+      },
+      "label": {
+        "title_asc": "標題 (A-Z)",
+        "title_desc": "標題 (Z-A)",
+        "duration_asc": "長度（最短優先）",
+        "duration_desc": "長度（最長優先）"
+      },
+      "result": "已依 **{label}** 排序播放佇列"
+    },
+    "swap": {
+      "description": "交換佇列中的兩首歌曲",
+      "optionPosition1": "第一個位置",
+      "optionPosition2": "第二個位置",
+      "samePosition": "兩個位置必須不同。",
+      "result": "已交換位置 **{pos1}** 和 **{pos2}** 的歌曲"
+    },
+    "removeuser": {
+      "description": "移除某位使用者點的所有歌曲",
+      "optionUser": "要移除歌曲的使用者",
+      "none": "找不到 {user} 點的歌曲。",
+      "result": "已移除 {user} 點的 **{count}** 首歌曲"
+    },
+    "removeabsent": {
+      "description": "移除不在語音頻道中的使用者點的歌曲",
+      "notInVoice": "你必須在語音頻道中。",
+      "none": "所有點歌的人都在語音頻道中。",
+      "result": "已移除不在場使用者點的 **{count}** 首歌曲"
+    },
+    "removelast": {
+      "description": "移除最後 N 首歌曲",
+      "optionCount": "要移除的數量",
+      "result": "已移除最後 **{count}** 首歌曲"
+    },
+    "removerange": {
+      "description": "移除指定範圍內的歌曲",
+      "optionStart": "起始位置",
+      "optionEnd": "結束位置",
+      "startAfterEnd": "起始位置必須小於或等於結束位置。",
+      "startTooHigh": "起始位置超過佇列長度（{count}）。",
+      "result": "已移除 **{count}** 首歌曲（位置 {start}-{end}）"
+    },
+    "reverse": {
+      "description": "反轉播放佇列順序",
+      "result": "已反轉播放佇列順序"
+    }
   },
   "settings": {
-    "description": "設定這個伺服器的機器人選項（僅限管理員）"
+    "description": "設定這個伺服器的機器人選項（僅限管理員）",
+    "noPermission": "你沒有管理機器人設定的權限。",
+    "unknownSubcommand": "未知的子指令。",
+    "current": "**目前：** {value}",
+    "allChannels": "允許所有頻道",
+    "allAllowed": "全部允許",
+    "on": "開啟",
+    "off": "關閉",
+    "yes": "是",
+    "no": "否",
+    "enabled": "已啟用",
+    "disabled": "已停用",
+    "view": {
+      "description": "查看目前設定",
+      "title": "機器人設定",
+      "roles": "身分組",
+      "djRole": "DJ 身分組",
+      "djNotSet": "未設定（所有人都能當 DJ）",
+      "adminRole": "管理員身分組",
+      "adminNotSet": "僅限伺服器管理員",
+      "volume": "音量",
+      "default": "預設",
+      "maximum": "最大值",
+      "queue": "播放佇列",
+      "maxSize": "最大數量",
+      "songs": "{count} 首歌曲",
+      "preventDuplicates": "防止重複",
+      "behavior": "行為",
+      "announcements": "播放通知",
+      "autoLeave": "自動離開",
+      "leaveTimeout": "離開等待時間",
+      "channels": "頻道",
+      "voiceChannels": "語音頻道",
+      "textChannels": "文字頻道",
+      "logChannel": "日誌頻道",
+      "logDefault": "預設 (#bot-commands)",
+      "blacklist": "黑名單",
+      "noBlacklist": "沒有被列入黑名單的使用者",
+      "premium": "Premium",
+      "tier": "等級",
+      "expires": "到期時間",
+      "never": "永不",
+      "notActive": "未啟用",
+      "customization": "自訂",
+      "language": "語言",
+      "embedColor": "嵌入顏色",
+      "footer": "使用 /settings <option> 來變更設定"
+    },
+    "djrole": {
+      "description": "設定控制音樂的 DJ 身分組",
+      "prompt": "選擇 DJ 身分組。擁有此身分組的使用者可以控制音樂播放。",
+      "placeholder": "選擇 DJ 身分組",
+      "clear": "清除 DJ 身分組（所有人都能當 DJ）",
+      "set": "DJ 身分組已設為 {role}",
+      "cleared": "已清除 DJ 身分組。",
+      "clearedEveryone": "已清除 DJ 身分組。現在所有人都能使用 DJ 指令。"
+    },
+    "adminrole": {
+      "description": "設定管理設定的管理員身分組",
+      "prompt": "選擇管理員身分組。擁有此身分組的使用者可以變更機器人設定。",
+      "placeholder": "選擇管理員身分組",
+      "clear": "清除管理員身分組（僅限伺服器管理員）",
+      "set": "管理員身分組已設為 {role}",
+      "cleared": "已清除管理員身分組。",
+      "clearedAdmins": "已清除管理員身分組。現在只有伺服器管理員可以變更設定。"
+    },
+    "volume": {
+      "description": "設定預設音量與最大音量",
+      "optionDefault": "預設音量（0-100）",
+      "optionMax": "允許的最大音量（0-100）",
+      "currentTitle": "目前的音量設定",
+      "defaultSet": "預設音量已設為 {value}%",
+      "maxSet": "最大音量已設為 {value}%",
+      "logDefault": "預設音量",
+      "logMax": "最大音量"
+    },
+    "queue": {
+      "description": "設定播放佇列",
+      "optionMaxSize": "佇列最大長度（1-1000）",
+      "optionPreventDuplicates": "防止佇列中出現重複歌曲",
+      "currentTitle": "目前的佇列設定",
+      "maxSet": "佇列最大長度已設為 {value} 首歌",
+      "duplicatesSet": "防止重複：{value}"
+    },
+    "behavior": {
+      "description": "設定機器人行為",
+      "optionAnnouncements": "在文字頻道公告正在播放的歌曲",
+      "optionAutoLeave": "語音頻道沒人時自動離開",
+      "optionLeaveTimeout": "離開空頻道前等待的秒數（30-3600）",
+      "currentTitle": "目前的行為設定",
+      "announcementsSet": "正在播放公告：{value}",
+      "autoLeaveSet": "沒人時自動離開：{value}",
+      "timeoutSet": "離開等待時間已設為 {value} 秒"
+    },
+    "voicechannels": {
+      "description": "設定允許的語音頻道",
+      "prompt": "選擇機器人可以加入的語音頻道。",
+      "placeholder": "選擇允許的語音頻道",
+      "allowAll": "允許所有頻道",
+      "set": "允許的語音頻道：{channels}",
+      "cleared": "現在允許所有語音頻道。"
+    },
+    "textchannels": {
+      "description": "設定可使用指令的文字頻道",
+      "prompt": "選擇可以使用機器人指令的文字頻道。",
+      "placeholder": "選擇允許的文字頻道",
+      "allowAll": "允許所有頻道",
+      "set": "允許的文字頻道：{channels}",
+      "cleared": "現在允許所有文字頻道。"
+    },
+    "logchannel": {
+      "description": "設定機器人日誌頻道（正在播放等）",
+      "prompt": "選擇機器人日誌訊息的頻道（正在播放、佇列播放完畢等）。",
+      "note": "**注意：**若未設定日誌頻道，機器人會尋找名為 #bot-commands 的頻道。如果該頻道不存在，就不會傳送日誌訊息。",
+      "placeholder": "選擇機器人訊息的日誌頻道",
+      "useDefault": "使用預設（bot-commands）",
+      "disable": "停用日誌訊息",
+      "statusDefault": "使用預設行為（尋找 #bot-commands）",
+      "statusDisabled": "日誌訊息已停用",
+      "set": "日誌頻道已設為 {channel}",
+      "reset": "日誌頻道已重設為預設（若 #bot-commands 存在則使用該頻道）。",
+      "disabled": "已停用日誌訊息。"
+    },
+    "blacklist": {
+      "description": "管理使用者黑名單",
+      "optionAdd": "將使用者加入黑名單",
+      "optionRemove": "將使用者移出黑名單",
+      "title": "黑名單使用者",
+      "none": "目前沒有使用者在黑名單中。",
+      "already": "{user} 已經在黑名單中。",
+      "added": "{user} 已被加入黑名單，無法使用機器人。",
+      "notListed": "{user} 不在黑名單中。",
+      "removed": "{user} 已從黑名單中移除。"
+    },
+    "language": {
+      "description": "設定此伺服器的機器人語言",
+      "prompt": "選擇此伺服器的機器人語言。",
+      "placeholder": "選擇語言",
+      "more": "機器人支援的所有語言都可以透過 {command} 選擇。"
+    },
+    "embedcolor": {
+      "description": "設定自訂嵌入訊息顏色",
+      "optionColor": "十六進位色碼（例如 #FF5500）",
+      "invalid": "無效的十六進位色碼。請使用格式：#RRGGBB（例如 #FF5500）",
+      "set": "嵌入訊息顏色已設為：{color}"
+    },
+    "reset": {
+      "description": "將所有設定重設為預設值",
+      "prompt": "確定要將「所有」設定重設為預設值嗎？此操作無法復原。",
+      "confirm": "是，重設所有設定",
+      "cancel": "取消",
+      "done": "所有設定已重設為預設值。",
+      "cancelled": "已取消重設。"
+    },
+    "stats": {
+      "description": "查看伺服器音樂統計",
+      "title": "音樂統計",
+      "songsPlayed": "總播放歌曲數",
+      "playtime": "總播放時間",
+      "playtimeValue": "{hours} 小時 {minutes} 分鐘"
+    }
   },
   "stats": {
-    "description": "查看機器人與播放階段統計"
+    "description": "查看機器人與播放階段統計",
+    "bot": {
+      "description": "顯示機器人統計",
+      "title": "機器人統計",
+      "servers": "伺服器",
+      "users": "使用者",
+      "channels": "頻道",
+      "activeQueues": "使用中的佇列",
+      "tracksPlaying": "播放中的歌曲",
+      "uptime": "運作時間",
+      "memory": "記憶體",
+      "platform": "平台"
+    },
+    "uptime": {
+      "description": "顯示機器人運作時間"
+    },
+    "leaderboard": {
+      "description": "顯示佇列排行榜",
+      "line": "{user} - {count} 首歌"
+    },
+    "history": {
+      "description": "顯示最近播放的曲目"
+    },
+    "session": {
+      "description": "顯示目前的播放工作階段資訊",
+      "noSession": "這個伺服器目前沒有進行中的工作階段。",
+      "title": "工作階段資訊",
+      "nowPlaying": "正在播放",
+      "nothing": "無",
+      "tracksInQueue": "佇列中的曲目",
+      "totalDuration": "總時長"
+    }
   },
   "user": {
-    "description": "使用者個人檔案與偏好設定"
+    "description": "使用者個人檔案與偏好設定",
+    "profile": {
+      "description": "查看使用者個人檔案",
+      "optionTarget": "要查看的使用者",
+      "free": "免費"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "開始播放",
+      "pause": "暫停播放",
+      "resume": "繼續播放",
+      "stop": "停止播放",
+      "skip": "跳過曲目",
+      "seek": "跳轉至指定位置",
+      "seek_forward": "向前跳轉",
+      "seek_backward": "向後跳轉",
+      "forward": "快轉",
+      "rewind": "倒轉",
+      "backward": "倒轉",
+      "replay": "重新播放曲目",
+      "restart": "重新開始佇列",
+      "volume_change": "調整音量",
+      "shuffle": "隨機排列佇列",
+      "loop": "變更循環模式",
+      "loopqueue": "變更佇列循環模式",
+      "setting_change": "更新設定",
+      "queue_clear": "清空佇列",
+      "clear": "清空佇列",
+      "join": "加入頻道",
+      "leave": "離開頻道",
+      "autoplay": "切換自動播放",
+      "previous": "播放上一首",
+      "jump": "跳至曲目",
+      "swap": "交換曲目",
+      "reverse": "反轉佇列",
+      "sort": "排序佇列",
+      "removerange": "移除範圍內曲目",
+      "removeduplicates": "移除重複曲目",
+      "removelast": "移除最後一首",
+      "voteskip": "投票跳過",
+      "grab": "收藏曲目",
+      "insert": "插入曲目",
+      "removecurrent": "移除目前曲目"
+    },
+    "detail": {
+      "on": "開啟",
+      "off": "關閉",
+      "tracks": "{count} 首曲目",
+      "effectsCleared": "已清除效果",
+      "bassBoost": "重低音增強 {level}",
+      "effectOn": "已啟用 {effect}",
+      "effectOff": "已停用 {effect}",
+      "previousTrack": "上一首",
+      "currentTrack": "目前曲目",
+      "queue": "佇列"
+    },
+    "settings": {
+      "title": "設定已更新",
+      "changed": "{user} 變更了 {setting}",
+      "before": "變更前",
+      "after": "變更後",
+      "notSet": "未設定",
+      "userId": "使用者 ID：{id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} 是 Founder 專屬福利",
+    "description": "Founder 每月 {price}，限量 {spots} 個名額，可解鎖 320kbps 音質、24/7 模式、無歌曲長度限制以及 Founder 身分組。",
+    "afterJoin": "加入後",
+    "afterJoinSteps": "1. 在你的 Patreon 設定中連結 Discord 帳號\n2. 在這個伺服器執行 `/premium link`",
+    "becomeFounder": "成為 Founder",
+    "voteTitle": "或免費投票",
+    "voteBody": "在 top.gg 投票即可解鎖此功能 12 小時。使用 `/vote`。",
+    "voteButton": "在 top.gg 投票"
+  },
+  "dashboardPlay": {
+    "noQuery": "請先輸入歌曲名稱或連結。",
+    "notMember": "你必須是這個伺服器的成員才能在這裡播放音樂。",
+    "noVoiceChannel": "請在 Discord 加入語音頻道，或在這裡選擇一個，然後再試一次。",
+    "channelGone": "該語音頻道已不存在，請選擇其他頻道。",
+    "memberCantJoin": "你沒有 {channel} 的存取權限。請選擇你可以加入的語音頻道。",
+    "nowPlaying": "正在播放：{title}",
+    "added": "已加入佇列（#{position}）：{title}",
+    "playlist": "已從 {title} 加入 {count} 首歌曲"
+  },
+  "voiceStatus": {
+    "title": "語音頻道狀態",
+    "missing": "我無法在語音頻道名稱下方顯示正在播放的歌曲，因為我缺少 **設定語音頻道狀態** 權限。重新授權我即可新增此權限；你的設定會保持不變。",
+    "reauthorize": "重新授權"
+  },
+  "guess": {
+    "description": "和語音頻道的朋友一起聽 30 秒試聽片段猜歌",
+    "startDescription": "在你的語音頻道開始猜歌遊戲",
+    "stopDescription": "停止猜歌遊戲",
+    "optionRounds": "要猜幾首歌（3-15，預設 5）",
+    "optionGenre": "要播哪種音樂（預設：熱門金曲）",
+    "genre": {
+      "top": "熱門金曲",
+      "pop": "流行",
+      "rock": "搖滾",
+      "hiphop": "嘻哈",
+      "latin": "拉丁",
+      "electronic": "電子",
+      "80s": "80 年代",
+      "90s": "90 年代",
+      "2000s": "2000 年代"
+    },
+    "title": "猜歌遊戲",
+    "trackTitle": "猜歌 · 第 {round} 回合",
+    "notInVoice": "先加入語音頻道，再開始遊戲。",
+    "alreadyRunning": "這個伺服器已經有猜歌遊戲在進行了。",
+    "musicPlaying": "這裡正在播放音樂。請先停止（/stop），再開始遊戲。",
+    "otherChannel": "我正待在 {channel}（24/7），請在那裡開始遊戲。",
+    "noVoicePermission": "我無法加入你的語音頻道或在裡面說話。",
+    "noChannelAccess": "我無法在這個頻道發訊息，請到我能發訊息的頻道開始遊戲。",
+    "noTracks": "目前無法載入這個類型的歌曲。試試其他類型，或稍等一下再試。",
+    "connectFailed": "無法加入你的語音頻道，請再試一次。",
+    "introMeta": "{rounds} 回合 · {genre}",
+    "introBody": "到 {channel} 聽歌，選出正在播放的歌曲。第一個答對的人得分，越快答對分數越高。答錯的話該回合就不能再作答。",
+    "introStarting": "第一首歌幾秒後開始…",
+    "introOver": "這場遊戲已結束。",
+    "stopButton": "停止遊戲",
+    "roundTitle": "第 {round}/{total} 回合",
+    "roundPrompt": "現在播的是哪首歌？",
+    "roundCloses": "作答截止：{time}",
+    "roundRules": "第一個答對的人得分",
+    "correctBy": "{user} 在 {seconds} 秒內答對（+{points}）",
+    "timeUp": "時間到！沒有人答對。",
+    "roundStopped": "遊戲已停止。",
+    "answerWas": "答案是 **{artist}** 的 **{title}**",
+    "scores": "分數",
+    "scoreLine": "{user} · {points} 分（答對 {correct} 題）",
+    "noScores": "還沒有人得分。",
+    "nextSoon": "下一首歌幾秒後開始…",
+    "finalSoon": "即將公布最終分數…",
+    "finalTitle": "最終分數",
+    "winner": "{user} 以 {points} 分獲勝！",
+    "noWinner": "這次沒有人得分。",
+    "playAgain": "用 {command} 再玩一次",
+    "stoppedBy": "遊戲已被 {user} 停止。",
+    "stoppedPlain": "遊戲已停止。",
+    "endedEmpty": "所有人都離開了語音頻道，遊戲已結束。",
+    "endedDisconnected": "我與語音頻道斷線了，遊戲已結束。",
+    "endedMusic": "開始播放音樂了，遊戲已結束。",
+    "endedError": "歌曲試聽片段無法播放，遊戲已結束。",
+    "wrong": "答錯了！這回合你出局了。",
+    "alreadyAnswered": "你這回合已經作答過了。",
+    "roundOver": "這回合已結束。",
+    "gameOver": "這場遊戲已結束。",
+    "joinToPlay": "加入 {channel} 來參加遊戲。",
+    "stopNotAllowed": "只有開始遊戲的人或擁有「管理伺服器」權限的人才能停止。",
+    "noGame": "這裡沒有正在進行的猜歌遊戲。",
+    "stopped": "遊戲已停止。",
+    "blockedDuringGame": "這個伺服器正在進行猜歌遊戲。請等遊戲結束，或用 {stop} 結束遊戲。"
   }
 }

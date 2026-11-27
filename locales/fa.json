@@ -29,13 +29,31 @@
   "loop": {
     "description": "تغییر وضعیت تکرار",
     "errorNotQueue": "هیچ چیزی در حال پخش نیست.",
-    "result": "تکرار {loop}"
+    "result": "تکرار {loop}",
+    "optionMode": "چه چیزی تکرار شود",
+    "mode": {
+      "off": "خاموش",
+      "track": "همین آهنگ",
+      "queue": "کل صف"
+    }
   },
   "lyrics": {
     "errorNotQueue": "هیچ چیزی در حال پخش نیست.",
     "lyricsNotFound": "متن برای آهنگ یافت نشد {title}.",
     "embedTitle": "{title} - متن",
-    "description": "متن آهنگ فعلی، یا هر آهنگ دیگه"
+    "description": "متن آهنگ فعلی، یا هر آهنگ دیگه",
+    "liveTitle": "متن زنده",
+    "liveButton": "متن زنده",
+    "liveHint": "متن همگام‌شده موجوده: روی «متن زنده» بزن تا همراهش بخونی.",
+    "liveStop": "توقف",
+    "livePaused": "متوقف شده",
+    "liveEnded": "متن زنده تموم شد.",
+    "liveReplaced": "متن زنده به یه پیام جدیدتر منتقل شد.",
+    "liveStoppedBy": "متن زنده توسط {user} متوقف شد.",
+    "liveNoSync": "این آهنگ متن همگام‌شده نداره، برای همین حالت زنده براش در دسترس نیست.",
+    "liveNoPermission": "فقط کسی که متن زنده رو شروع کرده یا کسی با دسترسی Manage Messages می‌تونه متوقفش کنه.",
+    "liveNotDuringGame": "وقتی بازی حدس آهنگ در جریانه، متن آهنگ مخفیه.",
+    "liveVersionHint": "زمان‌بندی برای نسخهٔ دیگه‌ای از آهنگه، پس ممکنه خط‌ها جابه‌جا بشن"
   },
   "move": {
     "description": "جابه جایی آهنگ در صف",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **هیچ آهنگی در حال پخش نیست**",
     "currentPage": "صفحه ی فعلی - ",
     "embedTitle": "صف آهنگ\n",
-    "embedCurrentSong": "**آهنگ فعلی - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**آهنگ فعلی - [{title}]({url})**\n\n{info}",
+    "optionPage": "شماره صفحه"
   },
   "remove": {
     "description": "حذف آهنگ از صف",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 صدای فعلی: **{volume}%**",
     "errorNotNumber": "یک عدد برای صدای آهنگ انتخاب کنید.",
     "errorNotValid": "یک عدد بین 0-100 انتخاب کنید.",
-    "result": "صدای آهنگ: **{arg}%**"
+    "result": "صدای آهنگ: **{arg}%**",
+    "errorRange": "صدا باید بین 0 و {max} باشد."
   },
   "common": {
     "on": "**روشن**",
@@ -207,15 +227,50 @@
     "enabled": "**فعال**",
     "disabled": "**غیر فعال**",
     "errorNotChannel": "ابتدا باید در یک چنل جوین شوید!",
-    "cooldownMessage": "لطفا {time} ثانه صبر کنید.",
-    "errorCommand": "مشکلی به وجود آمد."
+    "errorCommand": "مشکلی به وجود آمد.",
+    "djRequired": "برای استفاده از این دستور به نقش DJ نیاز داری.",
+    "guild_only": "این دستور فقط داخل سرور کار می‌کند.",
+    "unknown": "نامشخص",
+    "unknownError": "خطای نامشخص",
+    "unknownSubcommand": "زیردستور نامشخص.",
+    "voiceChannel": "کانال صوتی",
+    "playerInitializing": "پخش‌کننده موسیقی هنوز در حال راه‌اندازی است. لطفاً چند ثانیه دیگر دوباره امتحان کن.",
+    "voiceChannelNotAllowed": "ربات اجازه پخش در این کانال صوتی را ندارد. لطفاً از یک کانال مجاز استفاده کن.",
+    "queueFull": "صف پر است! حداکثر {max} آهنگ مجاز است.",
+    "invalidFileType": "نوع فایل نامعتبر است. فرمت‌های پشتیبانی‌شده: {formats}",
+    "fileTooLarge": "فایل خیلی بزرگ است ({size}MB). حداکثر حجم {max}MB است.",
+    "optionToggle": "روشن یا خاموش (پیش‌فرض: تغییر وضعیت)",
+    "requestedBy": "درخواست‌شده توسط {user}",
+    "yes": "بله",
+    "no": "خیر",
+    "loop": {
+      "off": "خاموش",
+      "track": "آهنگ",
+      "queue": "صف"
+    },
+    "field": {
+      "title": "عنوان",
+      "artist": "هنرمند",
+      "duration": "مدت",
+      "tracks": "آهنگ‌ها",
+      "source": "منبع",
+      "requestedBy": "درخواست‌شده توسط",
+      "loopMode": "حالت تکرار",
+      "volume": "صدا",
+      "loadTime": "زمان بارگذاری",
+      "positionInQueue": "جایگاه در صف",
+      "status": "وضعیت",
+      "tier": "سطح"
+    },
+    "cooldownMessage": "لطفاً {time} ثانیه دیگه صبر کن تا دوباره از دستور `{name}` استفاده کنی."
   },
   "seek": {
     "description": "رفتن به زمان مشخصی از آهنگ",
     "errorNotQueue": "چیزی در حال پخش نیست.",
     "errorInvalidTime": "فرمت زمان نامعتبر است. از فرمت‌هایی مثل 1:30، 90، 1m30s استفاده کن",
     "errorOutOfRange": "زمان باید بین 0:00 و {duration} باشد",
-    "result": "<@{author}> ⏩ به **{time}** رفت"
+    "result": "<@{author}> ⏩ به **{time}** رفت",
+    "optionTime": "زمان مورد نظر برای پرش (مثلاً 1:30، 90، 1m30s)"
   },
   "forward": {
     "description": "جلو بردن آهنگ به اندازه ثانیه‌های مشخص",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "عقب بردن آهنگ به اندازه ثانیه‌های مشخص",
     "errorNotQueue": "چیزی در حال پخش نیست.",
-    "result": "<@{author}> ⏪ **{seconds} ثانیه** عقب برد (الان در {position})"
+    "result": "<@{author}> ⏪ **{seconds} ثانیه** عقب برد (الان در {position})",
+    "optionSeconds": "تعداد ثانیه برای عقب رفتن"
   },
   "replay": {
     "description": "پخش دوباره آهنگ فعلی از ابتدا",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "روشن/خاموش کردن پخش خودکار (پخش آهنگ‌های مشابه وقتی صف تمام شود)",
     "errorNotQueue": "هیچ صف فعالی وجود ندارد.",
-    "result": "🔄 پخش خودکار الان {status} است"
+    "result": "🔄 پخش خودکار الان {status} است",
+    "optionDefault": "این را پیش‌فرض این سرور هم کن (Manage Server)"
   },
   "history": {
     "description": "نمایش آهنگ‌های اخیراً پخش‌شده",
     "errorNotQueue": "هیچ صف فعالی وجود ندارد.",
     "errorEmpty": "هنوز آهنگی در تاریخچه نیست.",
     "embedTitle": "اخیراً پخش‌شده",
-    "footer": "نمایش {count} آهنگ آخر"
+    "footer": "نمایش {count} آهنگ آخر",
+    "title": "اخیراً پخش‌شده",
+    "titleUser": "اخیراً پخش‌شده · درخواست‌شده توسط {user}",
+    "empty": "در ۳۰ روز گذشته چیزی در این سرور پخش نشده است.",
+    "emptyUser": "{user} در ۳۰ روز گذشته اینجا هیچ آهنگی درخواست نکرده است.",
+    "summary": "{count} پخش آخر",
+    "playAgain": "پخش دوباره…",
+    "optionUser": "فقط آهنگ‌هایی که این عضو درخواست کرده نشان داده شود",
+    "unavailable": "تاریخچه پخش الان در دسترس نیست. لطفاً یک دقیقه دیگر دوباره امتحان کن.",
+    "gone": "این آهنگ دیگر در تاریخچه نیست."
   },
   "previous": {
     "description": "پخش آهنگ قبلی",
@@ -283,7 +349,8 @@
     "errorNotQueue": "صفی وجود ندارد.",
     "errorInvalidPosition": "جایگاه نامعتبر است. صف فقط {max} آهنگ دارد.",
     "errorNotFound": "آهنگی در آن جایگاه پیدا نشد.",
-    "result": "<@{author}> ⏭️ به **{title}** پرید"
+    "result": "<@{author}> ⏭️ به **{title}** پرید",
+    "optionPosition": "جایگاهی در صف که می‌خواهی به آن بپری"
   },
   "Invite me to your server!": "من را به سرورت دعوت کن!",
   "Invite": "دعوت",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "دریافت لینک داشبورد",
     "embedDescription": "از داشبورد وب برای مدیریت تنظیمات سرورت، دیدن صف و کلی امکانات دیگه استفاده کن!",
-    "footer": "تجربه موزیکت رو مدیریت کن"
+    "footer": "تجربه موزیکت رو مدیریت کن",
+    "title": "داشبورد ربات",
+    "features": "امکانات",
+    "featuresList": "• پیکربندی تنظیمات سرور\n• مشاهده صف و کنترل‌های پخش\n• مدیریت پلی‌لیست‌ها و مجموعه‌ها\n• مشاهده آمار گوش دادن\n• مدیریت امکانات پریمیوم",
+    "open": "باز کردن داشبورد"
   },
   "clean": {
     "description": "حذف پیام‌های ربات از کانال",
@@ -377,7 +448,9 @@
       "description": "دیدن همه کالکشن‌هات",
       "title": "📁 کالکشن‌های تو",
       "empty": "هنوز هیچ کالکشنی نداری. با `/collections create` یکی بساز!",
-      "footer": "مجموع: {count} کالکشن"
+      "footer": "مجموع: {count} کالکشن",
+      "select": "یک مجموعه را باز کن…",
+      "more": "…و {count} مورد دیگر. با /collections view بازشان کن."
     },
     "create": {
       "description": "ساخت کالکشن جدید",
@@ -399,7 +472,12 @@
       "tracksField": "آهنگ‌ها",
       "durationField": "مدت",
       "shareCodeField": "کد اشتراک‌گذاری",
-      "andMore": "...و {count} آهنگ دیگه"
+      "andMore": "...و {count} آهنگ دیگه",
+      "play": "پخش",
+      "addToQueue": "افزودن به صف",
+      "summary": "{count} آهنگ · {duration}",
+      "page": "صفحه {page}/{pages}",
+      "importedFrom": "وارد‌شده از {source}"
     },
     "save": {
       "description": "ذخیره صف فعلی به‌عنوان کالکشن",
@@ -411,7 +489,9 @@
       "description": "بارگذاری یک کالکشن در صف",
       "nameOption": "نام کالکشنی که می‌خوای بارگذاری کنی",
       "empty": "این کالکشن خالیه.",
-      "success": "📂 **{count}** آهنگ از کالکشن **{name}** بارگذاری شد!"
+      "success": "📂 **{count}** آهنگ از کالکشن **{name}** بارگذاری شد!",
+      "queuedNext": "این‌ها درست بعد از آهنگ فعلی پخش می‌شوند.",
+      "skipped": "{count} مورد رد شد (طولانی‌تر از حد مجاز این سرور، بیش از ظرفیت صف، یا پیدا نشد)."
     },
     "rename": {
       "description": "تغییر نام یک کالکشن",
@@ -435,7 +515,8 @@
       "shareCodeOption": "کد اشتراک‌گذاری برای کپی",
       "nameOption": "نام کالکشن جدیدت",
       "invalidCode": "کد اشتراک‌گذاری نامعتبر است یا منقضی شده.",
-      "success": "📋 **{count}** آهنگ در کالکشن جدید **{name}** کپی شد!"
+      "success": "📋 **{count}** آهنگ در کالکشن جدید **{name}** کپی شد!",
+      "clonedFrom": "کپی‌شده از {name}"
     },
     "merge": {
       "description": "ادغام یک کالکشن با کالکشن دیگر",
@@ -457,6 +538,21 @@
       "positionOption": "شماره آهنگ برای حذف (از ۱ شروع می‌شود)",
       "invalidPosition": "شماره نامعتبر است. کالکشن {max} آهنگ دارد.",
       "success": "🗑️ **{track}** از کالکشن **{name}** حذف شد."
+    },
+    "error": "مشکلی در مجموعه‌هایت پیش آمد. لطفاً دوباره امتحان کن.",
+    "trackCount": "{count} آهنگ",
+    "gone": "این مجموعه دیگر وجود ندارد.",
+    "notYours": "این منو مال شخص دیگری است. برای دیدن مجموعه‌های خودت از /collections list استفاده کن.",
+    "import": {
+      "description": "وارد کردن پلی‌لیست از Spotify، YouTube، Deezer یا Apple Music",
+      "urlOption": "لینک پلی‌لیست (Spotify، YouTube، Deezer، آلبوم Apple Music)",
+      "nameOption": "نام مجموعه جدید (پیش‌فرض: عنوان پلی‌لیست)",
+      "invalidUrl": "این شبیه لینک نیست. لینک یک پلی‌لیست از Spotify، YouTube، Deezer یا یک آلبوم Apple Music را وارد کن.",
+      "failed": "نتوانستم این پلی‌لیست را بخوانم. مطمئن شو عمومی است و لینک از Spotify، YouTube، Deezer یا یک آلبوم Apple Music است.",
+      "exists": "از قبل مجموعه‌ای به نام **{name}** داری. با گزینه `name` نام دیگری انتخاب کن.",
+      "success": "📥 **{count}** آهنگ از {source} به **{name}** وارد شد.",
+      "skipped": "{count} مورد رد شد (بیش از حد {max} آهنگ برای هر مجموعه، یا غیرقابل پخش).",
+      "spotifyCap": "Spotify فقط ۱۰۰ آهنگ اول لینک پلی‌لیست را به اشتراک می‌گذارد."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "تبدیل متن به گفتار و پخش آن در کانال صوتی",
     "errorNotAvailable": "❌ سرویس TTS در دسترس نیست. لطفاً با مدیر بات تماس بگیر.",
     "errorGenerate": "❌ تولید گفتار ناموفق بود. لطفاً دوباره امتحان کن.",
-    "success": "🎤 در حال پخش: \"{text}\" ({language}، {voice})"
+    "success": "🎤 در حال پخش: \"{text}\" ({language}، {voice})",
+    "optionText": "متنی که به گفتار تبدیل شود",
+    "optionLanguage": "زبان گفتار (اگر مشخص نشود از تنظیمات ذخیره‌شده استفاده می‌شود)",
+    "optionVoice": "صدای مورد استفاده (اگر مشخص نشود از تنظیمات ذخیره‌شده استفاده می‌شود)"
   },
   "sayconfig": {
-    "description": "پیکربندی تنظیمات TTS (تبدیل متن به گفتار)"
+    "description": "پیکربندی تنظیمات TTS (تبدیل متن به گفتار)",
+    "view": {
+      "description": "مشاهده تنظیمات فعلی TTS تو",
+      "title": "تنظیمات TTS",
+      "noConfig": "تنظیمات سفارشی‌ای تعیین نشده. از پیش‌فرض‌ها استفاده می‌شود.",
+      "mode": "حالت",
+      "language": "زبان",
+      "voice": "صدا",
+      "voiceDescription": "توضیح صدا",
+      "styleInstruction": "دستورالعمل سبک",
+      "referenceAudio": "صدای مرجع",
+      "referenceAudioSet": "تنظیم‌شده",
+      "referenceText": "متن مرجع"
+    },
+    "mode": {
+      "description": "تنظیم حالت TTS (custom_voice یا voice_clone)",
+      "option": "حالت TTS",
+      "customVoice": "صدای سفارشی (پیش‌فرض)",
+      "voiceClone": "شبیه‌سازی صدا",
+      "set": "حالت TTS روی **{mode}** تنظیم شد"
+    },
+    "language": {
+      "description": "تنظیم زبان پیش‌فرض",
+      "option": "زبان گفتار",
+      "set": "زبان پیش‌فرض روی **{language}** تنظیم شد"
+    },
+    "voice": {
+      "description": "تنظیم صدا/گوینده پیش‌فرض",
+      "option": "صدای مورد استفاده",
+      "set": "صدای پیش‌فرض روی **{voice}** تنظیم شد"
+    },
+    "voiceDescription": {
+      "description": "تنظیم توضیح صدا برای ساخت صدای سفارشی",
+      "option": "توضیح صدا (مثلاً «صدای بم مردانه با لحن آرام»)",
+      "set": "توضیح صدا تنظیم شد: \"{text}\""
+    },
+    "style": {
+      "description": "تنظیم دستور سبک برای ساخت صدا",
+      "option": "دستور سبک (مثلاً «آرام و واضح صحبت کن»)",
+      "set": "دستور سبک تنظیم شد: \"{text}\""
+    },
+    "reference": {
+      "description": "تنظیم صدا و متن مرجع برای شبیه‌سازی صدا",
+      "optionAudio": "فایل صوتی مرجع (MP3، WAV و غیره)",
+      "optionText": "متن صدای مرجع",
+      "saved": "صدای مرجع آپلود و ذخیره شد!",
+      "text": "متن مرجع: \"{text}\"",
+      "modeSet": "حالت به‌طور خودکار روی **{mode}** تنظیم شد",
+      "failed": "آپلود صدای مرجع ناموفق بود. دوباره امتحان کن."
+    },
+    "reset": {
+      "description": "بازنشانی تنظیمات TTS به پیش‌فرض",
+      "done": "تنظیمات TTS به پیش‌فرض بازنشانی شد.",
+      "none": "هیچ تنظیمات سفارشی‌ای برای بازنشانی پیدا نشد."
+    }
   },
   "radio": {
     "notInVoice": "باید در یک کانال صوتی باشی.",
@@ -649,7 +802,8 @@
     "body": "رأی دادن کمک می‌کنه سرورهای بیشتری بات رو پیدا کنن. هر رأی توی top.gg حالت **24/7** و **کیفیت استودیویی** رو برای ۱۲ ساعت برات فعال می‌کنه.",
     "active": "مزایای رأیت تا {time} دیگه فعاله.",
     "inactive": "رأی فعالی نداری. پایین رأی بده، مزایا ظرف یه دقیقه فعال می‌شن.",
-    "notListed": "رأی‌گیری وقتی بات توی لیست ثبت بشه باز می‌شه. ممنون که می‌خوای کمک کنی!"
+    "notListed": "رأی‌گیری وقتی بات توی لیست ثبت بشه باز می‌شه. ممنون که می‌خوای کمک کنی!",
+    "heading": "به {bot} رأی بده"
   },
   "leaderboard": {
     "description": "دیدن جدول امتیازات آهنگ‌های این جلسه",
@@ -742,7 +896,8 @@
     "noQueue": "هیچ صف فعالی وجود نداره.",
     "invalidChannel": "کانال نامعتبره. لطفاً یه کانال متنی انتخاب کن.",
     "title": "📢 کانال تغییر کرد",
-    "success": "از این به بعد اعلان‌ها به {channel} فرستاده می‌شن."
+    "success": "از این به بعد اعلان‌ها به {channel} فرستاده می‌شن.",
+    "optionChannel": "کانالی که می‌خوای بهش متصل بشه (پیش‌فرض: کانال فعلی)"
   },
   "disabledcommands": {
     "description": "نمایش همه دستورهای غیرفعال این سرور",
@@ -939,7 +1094,28 @@
     "user_free": "تو روی سطح **رایگان** هستی.",
     "upgrade": "ارتقا به پریمیوم",
     "upgrade_message": "با حمایت از ما توی Patreon قابلیت‌های پریمیوم بگیر!",
-    "description": "مزایای پریمیوم رو ببین"
+    "description": "مزایای پریمیوم رو ببین",
+    "view": {
+      "description": "مشاهده مزایای موجود"
+    },
+    "user": {
+      "description": "مشاهده مزایای فعلی تو",
+      "title": "مزایای تو",
+      "premium": "تو **{tier}** داری!",
+      "premiumTier": "پریمیوم",
+      "audio": "صدا: {bitrate}kbps",
+      "audioFilters": "فیلترهای صوتی",
+      "stay247": "حالت 24/7",
+      "free": "تو روی سطح **رایگان** هستی. پریمیوم رو از Patreon بگیر!"
+    },
+    "overview": {
+      "title": "مزایای پریمیوم",
+      "intro": "Founder فقط {spots} جای خالی داره و قیمتش ثابت می‌مونه.",
+      "freeName": "رایگان — {price}",
+      "freePerks": "صدای 128kbps\nصف، پلی‌لیست و متن آهنگ\nهمه دستورات",
+      "founderName": "Founder / تستر بتا — {price}/ماه",
+      "founderPerks": "صدای 320kbps\nفیلترهای صوتی\nحالت 24/7\nصف با اولویت\nنقش Founder و پشتیبانی مستقیم"
+    }
   },
   "boost": {
     "no_premium_title": "❌ پریمیوم نداری",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "پخش خودکار خاموش شد.",
     "volumeLimit": "این سرور حداکثر صدا رو روی {max}% محدود کرده.",
     "lyricsButton": "متن آهنگ",
-    "saveButton": "ذخیره"
+    "saveButton": "ذخیره",
+    "trackFailed": "نتونستم **{title}** رو پخش کنم، ردش می‌کنم. یه لینک یا جستجوی دیگه رو امتحان کن.",
+    "guessRunning": "اینجا یه بازی حدس آهنگ در جریانه. پلیر بعد از تموم شدنش برمی‌گرده."
   },
   "queueView": {
     "title": "صف پخش",
@@ -1040,7 +1218,8 @@
     "commands": "دستورها",
     "dashboard": "داشبورد",
     "support": "سرور پشتیبانی",
-    "vote": "رأی بده"
+    "vote": "رأی بده",
+    "voiceStatusHint": "می‌خوای آهنگ در حال پخش زیر اسم کانال صوتی نمایش داده بشه؟ [دوباره به من مجوز بده]({url}) تا دسترسی Set Voice Channel Status رو بدی."
   },
   "router": {
     "guildOnly": "این دستور فقط تو سرور کار می‌کنه.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "زبان (خودکار از زبان Discord هر عضو پیروی می‌کنه)",
     "auto": "خودکار (زبان Discord هر عضو)",
     "set": "زبان روی {language} تنظیم شد.",
-    "needManage": "برای تغییر زبان به دسترسی Manage Server نیاز داری."
+    "needManage": "برای تغییر زبان به دسترسی Manage Server نیاز داری.",
+    "unknown": "زبان ناشناخته."
   },
   "links": {
     "website": "وب‌سایت",
@@ -1100,45 +1280,741 @@
     "invite": "دعوت"
   },
   "commanddisable": {
-    "description": "غیرفعال کردن دستورها در این سرور"
+    "description": "غیرفعال کردن دستورها در این سرور",
+    "optionCommand": "دستوری که می‌خوای غیرفعال بشه",
+    "protected": "دستور ضروری قابل غیرفعال‌سازی نیست: {command}",
+    "notFound": "دستور پیدا نشد: {command}",
+    "alreadyDisabled": "دستور {command} از قبل غیرفعاله.",
+    "title": "دستور غیرفعال شد",
+    "done": "دستور {command} در این سرور غیرفعال شد.\n\nبرای فعال‌سازی دوباره از `/commandenable` استفاده کن."
   },
   "commanddisableall": {
-    "description": "غیرفعال کردن همه دستورها به‌جز دستورهای ضروری"
+    "description": "غیرفعال کردن همه دستورها به‌جز دستورهای ضروری",
+    "title": "همه دستورات غیرفعال شدند",
+    "done": "**{count}** دستور غیرفعال شد.\n\nدستورات محافظت‌شده همچنان در دسترس‌اند:\n{commands}\n\nبرای بازگرداندن همه دستورات از `/commandenableall` استفاده کن."
   },
   "commandenable": {
-    "description": "فعال کردن یک دستور غیرفعال"
+    "description": "فعال کردن یک دستور غیرفعال",
+    "optionCommand": "دستوری که می‌خوای فعال بشه",
+    "notDisabled": "دستور {command} غیرفعال نیست.",
+    "title": "دستور فعال شد",
+    "done": "دستور {command} در این سرور دوباره فعال شد."
   },
   "commandenableall": {
-    "description": "فعال کردن همه دستورهای غیرفعال"
+    "description": "فعال کردن همه دستورهای غیرفعال",
+    "title": "همه دستورات فعال شدند",
+    "done": "**{count}** دستور دوباره فعال شد.\n\nحالا همه دستورات در دسترس‌اند.",
+    "none": "هیچ دستوری غیرفعال نبود."
   },
   "effects": {
-    "description": "مدیریت افکت‌های صوتی"
+    "description": "مدیریت افکت‌های صوتی",
+    "optionEnabled": "فعال یا غیرفعال",
+    "nothingPlaying": "در حال حاضر هیچ آهنگی پخش نمی‌شه.",
+    "unknown": "افکت ناشناخته.",
+    "enabledBy": "افکت {effect} توسط {user} فعال شد",
+    "disabledBy": "افکت {effect} توسط {user} غیرفعال شد",
+    "8d": {
+      "description": "اعمال افکت صوتی 8D (چرخش صدا)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "اعمال افکت تقویت بیس",
+      "optionLevel": "سطح بیس",
+      "level": {
+        "off": "خاموش",
+        "low": "کم",
+        "medium": "متوسط",
+        "high": "زیاد"
+      },
+      "disabledBy": "تقویت بیس توسط {user} غیرفعال شد",
+      "alreadyOff": "تقویت بیس از قبل خاموشه.",
+      "setBy": "تقویت بیس توسط {user} روی **{level}** تنظیم شد"
+    },
+    "distortion": {
+      "description": "اعمال افکت دیستورشن",
+      "name": "دیستورشن"
+    },
+    "haas": {
+      "description": "اعمال افکت Haas (صدای فضایی)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "کاهش صدای خواننده (حالت کارائوکه)",
+      "name": "کارائوکه"
+    },
+    "nightcore": {
+      "description": "اعمال افکت نایت‌کور (زیر و تندتر)",
+      "name": "نایت‌کور"
+    },
+    "vaporwave": {
+      "description": "اعمال افکت ویپورویو (بم و کندتر)",
+      "name": "ویپورویو"
+    },
+    "pulsator": {
+      "description": "اعمال افکت پالساتور",
+      "name": "پالساتور"
+    },
+    "reverse": {
+      "description": "پخش معکوس صدا",
+      "name": "معکوس"
+    },
+    "tremolo": {
+      "description": "اعمال افکت ترمولو",
+      "name": "ترمولو"
+    },
+    "vibrato": {
+      "description": "اعمال افکت ویبراتو",
+      "name": "ویبراتو"
+    },
+    "lofi": {
+      "description": "اعمال افکت لوفای",
+      "name": "لوفای"
+    },
+    "surrounding": {
+      "description": "اعمال افکت صدای فراگیر",
+      "name": "فراگیر"
+    },
+    "list": {
+      "description": "نمایش افکت‌های فعال",
+      "title": "افکت‌های فعال",
+      "empty": "هیچ افکتی فعال نیست"
+    },
+    "clear": {
+      "description": "پاک کردن همه افکت‌ها",
+      "done": "همه افکت‌ها پاک شدند."
+    }
   },
   "info": {
-    "description": "اطلاعات و راهنمای ربات"
+    "description": "اطلاعات و راهنمای ربات",
+    "about": {
+      "description": "درباره این بات",
+      "statistics": "آمار",
+      "servers": "سرورها",
+      "commands": "دستورها",
+      "uptime": "زمان فعالیت",
+      "system": "سیستم",
+      "memory": "حافظه"
+    },
+    "faq": {
+      "description": "سؤالات متداول"
+    },
+    "support": {
+      "description": "دریافت لینک سرور پشتیبانی",
+      "title": "پشتیبانی",
+      "body": "کمک لازم داری؟ به سرور پشتیبانی ما بپیوند:",
+      "join": "برای پیوستن کلیک کن",
+      "reportIssues": "گزارش مشکلات",
+      "reportIssuesValue": "اول از `/info faq` استفاده کن، بعد در پشتیبانی بپرس",
+      "suggestions": "پیشنهادها",
+      "suggestionsValue": "ایده‌هات رو در کانال پیشنهادهای ما به اشتراک بذار"
+    },
+    "queue": {
+      "description": "اطلاعات کامل صف",
+      "noQueue": "هیچ صف فعالی وجود نداره.",
+      "title": "اطلاعات صف",
+      "contributors": "مشارکت‌کنندگان"
+    },
+    "song": {
+      "description": "جزئیات آهنگ فعلی",
+      "noTrack": "هیچ آهنگی در حال پخش نیست.",
+      "title": "در حال پخش"
+    },
+    "nextup": {
+      "description": "نمایش آهنگ بعدی در صف",
+      "empty": "هیچ آهنگی در صف نیست.",
+      "title": "آهنگ بعدی",
+      "footer": "{count} آهنگ در صف"
+    },
+    "changelogs": {
+      "description": "به‌روزرسانی‌ها و تغییرات اخیر",
+      "title": "به‌روزرسانی‌های اخیر",
+      "intro": "آخرین تغییرات و بهبودها:",
+      "newFeatures": "قابلیت‌های جدید",
+      "newFeaturesList": "• یکپارچه‌سازی دستورها برای نظم بهتر\n• بهبود سیستم افکت‌های صوتی\n• مدیریت بهتر صف",
+      "improvements": "بهبودها",
+      "improvementsList": "• پاسخ سریع‌تر دستورها\n• مدیریت بهتر خطاها\n• مصرف کمتر حافظه",
+      "bugFixes": "رفع باگ‌ها",
+      "bugFixesList": "• رفع مشکلات پخش\n• حل مشکلات همگام‌سازی صف"
+    }
   },
   "patreon": {
-    "description": "وضعیت Patreon خودت رو چک کن و مزایا رو همگام‌سازی کن"
+    "description": "وضعیت Patreon خودت رو چک کن و مزایا رو همگام‌سازی کن",
+    "notConfigured": "اتصال Patreon برای این بات تنظیم نشده.",
+    "howToLink": "نحوه اتصال",
+    "premiumActive": "پریمیوم فعال",
+    "patronStatus": {
+      "active": "حامی فعال",
+      "declined": "پرداخت رد شد",
+      "former": "حامی سابق",
+      "none": "حامی نیستی"
+    },
+    "status": {
+      "description": "بررسی وضعیت فعلی و مزایای Patreon تو",
+      "title": "وضعیت Patreon",
+      "yourTitle": "وضعیت Patreon تو",
+      "notLinked": "در حال حاضر به هیچ حساب Patreon متصل نیستی.",
+      "howToLinkSteps": "1. به [Patreon]({patreon}) برو\n2. حساب Discord خودت رو در Settings → Connections متصل کن\n3. در صفحه Patreon ما عضو شو\n4. با `/patreon sync` مزایات رو به‌روز کن",
+      "pledgeAmount": "مبلغ حمایت",
+      "perMonth": "{amount}/ماه",
+      "lifetimeSupport": "کل حمایت",
+      "lastCharge": "آخرین پرداخت",
+      "thanks": "ممنون از حمایتت! به قابلیت‌های پریمیوم دسترسی داری.",
+      "declined": "آخرین پرداختت رد شد. لطفاً روش پرداختت رو در Patreon به‌روز کن تا مزایا برگردن.",
+      "former": "حمایتت تموم شده. در Patreon تمدیدش کن تا مزایات برگردن!",
+      "error": "هنگام بررسی وضعیت Patreon خطایی رخ داد. لطفاً بعداً دوباره امتحان کن."
+    },
+    "sync": {
+      "description": "همگام‌سازی اطلاعات Patreon برای به‌روزرسانی مزایا",
+      "completeTitle": "همگام‌سازی Patreon انجام شد",
+      "success": "اطلاعات Patreon تو با موفقیت همگام‌سازی شد!",
+      "title": "همگام‌سازی Patreon",
+      "notFound": "هیچ حساب Patreon متصل به Discord تو پیدا نشد.",
+      "howToLinkSteps": "1. به [تنظیمات Patreon]({settings}) برو\n2. روی **Connections** کلیک کن\n3. حساب **Discord** خودت رو متصل کن\n4. مطمئن شو که از کمپین ما حمایت می‌کنی\n5. دوباره `/patreon sync` رو اجرا کن",
+      "error": "هنگام همگام‌سازی اطلاعات Patreon خطایی رخ داد. لطفاً بعداً دوباره امتحان کن."
+    },
+    "info": {
+      "description": "آشنایی با مزایای Patreon و نحوه اتصال حساب",
+      "title": "مزایای Patreon",
+      "intro": "در Patreon از ما حمایت کن و مزایای ویژه رو باز کن!",
+      "benefits": "مزایای پریمیوم",
+      "benefitsList": "• کیفیت صدای بالاتر\n• پلی‌لیست‌های طولانی‌تر\n• صف با اولویت\n• دستورهای اختصاصی\n• دسترسی زودهنگام به قابلیت‌های جدید",
+      "howToGet": "نحوه دریافت پریمیوم",
+      "howToGetSteps": "1. به [صفحه Patreon]({patreon}) ما سر بزن\n2. سطحی که بهت میاد رو انتخاب کن\n3. Discord خودت رو در Patreon Settings → Connections متصل کن\n4. با `/patreon sync` مزایا رو فعال کن",
+      "troubleshooting": "رفع مشکلات",
+      "troubleshootingList": "• مطمئن شو Discord در تنظیمات Patreon متصله\n• پرداختت باید موفق باشه (رد نشده باشه)\n• بعد از اتصال `/patreon sync` رو امتحان کن\n• مزایا هر ۳۰ دقیقه خودکار به‌روز می‌شن"
+    }
   },
   "play_file": {
-    "description": "پخش یک فایل صوتی از پیوست"
+    "description": "پخش یک فایل صوتی از پیوست",
+    "optionFile": "فایل صوتی برای پخش (MP3، WAV، FLAC، M4A، OGG و...)",
+    "optionTitle": "عنوان دلخواه برای آهنگ (اختیاری)",
+    "cantPlay": "پخش فایل ممکن نشد: {name}",
+    "nowPlayingTitle": "در حال پخش فایل",
+    "addedTitle": "فایل به صف اضافه شد",
+    "format": "فرمت",
+    "size": "حجم",
+    "error": {
+      "load": "بارگذاری فایل ممکن نشد: {name}\n\nدلایل احتمالی:\n• فرمت فایل پشتیبانی نمی‌شود\n• فایل خراب است\n• لینک فایل منقضی شده",
+      "timeout": "زمان دانلود فایل تمام شد. ممکن است فایل خیلی بزرگ باشد یا اتصال کند باشد.",
+      "forbidden": "دسترسی به فایل رد شد. لطفاً دوباره آپلود کن و امتحان کن.",
+      "notFound": "فایل پیدا نشد. ممکن است لینک پیوست منقضی شده باشد.",
+      "generic": "هنگام پخش فایل خطایی رخ داد."
+    }
   },
   "play_spotify": {
-    "description": "جستجو و پخش آهنگ از Spotify"
+    "description": "جستجو و پخش آهنگ از Spotify",
+    "optionQuery": "نام آهنگ، خواننده یا لینک Spotify برای جستجو",
+    "cantPlayLink": "پخش لینک Spotify ممکن نشد: {query}",
+    "playlistFallback": "پلی‌لیست Spotify",
+    "playlistAdded": "پلی‌لیست Spotify اضافه شد",
+    "songs": "{count} آهنگ",
+    "nowPlaying": "در حال پخش",
+    "trackBy": "{title} از {author}",
+    "nowPlayingTitle": "در حال پخش از Spotify",
+    "addedTitle": "از Spotify به صف اضافه شد",
+    "noResults": "نتیجه‌ای در Spotify برای {query} پیدا نشد\n\nامتحان کن:\n• کلمات کلیدی دیگر\n• اضافه کردن نام خواننده\n• استفاده از لینک مستقیم Spotify",
+    "notOnYoutube": "در YouTube پیدا نشد: {title} از {artist}",
+    "error": {
+      "auth": "این آهنگ Spotify نیاز به احراز هویت دارد. آهنگ دیگری را امتحان کن.",
+      "premium": "این آهنگ به Spotify Premium نیاز دارد.",
+      "private": "این آهنگ Spotify خصوصی است و قابل پخش نیست.",
+      "region": "این آهنگ در منطقه تو در دسترس نیست.",
+      "generic": "هنگام پخش آهنگ Spotify خطایی رخ داد."
+    }
   },
   "premium": {
-    "description": "مدیریت امکانات پریمیوم و سرورهای متصل"
+    "description": "مدیریت امکانات پریمیوم و سرورهای متصل",
+    "audioQuality": "کیفیت صدا",
+    "botIdentity": "هویت ربات",
+    "serverSlots": "ظرفیت سرورها",
+    "patreonTier": "سطح Patreon",
+    "supporter": "حامی",
+    "dbUnavailable": "**پایگاه داده موقتاً در دسترس نیست**\n\nربات در اتصال به پایگاه داده مشکل دارد. لطفاً چند لحظه دیگر دوباره امتحان کن.\n\nاگر مشکل ادامه داشت، به مدیر ربات اطلاع داده شده است.",
+    "error": "خطایی رخ داد: {error}",
+    "link": {
+      "description": "این سرور را به حساب Patreon خودت متصل کن",
+      "successTitle": "سرور متصل شد",
+      "failTitle": "اتصال ناموفق بود"
+    },
+    "unlink": {
+      "description": "اتصال این سرور را از حساب Patreon خودت قطع کن",
+      "successTitle": "اتصال سرور قطع شد",
+      "failTitle": "قطع اتصال ناموفق بود"
+    },
+    "list": {
+      "description": "فهرست همه سرورهای متصل به حساب Patreon تو",
+      "title": "سرورهای متصل تو",
+      "empty": "هنوز هیچ سروری متصل نکرده‌ای.\n\nبرای اتصال این سرور از `/premium link` استفاده کن!",
+      "linkedAt": "متصل شده: {time}",
+      "slotsUsed": "{used}/{max} استفاده شده",
+      "noMembership": "اشتراک فعال Patreon نداری.\n\nبا حمایت از ما در Patreon امکانات پریمیوم را باز کن!"
+    },
+    "status": {
+      "description": "نمایش وضعیت پریمیوم این سرور",
+      "premiumTitle": "سرور پریمیوم",
+      "freeTitle": "سرور رایگان",
+      "premiumBody": "امکانات پریمیوم برای این سرور فعال است!",
+      "freeBody": "این سرور از نسخه رایگان استفاده می‌کند.\n\nبرای فعال کردن امکانات پریمیوم از `/premium link` استفاده کن.",
+      "linked": "متصل شده",
+      "lastUsed": "آخرین استفاده",
+      "ownFooter": "این اتصال پریمیوم متعلق به توست",
+      "otherFooter": "پریمیوم توسط کاربر دیگری فراهم شده",
+      "freeQuality": "128kbps (رایگان)"
+    },
+    "config": {
+      "description": "پیکربندی تنظیمات پریمیوم این سرور",
+      "optionBitrate": "بیت‌ریت صدا به kbps",
+      "optionIdentity": "هویت سفارشی ربات برای این سرور",
+      "nothing": "لطفاً حداقل یک تنظیم را مشخص کن.\n\nمثال: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "تنظیمات به‌روزرسانی شد",
+      "failTitle": "به‌روزرسانی ناموفق بود"
+    },
+    "service": {
+      "needMembership": "برای اتصال سرورها به اشتراک فعال Patreon نیاز داری.\n\nبا حمایت از ما در Patreon امکانات پریمیوم را باز کن!",
+      "limitReached": "به سقف سرورهایت رسیده‌ای ({max} سرور).\n\nسطح فعلی: **{tier}**\nسرورهای متصل: **{current}/{max}**\n\nبرای اتصال سرورهای بیشتر سطحت را ارتقا بده!",
+      "patron": "حامی",
+      "alreadyLinkedYou": "این سرور از قبل به حساب تو متصل است.",
+      "alreadyLinkedOther": "این سرور از قبل به حساب Patreon دیگری متصل است.\n\nدر هر سرور فقط یک حساب Patreon می‌تواند امکانات پریمیوم را فعال کند.",
+      "linked": "سرور با موفقیت متصل شد!",
+      "servers": "سرورها",
+      "linkedActive": "امکانات پریمیوم اکنون در این سرور فعال است!",
+      "linkError": "خطا در اتصال سرور: {error}",
+      "notLinked": "این سرور به حساب تو متصل نیست.",
+      "unlinked": "اتصال سرور با موفقیت قطع شد!",
+      "unlinkedBody": "امکانات پریمیوم برای این سرور غیرفعال شد.\nمی‌توانی با ظرفیت باقی‌مانده سرور دیگری را متصل کنی.",
+      "unlinkError": "خطا در قطع اتصال سرور: {error}",
+      "invalidBitrate": "بیت‌ریت نامعتبر است. انتخاب کن: 128، 192، 256 یا 320 kbps",
+      "updated": "تنظیمات سرور با موفقیت به‌روزرسانی شد!",
+      "updateError": "خطا در به‌روزرسانی تنظیمات: {error}"
+    },
+    "feature": {
+      "audio_filters": "فیلترهای صوتی",
+      "stay_24_7": "حالت 24/7",
+      "max_quality": "حداکثر کیفیت",
+      "priority_queue": "صف اولویت‌دار",
+      "unlimited_playlists": "پلی‌لیست نامحدود",
+      "longer_songs": "بدون محدودیت مدت زمان",
+      "vote_features": "رأی‌دادن به قابلیت‌ها",
+      "founder_role": "نقش Founder",
+      "direct_support": "پشتیبانی مستقیم"
+    }
   },
   "queuemanage": {
-    "description": "مدیریت پیشرفته صف پخش"
+    "description": "مدیریت پیشرفته صف پخش",
+    "empty": "صف خالی است.",
+    "invalidPosition": "موقعیت نامعتبر. صف {count} آهنگ دارد.",
+    "removedupes": {
+      "description": "حذف آهنگ‌های تکراری از صف",
+      "none": "هیچ آهنگ تکراری پیدا نشد!",
+      "title": "تکراری‌ها حذف شدند",
+      "result": "**{count}** آهنگ تکراری حذف شد"
+    },
+    "sort": {
+      "description": "مرتب‌سازی صف",
+      "optionBy": "مرتب‌سازی بر اساس",
+      "choice": {
+        "title_asc": "عنوان (A-Z)",
+        "title_desc": "عنوان (Z-A)",
+        "duration_asc": "مدت (کوتاه)",
+        "duration_desc": "مدت (بلند)"
+      },
+      "label": {
+        "title_asc": "عنوان (A-Z)",
+        "title_desc": "عنوان (Z-A)",
+        "duration_asc": "مدت (کوتاه‌ترین)",
+        "duration_desc": "مدت (بلندترین)"
+      },
+      "result": "صف بر اساس **{label}** مرتب شد"
+    },
+    "swap": {
+      "description": "جابه‌جایی دو آهنگ در صف",
+      "optionPosition1": "جایگاه اول",
+      "optionPosition2": "جایگاه دوم",
+      "samePosition": "جایگاه‌ها باید متفاوت باشند.",
+      "result": "آهنگ‌های جایگاه **{pos1}** و **{pos2}** جابه‌جا شدند"
+    },
+    "removeuser": {
+      "description": "حذف همه آهنگ‌های یک کاربر",
+      "optionUser": "کاربری که آهنگ‌هایش حذف شود",
+      "none": "هیچ آهنگی از {user} پیدا نشد.",
+      "result": "**{count}** آهنگ از {user} حذف شد"
+    },
+    "removeabsent": {
+      "description": "حذف آهنگ‌های کاربرانی که در ویس نیستند",
+      "notInVoice": "باید در یک کانال صوتی باشی.",
+      "none": "همه درخواست‌کننده‌ها در کانال صوتی هستند.",
+      "result": "**{count}** آهنگ از کاربران غایب حذف شد"
+    },
+    "removelast": {
+      "description": "حذف N آهنگ آخر",
+      "optionCount": "تعداد برای حذف",
+      "result": "**{count}** آهنگ آخر حذف شد"
+    },
+    "removerange": {
+      "description": "حذف آهنگ‌ها در یک بازه",
+      "optionStart": "جایگاه شروع",
+      "optionEnd": "جایگاه پایان",
+      "startAfterEnd": "شروع باید کوچک‌تر یا مساوی پایان باشد.",
+      "startTooHigh": "جایگاه شروع از طول صف ({count}) بیشتر است.",
+      "result": "**{count}** آهنگ حذف شد (جایگاه‌های {start}-{end})"
+    },
+    "reverse": {
+      "description": "برعکس کردن ترتیب صف",
+      "result": "ترتیب صف برعکس شد"
+    }
   },
   "settings": {
-    "description": "پیکربندی تنظیمات ربات برای این سرور (فقط ادمین)"
+    "description": "پیکربندی تنظیمات ربات برای این سرور (فقط ادمین)",
+    "noPermission": "اجازه مدیریت تنظیمات بات را نداری.",
+    "unknownSubcommand": "زیرفرمان ناشناخته.",
+    "current": "**فعلی:** {value}",
+    "allChannels": "همه کانال‌ها مجازند",
+    "allAllowed": "همه مجازند",
+    "on": "روشن",
+    "off": "خاموش",
+    "yes": "بله",
+    "no": "خیر",
+    "enabled": "فعال",
+    "disabled": "غیرفعال",
+    "view": {
+      "description": "مشاهده تنظیمات فعلی",
+      "title": "تنظیمات بات",
+      "roles": "نقش‌ها",
+      "djRole": "نقش DJ",
+      "djNotSet": "تنظیم نشده (همه می‌توانند DJ باشند)",
+      "adminRole": "نقش ادمین",
+      "adminNotSet": "فقط ادمین‌های سرور",
+      "volume": "صدا",
+      "default": "پیش‌فرض",
+      "maximum": "حداکثر",
+      "queue": "صف",
+      "maxSize": "حداکثر اندازه",
+      "songs": "{count} آهنگ",
+      "preventDuplicates": "جلوگیری از تکراری‌ها",
+      "behavior": "رفتار",
+      "announcements": "اعلان‌ها",
+      "autoLeave": "خروج خودکار",
+      "leaveTimeout": "زمان انتظار خروج",
+      "channels": "کانال‌ها",
+      "voiceChannels": "کانال‌های صوتی",
+      "textChannels": "کانال‌های متنی",
+      "logChannel": "کانال لاگ",
+      "logDefault": "پیش‌فرض (#bot-commands)",
+      "blacklist": "لیست سیاه",
+      "noBlacklist": "هیچ کاربری در لیست سیاه نیست",
+      "premium": "پریمیوم",
+      "tier": "سطح",
+      "expires": "انقضا",
+      "never": "هرگز",
+      "notActive": "غیرفعال",
+      "customization": "شخصی‌سازی",
+      "language": "زبان",
+      "embedColor": "رنگ Embed",
+      "footer": "برای تغییر تنظیمات از /settings <option> استفاده کن"
+    },
+    "djrole": {
+      "description": "تنظیم نقش DJ برای کنترل موسیقی",
+      "prompt": "نقش DJ را انتخاب کن. کاربران با این نقش می‌توانند پخش موسیقی را کنترل کنند.",
+      "placeholder": "انتخاب نقش DJ",
+      "clear": "حذف نقش DJ (همه می‌توانند DJ باشند)",
+      "set": "نقش DJ روی {role} تنظیم شد",
+      "cleared": "نقش DJ حذف شد.",
+      "clearedEveryone": "نقش DJ حذف شد. حالا همه می‌توانند از فرمان‌های DJ استفاده کنند."
+    },
+    "adminrole": {
+      "description": "تنظیم نقش ادمین برای مدیریت تنظیمات",
+      "prompt": "نقش ادمین را انتخاب کن. کاربران با این نقش می‌توانند تنظیمات بات را تغییر دهند.",
+      "placeholder": "انتخاب نقش ادمین",
+      "clear": "حذف نقش ادمین (فقط ادمین‌های سرور)",
+      "set": "نقش ادمین روی {role} تنظیم شد",
+      "cleared": "نقش ادمین حذف شد.",
+      "clearedAdmins": "نقش ادمین حذف شد. حالا فقط ادمین‌های سرور می‌تونن تنظیمات رو تغییر بدن."
+    },
+    "volume": {
+      "description": "تنظیم صدای پیش‌فرض و حداکثر",
+      "optionDefault": "صدای پیش‌فرض (0-100)",
+      "optionMax": "حداکثر صدای مجاز (0-100)",
+      "currentTitle": "تنظیمات فعلی صدا",
+      "defaultSet": "صدای پیش‌فرض روی {value}% تنظیم شد",
+      "maxSet": "حداکثر صدا روی {value}% تنظیم شد",
+      "logDefault": "صدای پیش‌فرض",
+      "logMax": "حداکثر صدا"
+    },
+    "queue": {
+      "description": "پیکربندی تنظیمات صف",
+      "optionMaxSize": "حداکثر اندازه صف (1-1000)",
+      "optionPreventDuplicates": "جلوگیری از آهنگ‌های تکراری در صف",
+      "currentTitle": "تنظیمات فعلی صف",
+      "maxSet": "حداکثر اندازه صف روی {value} آهنگ تنظیم شد",
+      "duplicatesSet": "جلوگیری از تکراری‌ها: {value}"
+    },
+    "behavior": {
+      "description": "پیکربندی رفتار ربات",
+      "optionAnnouncements": "اعلام آهنگ در حال پخش در کانال متنی",
+      "optionAutoLeave": "ترک کانال صوتی وقتی خالیه",
+      "optionLeaveTimeout": "چند ثانیه قبل از ترک کانال خالی (30-3600)",
+      "currentTitle": "تنظیمات فعلی رفتار",
+      "announcementsSet": "اعلام آهنگ در حال پخش: {value}",
+      "autoLeaveSet": "ترک خودکار در صورت خالی بودن: {value}",
+      "timeoutSet": "زمان ترک روی {value} ثانیه تنظیم شد"
+    },
+    "voicechannels": {
+      "description": "تنظیم کانال‌های صوتی مجاز",
+      "prompt": "انتخاب کن ربات اجازه ورود به کدوم کانال‌های صوتی رو داره.",
+      "placeholder": "کانال‌های صوتی مجاز رو انتخاب کن",
+      "allowAll": "اجازه به همه کانال‌ها",
+      "set": "کانال‌های صوتی مجاز: {channels}",
+      "cleared": "حالا همه کانال‌های صوتی مجازن."
+    },
+    "textchannels": {
+      "description": "تنظیم کانال‌های متنی مجاز برای دستورات",
+      "prompt": "انتخاب کن توی کدوم کانال‌های متنی میشه از دستورات ربات استفاده کرد.",
+      "placeholder": "کانال‌های متنی مجاز رو انتخاب کن",
+      "allowAll": "اجازه به همه کانال‌ها",
+      "set": "کانال‌های متنی مجاز: {channels}",
+      "cleared": "حالا همه کانال‌های متنی مجازن."
+    },
+    "logchannel": {
+      "description": "تنظیم کانال لاگ ربات (در حال پخش و غیره)",
+      "prompt": "یه کانال برای پیام‌های لاگ ربات انتخاب کن (در حال پخش، پایان صف و غیره).",
+      "note": "**نکته:** اگه کانال لاگ تنظیم نشه، ربات دنبال کانالی به اسم #bot-commands می‌گرده. اگه اون هم وجود نداشته باشه، هیچ پیام لاگی ارسال نمیشه.",
+      "placeholder": "کانال لاگ پیام‌های ربات رو انتخاب کن",
+      "useDefault": "استفاده از پیش‌فرض (bot-commands)",
+      "disable": "غیرفعال کردن پیام‌های لاگ",
+      "statusDefault": "استفاده از رفتار پیش‌فرض (دنبال #bot-commands می‌گرده)",
+      "statusDisabled": "پیام‌های لاگ غیرفعالن",
+      "set": "کانال لاگ روی {channel} تنظیم شد",
+      "reset": "کانال لاگ به پیش‌فرض برگشت (اگه #bot-commands وجود داشته باشه ازش استفاده میشه).",
+      "disabled": "پیام‌های لاگ غیرفعال شدن."
+    },
+    "blacklist": {
+      "description": "مدیریت لیست سیاه کاربران",
+      "optionAdd": "اضافه کردن کاربر به لیست سیاه",
+      "optionRemove": "حذف کاربر از لیست سیاه",
+      "title": "کاربران لیست سیاه",
+      "none": "هیچ کاربری توی لیست سیاه نیست.",
+      "already": "{user} از قبل توی لیست سیاهه.",
+      "added": "{user} به لیست سیاه اضافه شد و دیگه نمی‌تونه از ربات استفاده کنه.",
+      "notListed": "{user} توی لیست سیاه نیست.",
+      "removed": "{user} از لیست سیاه حذف شد."
+    },
+    "language": {
+      "description": "تنظیم زبان ربات برای این سرور",
+      "prompt": "زبان ربات رو برای این سرور انتخاب کن.",
+      "placeholder": "یه زبان انتخاب کن",
+      "more": "همه زبان‌هایی که ربات پشتیبانی می‌کنه با {command} در دسترسن."
+    },
+    "embedcolor": {
+      "description": "تنظیم رنگ دلخواه embed",
+      "optionColor": "کد رنگ هگز (مثلاً #FF5500)",
+      "invalid": "رنگ هگز نامعتبره. لطفاً از فرمت #RRGGBB استفاده کن (مثلاً #FF5500)",
+      "set": "رنگ embed تنظیم شد روی: {color}"
+    },
+    "reset": {
+      "description": "بازنشانی همه تنظیمات به پیش‌فرض",
+      "prompt": "مطمئنی می‌خوای همه تنظیمات رو به پیش‌فرض برگردونی؟ این کار قابل برگشت نیست.",
+      "confirm": "آره، همه تنظیمات رو بازنشانی کن",
+      "cancel": "لغو",
+      "done": "همه تنظیمات به پیش‌فرض برگشتن.",
+      "cancelled": "بازنشانی لغو شد."
+    },
+    "stats": {
+      "description": "مشاهده آمار موسیقی سرور",
+      "title": "آمار موسیقی",
+      "songsPlayed": "کل آهنگ‌های پخش‌شده",
+      "playtime": "کل زمان پخش",
+      "playtimeValue": "{hours} ساعت {minutes} دقیقه"
+    }
   },
   "stats": {
-    "description": "مشاهده آمار ربات و جلسه"
+    "description": "مشاهده آمار ربات و جلسه",
+    "bot": {
+      "description": "نمایش آمار ربات",
+      "title": "آمار ربات",
+      "servers": "سرورها",
+      "users": "کاربران",
+      "channels": "کانال‌ها",
+      "activeQueues": "صف‌های فعال",
+      "tracksPlaying": "آهنگ‌های در حال پخش",
+      "uptime": "مدت فعالیت",
+      "memory": "حافظه",
+      "platform": "پلتفرم"
+    },
+    "uptime": {
+      "description": "نمایش مدت فعالیت ربات"
+    },
+    "leaderboard": {
+      "description": "نمایش جدول رتبه‌بندی صف",
+      "line": "{user} - {count} آهنگ"
+    },
+    "history": {
+      "description": "نمایش آهنگ‌هایی که اخیراً پخش شده‌اند"
+    },
+    "session": {
+      "description": "نمایش اطلاعات جلسه فعلی",
+      "noSession": "هیچ جلسه فعالی در این سرور نیست.",
+      "title": "اطلاعات جلسه",
+      "nowPlaying": "در حال پخش",
+      "nothing": "هیچی",
+      "tracksInQueue": "آهنگ‌های صف",
+      "totalDuration": "مدت کل"
+    }
   },
   "user": {
-    "description": "پروفایل و تنظیمات کاربر"
+    "description": "پروفایل و تنظیمات کاربر",
+    "profile": {
+      "description": "مشاهده پروفایل کاربر",
+      "optionTarget": "کاربری که می‌خوای ببینی",
+      "free": "رایگان"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "پخش را شروع کرد",
+      "pause": "پخش را متوقف موقت کرد",
+      "resume": "پخش را ادامه داد",
+      "stop": "پخش را متوقف کرد",
+      "skip": "آهنگ را رد کرد",
+      "seek": "به موقعیت مشخص رفت",
+      "seek_forward": "جلو برد",
+      "seek_backward": "عقب برد",
+      "forward": "سریع جلو برد",
+      "rewind": "عقب برد",
+      "backward": "عقب برد",
+      "replay": "آهنگ را از اول پخش کرد",
+      "restart": "صف را از اول شروع کرد",
+      "volume_change": "صدا را تغییر داد",
+      "shuffle": "صف را درهم کرد",
+      "loop": "حالت تکرار را تغییر داد",
+      "loopqueue": "حالت تکرار صف را تغییر داد",
+      "setting_change": "تنظیمات را به‌روز کرد",
+      "queue_clear": "صف را پاک کرد",
+      "clear": "صف را پاک کرد",
+      "join": "به کانال پیوست",
+      "leave": "کانال را ترک کرد",
+      "autoplay": "پخش خودکار را تغییر داد",
+      "previous": "آهنگ قبلی را پخش کرد",
+      "jump": "به آهنگ پرید",
+      "swap": "جای آهنگ‌ها را عوض کرد",
+      "reverse": "صف را برعکس کرد",
+      "sort": "صف را مرتب کرد",
+      "removerange": "یک بازه را حذف کرد",
+      "removeduplicates": "تکراری‌ها را حذف کرد",
+      "removelast": "آخرین آهنگ را حذف کرد",
+      "voteskip": "با رأی رد کرد",
+      "grab": "آهنگ را ذخیره کرد",
+      "insert": "آهنگ را اضافه کرد",
+      "removecurrent": "آهنگ فعلی را حذف کرد"
+    },
+    "detail": {
+      "on": "روشن",
+      "off": "خاموش",
+      "tracks": "{count} آهنگ",
+      "effectsCleared": "افکت‌ها پاک شدند",
+      "bassBoost": "تقویت بیس {level}",
+      "effectOn": "{effect} فعال شد",
+      "effectOff": "{effect} غیرفعال شد",
+      "previousTrack": "آهنگ قبلی",
+      "currentTrack": "آهنگ فعلی",
+      "queue": "صف"
+    },
+    "settings": {
+      "title": "تنظیمات به‌روز شد",
+      "changed": "{user} گزینه {setting} را تغییر داد",
+      "before": "قبل",
+      "after": "بعد",
+      "notSet": "تنظیم نشده",
+      "userId": "شناسه کاربر: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} از مزایای Founder است",
+    "description": "Founder ماهانه {price} است، فقط {spots} جای خالی دارد و صدای 320kbps، حالت 24/7، بدون محدودیت طول آهنگ و نقش Founder را باز می‌کند.",
+    "afterJoin": "بعد از عضویت",
+    "afterJoinSteps": "1. حساب Discord خودت را در تنظیمات Patreon وصل کن\n2. دستور `/premium link` را در این سرور اجرا کن",
+    "becomeFounder": "Founder شو",
+    "voteTitle": "یا رایگان رأی بده",
+    "voteBody": "یک رأی در top.gg این قابلیت را برای ۱۲ ساعت باز می‌کند. از `/vote` استفاده کن.",
+    "voteButton": "رأی در top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "اول اسم آهنگ یا لینک را وارد کن.",
+    "notMember": "برای پخش موسیقی در این سرور باید عضوش باشی.",
+    "noVoiceChannel": "در Discord وارد یک کانال صوتی شو یا از اینجا یکی انتخاب کن، بعد دوباره امتحان کن.",
+    "channelGone": "این کانال صوتی دیگر وجود ندارد. یکی دیگر انتخاب کن.",
+    "memberCantJoin": "به {channel} دسترسی نداری. کانال صوتی‌ای انتخاب کن که بتوانی واردش شوی.",
+    "nowPlaying": "در حال پخش: {title}",
+    "added": "به صف اضافه شد (#{position}): {title}",
+    "playlist": "{count} آهنگ از {title} اضافه شد"
+  },
+  "voiceStatus": {
+    "title": "وضعیت کانال صوتی",
+    "missing": "نمی‌توانم آهنگ در حال پخش را زیر اسم کانال صوتی نشان بدهم چون دسترسی **Set Voice Channel Status** را ندارم. برای اضافه کردنش دوباره به من مجوز بده؛ تنظیماتت همان‌طور می‌ماند.",
+    "reauthorize": "مجوز دوباره"
+  },
+  "guess": {
+    "description": "آهنگ رو از پیش‌نمایش‌های ۳۰ ثانیه‌ای حدس بزن، با دوستات توی ویس",
+    "startDescription": "یه بازی حدس آهنگ توی کانال ویست شروع کن",
+    "stopDescription": "بازی حدس آهنگ رو متوقف کن",
+    "optionRounds": "چند تا آهنگ حدس زده بشه (۳ تا ۱۵، پیش‌فرض ۵)",
+    "optionGenre": "چه موسیقی‌ای پخش بشه (پیش‌فرض: پرطرفدارها)",
+    "genre": {
+      "top": "پرطرفدارها",
+      "pop": "پاپ",
+      "rock": "راک",
+      "hiphop": "هیپ‌هاپ",
+      "latin": "لاتین",
+      "electronic": "الکترونیک",
+      "80s": "دههٔ ۸۰",
+      "90s": "دههٔ ۹۰",
+      "2000s": "دههٔ ۲۰۰۰"
+    },
+    "title": "حدس آهنگ",
+    "trackTitle": "حدس آهنگ · دور {round}",
+    "notInVoice": "اول وارد یه کانال ویس شو، بعد بازی رو شروع کن.",
+    "alreadyRunning": "یه بازی حدس آهنگ همین الان توی این سرور در جریانه.",
+    "musicPlaying": "اینجا داره موسیقی پخش می‌شه. اول متوقفش کن (/stop)، بعد بازی رو شروع کن.",
+    "otherChannel": "من توی {channel} می‌مونم (24/7). بازی رو از اونجا شروع کن.",
+    "noVoicePermission": "نمی‌تونم وارد کانال ویست بشم یا توش صحبت کنم.",
+    "noChannelAccess": "نمی‌تونم توی این کانال پیام بفرستم. بازی رو جایی شروع کن که بتونم پیام بدم.",
+    "noTracks": "الان نتونستم آهنگ‌های این ژانر رو بارگذاری کنم. یه ژانر دیگه رو امتحان کن یا یه دقیقه دیگه دوباره تلاش کن.",
+    "connectFailed": "نتونستم وارد کانال ویست بشم. لطفاً دوباره تلاش کن.",
+    "introMeta": "{rounds} دور · {genre}",
+    "introBody": "توی {channel} گوش بده و آهنگی که داره پخش می‌شه رو انتخاب کن. اولین جواب درست امتیاز می‌گیره و جواب سریع‌تر امتیاز بیشتری داره. انتخاب اشتباه تو رو از اون دور حذف می‌کنه.",
+    "introStarting": "اولین آهنگ تا چند ثانیهٔ دیگه…",
+    "introOver": "این بازی تموم شده.",
+    "stopButton": "توقف بازی",
+    "roundTitle": "دور {round}/{total}",
+    "roundPrompt": "کدوم آهنگ داره پخش می‌شه؟",
+    "roundCloses": "پایان مهلت جواب {time}",
+    "roundRules": "اولین جواب درست امتیاز می‌گیره",
+    "correctBy": "{user} توی {seconds} ثانیه درست گفت (+{points})",
+    "timeUp": "وقت تموم شد! هیچ‌کس درست نگفت.",
+    "roundStopped": "بازی متوقف شد.",
+    "answerWas": "آهنگ **{title}** از **{artist}** بود",
+    "scores": "امتیازها",
+    "scoreLine": "{user} · {points} امتیاز ({correct} جواب درست)",
+    "noScores": "هنوز امتیازی نیست.",
+    "nextSoon": "آهنگ بعدی تا چند ثانیهٔ دیگه…",
+    "finalSoon": "امتیازهای نهایی در راهه…",
+    "finalTitle": "امتیازهای نهایی",
+    "winner": "{user} با {points} امتیاز برنده شد!",
+    "noWinner": "این بار هیچ‌کس امتیاز نگرفت.",
+    "playAgain": "با {command} دوباره بازی کن",
+    "stoppedBy": "بازی توسط {user} متوقف شد.",
+    "stoppedPlain": "بازی متوقف شد.",
+    "endedEmpty": "همه از کانال ویس رفتن، برای همین بازی تموم شد.",
+    "endedDisconnected": "اتصالم به ویس قطع شد، برای همین بازی تموم شد.",
+    "endedMusic": "پخش موسیقی شروع شد، برای همین بازی تموم شد.",
+    "endedError": "پیش‌نمایش آهنگ‌ها پخش نشدن، برای همین بازی تموم شد.",
+    "wrong": "اشتباه بود! برای این دور حذف شدی.",
+    "alreadyAnswered": "توی این دور قبلاً جواب دادی.",
+    "roundOver": "این دور تموم شده.",
+    "gameOver": "این بازی تموم شده.",
+    "joinToPlay": "برای بازی وارد {channel} شو.",
+    "stopNotAllowed": "فقط کسی که بازی رو شروع کرده یا کسی با دسترسی Manage Server می‌تونه متوقفش کنه.",
+    "noGame": "اینجا هیچ بازی حدس آهنگی در جریان نیست.",
+    "stopped": "بازی متوقف شد.",
+    "blockedDuringGame": "یه بازی حدس آهنگ توی این سرور در جریانه. صبر کن تموم بشه یا با {stop} تمومش کن."
   }
 }

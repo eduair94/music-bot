@@ -29,13 +29,31 @@
   "loop": {
     "description": "Toggle bocami wab",
     "errorNotQueue": "Bada tis secmop maenae.",
-    "result": "Wab tis prompo {loop}"
+    "result": "Wab tis prompo {loop}",
+    "optionMode": "He aha hei tāruarua",
+    "mode": {
+      "off": "Weto",
+      "track": "Tēnei waiata",
+      "queue": "Te rārangi katoa"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Bada tis secmop maenae.",
     "lyricsNotFound": "No lyrics polo nunu {title}.",
     "embedTitle": "{title} - Lyrics",
-    "description": "Ngā kupu o te waiata o nāianei, o tētahi waiata rānei"
+    "description": "Ngā kupu o te waiata o nāianei, o tētahi waiata rānei",
+    "liveTitle": "Kupu waiata ora",
+    "liveButton": "Kupu waiata ora",
+    "liveHint": "He kupu waiata tukutahi kei konei: pēhia te Kupu waiata ora kia whai haere ai koe.",
+    "liveStop": "Kati",
+    "livePaused": "Kua tatari",
+    "liveEnded": "Kua mutu ngā kupu waiata ora.",
+    "liveReplaced": "Kua nekehia ngā kupu waiata ora ki tētahi karere hōu ake.",
+    "liveStoppedBy": "Nā {user} i kati ngā kupu waiata ora.",
+    "liveNoSync": "Kāore he kupu tukutahi mō tēnei waiata, nō reira kāore he aratau ora.",
+    "liveNoPermission": "Ko te tangata nāna i tīmata ngā kupu waiata ora, ko tētahi rānei whai Manage Messages anake ka taea te kati.",
+    "liveNotDuringGame": "Ka hunaia ngā kupu waiata i te wā e haere ana tētahi kēmu matapae waiata.",
+    "liveVersionHint": "I whakaritea mō tētahi atu putanga o te waiata, nō reira tērā pea ka hē te wā o ētahi rārangi"
   },
   "move": {
     "description": "Mova rob woeod een ta tic",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Secmop maenae een ba patohs**",
     "currentPage": "Hodski Piplo - ",
     "embedTitle": "Amu Tic\n",
-    "embedCurrentSong": "**Hodski Amu - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Hodski Amu - [{title}]({url})**\n\n{info}",
+    "optionPage": "Nama whārangi"
   },
   "remove": {
     "description": "Absdot amu da ta tic",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Ta hodski nogarc tis: **{volume}%**",
     "errorNotNumber": "Radbad uso a nobam da ka kow nogarc.",
     "errorNotValid": "Radbad uso a nobam squee 0 - 100.",
-    "result": "Nogarc ka kow da: **{arg}%**"
+    "result": "Nogarc ka kow da: **{arg}%**",
+    "errorRange": "Me noho te rahi oro i waenga i te 0 me te {max}."
   },
   "common": {
     "on": "**en**",
@@ -208,14 +228,49 @@
     "disabled": "**norhex**",
     "errorNotChannel": "To mo da nut a vola fagtit prima!",
     "cooldownMessage": "radbad sky {time} mas emebid bidom reusing ta `{name}` dogpun.",
-    "errorCommand": "Bada tos nan via unhod pak dogpun."
+    "errorCommand": "Bada tos nan via unhod pak dogpun.",
+    "djRequired": "Me whai koe i te tūranga DJ hei whakamahi i tēnei tono.",
+    "guild_only": "Ka mahi noa tēnei tono i roto i tētahi tūmau.",
+    "unknown": "Kāore e mōhiotia",
+    "unknownError": "Hapa kāore e mōhiotia",
+    "unknownSubcommand": "Tono-iti kāore e mōhiotia.",
+    "voiceChannel": "hongere reo",
+    "playerInitializing": "Kei te whakarite tonu te pūrei waiata. Me ngana anō ā ngā hēkona torutoru.",
+    "voiceChannelNotAllowed": "Kāore te bot e whakaaetia ki te pūrei i tēnei hongere reo. Whakamahia tētahi hongere kua whakaaetia.",
+    "queueFull": "Kua kī te rārangi! E {max} ngā waiata mōrahi.",
+    "invalidFileType": "He momo kōnae hē. Ngā hōputu e tautokona ana: {formats}",
+    "fileTooLarge": "He nui rawa te kōnae ({size}MB). Ko te rahi mōrahi ko {max}MB.",
+    "optionToggle": "Kā, weto rānei (taunoa: huri)",
+    "requestedBy": "I tonoa e {user}",
+    "yes": "Āe",
+    "no": "Kāo",
+    "loop": {
+      "off": "Weto",
+      "track": "Waiata",
+      "queue": "Rārangi"
+    },
+    "field": {
+      "title": "Taitara",
+      "artist": "Kaiwaiata",
+      "duration": "Roanga",
+      "tracks": "Ngā waiata",
+      "source": "Pūtake",
+      "requestedBy": "I tonoa e",
+      "loopMode": "Aratau Tāruarua",
+      "volume": "Rahi Oro",
+      "loadTime": "Wā Uta",
+      "positionInQueue": "Tūnga i te Rārangi",
+      "status": "Tūnga",
+      "tier": "Taumata"
+    }
   },
   "seek": {
     "description": "Peke ki tētahi wā motuhake o te waiata",
     "errorNotQueue": "Kāore he mea e tākaro ana.",
     "errorInvalidTime": "He hōputu wā hē. Whakamahia ngā hōputu pēnei: 1:30, 90, 1m30s",
     "errorOutOfRange": "Me noho te wā i waenga i te 0:00 me te {duration}",
-    "result": "<@{author}> ⏩ i peke ki **{time}**"
+    "result": "<@{author}> ⏩ i peke ki **{time}**",
+    "optionTime": "Te wā hei peke atu (hei tauira: 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Whakatere whakamua i te waiata mā ngā hēkona kua tohua",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Whakahoki whakamuri i te waiata mā ngā hēkona kua tohua",
     "errorNotQueue": "Kāore he mea e tākaro ana.",
-    "result": "<@{author}> ⏪ i whakamuri **{seconds}s** (kei {position} ināianei)"
+    "result": "<@{author}> ⏪ i whakamuri **{seconds}s** (kei {position} ināianei)",
+    "optionSeconds": "Te maha o ngā hēkona hei whakahoki"
   },
   "replay": {
     "description": "Tīmata anō i te waiata o nāianei mai i te tīmatanga",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Huri i te aratau tākaro-aunoa (ka tākaro waiata ōrite ina mutu te rārangi tatari)",
     "errorNotQueue": "Kāore he rārangi tatari hohe.",
-    "result": "🔄 Tākaro-aunoa ināianei: {status}"
+    "result": "🔄 Tākaro-aunoa ināianei: {status}",
+    "optionDefault": "Me waiho hoki hei taunoa mō tēnei tūmau (Manage Server)"
   },
   "history": {
     "description": "Whakaatu i ngā waiata i tākarohia tata nei",
     "errorNotQueue": "Kāore he rārangi tatari hohe.",
     "errorEmpty": "Kāore anō he waiata i te hītori.",
     "embedTitle": "I Tākarohia Tata Nei",
-    "footer": "E whakaatu ana i ngā waiata {count} whakamutunga"
+    "footer": "E whakaatu ana i ngā waiata {count} whakamutunga",
+    "title": "I pūreihia ināia tata nei",
+    "titleUser": "I pūreihia ināia tata nei · i tonoa e {user}",
+    "empty": "Kāore he mea i pūreihia i tēnei tūmau i ngā rā 30 kua hipa.",
+    "emptyUser": "Kāore anō a {user} kia tono waiata ki konei i ngā rā 30 kua hipa.",
+    "summary": "Ngā pūrei {count} whakamutunga",
+    "playAgain": "Pūrei anō…",
+    "optionUser": "Whakaaturia anake ngā waiata i tonoa e tēnei mema",
+    "unavailable": "Kāore te hītori pūrei e wātea ana ināianei. Me ngana anō ā tētahi meneti.",
+    "gone": "Kua kore taua waiata i te hītori."
   },
   "previous": {
     "description": "Tākaro i te waiata o mua",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Kāore he rārangi tatari.",
     "errorInvalidPosition": "He tūranga hē. Ko ngā waiata {max} anake kei te rārangi tatari.",
     "errorNotFound": "Kāore i kitea he waiata i taua tūranga.",
-    "result": "<@{author}> ⏭️ i peke ki **{title}**"
+    "result": "<@{author}> ⏭️ i peke ki **{title}**",
+    "optionPosition": "Te tūnga i te rārangi hei peke atu"
   },
   "Invite me to your server!": "Pōwhiritia au ki tō tūmau!",
   "Invite": "Tono",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Tikina te hono ki te papatohu",
     "embedDescription": "Uru atu ki te papatohu ipurangi hei whakahaere i ngā tautuhinga o tō tūmau, hei mātakitaki i te rārangi, me ētahi atu!",
-    "footer": "Whakahaerehia tō wheako puoro"
+    "footer": "Whakahaerehia tō wheako puoro",
+    "title": "Papatohu Bot",
+    "features": "Ngā Āhuatanga",
+    "featuresList": "• Whirihora i ngā tautuhinga tūmau\n• Tiro i te rārangi me ngā mana pūrei\n• Whakahaere i ngā rārangi pūrei me ngā kohinga\n• Tiro i ngā tatauranga whakarongo\n• Whakahaere i ngā āhuatanga Premium",
+    "open": "Huaki i te Papatohu"
   },
   "clean": {
     "description": "Mukua ngā karere a te bot i te hongere",
@@ -377,7 +448,9 @@
       "description": "Tirohia ō kohinga katoa",
       "title": "📁 Ō Kohinga",
       "empty": "Kāore anō ō kohinga. Waihangatia tētahi mā `/collections create`!",
-      "footer": "Tapeke: {count} kohinga"
+      "footer": "Tapeke: {count} kohinga",
+      "select": "Huaki i tētahi kohinga…",
+      "more": "…me ētahi atu {count}. Huakina mā /collections view."
     },
     "create": {
       "description": "Waihangatia he kohinga hou",
@@ -399,7 +472,12 @@
       "tracksField": "Ngā Waiata",
       "durationField": "Roanga",
       "shareCodeField": "Waehere Tiritiri",
-      "andMore": "...me ētahi atu waiata {count}"
+      "andMore": "...me ētahi atu waiata {count}",
+      "play": "Pūrei",
+      "addToQueue": "Tāpiri ki te rārangi",
+      "summary": "{count} waiata · {duration}",
+      "page": "Whārangi {page}/{pages}",
+      "importedFrom": "I kawea mai i {source}"
     },
     "save": {
       "description": "Tiakina te rārangi o nāianei hei kohinga",
@@ -411,7 +489,9 @@
       "description": "Utaina tētahi kohinga ki te rārangi",
       "nameOption": "Ingoa o te kohinga hei uta",
       "empty": "Kei te piako tēnei kohinga.",
-      "success": "📂 Kua utaina ngā waiata **{count}** mai i te kohinga **{name}**!"
+      "success": "📂 Kua utaina ngā waiata **{count}** mai i te kohinga **{name}**!",
+      "queuedNext": "Ka pūreihia i muri tonu i te waiata o nāianei.",
+      "skipped": "{count} i peke (he roa ake i tā te tūmau e whakaae ana, kua hipa te tepe rārangi, kāore rānei i kitea)."
     },
     "rename": {
       "description": "Tapaina anō he kohinga",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Te waehere tiritiri hei tārua",
       "nameOption": "He ingoa mō tō kohinga hou",
       "invalidCode": "He hē, kua pau rānei te waehere tiritiri.",
-      "success": "📋 Kua tāruatia ngā ara **{count}** ki te kohinga hou **{name}**!"
+      "success": "📋 Kua tāruatia ngā ara **{count}** ki te kohinga hou **{name}**!",
+      "clonedFrom": "I tāruatia mai i {name}"
     },
     "merge": {
       "description": "Hanumitia tētahi kohinga ki tētahi atu",
@@ -457,6 +538,21 @@
       "positionOption": "Te tūranga o te ara hei tango (ka tīmata i te 1)",
       "invalidPosition": "He hē te tūranga. E {max} ngā ara kei te kohinga.",
       "success": "🗑️ Kua tangohia a **{track}** i te kohinga **{name}**."
+    },
+    "error": "I hē tētahi mea ki ō kohinga. Me ngana anō.",
+    "trackCount": "{count} waiata",
+    "gone": "Kua kore taua kohinga.",
+    "notYours": "Nā tētahi atu tēnei tahua. Whakamahia /collections list kia kite i ōu ake.",
+    "import": {
+      "description": "Kawea mai he rārangi pūrei i Spotify, YouTube, Deezer, Apple Music rānei",
+      "urlOption": "Hono rārangi pūrei (Spotify, YouTube, Deezer, pukaemi Apple Music)",
+      "nameOption": "Ingoa mō te kohinga hou (taunoa: te taitara o te rārangi pūrei)",
+      "invalidUrl": "Ehara tērā i te hono. Whakapiria he URL rārangi pūrei i Spotify, YouTube, Deezer, he pukaemi Apple Music rānei.",
+      "failed": "Kāore i taea e au te pānui i taua rārangi pūrei. Kia tūmatanui, ā, kia nō Spotify, YouTube, Deezer, he pukaemi Apple Music rānei te hono.",
+      "exists": "He kohinga kē tōu ko **{name}** te ingoa. Kōwhiria he ingoa kē mā te kōwhiringa `name`.",
+      "success": "📥 E **{count}** ngā waiata i kawea mai i {source} ki **{name}**.",
+      "skipped": "{count} i peke (kua hipa te tepe {max} waiata ia kohinga, kāore rānei e taea te pūrei).",
+      "spotifyCap": "Ko ngā waiata 100 tuatahi anake o tētahi hono rārangi pūrei e tukuna ana e Spotify."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Hurihia te kuputuhi hei kōrero, ā, whakatangihia ki te hongere reo",
     "errorNotAvailable": "❌ Kāore te ratonga TTS e wātea ana. Whakapā atu ki te kaiwhakahaere o te bot.",
     "errorGenerate": "❌ I rahua te waihanga kōrero. Whakamātauria anō.",
-    "success": "🎤 E whakatangi ana: \"{text}\" ({language}, {voice})"
+    "success": "🎤 E whakatangi ana: \"{text}\" ({language}, {voice})",
+    "optionText": "Kuputuhi hei huri ki te kōrero",
+    "optionLanguage": "Reo mō te kōrero (ka whakamahi i te whirihora kua tiakina mēnā kāore i tohua)",
+    "optionVoice": "Reo kōrero hei whakamahi (ka whakamahi i te whirihora kua tiakina mēnā kāore i tohua)"
   },
   "sayconfig": {
-    "description": "Whirihorahia ō tautuhinga TTS (Kuputuhi-ki-te-Kōrero)"
+    "description": "Whirihorahia ō tautuhinga TTS (Kuputuhi-ki-te-Kōrero)",
+    "view": {
+      "description": "Tiro i tō whirihora TTS o nāianei",
+      "title": "Whirihora TTS",
+      "noConfig": "Kāore he whirihora ritenga. Kei te whakamahi i ngā taunoa.",
+      "mode": "Aratau",
+      "language": "Reo",
+      "voice": "Reo kōrero",
+      "voiceDescription": "Whakaahuatanga Reo Kōrero",
+      "styleInstruction": "Tohutohu Kāhua",
+      "referenceAudio": "Oro Tohutoro",
+      "referenceAudioSet": "Kua tautuhia",
+      "referenceText": "Kuputuhi Tohutoro"
+    },
+    "mode": {
+      "description": "Tautuhia te aratau TTS (custom_voice, voice_clone rānei)",
+      "option": "Aratau TTS",
+      "customVoice": "Reo Ritenga (taunoa)",
+      "voiceClone": "Tārua Reo",
+      "set": "Kua tautuhia te aratau TTS ki **{mode}**"
+    },
+    "language": {
+      "description": "Tautuhia te reo taunoa",
+      "option": "Te reo mō te kōrero",
+      "set": "Kua tautuhia te reo taunoa ki **{language}**"
+    },
+    "voice": {
+      "description": "Tautuhia te reo/kaikōrero taunoa",
+      "option": "Te reo hei whakamahi",
+      "set": "Kua tautuhia te reo taunoa ki **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Tautuhia te whakaahuatanga reo mō te hanga reo ritenga",
+      "option": "Whakaahuatanga reo (hei tauira, 'he reo tāne hōhonu, he rangimārie')",
+      "set": "Kua tautuhia te whakaahuatanga reo ki: \"{text}\""
+    },
+    "style": {
+      "description": "Tautuhia te tohutohu kāhua mō te hanga reo",
+      "option": "Tohutohu kāhua (hei tauira, 'kōrero āta haere, kia mārama')",
+      "set": "Kua tautuhia te tohutohu kāhua ki: \"{text}\""
+    },
+    "reference": {
+      "description": "Tautuhia te oro me te kuputuhi tohutoro mō te tārua reo",
+      "optionAudio": "Kōnae oro tohutoro (MP3, WAV, aha atu)",
+      "optionText": "Tuhinga o te oro tohutoro",
+      "saved": "Kua tukuatu, kua tiakina te oro tohutoro!",
+      "text": "Kuputuhi tohutoro: \"{text}\"",
+      "modeSet": "Kua tautuhia aunoatia te aratau ki **{mode}**",
+      "failed": "I rahua te tukuatu i te oro tohutoro. Tēnā, ngana anō."
+    },
+    "reset": {
+      "description": "Tautuhi anō i tō whirihoranga TTS ki ngā taunoa",
+      "done": "Kua tautuhia anō te whirihoranga TTS ki ngā taunoa.",
+      "none": "Kāore he whirihoranga ritenga hei tautuhi anō."
+    }
   },
   "radio": {
     "notInVoice": "Me noho koe ki tētahi hongere reo.",
@@ -649,7 +802,8 @@
     "body": "Mā te pōti ka kitea te bot e ētahi atu tūmau. Ka huakina e ia pōti i top.gg te **aratau 24/7** me te **kounga taupuni** mōu mō ngā hāora 12.",
     "active": "Kei te hohe ō painga pōti mō {time} anō.",
     "inactive": "Kāore he pōti hohe. Pōti i raro, ka tīmata ngā painga i roto i te meneti kotahi.",
-    "notListed": "Ka tuwhera te pōti ina whakarārangitia te bot. Ngā mihi mō tō hiahia ki te āwhina!"
+    "notListed": "Ka tuwhera te pōti ina whakarārangitia te bot. Ngā mihi mō tō hiahia ki te āwhina!",
+    "heading": "Pōti mō {bot}"
   },
   "leaderboard": {
     "description": "Tirohia te papa toa riu o te wātū",
@@ -742,7 +896,8 @@
     "noQueue": "Kāore he rārangi hohe.",
     "invalidChannel": "He hongere muhu. Kōwhiria he hongere kuputuhi.",
     "title": "📢 Kua Nekehia te Hongere",
-    "success": "Ka tukuna ngā pānui ki {channel} ināianei."
+    "success": "Ka tukuna ngā pānui ki {channel} ināianei.",
+    "optionChannel": "Te hongere hei here anō (taunoa: te hongere o nāianei)"
   },
   "disabledcommands": {
     "description": "Tirohia ngā tono katoa kua monokia i tēnei tūmau",
@@ -939,7 +1094,28 @@
     "user_free": "Kei te taumata **Free** koe.",
     "upgrade": "Whakapikia ki te Premium",
     "upgrade_message": "Whiwhi āhuatanga premium mā te tautoko i a mātou ki Patreon!",
-    "description": "Tirohia ngā painga premium"
+    "description": "Tirohia ngā painga premium",
+    "view": {
+      "description": "Tirohia ngā painga e wātea ana"
+    },
+    "user": {
+      "description": "Tirohia ō painga o nāianei",
+      "title": "Ō Painga",
+      "premium": "Kei a koe te **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Oro: {bitrate}kbps",
+      "audioFilters": "Tātari oro",
+      "stay247": "Aratau 24/7",
+      "free": "Kei te taumata **Kore Utu** koe. Tikina te premium i Patreon!"
+    },
+    "overview": {
+      "title": "Ngā painga premium",
+      "intro": "E {spots} noa iho ngā tūranga Founder, ā, kua raka te utu.",
+      "freeName": "Kore Utu — {price}",
+      "freePerks": "Oro 128kbps\nRārangi tatari, rārangi waiata me ngā kupu waiata\nIa whakahau",
+      "founderName": "Founder / Kaiwhakamātau Beta — {price}/marama",
+      "founderPerks": "Oro 320kbps\nTātari oro\nAratau 24/7\nRārangi tatari matua\nTūranga Founder me te tautoko tōtika"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Kāore he Premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Kua weto te autoplay.",
     "volumeLimit": "Ka herea e tēnei tūmau te rahi o te oro ki te {max}%.",
     "lyricsButton": "Kupu waiata",
-    "saveButton": "Tiaki"
+    "saveButton": "Tiaki",
+    "trackFailed": "Kāore i taea te pūrei i **{title}**, ka peke. Whakamātauria he hono kē, he rapunga kē rānei.",
+    "guessRunning": "He kēmu matapae waiata e haere ana i konei. Ka hoki mai te pūrei ina mutu."
   },
   "queueView": {
     "title": "Rārangi",
@@ -1040,7 +1218,8 @@
     "commands": "Ngā tono",
     "dashboard": "Papatohu",
     "support": "Tūmau tautoko",
-    "vote": "Pōti"
+    "vote": "Pōti",
+    "voiceStatusHint": "Kei te hiahia koe kia whakaaturia te waiata e pūrei ana i raro i te ingoa o te hongere reo? [Whakamana anō i ahau]({url}) kia whakaaetia te mana Set Voice Channel Status."
   },
   "router": {
     "guildOnly": "Ka mahi noa tēnei tono i roto i tētahi tūmau.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Reo (ka whai te aunoa i te reo Discord o ia mema)",
     "auto": "Aunoa (te reo Discord o ia mema)",
     "set": "Kua tautuhia te reo ki {language}.",
-    "needManage": "Me whai koe i te whakaaetanga Manage Server kia huri i te reo."
+    "needManage": "Me whai koe i te whakaaetanga Manage Server kia huri i te reo.",
+    "unknown": "Reo tē mōhiotia."
   },
   "links": {
     "website": "Paetukutuku",
@@ -1100,45 +1280,741 @@
     "invite": "Pōwhiri"
   },
   "commanddisable": {
-    "description": "Monokia ngā tono i tēnei tūmau"
+    "description": "Monokia ngā tono i tēnei tūmau",
+    "optionCommand": "Te whakahau hei whakakore",
+    "protected": "Kāore e taea te whakakore i te whakahau matua: {command}",
+    "notFound": "Kāore i kitea te whakahau: {command}",
+    "alreadyDisabled": "Kua whakakorea kē te whakahau {command}.",
+    "title": "Kua Whakakorea te Whakahau",
+    "done": "Kua whakakorea te whakahau {command} i tēnei tūmau.\n\nWhakamahia te `/commandenable` hei whakahohe anō."
   },
   "commanddisableall": {
-    "description": "Monokia ngā tono katoa, hāunga ngā mea waiwai"
+    "description": "Monokia ngā tono katoa, hāunga ngā mea waiwai",
+    "title": "Kua Whakakorea Ngā Whakahau Katoa",
+    "done": "Kua whakakorea ngā whakahau **{count}**.\n\nNgā whakahau tiaki e wātea tonu ana:\n{commands}\n\nWhakamahia te `/commandenableall` hei whakahoki i ngā whakahau katoa."
   },
   "commandenable": {
-    "description": "Whakahohea tētahi tono kua monokia"
+    "description": "Whakahohea tētahi tono kua monokia",
+    "optionCommand": "Te whakahau hei whakahohe",
+    "notDisabled": "Kāore te whakahau {command} i whakakorea.",
+    "title": "Kua Whakahohea te Whakahau",
+    "done": "Kua whakahohea anō te whakahau {command} i tēnei tūmau."
   },
   "commandenableall": {
-    "description": "Whakahohea ngā tono katoa kua monokia"
+    "description": "Whakahohea ngā tono katoa kua monokia",
+    "title": "Kua Whakahohea Ngā Whakahau Katoa",
+    "done": "Kua whakahohea anō ngā whakahau **{count}**.\n\nKua wātea ngā whakahau katoa ināianei.",
+    "none": "Kāore he whakahau i whakakorea."
   },
   "effects": {
-    "description": "Whakahaerehia ngā pānga oro"
+    "description": "Whakahaerehia ngā pānga oro",
+    "optionEnabled": "Whakahohe, whakakore rānei",
+    "nothingPlaying": "Kāore he waiata e pūrei ana ināianei.",
+    "unknown": "Pānga tē mōhiotia.",
+    "enabledBy": "Nā {user} i whakahohe te pānga {effect}",
+    "disabledBy": "Nā {user} i whakakore te pānga {effect}",
+    "8d": {
+      "description": "Tāpiri i te pānga oro 8D (ka huri te oro)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Tāpiri i te pānga whakakaha bass",
+      "optionLevel": "Taumata bass",
+      "level": {
+        "off": "Weto",
+        "low": "Iti",
+        "medium": "Waenga",
+        "high": "Teitei"
+      },
+      "disabledBy": "Nā {user} i whakakore te whakakaha bass",
+      "alreadyOff": "Kua weto kē te whakakaha bass.",
+      "setBy": "Nā {user} i tautuhi te whakakaha bass ki **{level}**"
+    },
+    "distortion": {
+      "description": "Tāpiri i te pānga whakahīroki",
+      "name": "Whakahīroki"
+    },
+    "haas": {
+      "description": "Tāpiri i te pānga haas (oro mokowā)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Whakaiti i ngā reo waiata (aratau karaoke)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Tāpiri i te pānga nightcore (oro teitei ake + tere ake)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Tāpiri i te pānga vaporwave (oro hohonu ake + pōturi ake)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Tāpiri i te pānga pulsator",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Pūrei whakamuri i te oro",
+      "name": "Huripoki"
+    },
+    "tremolo": {
+      "description": "Tāpirihia te pānga tremolo",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Tāpirihia te pānga vibrato",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Tāpirihia te pānga lofi",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Tāpirihia te pānga oro karapoti",
+      "name": "Karapoti"
+    },
+    "list": {
+      "description": "Whakaaturia ngā pānga hohe",
+      "title": "Ngā Pānga Hohe",
+      "empty": "Kāore he pānga hohe"
+    },
+    "clear": {
+      "description": "Whakakorea ngā pānga katoa",
+      "done": "Kua whakakorea ngā pānga katoa."
+    }
   },
   "info": {
-    "description": "Ngā mōhiohio me te āwhina mō te bot"
+    "description": "Ngā mōhiohio me te āwhina mō te bot",
+    "about": {
+      "description": "Mō tēnei bot",
+      "statistics": "Tatauranga",
+      "servers": "Ngā Tūmau",
+      "commands": "Ngā Tohutohu",
+      "uptime": "Wā Mahi",
+      "system": "Pūnaha",
+      "memory": "Pūmahara"
+    },
+    "faq": {
+      "description": "Ngā pātai auau"
+    },
+    "support": {
+      "description": "Tikina te hono ki te tūmau tautoko",
+      "title": "Tautoko",
+      "body": "Me āwhina koe? Hono mai ki tō mātou tūmau tautoko:",
+      "join": "Pāwhiri kia Hono",
+      "reportIssues": "Pūrongo Raruraru",
+      "reportIssuesValue": "Whakamahia te `/info faq` i te tuatahi, kātahi ka pātai i te tautoko",
+      "suggestions": "Ngā Marohi",
+      "suggestionsValue": "Tohaina ō whakaaro ki tō mātou hongere marohi"
+    },
+    "queue": {
+      "description": "Ngā mōhiohio taipitopito mō te rārangi",
+      "noQueue": "Kāore he rārangi hohe.",
+      "title": "Mōhiohio Rārangi",
+      "contributors": "Ngā Kaitāpae"
+    },
+    "song": {
+      "description": "Ngā taipitopito o te waiata o nāianei",
+      "noTrack": "Kāore he waiata e pūrei ana.",
+      "title": "E Pūrei Ana"
+    },
+    "nextup": {
+      "description": "Whakaaturia te waiata e whai ake ana i te rārangi",
+      "empty": "Kāore he waiata i te rārangi.",
+      "title": "Ka Whai Ake",
+      "footer": "{count} ngā waiata i te rārangi"
+    },
+    "changelogs": {
+      "description": "Ngā whakahou me ngā panoni hou",
+      "title": "Ngā Whakahou Hou",
+      "intro": "Ngā panoni me ngā whakapainga hou rawa:",
+      "newFeatures": "Ngā Āhuatanga Hou",
+      "newFeaturesList": "• Kua whakakotahitia ngā tohutohu kia pai ake te whakaraupapa\n• Kua whakapaingia te pūnaha pānga oro\n• Kua whakapakarihia te whakahaere rārangi",
+      "improvements": "Ngā Whakapainga",
+      "improvementsList": "• He tere ake te urupare a ngā tohutohu\n• He pai ake te whakahaere hapa\n• He iti iho te whakamahinga pūmahara",
+      "bugFixes": "Ngā Whakatika Hapa",
+      "bugFixesList": "• Kua whakatikaina ngā raruraru pūrei\n• Kua whakaotia ngā raruraru tukutahi rārangi"
+    }
   },
   "patreon": {
-    "description": "Tirohia tō tūnga Patreon, ka tukutahi i ō painga"
+    "description": "Tirohia tō tūnga Patreon, ka tukutahi i ō painga",
+    "notConfigured": "Kāore anō kia whirihorahia te hononga Patreon mō tēnei bot.",
+    "howToLink": "Me Pēhea te Hono",
+    "premiumActive": "Kei te Hohe te Premium",
+    "patronStatus": {
+      "active": "Kaitautoko Hohe",
+      "declined": "Kua Whakakāhoretia te Utu",
+      "former": "Kaitautoko o Mua",
+      "none": "Ehara i te Kaitautoko"
+    },
+    "status": {
+      "description": "Tirohia tō tūnga Patreon me ōna painga",
+      "title": "Tūnga Patreon",
+      "yourTitle": "Tō Tūnga Patreon",
+      "notLinked": "Kāore koe i te hono ki tētahi pūkete Patreon i tēnei wā.",
+      "howToLinkSteps": "1. Haere ki [Patreon]({patreon})\n2. Honoa tō pūkete Discord i Settings → Connections\n3. Ohauru ki tā mātou whārangi Patreon\n4. Whakamahia te `/patreon sync` hei whakahou i ō painga",
+      "pledgeAmount": "Te Nui o te Taurangi",
+      "perMonth": "{amount}/marama",
+      "lifetimeSupport": "Tautoko Katoa",
+      "lastCharge": "Utu Whakamutunga",
+      "thanks": "Ngā mihi mō tō tautoko! Ka taea e koe ngā āhuatanga premium.",
+      "declined": "I whakakāhoretia tō utu whakamutunga. Whakahoutia tō tikanga utu ki Patreon kia whakahokia ō painga.",
+      "former": "Kua mutu tō taurangi. Whakahoutia ki Patreon kia whakahokia ō painga!",
+      "error": "I puta he hapa i te tirohanga o tō tūnga Patreon. Tēnā, ngana anō ā muri ake."
+    },
+    "sync": {
+      "description": "Tukutahitia ō raraunga Patreon hei whakahou i ō painga",
+      "completeTitle": "Kua Oti te Tukutahi Patreon",
+      "success": "Kua angitu te tukutahi o ō raraunga Patreon!",
+      "title": "Tukutahi Patreon",
+      "notFound": "Kāore i kitea he pūkete Patreon e hono ana ki tō Discord.",
+      "howToLinkSteps": "1. Haere ki [Patreon Settings]({settings})\n2. Pāwhiri ki **Connections**\n3. Honoa tō pūkete **Discord**\n4. Kia mōhio kei te taurangi koe ki tā mātou kaupapa\n5. Whakahaerehia anō te `/patreon sync`",
+      "error": "I puta he hapa i te tukutahi o ō raraunga Patreon. Tēnā, ngana anō ā muri ake."
+    },
+    "info": {
+      "description": "Ako mō ngā painga Patreon me te hono i tō pūkete",
+      "title": "Ngā Painga Patreon",
+      "intro": "Tautokona mātou ki Patreon kia whakatuwheratia ngā painga motuhake!",
+      "benefits": "Ngā Painga Premium",
+      "benefitsList": "• He kounga oro teitei ake\n• He rārangi waiata roa ake\n• Rārangi matua\n• Ngā tohutohu motuhake\n• Te uru moata ki ngā āhuatanga hou",
+      "howToGet": "Me Pēhea te Whiwhi Premium",
+      "howToGetSteps": "1. Toro atu ki tā mātou [whārangi Patreon]({patreon})\n2. Kōwhiria he taumata e tika ana mōu\n3. Honoa tō Discord i Patreon Settings → Connections\n4. Whakamahia te `/patreon sync` hei whakahohe i ngā painga",
+      "troubleshooting": "Whakatika Raruraru",
+      "troubleshootingList": "• Kia mōhio kua honoa a Discord i ō tautuhinga Patreon\n• Me angitu tō utu (kaua e whakakāhoretia)\n• Ngana i te `/patreon sync` i muri i te hono\n• Ka whakahou aunoa ngā painga ia 30 meneti"
+    }
   },
   "play_file": {
-    "description": "Whakatangihia tētahi kōnae oro mai i tētahi āpitihanga"
+    "description": "Whakatangihia tētahi kōnae oro mai i tētahi āpitihanga",
+    "optionFile": "Kōnae oro hei pūrei (MP3, WAV, FLAC, M4A, OGG, me ētahi atu)",
+    "optionTitle": "He taitara ritenga kōwhiringa mō te waiata",
+    "cantPlay": "Kāore i taea te pūrei i te kōnae: {name}",
+    "nowPlayingTitle": "E Pūrei Ana te Kōnae",
+    "addedTitle": "Kua Tāpiritia te Kōnae ki te Rārangi",
+    "format": "Hōputu",
+    "size": "Rahi",
+    "error": {
+      "load": "Kāore i taea te uta i te kōnae: {name}\n\nĒtahi take pea:\n• Kāore e tautokona te hōputu kōnae\n• Kua pakaru te kōnae\n• Kua pau te wā o te URL kōnae",
+      "timeout": "Kua pau te wā tikiake i te kōnae. Tērā pea he nui rawa te kōnae, he pōturi rānei te hononga.",
+      "forbidden": "Kua whakakāhoretia te uru ki te kōnae. Tukuatu anō, ka ngana anō.",
+      "notFound": "Kāore i kitea te kōnae. Tērā pea kua pau te wā o te URL tāpiri.",
+      "generic": "I puta he hapa i te whakatangi i te kōnae."
+    }
   },
   "play_spotify": {
-    "description": "Rapua, ka whakatangi i tētahi waiata mai i Spotify"
+    "description": "Rapua, ka whakatangi i tētahi waiata mai i Spotify",
+    "optionQuery": "Ingoa waiata, kaiwaiata, URL Spotify rānei hei rapu",
+    "cantPlayLink": "Kāore i taea te whakatangi i te hononga Spotify: {query}",
+    "playlistFallback": "Rārangi Waiata Spotify",
+    "playlistAdded": "Kua Tāpiritia te Rārangi Waiata Spotify",
+    "songs": "{count} waiata",
+    "nowPlaying": "E Tangi Ana Ināianei",
+    "trackBy": "{title} nā {author}",
+    "nowPlayingTitle": "E Tangi Ana Ināianei mai i Spotify",
+    "addedTitle": "Kua Tāpiritia ki te Rārangi mai i Spotify",
+    "noResults": "Kāore he hua i kitea ki Spotify mō: {query}\n\nNgana:\n• He kupu matua rerekē\n• Te tāpiri i te ingoa o te kaiwaiata\n• Te whakamahi i tētahi hononga Spotify tika",
+    "notOnYoutube": "Kāore i kitea ki YouTube: {title} nā {artist}",
+    "error": {
+      "auth": "Me whakamotuhēhē tēnei waiata Spotify. Ngana i tētahi atu waiata.",
+      "premium": "Me whai Spotify Premium mō tēnei waiata.",
+      "private": "He tūmataiti tēnei waiata Spotify, ā, kāore e taea te whakatangi.",
+      "region": "Kāore tēnei waiata e wātea ana i tō rohe.",
+      "generic": "I puta he hapa i te whakatangi i te waiata Spotify."
+    }
   },
   "premium": {
-    "description": "Whakahaerehia ngā āhuatanga premium me ngā hononga tūmau"
+    "description": "Whakahaerehia ngā āhuatanga premium me ngā hononga tūmau",
+    "audioQuality": "Kounga Oro",
+    "botIdentity": "Tuakiri Bot",
+    "serverSlots": "Wāhi Tūmau",
+    "patreonTier": "Taumata Patreon",
+    "supporter": "Kaitautoko",
+    "dbUnavailable": "**Kāore te Pātengi Raraunga e Wātea ana mō te Wā**\n\nKei te raru te bot ki te hono ki te pātengi raraunga. Ngana anō ā tōna wā.\n\nMēnā ka mau tonu tēnei raru, kua whakamōhiotia te kaiwhakahaere o te bot.",
+    "error": "I puta he hapa: {error}",
+    "link": {
+      "description": "Hono i tēnei tūmau ki tō pūkete Patreon",
+      "successTitle": "Kua Hono te Tūmau",
+      "failTitle": "I Rahua te Hono"
+    },
+    "unlink": {
+      "description": "Wetewete i tēnei tūmau i tō pūkete Patreon",
+      "successTitle": "Kua Wetewetehia te Tūmau",
+      "failTitle": "I Rahua te Wetewete"
+    },
+    "list": {
+      "description": "Whakarārangi i ngā tūmau katoa e hono ana ki tō pūkete Patreon",
+      "title": "Ō Tūmau Kua Hono",
+      "empty": "Kāore anō koe kia hono i tētahi tūmau.\n\nWhakamahia te `/premium link` hei hono i tēnei tūmau!",
+      "linkedAt": "I hono: {time}",
+      "slotsUsed": "{used}/{max} kua whakamahia",
+      "noMembership": "Kāore ōu mematanga Patreon hohe.\n\nTautokohia mai mātou ki Patreon hei whakatuwhera i ngā āhuatanga premium!"
+    },
+    "status": {
+      "description": "Whakaatu i te tūnga premium o tēnei tūmau",
+      "premiumTitle": "Tūmau Premium",
+      "freeTitle": "Tūmau Utukore",
+      "premiumBody": "Kua whakahohea ngā āhuatanga premium i tēnei tūmau!",
+      "freeBody": "Kei te whakamahi tēnei tūmau i te taumata utukore.\n\nWhakamahia te `/premium link` hei whakahohe i ngā āhuatanga premium.",
+      "linked": "Kua Hono",
+      "lastUsed": "Whakamahinga Whakamutunga",
+      "ownFooter": "Nāu tēnei hononga premium",
+      "otherFooter": "Nā tētahi atu kaiwhakamahi te premium i tuku",
+      "freeQuality": "128kbps (Utukore)"
+    },
+    "config": {
+      "description": "Whirihora i ngā tautuhinga premium mō tēnei tūmau",
+      "optionBitrate": "Pāpātanga oro i te kbps",
+      "optionIdentity": "Tuakiri bot ritenga mō tēnei tūmau",
+      "nothing": "Tohua kia kotahi te tautuhinga hei whirihora.\n\nTauira: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Kua Whakahōuhia ngā Tautuhinga",
+      "failTitle": "I Rahua te Whakahōu"
+    },
+    "service": {
+      "needMembership": "Me whai mematanga Patreon hohe koe hei hono tūmau.\n\nTautokohia mai mātou ki Patreon hei whakatuwhera i ngā āhuatanga premium!",
+      "limitReached": "Kua tae koe ki tō tepe tūmau ({max} tūmau).\n\nTaumata o nāianei: **{tier}**\nTūmau kua hono: **{current}/{max}**\n\nWhakapikia tō taumata hei hono i ētahi atu tūmau!",
+      "patron": "Kaitautoko",
+      "alreadyLinkedYou": "Kua hono kē tēnei tūmau ki tō pūkete.",
+      "alreadyLinkedOther": "Kua hono kē tēnei tūmau ki tētahi atu pūkete Patreon.\n\nKotahi anake te pūkete Patreon ka taea te whakahohe i ngā āhuatanga premium i ia tūmau.",
+      "linked": "Kua angitū te hono o te tūmau!",
+      "servers": "Tūmau",
+      "linkedActive": "Kua hohe ngā āhuatanga premium i tēnei tūmau ināianei!",
+      "linkError": "Hapa i te hono i te tūmau: {error}",
+      "notLinked": "Kāore tēnei tūmau i hono ki tō pūkete.",
+      "unlinked": "Kua angitū te wetewete o te tūmau!",
+      "unlinkedBody": "Kua whakakorehia ngā āhuatanga premium mō tēnei tūmau.\nKa taea e koe te hono i tētahi atu tūmau ki ō wāhi wātea.",
+      "unlinkError": "Hapa i te wetewete i te tūmau: {error}",
+      "invalidBitrate": "He hē te pāpātanga. Kōwhiria: 128, 192, 256, 320 kbps rānei",
+      "updated": "Kua angitū te whakahōu i ngā tautuhinga tūmau!",
+      "updateError": "Hapa i te whakahōu i ngā tautuhinga: {error}"
+    },
+    "feature": {
+      "audio_filters": "Tātari Oro",
+      "stay_24_7": "Aratau 24/7",
+      "max_quality": "Kounga Teitei Rawa",
+      "priority_queue": "Rārangi Matua",
+      "unlimited_playlists": "Rārangi Waiata Mutunga Kore",
+      "longer_songs": "Kāore he Tepe Roanga",
+      "vote_features": "Pōti mō ngā Āhuatanga",
+      "founder_role": "Tūranga Founder",
+      "direct_support": "Tautoko Tōtika"
+    }
   },
   "queuemanage": {
-    "description": "Whakahaere rārangi tatari matatau"
+    "description": "Whakahaere rārangi tatari matatau",
+    "empty": "Kei te piako te rārangi.",
+    "invalidPosition": "He hē te tūnga. E {count} ngā waiata kei te rārangi.",
+    "removedupes": {
+      "description": "Tango i ngā waiata tārua i te rārangi",
+      "none": "Kāore he tārua i kitea!",
+      "title": "Kua Tangohia ngā Tārua",
+      "result": "Kua tangohia e **{count}** ngā waiata tārua"
+    },
+    "sort": {
+      "description": "Kōmakahia te rārangi",
+      "optionBy": "Kōmakahia mā",
+      "choice": {
+        "title_asc": "Taitara (A-Z)",
+        "title_desc": "Taitara (Z-A)",
+        "duration_asc": "Roanga (Poto)",
+        "duration_desc": "Roanga (Roa)"
+      },
+      "label": {
+        "title_asc": "Taitara (A-Z)",
+        "title_desc": "Taitara (Z-A)",
+        "duration_asc": "Roanga (Poto rawa)",
+        "duration_desc": "Roanga (Roa rawa)"
+      },
+      "result": "Kua kōmakahia te rārangi mā **{label}**"
+    },
+    "swap": {
+      "description": "Whakawhitia ngā waiata e rua i te rārangi",
+      "optionPosition1": "Tūranga tuatahi",
+      "optionPosition2": "Tūranga tuarua",
+      "samePosition": "Me rerekē ngā tūranga.",
+      "result": "Kua whakawhitia ngā waiata i ngā tūranga **{pos1}** me **{pos2}**"
+    },
+    "removeuser": {
+      "description": "Tangohia ngā waiata katoa a tētahi kaiwhakamahi",
+      "optionUser": "Te kaiwhakamahi hei tango waiata",
+      "none": "Kāore he waiata i kitea nā {user}.",
+      "result": "Kua tangohia ngā waiata **{count}** nā {user}"
+    },
+    "removeabsent": {
+      "description": "Tangohia ngā waiata a ngā kaiwhakamahi kāore i te hongere reo",
+      "notInVoice": "Me noho koe ki tētahi hongere reo.",
+      "none": "Kei te hongere reo te katoa o ngā kaitono waiata.",
+      "result": "Kua tangohia ngā waiata **{count}** a ngā kaiwhakamahi kua wehe"
+    },
+    "removelast": {
+      "description": "Tangohia ngā waiata N whakamutunga",
+      "optionCount": "Te maha hei tango",
+      "result": "Kua tangohia ngā waiata **{count}** whakamutunga"
+    },
+    "removerange": {
+      "description": "Tangohia ngā waiata i tētahi awhe",
+      "optionStart": "Tūranga tīmatanga",
+      "optionEnd": "Tūranga whakamutunga",
+      "startAfterEnd": "Me iti iho, me ōrite rānei te tīmatanga ki te whakamutunga.",
+      "startTooHigh": "Ka nui ake te tūranga tīmatanga i te roa o te rārangi ({count}).",
+      "result": "Kua tangohia ngā waiata **{count}** (tūranga {start}-{end})"
+    },
+    "reverse": {
+      "description": "Huripokia te raupapa o te rārangi",
+      "result": "Kua huripokia te raupapa o te rārangi"
+    }
   },
   "settings": {
-    "description": "Whirihorahia ngā tautuhinga bot mō tēnei tūmau (Kaiwhakahaere anake)"
+    "description": "Whirihorahia ngā tautuhinga bot mō tēnei tūmau (Kaiwhakahaere anake)",
+    "noPermission": "Kāore ō mana ki te whakahaere i ngā tautuhinga o te bot.",
+    "unknownSubcommand": "Kāore e mōhiotia te tono-iti.",
+    "current": "**Ō nāianei:** {value}",
+    "allChannels": "Ka whakaaetia ngā hongere katoa",
+    "allAllowed": "Ka whakaaetia te katoa",
+    "on": "Kā",
+    "off": "Weto",
+    "yes": "Āe",
+    "no": "Kāo",
+    "enabled": "Kua whakahohea",
+    "disabled": "Kua monokia",
+    "view": {
+      "description": "Tirohia ngā tautuhinga o nāianei",
+      "title": "Ngā Tautuhinga Bot",
+      "roles": "Ngā Tūranga",
+      "djRole": "Tūranga DJ",
+      "djNotSet": "Kāore anō kia tautuhia (ka taea e te katoa te DJ)",
+      "adminRole": "Tūranga Kaiwhakahaere",
+      "adminNotSet": "Ngā kaiwhakahaere tūmau anake",
+      "volume": "Rahi oro",
+      "default": "Taunoa",
+      "maximum": "Mōrahi",
+      "queue": "Rārangi",
+      "maxSize": "Rahi Mōrahi",
+      "songs": "{count} waiata",
+      "preventDuplicates": "Ārai Tāruarua",
+      "behavior": "Whanonga",
+      "announcements": "Pānui",
+      "autoLeave": "Wehe Aunoa",
+      "leaveTimeout": "Wā Wehe",
+      "channels": "Ngā Hongere",
+      "voiceChannels": "Ngā Hongere Reo",
+      "textChannels": "Ngā Hongere Kuputuhi",
+      "logChannel": "Hongere Rangitaki",
+      "logDefault": "Taunoa (#bot-commands)",
+      "blacklist": "Rārangi Aukati",
+      "noBlacklist": "Kāore he kaiwhakamahi kua aukatia",
+      "premium": "Premium",
+      "tier": "Taumata",
+      "expires": "Ka pau",
+      "never": "Kore rawa",
+      "notActive": "Kāore i te hohe",
+      "customization": "Whakaritenga",
+      "language": "Reo",
+      "embedColor": "Tae Tāmau",
+      "footer": "Whakamahia te /settings <option> hei huri i ngā tautuhinga"
+    },
+    "djrole": {
+      "description": "Tautuhia te tūranga DJ mō te whakahaere puoro",
+      "prompt": "Kōwhiria te tūranga DJ. Ka taea e ngā kaiwhakamahi whai i tēnei tūranga te whakahaere i te puoro.",
+      "placeholder": "Kōwhiria te tūranga DJ",
+      "clear": "Ūkuia te Tūranga DJ (Ka taea e te katoa te DJ)",
+      "set": "Kua tautuhia te tūranga DJ ki {role}",
+      "cleared": "Kua ūkuia te tūranga DJ.",
+      "clearedEveryone": "Kua ūkuia te tūranga DJ. Ka taea ināianei e te katoa ngā tono DJ."
+    },
+    "adminrole": {
+      "description": "Tautuhia te tūranga kaiwhakahaere mō te whakahaere tautuhinga",
+      "prompt": "Kōwhiria te tūranga Kaiwhakahaere. Ka taea e ngā kaiwhakamahi whai i tēnei tūranga te huri i ngā tautuhinga o te bot.",
+      "placeholder": "Kōwhiria te tūranga Kaiwhakahaere",
+      "clear": "Whakakore i te Tūranga Kaiwhakahaere (Mā ngā kaiwhakahaere tūmau anake)",
+      "set": "Kua tautuhia te tūranga kaiwhakahaere ki {role}",
+      "cleared": "Kua whakakorea te tūranga kaiwhakahaere.",
+      "clearedAdmins": "Kua whakakorea te tūranga kaiwhakahaere. Mā ngā kaiwhakahaere tūmau anake e huri ngā tautuhinga."
+    },
+    "volume": {
+      "description": "Tautuhia te rahi oro taunoa me te rahi oro mōrahi",
+      "optionDefault": "Rahi oro taunoa (0-100)",
+      "optionMax": "Rahi oro mōrahi e whakaaetia ana (0-100)",
+      "currentTitle": "Ngā Tautuhinga Rahi Oro o Nāianei",
+      "defaultSet": "Kua tautuhia te rahi oro taunoa ki {value}%",
+      "maxSet": "Kua tautuhia te rahi oro mōrahi ki {value}%",
+      "logDefault": "Rahi Oro Taunoa",
+      "logMax": "Rahi Oro Mōrahi"
+    },
+    "queue": {
+      "description": "Whirihorahia ngā tautuhinga rārangi",
+      "optionMaxSize": "Te rahi mōrahi o te rārangi (1-1000)",
+      "optionPreventDuplicates": "Ārai i ngā waiata tārua i te rārangi",
+      "currentTitle": "Ngā Tautuhinga Rārangi o Nāianei",
+      "maxSet": "Kua tautuhia te rahi mōrahi o te rārangi ki ngā waiata {value}",
+      "duplicatesSet": "Ārai tārua: {value}"
+    },
+    "behavior": {
+      "description": "Whirihorahia te whanonga o te bot",
+      "optionAnnouncements": "Pānui i te waiata e whakatangihia ana ki te hongere kuputuhi",
+      "optionAutoLeave": "Wehe i te hongere reo ina kau",
+      "optionLeaveTimeout": "Hēkona i mua i te wehe i te hongere kau (30-3600)",
+      "currentTitle": "Ngā Tautuhinga Whanonga o Nāianei",
+      "announcementsSet": "Ngā pānui waiata e whakatangihia ana: {value}",
+      "autoLeaveSet": "Wehe aunoa ina kau: {value}",
+      "timeoutSet": "Kua tautuhia te wā wehe ki ngā hēkona {value}"
+    },
+    "voicechannels": {
+      "description": "Tautuhia ngā hongere reo e whakaaetia ana",
+      "prompt": "Kōwhiria ngā hongere reo ka āhei te bot ki te uru atu.",
+      "placeholder": "Kōwhiria ngā hongere reo e whakaaetia ana",
+      "allowAll": "Whakaaetia Ngā Hongere Katoa",
+      "set": "Ngā hongere reo e whakaaetia ana: {channels}",
+      "cleared": "Kua whakaaetia ināianei ngā hongere reo katoa."
+    },
+    "textchannels": {
+      "description": "Tautuhia ngā hongere kuputuhi e whakaaetia ana mō ngā tono",
+      "prompt": "Kōwhiria ngā hongere kuputuhi ka taea te whakamahi i ngā tono a te bot.",
+      "placeholder": "Kōwhiria ngā hongere kuputuhi e whakaaetia ana",
+      "allowAll": "Whakaaetia Ngā Hongere Katoa",
+      "set": "Ngā hongere kuputuhi e whakaaetia ana: {channels}",
+      "cleared": "Kua whakaaetia ināianei ngā hongere kuputuhi katoa."
+    },
+    "logchannel": {
+      "description": "Tautuhia te hongere mō ngā rangitaki a te bot (e whakatangihia ana, me ērā atu)",
+      "prompt": "Kōwhiria he hongere mō ngā karere rangitaki a te bot (e whakatangihia ana, kua mutu te rārangi, me ērā atu).",
+      "note": "**Tuhipoka:** Ki te kore he hongere rangitaki i tautuhia, ka rapu te bot i tētahi hongere ko #bot-commands te ingoa. Ki te kore tērā, kāore he karere rangitaki e tukuna.",
+      "placeholder": "Kōwhiria te hongere rangitaki mō ngā karere a te bot",
+      "useDefault": "Whakamahia te Taunoa (bot-commands)",
+      "disable": "Monokia Ngā Karere Rangitaki",
+      "statusDefault": "E whakamahi ana i te whanonga taunoa (ka rapu i #bot-commands)",
+      "statusDisabled": "Kua monokia ngā karere rangitaki",
+      "set": "Kua tautuhia te hongere rangitaki ki {channel}",
+      "reset": "Kua tautuhia anō te hongere rangitaki ki te taunoa (ka whakamahia #bot-commands mēnā kei reira).",
+      "disabled": "Kua monokia ngā karere rangitaki."
+    },
+    "blacklist": {
+      "description": "Whakahaere i te rārangi aukati kaiwhakamahi",
+      "optionAdd": "Tāpiri kaiwhakamahi ki te rārangi aukati",
+      "optionRemove": "Tango kaiwhakamahi i te rārangi aukati",
+      "title": "Ngā Kaiwhakamahi Kua Aukatia",
+      "none": "Kāore he kaiwhakamahi kua aukatia.",
+      "already": "Kua aukatia kē a {user}.",
+      "added": "Kua aukatia a {user} i te whakamahi i te bot.",
+      "notListed": "Kāore a {user} i aukatia.",
+      "removed": "Kua tangohia a {user} i te rārangi aukati."
+    },
+    "language": {
+      "description": "Tautuhia te reo o te bot mō tēnei tūmau",
+      "prompt": "Kōwhiria te reo o te bot mō tēnei tūmau.",
+      "placeholder": "Kōwhiria he reo",
+      "more": "Kei {command} ngā reo katoa e kōrerotia ana e te bot."
+    },
+    "embedcolor": {
+      "description": "Tautuhia he tae tāmau ritenga",
+      "optionColor": "Waehere tae hex (hei tauira, #FF5500)",
+      "invalid": "He tae hex hē. Whakamahia te hōputu: #RRGGBB (hei tauira, #FF5500)",
+      "set": "Kua tautuhia te tae tāmau ki: {color}"
+    },
+    "reset": {
+      "description": "Tautuhia anō ngā tautuhinga katoa ki te taunoa",
+      "prompt": "E tino hiahia ana koe ki te tautuhi anō i ngā tautuhinga KATOA ki te taunoa? Kāore e taea te whakahoki.",
+      "confirm": "Āe, Tautuhia Anō Ngā Tautuhinga Katoa",
+      "cancel": "Whakakore",
+      "done": "Kua tautuhia anō ngā tautuhinga katoa ki te taunoa.",
+      "cancelled": "Kua whakakorea te tautuhi anō."
+    },
+    "stats": {
+      "description": "Tirohia ngā tatauranga waiata o te tūmau",
+      "title": "Ngā Tatauranga Waiata",
+      "songsPlayed": "Te Tapeke o ngā Waiata kua Whakatangihia",
+      "playtime": "Te Tapeke o te Wā Whakatangi",
+      "playtimeValue": "{hours}h {minutes}m"
+    }
   },
   "stats": {
-    "description": "Tirohia ngā tatauranga o te bot me te wātū"
+    "description": "Tirohia ngā tatauranga o te bot me te wātū",
+    "bot": {
+      "description": "Whakaatu i ngā tatauranga o te bot",
+      "title": "Ngā Tatauranga o te Bot",
+      "servers": "Ngā Tūmau",
+      "users": "Ngā Kaiwhakamahi",
+      "channels": "Ngā Hongere",
+      "activeQueues": "Ngā Rārangi Hohe",
+      "tracksPlaying": "Ngā Waiata e Whakatangihia ana",
+      "uptime": "Wā Mahi",
+      "memory": "Pūmahara",
+      "platform": "Pūhara"
+    },
+    "uptime": {
+      "description": "Whakaatu i te wā mahi o te bot"
+    },
+    "leaderboard": {
+      "description": "Whakaatu i te papa tohu rārangi",
+      "line": "{user} - {count} ngā waiata"
+    },
+    "history": {
+      "description": "Whakaatu i ngā waiata kua whakatangihia tata nei"
+    },
+    "session": {
+      "description": "Whakaatu i ngā mōhiohio o te wātū o nāianei",
+      "noSession": "Kāore he wātū hohe i tēnei tūmau.",
+      "title": "Mōhiohio Wātū",
+      "nowPlaying": "E Whakatangihia Ana",
+      "nothing": "Kore noa iho",
+      "tracksInQueue": "Ngā Waiata i te Rārangi",
+      "totalDuration": "Te Roanga Katoa"
+    }
   },
   "user": {
-    "description": "Kōtaha kaiwhakamahi me ngā manakohanga"
+    "description": "Kōtaha kaiwhakamahi me ngā manakohanga",
+    "profile": {
+      "description": "Tirohia te kōtaha o te kaiwhakamahi",
+      "optionTarget": "Te kaiwhakamahi hei tirotiro",
+      "free": "Utukore"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "I tīmata te whakatangi",
+      "pause": "I whakatārewa te whakatangi",
+      "resume": "I haere tonu te whakatangi",
+      "stop": "I whakamutua te whakatangi",
+      "skip": "I pekehia te waiata",
+      "seek": "I neke ki tētahi wāhi",
+      "seek_forward": "I neke whakamua",
+      "seek_backward": "I neke whakamuri",
+      "forward": "I whakatere whakamua",
+      "rewind": "I whakahoki whakamuri",
+      "backward": "I whakahoki whakamuri",
+      "replay": "I tīmata anō te waiata",
+      "restart": "I tīmata anō te rārangi",
+      "volume_change": "I panoni te kahaoro",
+      "shuffle": "I kōrapu te rārangi",
+      "loop": "I panoni te aratau kōmuri",
+      "loopqueue": "I panoni te aratau kōmuri o te rārangi",
+      "setting_change": "I whakahōu ngā tautuhinga",
+      "queue_clear": "I ūkuia te rārangi",
+      "clear": "I ūkuia te rārangi",
+      "join": "I uru ki te hongere",
+      "leave": "I wehe i te hongere",
+      "autoplay": "I huri i te whakatangi aunoa",
+      "previous": "I whakatangi i te waiata o mua",
+      "jump": "I peke ki te waiata",
+      "swap": "I whakawhitiwhiti ngā waiata",
+      "reverse": "I hurihia kōaro te rārangi",
+      "sort": "I kōmakahia te rārangi",
+      "removerange": "I tangohia he awhe",
+      "removeduplicates": "I tangohia ngā tāruarua",
+      "removelast": "I tangohia te waiata whakamutunga",
+      "voteskip": "I pōti kia pekehia",
+      "grab": "I tīkina te waiata",
+      "insert": "I kōkuhuna te waiata",
+      "removecurrent": "I tangohia te waiata o nāianei"
+    },
+    "detail": {
+      "on": "Kā",
+      "off": "Weto",
+      "tracks": "{count} waiata",
+      "effectsCleared": "Kua ūkuia ngā pānga",
+      "bassBoost": "Whakakaha papa {level}",
+      "effectOn": "Kua whakakāhia a {effect}",
+      "effectOff": "Kua wetohia a {effect}",
+      "previousTrack": "waiata o mua",
+      "currentTrack": "waiata o nāianei",
+      "queue": "Rārangi"
+    },
+    "settings": {
+      "title": "Kua Whakahōuhia ngā Tautuhinga",
+      "changed": "I panoni a {user} i te {setting}",
+      "before": "I mua",
+      "after": "I muri",
+      "notSet": "Kāore anō kia tautuhia",
+      "userId": "ID Kaiwhakamahi: {id}"
+    }
+  },
+  "upsell": {
+    "title": "He painga Founder a {feature}",
+    "description": "Ko te utu o Founder he {price}/marama, he {spots} tūranga anake, ā, ka huakina te oro 320kbps, te aratau 24/7, kāore he tepe roanga waiata, me te tūranga Founder.",
+    "afterJoin": "I muri i tō urunga",
+    "afterJoinSteps": "1. hono i tō pūkete Discord i ō tautuhinga Patreon\n2. whakahaerehia te `/premium link` i tēnei tūmau",
+    "becomeFounder": "Hei Founder",
+    "voteTitle": "Pōti utukore rānei",
+    "voteBody": "Mā te pōti ki top.gg ka huakina tēnei mō ngā hāora 12. Whakamahia te `/vote`.",
+    "voteButton": "Pōti ki top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Tāurua tētahi ingoa waiata, hono rānei i te tuatahi.",
+    "notMember": "Me noho mema koe o tēnei tūmau kia whakatangi puoro ai i konei.",
+    "noVoiceChannel": "Uru atu ki tētahi hongere reo i Discord, kōwhiri rānei i tētahi i konei, ka ngana anō.",
+    "channelGone": "Kua kore taua hongere reo. Kōwhiria tētahi atu.",
+    "memberCantJoin": "Kāore ōu whakaaetanga ki {channel}. Kōwhiria tētahi hongere reo ka taea e koe te uru.",
+    "nowPlaying": "E whakatangihia ana: {title}",
+    "added": "Kua tāpiritia ki te rārangi (#{position}): {title}",
+    "playlist": "Kua tāpiritia ngā waiata {count} mai i {title}"
+  },
+  "voiceStatus": {
+    "title": "Tūnga hongere reo",
+    "missing": "Kāore e taea e au te whakaatu i te waiata e whakatangihia ana i raro i te ingoa hongere reo nā te mea kei te ngaro te whakaaetanga **Set Voice Channel Status**. Whakamanahia anō ahau kia tāpiritia; ka noho tonu ō tautuhinga.",
+    "reauthorize": "Whakamana anō"
+  },
+  "guess": {
+    "description": "Matapaetia te waiata mai i ngā tauira 30-hēkona, me ō hoa i te reo",
+    "startDescription": "Tīmatahia he kēmu matapae waiata i tō hongere reo",
+    "stopDescription": "Katia te kēmu matapae waiata",
+    "optionRounds": "E hia ngā waiata hei matapae (3-15, taunoa 5)",
+    "optionGenre": "He aha te momo puoro (taunoa: ngā waiata rongonui)",
+    "genre": {
+      "top": "Ngā waiata rongonui",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latina",
+      "electronic": "Hiko",
+      "80s": "Ngā tau 80",
+      "90s": "Ngā tau 90",
+      "2000s": "Ngā tau 2000"
+    },
+    "title": "Matapaetia te Waiata",
+    "trackTitle": "Matapaetia te waiata · rauna {round}",
+    "notInVoice": "Hono atu ki tētahi hongere reo i te tuatahi, kātahi ka tīmata i te kēmu.",
+    "alreadyRunning": "Kei te haere kē tētahi kēmu matapae waiata i tēnei tūmau.",
+    "musicPlaying": "Kei te pūrei puoro i konei. Katia i te tuatahi (/stop), kātahi ka tīmata i te kēmu.",
+    "otherChannel": "Kei te noho ahau ki {channel} (24/7). Tīmatahia te kēmu i reira.",
+    "noVoicePermission": "Kāore e taea e au te hono, te kōrero rānei i tō hongere reo.",
+    "noChannelAccess": "Kāore e taea e au te tuku karere ki tēnei hongere. Tīmatahia te kēmu i te wāhi e taea ai e au.",
+    "noTracks": "Kāore i taea te uta waiata mō taua momo ināianei. Whakamātauria he momo kē, anō rānei ā tētahi meneti.",
+    "connectFailed": "Kāore i taea te hono ki tō hongere reo. Whakamātauria anō.",
+    "introMeta": "{rounds} rauna · {genre}",
+    "introBody": "Whakarongo i {channel} ka kōwhiri i te waiata e pūrei ana. Ko te whakautu tika tuatahi ka whiwhi piro, ā, ka nui ake ngā piro mō te tere. Ki te hē tō kōwhiri, ka rakaina koe mō taua rauna.",
+    "introStarting": "Te waiata tuatahi ā tētahi hēkona torutoru…",
+    "introOver": "Kua mutu tēnei kēmu.",
+    "stopButton": "Katia te kēmu",
+    "roundTitle": "Rauna {round}/{total}",
+    "roundPrompt": "Ko tēhea waiata e pūrei ana?",
+    "roundCloses": "Ka kati ngā whakautu {time}",
+    "roundRules": "ko te whakautu tika tuatahi ka whiwhi piro",
+    "correctBy": "I tika a {user} i roto i te {seconds} s (+{points})",
+    "timeUp": "Kua pau te wā! Kāore tētahi i tika.",
+    "roundStopped": "Kua katia te kēmu.",
+    "answerWas": "Ko **{title}** nā **{artist}**",
+    "scores": "Ngā piro",
+    "scoreLine": "{user} · {points} piro ({correct} tika)",
+    "noScores": "Kāore anō he piro.",
+    "nextSoon": "Te waiata e whai ake nei ā tētahi hēkona torutoru…",
+    "finalSoon": "Kei te haere mai ngā piro whakamutunga…",
+    "finalTitle": "Ngā piro whakamutunga",
+    "winner": "Ka toa a {user} ki ngā piro {points}!",
+    "noWinner": "Kāore tētahi i whiwhi piro i tēnei wā.",
+    "playAgain": "Tākaro anō mā {command}",
+    "stoppedBy": "Nā {user} i kati te kēmu.",
+    "stoppedPlain": "Kua katia te kēmu.",
+    "endedEmpty": "Kua wehe katoa te tangata i te hongere reo, nō reira kua mutu te kēmu.",
+    "endedDisconnected": "I momotu ahau i te reo, nō reira kua mutu te kēmu.",
+    "endedMusic": "I tīmata te pūrei puoro, nō reira kua mutu te kēmu.",
+    "endedError": "Kāore ngā tauira waiata i pūrei, nō reira kua mutu te kēmu.",
+    "wrong": "Hē! Kua puta koe mō tēnei rauna.",
+    "alreadyAnswered": "Kua whakautu kē koe i tēnei rauna.",
+    "roundOver": "Kua mutu tēnei rauna.",
+    "gameOver": "Kua mutu tēnei kēmu.",
+    "joinToPlay": "Hono atu ki {channel} kia tākaro ai.",
+    "stopNotAllowed": "Ko te tangata nāna i tīmata te kēmu, ko tētahi rānei whai Manage Server anake ka taea te kati.",
+    "noGame": "Kāore he kēmu matapae waiata e haere ana i konei.",
+    "stopped": "Kua katia te kēmu.",
+    "blockedDuringGame": "He kēmu matapae waiata e haere ana i tēnei tūmau. Tatari kia mutu, katia rānei mā {stop}."
   }
 }

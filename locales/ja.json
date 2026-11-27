@@ -29,13 +29,31 @@
   "loop": {
     "description": "ループの切り替え",
     "errorNotQueue": "何も再生していません。",
-    "result": "ループが今すぐ {loop}"
+    "result": "ループが今すぐ {loop}",
+    "optionMode": "リピートする対象",
+    "mode": {
+      "off": "オフ",
+      "track": "この曲",
+      "queue": "キュー全体"
+    }
   },
   "lyrics": {
     "errorNotQueue": "何も再生していません。",
     "lyricsNotFound": "{title} の歌詞が見つかりません。",
     "embedTitle": "{title} - 歌詞",
-    "description": "再生中の曲、または好きな曲の歌詞を表示"
+    "description": "再生中の曲、または好きな曲の歌詞を表示",
+    "liveTitle": "ライブ歌詞",
+    "liveButton": "ライブ歌詞",
+    "liveHint": "同期歌詞があるよ：「ライブ歌詞」を押して一緒に追いかけよう。",
+    "liveStop": "停止",
+    "livePaused": "一時停止中",
+    "liveEnded": "ライブ歌詞が終了しました。",
+    "liveReplaced": "ライブ歌詞は新しいメッセージに移動しました。",
+    "liveStoppedBy": "{user} がライブ歌詞を停止しました。",
+    "liveNoSync": "この曲には同期歌詞がないため、ライブモードは使えません。",
+    "liveNoPermission": "ライブ歌詞を停止できるのは、開始した人か「メッセージの管理」権限を持つ人だけです。",
+    "liveNotDuringGame": "曲当てゲーム中は歌詞が非表示になります。",
+    "liveVersionHint": "別バージョンの曲に合わせたタイミングのため、ずれることがあります"
   },
   "move": {
     "description": "キューにある曲を移動",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **何も再生していません**",
     "currentPage": "現在のページ - ",
     "embedTitle": "曲のキュー\n",
-    "embedCurrentSong": "**再生中 - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**再生中 - [{title}]({url})**\n\n{info}",
+    "optionPage": "ページ番号"
   },
   "remove": {
     "description": "キューにある曲を削除",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 現在のボリューム: **{volume}%**",
     "errorNotNumber": "音量は数字で指定してください。",
     "errorNotValid": "数字は 0 - 100 の間で指定してください。",
-    "result": "ボリュームを設定: **{arg}%**"
+    "result": "ボリュームを設定: **{arg}%**",
+    "errorRange": "音量は0〜{max}の間で指定してね。"
   },
   "common": {
     "on": "**オン**",
@@ -208,14 +228,49 @@
     "disabled": "**無効**",
     "errorNotChannel": "先にボイスチャンネルに参加してください！",
     "cooldownMessage": "`{name}` コマンドの実行中のため、あと {time} 秒お待ち下さい。",
-    "errorCommand": "コマンド実行時にエラーが発生しました。"
+    "errorCommand": "コマンド実行時にエラーが発生しました。",
+    "djRequired": "このコマンドを使うにはDJロールが必要だよ。",
+    "guild_only": "このコマンドはサーバー内でのみ使えるよ。",
+    "unknown": "不明",
+    "unknownError": "不明なエラー",
+    "unknownSubcommand": "不明なサブコマンドです。",
+    "voiceChannel": "ボイスチャンネル",
+    "playerInitializing": "音楽プレイヤーを準備中です。数秒後にもう一度試してね。",
+    "voiceChannelNotAllowed": "このボイスチャンネルではBotが再生できません。許可されたチャンネルを使ってね。",
+    "queueFull": "キューがいっぱいです！最大{max}曲までだよ。",
+    "invalidFileType": "無効なファイル形式です。対応形式: {formats}",
+    "fileTooLarge": "ファイルが大きすぎます（{size}MB）。最大サイズは{max}MBだよ。",
+    "optionToggle": "オンまたはオフ（デフォルト: 切り替え）",
+    "requestedBy": "リクエスト: {user}",
+    "yes": "はい",
+    "no": "いいえ",
+    "loop": {
+      "off": "オフ",
+      "track": "曲",
+      "queue": "キュー"
+    },
+    "field": {
+      "title": "タイトル",
+      "artist": "アーティスト",
+      "duration": "長さ",
+      "tracks": "曲数",
+      "source": "ソース",
+      "requestedBy": "リクエスト者",
+      "loopMode": "ループモード",
+      "volume": "音量",
+      "loadTime": "読み込み時間",
+      "positionInQueue": "キュー内の位置",
+      "status": "ステータス",
+      "tier": "ティア"
+    }
   },
   "seek": {
     "description": "曲の指定した時間に移動",
     "errorNotQueue": "何も再生していません。",
     "errorInvalidTime": "時間の形式が無効です。1:30、90、1m30s のような形式を使ってね",
     "errorOutOfRange": "時間は 0:00 から {duration} の間で指定してね",
-    "result": "<@{author}> ⏩ **{time}** に移動しました"
+    "result": "<@{author}> ⏩ **{time}** に移動しました",
+    "optionTime": "移動先の時間（例: 1:30、90、1m30s）"
   },
   "forward": {
     "description": "指定した秒数だけ早送り",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "指定した秒数だけ巻き戻し",
     "errorNotQueue": "何も再生していません。",
-    "result": "<@{author}> ⏪ **{seconds}秒** 巻き戻しました（現在 {position}）"
+    "result": "<@{author}> ⏪ **{seconds}秒** 巻き戻しました（現在 {position}）",
+    "optionSeconds": "巻き戻す秒数"
   },
   "replay": {
     "description": "今の曲を最初から再生",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "自動再生を切り替え（キューが終わったら似た曲を再生）",
     "errorNotQueue": "アクティブなキューがありません。",
-    "result": "🔄 自動再生: {status}"
+    "result": "🔄 自動再生: {status}",
+    "optionDefault": "このサーバーのデフォルトにも設定する（サーバー管理権限）"
   },
   "history": {
     "description": "最近再生した曲を表示",
     "errorNotQueue": "アクティブなキューがありません。",
     "errorEmpty": "履歴にまだ曲がありません。",
     "embedTitle": "最近再生した曲",
-    "footer": "直近 {count} 曲を表示中"
+    "footer": "直近 {count} 曲を表示中",
+    "title": "最近再生した曲",
+    "titleUser": "最近再生した曲 · {user}のリクエスト",
+    "empty": "過去30日間、このサーバーでは何も再生されていません。",
+    "emptyUser": "{user}は過去30日間、ここで曲をリクエストしていません。",
+    "summary": "直近{count}回の再生",
+    "playAgain": "もう一度再生…",
+    "optionUser": "このメンバーがリクエストした曲のみ表示",
+    "unavailable": "再生履歴は現在利用できません。少し後でもう一度試してね。",
+    "gone": "その曲はもう履歴にありません。"
   },
   "previous": {
     "description": "前の曲を再生",
@@ -283,7 +349,8 @@
     "errorNotQueue": "キューがありません。",
     "errorInvalidPosition": "無効な位置です。キューには {max} 曲しかありません。",
     "errorNotFound": "その位置に曲が見つかりません。",
-    "result": "<@{author}> ⏭️ **{title}** にジャンプしました"
+    "result": "<@{author}> ⏭️ **{title}** にジャンプしました",
+    "optionPosition": "ジャンプ先のキュー位置"
   },
   "Invite me to your server!": "サーバーに招待してね！",
   "Invite": "招待",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "ダッシュボードのリンクを表示",
     "embedDescription": "Webダッシュボードでサーバー設定の管理やキューの確認などができるよ！",
-    "footer": "音楽体験をカスタマイズしよう"
+    "footer": "音楽体験をカスタマイズしよう",
+    "title": "Botダッシュボード",
+    "features": "機能",
+    "featuresList": "• サーバー設定の変更\n• キューと再生コントロールの表示\n• プレイリストとコレクションの管理\n• 再生統計の表示\n• プレミアム機能の管理",
+    "open": "ダッシュボードを開く"
   },
   "clean": {
     "description": "チャンネルからBotのメッセージを削除",
@@ -377,7 +448,9 @@
       "description": "すべてのコレクションを表示",
       "title": "📁 あなたのコレクション",
       "empty": "まだコレクションがないよ。`/collections create` で作成しよう！",
-      "footer": "合計: {count}個のコレクション"
+      "footer": "合計: {count}個のコレクション",
+      "select": "コレクションを開く…",
+      "more": "…他{count}件。/collections view で開けるよ。"
     },
     "create": {
       "description": "新しいコレクションを作成",
@@ -399,7 +472,12 @@
       "tracksField": "曲",
       "durationField": "再生時間",
       "shareCodeField": "共有コード",
-      "andMore": "...他{count}曲"
+      "andMore": "...他{count}曲",
+      "play": "再生",
+      "addToQueue": "キューに追加",
+      "summary": "{count}曲 · {duration}",
+      "page": "ページ {page}/{pages}",
+      "importedFrom": "{source}からインポート"
     },
     "save": {
       "description": "現在のキューをコレクションとして保存",
@@ -411,7 +489,9 @@
       "description": "コレクションをキューに読み込む",
       "nameOption": "読み込むコレクションの名前",
       "empty": "このコレクションは空だよ。",
-      "success": "📂 コレクション **{name}** から**{count}**曲を読み込んだよ！"
+      "success": "📂 コレクション **{name}** から**{count}**曲を読み込んだよ！",
+      "queuedNext": "現在の曲の直後に再生されるよ。",
+      "skipped": "{count}曲をスキップしました（サーバーの許可より長い、キュー上限超過、または見つからない）。"
     },
     "rename": {
       "description": "コレクションの名前を変更する",
@@ -435,7 +515,8 @@
       "shareCodeOption": "コピー元の共有コード",
       "nameOption": "新しいコレクションの名前",
       "invalidCode": "共有コードが無効か、期限切れです。",
-      "success": "📋 **{count}** 曲を新しいコレクション **{name}** にコピーしました！"
+      "success": "📋 **{count}** 曲を新しいコレクション **{name}** にコピーしました！",
+      "clonedFrom": "{name}からコピー"
     },
     "merge": {
       "description": "コレクションを別のコレクションに統合する",
@@ -457,6 +538,21 @@
       "positionOption": "削除する曲の位置（1から開始）",
       "invalidPosition": "位置が無効です。コレクションには {max} 曲あります。",
       "success": "🗑️ コレクション **{name}** から **{track}** を削除しました。"
+    },
+    "error": "コレクションで問題が発生しました。もう一度試してね。",
+    "trackCount": "{count}曲",
+    "gone": "そのコレクションはもう存在しません。",
+    "notYours": "このメニューは他の人のものだよ。/collections list で自分のコレクションを見てね。",
+    "import": {
+      "description": "Spotify、YouTube、Deezer、Apple Musicからプレイリストをインポート",
+      "urlOption": "プレイリストのリンク（Spotify、YouTube、Deezer、Apple Musicのアルバム）",
+      "nameOption": "新しいコレクションの名前（デフォルト: プレイリストのタイトル）",
+      "invalidUrl": "リンクではないようです。Spotify、YouTube、DeezerのプレイリストURLかApple MusicのアルバムURLを貼ってね。",
+      "failed": "そのプレイリストを読み込めませんでした。公開されていて、Spotify、YouTube、DeezerまたはApple Musicのアルバムのリンクか確認してね。",
+      "exists": "**{name}**という名前のコレクションはすでにあります。`name`オプションで別の名前を選んでね。",
+      "success": "📥 {source}から**{count}**曲を**{name}**にインポートしました。",
+      "skipped": "{count}曲をスキップしました（コレクションごとの上限{max}曲を超過、または再生不可）。",
+      "spotifyCap": "Spotifyのプレイリストリンクでは最初の100曲しか取得できません。"
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "テキストを音声に変換してボイスチャンネルで再生する",
     "errorNotAvailable": "❌ TTSサービスは利用できません。Botの管理者に連絡してください。",
     "errorGenerate": "❌ 音声の生成に失敗しました。もう一度試してね。",
-    "success": "🎤 再生中：「{text}」（{language}、{voice}）"
+    "success": "🎤 再生中：「{text}」（{language}、{voice}）",
+    "optionText": "読み上げるテキスト",
+    "optionLanguage": "読み上げの言語（未指定なら保存した設定を使用）",
+    "optionVoice": "使用する声（未指定なら保存した設定を使用）"
   },
   "sayconfig": {
-    "description": "TTS（読み上げ）の設定を変更する"
+    "description": "TTS（読み上げ）の設定を変更する",
+    "view": {
+      "description": "現在のTTS設定を表示",
+      "title": "TTS設定",
+      "noConfig": "カスタム設定はありません。デフォルトを使用中です。",
+      "mode": "モード",
+      "language": "言語",
+      "voice": "声",
+      "voiceDescription": "声の説明",
+      "styleInstruction": "スタイル指示",
+      "referenceAudio": "参照音声",
+      "referenceAudioSet": "設定済み",
+      "referenceText": "参照テキスト"
+    },
+    "mode": {
+      "description": "TTSモードを設定（custom_voice または voice_clone）",
+      "option": "TTSモード",
+      "customVoice": "カスタムボイス（デフォルト）",
+      "voiceClone": "ボイスクローン",
+      "set": "TTSモードを **{mode}** に設定しました"
+    },
+    "language": {
+      "description": "デフォルトの言語を設定",
+      "option": "読み上げの言語",
+      "set": "デフォルトの言語を **{language}** に設定しました"
+    },
+    "voice": {
+      "description": "デフォルトの声／話者を設定",
+      "option": "使用する声",
+      "set": "デフォルトの声を **{voice}** に設定しました"
+    },
+    "voiceDescription": {
+      "description": "カスタムボイス生成用の声の説明を設定",
+      "option": "声の説明（例：「落ち着いたトーンの低い男性の声」）",
+      "set": "声の説明を設定しました：\"{text}\""
+    },
+    "style": {
+      "description": "音声生成のスタイル指示を設定",
+      "option": "スタイル指示（例：「ゆっくりはっきり話す」）",
+      "set": "スタイル指示を設定しました：\"{text}\""
+    },
+    "reference": {
+      "description": "ボイスクローン用の参照音声とテキストを設定",
+      "optionAudio": "参照音声ファイル（MP3、WAVなど）",
+      "optionText": "参照音声の書き起こし",
+      "saved": "参照音声をアップロードして保存しました！",
+      "text": "参照テキスト：\"{text}\"",
+      "modeSet": "モードを自動的に **{mode}** に設定しました",
+      "failed": "参照音声のアップロードに失敗しました。もう一度お試しください。"
+    },
+    "reset": {
+      "description": "TTS設定をデフォルトにリセット",
+      "done": "TTS設定をデフォルトにリセットしました。",
+      "none": "リセットするカスタム設定がありません。"
+    }
   },
   "radio": {
     "notInVoice": "ボイスチャンネルに参加してね。",
@@ -649,7 +802,8 @@
     "body": "投票するとより多くのサーバーがボットを見つけやすくなるよ。top.ggで投票するたびに、**24/7モード**と**スタジオ品質**が12時間使えるよ。",
     "active": "投票特典はあと {time} 有効だよ。",
     "inactive": "有効な投票はないよ。下から投票すると1分以内に特典が始まるよ。",
-    "notListed": "ボットが掲載されたら投票できるようになるよ。応援しようとしてくれてありがとう!"
+    "notListed": "ボットが掲載されたら投票できるようになるよ。応援しようとしてくれてありがとう!",
+    "heading": "{bot} に投票しよう"
   },
   "leaderboard": {
     "description": "セッションのトラックランキングを表示",
@@ -742,7 +896,8 @@
     "noQueue": "アクティブなキューがありません。",
     "invalidChannel": "無効なチャンネルです。テキストチャンネルを選んでください。",
     "title": "📢 チャンネルを変更しました",
-    "success": "今後の通知は {channel} に送信します。"
+    "success": "今後の通知は {channel} に送信します。",
+    "optionChannel": "再バインドするチャンネル（デフォルトは現在のチャンネル）"
   },
   "disabledcommands": {
     "description": "このサーバーで無効化されたコマンドを表示",
@@ -939,7 +1094,28 @@
     "user_free": "現在は **Free** プランです。",
     "upgrade": "プレミアムにアップグレード",
     "upgrade_message": "Patreon で応援してプレミアム機能をゲットしよう!",
-    "description": "プレミアム特典を見る"
+    "description": "プレミアム特典を見る",
+    "view": {
+      "description": "利用可能な特典を表示"
+    },
+    "user": {
+      "description": "現在の特典を表示",
+      "title": "あなたの特典",
+      "premium": "**{tier}** を利用中です！",
+      "premiumTier": "プレミアム",
+      "audio": "音質：{bitrate}kbps",
+      "audioFilters": "オーディオフィルター",
+      "stay247": "24時間モード",
+      "free": "現在は **Free** プランです。Patreon でプレミアムを手に入れよう！"
+    },
+    "overview": {
+      "title": "プレミアム特典",
+      "intro": "Founder は先着 {spots} 名限定で、価格はずっと固定です。",
+      "freeName": "Free — {price}",
+      "freePerks": "128kbps の音質\nキュー、プレイリスト、歌詞\nすべてのコマンド",
+      "founderName": "Founder / ベータテスター — {price}/月",
+      "founderPerks": "320kbps の音質\nオーディオフィルター\n24時間モード\n優先キュー\nFounder ロールと直接サポート"
+    }
   },
   "boost": {
     "no_premium_title": "❌ プレミアムなし",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "自動再生オフ。",
     "volumeLimit": "このサーバーでは音量の上限が{max}%に設定されています。",
     "lyricsButton": "歌詞",
-    "saveButton": "保存"
+    "saveButton": "保存",
+    "trackFailed": "**{title}** を再生できなかったのでスキップします。別のリンクや検索を試してね。",
+    "guessRunning": "ここで曲当てゲームが進行中です。終了するとプレイヤーが戻ります。"
   },
   "queueView": {
     "title": "キュー",
@@ -1040,7 +1218,8 @@
     "commands": "コマンド",
     "dashboard": "ダッシュボード",
     "support": "サポートサーバー",
-    "vote": "投票"
+    "vote": "投票",
+    "voiceStatusHint": "再生中の曲をボイスチャンネル名の下に表示したい？[再認証]({url})して「ボイスチャンネルステータスの設定」権限を付与してね。"
   },
   "router": {
     "guildOnly": "このコマンドはサーバー内でのみ使えます。",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "言語（自動の場合は各メンバーの Discord の言語に合わせます）",
     "auto": "自動（各メンバーの Discord の言語）",
     "set": "言語を{language}に設定しました。",
-    "needManage": "言語を変更するには「サーバー管理」権限が必要です。"
+    "needManage": "言語を変更するには「サーバー管理」権限が必要です。",
+    "unknown": "不明な言語です。"
   },
   "links": {
     "website": "ウェブサイト",
@@ -1100,45 +1280,741 @@
     "invite": "招待"
   },
   "commanddisable": {
-    "description": "このサーバーでコマンドを無効にする"
+    "description": "このサーバーでコマンドを無効にする",
+    "optionCommand": "無効にするコマンド",
+    "protected": "必須コマンドは無効にできません：{command}",
+    "notFound": "コマンドが見つかりません：{command}",
+    "alreadyDisabled": "コマンド {command} はすでに無効です。",
+    "title": "コマンドを無効化しました",
+    "done": "このサーバーでコマンド {command} を無効にしました。\n\n`/commandenable` で再び有効にできます。"
   },
   "commanddisableall": {
-    "description": "必須コマンド以外をすべて無効にする"
+    "description": "必須コマンド以外をすべて無効にする",
+    "title": "すべてのコマンドを無効化しました",
+    "done": "**{count}** 個のコマンドを無効にしました。\n\n引き続き使える保護コマンド：\n{commands}\n\n`/commandenableall` ですべてのコマンドを元に戻せます。"
   },
   "commandenable": {
-    "description": "無効化したコマンドを有効にする"
+    "description": "無効化したコマンドを有効にする",
+    "optionCommand": "有効にするコマンド",
+    "notDisabled": "コマンド {command} は無効になっていません。",
+    "title": "コマンドを有効化しました",
+    "done": "このサーバーでコマンド {command} を再び有効にしました。"
   },
   "commandenableall": {
-    "description": "無効化したコマンドをすべて有効にする"
+    "description": "無効化したコマンドをすべて有効にする",
+    "title": "すべてのコマンドを有効化しました",
+    "done": "**{count}** 個のコマンドを再び有効にしました。\n\nすべてのコマンドが使えるようになりました。",
+    "none": "無効になっているコマンドはありません。"
   },
   "effects": {
-    "description": "オーディオエフェクトを管理"
+    "description": "オーディオエフェクトを管理",
+    "optionEnabled": "オンまたはオフ",
+    "nothingPlaying": "現在再生中の音楽はありません。",
+    "unknown": "不明なエフェクトです。",
+    "enabledBy": "{user} が {effect} エフェクトをオンにしました",
+    "disabledBy": "{user} が {effect} エフェクトをオフにしました",
+    "8d": {
+      "description": "8Dオーディオエフェクトを適用（音が回転）",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "低音ブーストを適用",
+      "optionLevel": "低音レベル",
+      "level": {
+        "off": "オフ",
+        "low": "低",
+        "medium": "中",
+        "high": "高"
+      },
+      "disabledBy": "{user} が低音ブーストをオフにしました",
+      "alreadyOff": "低音ブーストはすでにオフです。",
+      "setBy": "{user} が低音ブーストを **{level}** に設定しました"
+    },
+    "distortion": {
+      "description": "ディストーションエフェクトを適用",
+      "name": "ディストーション"
+    },
+    "haas": {
+      "description": "ハース効果を適用（立体音響）",
+      "name": "ハース"
+    },
+    "karaoke": {
+      "description": "ボーカルを抑える（カラオケモード）",
+      "name": "カラオケ"
+    },
+    "nightcore": {
+      "description": "ナイトコアエフェクトを適用（ピッチ＋速度アップ）",
+      "name": "ナイトコア"
+    },
+    "vaporwave": {
+      "description": "ヴェイパーウェイヴエフェクトを適用（ピッチ＋速度ダウン）",
+      "name": "ヴェイパーウェイヴ"
+    },
+    "pulsator": {
+      "description": "パルセーターエフェクトを適用",
+      "name": "パルセーター"
+    },
+    "reverse": {
+      "description": "音声を逆再生",
+      "name": "リバース"
+    },
+    "tremolo": {
+      "description": "トレモロエフェクトをかける",
+      "name": "トレモロ"
+    },
+    "vibrato": {
+      "description": "ビブラートエフェクトをかける",
+      "name": "ビブラート"
+    },
+    "lofi": {
+      "description": "Lofiエフェクトをかける",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "サラウンドエフェクトをかける",
+      "name": "サラウンド"
+    },
+    "list": {
+      "description": "有効なエフェクトを表示",
+      "title": "有効なエフェクト",
+      "empty": "有効なエフェクトはありません"
+    },
+    "clear": {
+      "description": "すべてのエフェクトを解除",
+      "done": "すべてのエフェクトを解除しました。"
+    }
   },
   "info": {
-    "description": "Botの情報とヘルプ"
+    "description": "Botの情報とヘルプ",
+    "about": {
+      "description": "このBotについて",
+      "statistics": "統計",
+      "servers": "サーバー",
+      "commands": "コマンド",
+      "uptime": "稼働時間",
+      "system": "システム",
+      "memory": "メモリ"
+    },
+    "faq": {
+      "description": "よくある質問"
+    },
+    "support": {
+      "description": "サポートサーバーのリンクを表示",
+      "title": "サポート",
+      "body": "お困りですか？サポートサーバーに参加してね：",
+      "join": "クリックして参加",
+      "reportIssues": "問題を報告",
+      "reportIssuesValue": "まず `/info faq` を確認してから、サポートで質問してね",
+      "suggestions": "提案",
+      "suggestionsValue": "提案チャンネルでアイデアを共有してね"
+    },
+    "queue": {
+      "description": "キューの詳細情報",
+      "noQueue": "アクティブなキューはありません。",
+      "title": "キュー情報",
+      "contributors": "追加したユーザー"
+    },
+    "song": {
+      "description": "再生中の曲の詳細",
+      "noTrack": "再生中の曲はありません。",
+      "title": "再生中"
+    },
+    "nextup": {
+      "description": "キューの次の曲を表示",
+      "empty": "キューに曲がありません。",
+      "title": "次の曲",
+      "footer": "キューに{count}曲"
+    },
+    "changelogs": {
+      "description": "最近のアップデートと変更点",
+      "title": "最近のアップデート",
+      "intro": "最新の変更点と改善：",
+      "newFeatures": "新機能",
+      "newFeaturesList": "• コマンドを整理・統合\n• オーディオエフェクトシステムを改善\n• キュー管理を強化",
+      "improvements": "改善点",
+      "improvementsList": "• コマンドの応答速度を向上\n• エラー処理を改善\n• メモリ使用量を削減",
+      "bugFixes": "バグ修正",
+      "bugFixesList": "• 再生の問題を修正\n• キューの同期問題を解決"
+    }
   },
   "patreon": {
-    "description": "Patreonのステータスを確認して特典を同期"
+    "description": "Patreonのステータスを確認して特典を同期",
+    "notConfigured": "このBotではPatreon連携が設定されていません。",
+    "howToLink": "連携方法",
+    "premiumActive": "プレミアム有効",
+    "patronStatus": {
+      "active": "支援中",
+      "declined": "支払い拒否",
+      "former": "元支援者",
+      "none": "未支援"
+    },
+    "status": {
+      "description": "現在のPatreonステータスと特典を確認",
+      "title": "Patreonステータス",
+      "yourTitle": "あなたのPatreonステータス",
+      "notLinked": "現在Patreonアカウントと連携されていません。",
+      "howToLinkSteps": "1. [Patreon]({patreon})にアクセス\n2. 設定 → 連携 でDiscordアカウントを接続\n3. Patreonページで支援を開始\n4. `/patreon sync` で特典を更新",
+      "pledgeAmount": "支援額",
+      "perMonth": "{amount}/月",
+      "lifetimeSupport": "累計支援額",
+      "lastCharge": "最終請求",
+      "thanks": "支援ありがとう！プレミアム機能が使えます。",
+      "declined": "前回の支払いが拒否されました。特典を復活させるには、Patreonで支払い方法を更新してね。",
+      "former": "支援が終了しました。Patreonで再開すると特典が復活するよ！",
+      "error": "Patreonステータスの確認中にエラーが発生しました。後でもう一度試してね。"
+    },
+    "sync": {
+      "description": "Patreonデータを同期して特典を更新",
+      "completeTitle": "Patreon同期完了",
+      "success": "Patreonデータを同期しました！",
+      "title": "Patreon同期",
+      "notFound": "あなたのDiscordに連携されたPatreonアカウントが見つかりません。",
+      "howToLinkSteps": "1. [Patreonの設定]({settings})にアクセス\n2. **連携** をクリック\n3. **Discord** アカウントを接続\n4. 私たちのキャンペーンを支援しているか確認\n5. もう一度 `/patreon sync` を実行",
+      "error": "Patreonデータの同期中にエラーが発生しました。後でもう一度試してね。"
+    },
+    "info": {
+      "description": "Patreon特典とアカウント連携方法について",
+      "title": "Patreon特典",
+      "intro": "Patreonで支援して限定特典をゲットしよう！",
+      "benefits": "プレミアム特典",
+      "benefitsList": "• より高音質なオーディオ\n• より長いプレイリスト\n• 優先キュー\n• 限定コマンド\n• 新機能への先行アクセス",
+      "howToGet": "プレミアムの入手方法",
+      "howToGetSteps": "1. [Patreonページ]({patreon})にアクセス\n2. 好きなプランを選択\n3. Patreonの設定 → 連携 でDiscordを接続\n4. `/patreon sync` で特典を有効化",
+      "troubleshooting": "トラブルシューティング",
+      "troubleshootingList": "• Patreonの設定でDiscordが連携されているか確認\n• 支払いが成功している必要があります（拒否されていないこと）\n• 連携後に `/patreon sync` を試してね\n• 特典は30分ごとに自動更新されます"
+    }
   },
   "play_file": {
-    "description": "添付した音声ファイルを再生"
+    "description": "添付した音声ファイルを再生",
+    "optionFile": "再生する音声ファイル（MP3、WAV、FLAC、M4A、OGGなど）",
+    "optionTitle": "曲のカスタムタイトル（任意）",
+    "cantPlay": "ファイルを再生できませんでした：{name}",
+    "nowPlayingTitle": "ファイルを再生中",
+    "addedTitle": "ファイルをキューに追加しました",
+    "format": "形式",
+    "size": "サイズ",
+    "error": {
+      "load": "ファイルを読み込めませんでした: {name}\n\n考えられる原因:\n• 対応していないファイル形式\n• ファイルが破損している\n• ファイルのURLが期限切れ",
+      "timeout": "ファイルのダウンロードがタイムアウトしました。ファイルが大きすぎるか、接続が遅い可能性があります。",
+      "forbidden": "ファイルへのアクセスが拒否されました。もう一度アップロードしてお試しください。",
+      "notFound": "ファイルが見つかりません。添付ファイルのURLが期限切れの可能性があります。",
+      "generic": "ファイルの再生中にエラーが発生しました。"
+    }
   },
   "play_spotify": {
-    "description": "Spotifyで曲を検索して再生"
+    "description": "Spotifyで曲を検索して再生",
+    "optionQuery": "検索する曲名、アーティスト、またはSpotifyのURL",
+    "cantPlayLink": "Spotifyのリンクを再生できませんでした: {query}",
+    "playlistFallback": "Spotifyプレイリスト",
+    "playlistAdded": "Spotifyプレイリストを追加しました",
+    "songs": "{count}曲",
+    "nowPlaying": "再生中",
+    "trackBy": "{title} - {author}",
+    "nowPlayingTitle": "Spotifyから再生中",
+    "addedTitle": "Spotifyからキューに追加しました",
+    "noResults": "Spotifyで見つかりませんでした: {query}\n\n試してみて:\n• 別のキーワード\n• アーティスト名を追加\n• Spotifyの直接リンクを使う",
+    "notOnYoutube": "YouTubeで見つかりませんでした: {title} - {artist}",
+    "error": {
+      "auth": "このSpotifyトラックは認証が必要です。別のトラックを試してください。",
+      "premium": "このトラックにはSpotify Premiumが必要です。",
+      "private": "このSpotifyトラックは非公開のため再生できません。",
+      "region": "このトラックはお住まいの地域では利用できません。",
+      "generic": "Spotifyトラックの再生中にエラーが発生しました。"
+    }
   },
   "premium": {
-    "description": "プレミアム機能とサーバーの紐付けを管理"
+    "description": "プレミアム機能とサーバーの紐付けを管理",
+    "audioQuality": "音質",
+    "botIdentity": "Botの外見",
+    "serverSlots": "サーバー枠",
+    "patreonTier": "Patreonティア",
+    "supporter": "サポーター",
+    "dbUnavailable": "**データベースが一時的に利用できません**\n\nBotがデータベースに接続できません。しばらくしてからもう一度お試しください。\n\n問題が続く場合は、Bot管理者に通知済みです。",
+    "error": "エラーが発生しました: {error}",
+    "link": {
+      "description": "このサーバーをPatreonアカウントにリンク",
+      "successTitle": "サーバーをリンクしました",
+      "failTitle": "リンクに失敗しました"
+    },
+    "unlink": {
+      "description": "このサーバーとPatreonアカウントのリンクを解除",
+      "successTitle": "リンクを解除しました",
+      "failTitle": "リンク解除に失敗しました"
+    },
+    "list": {
+      "description": "Patreonアカウントにリンクされた全サーバーを表示",
+      "title": "リンク済みサーバー",
+      "empty": "まだサーバーをリンクしていません。\n\n`/premium link` でこのサーバーをリンクしよう！",
+      "linkedAt": "リンク日時: {time}",
+      "slotsUsed": "{used}/{max} 使用中",
+      "noMembership": "有効なPatreonメンバーシップがありません。\n\nPatreonで支援してプレミアム機能を解放しよう！"
+    },
+    "status": {
+      "description": "このサーバーのプレミアム状況を表示",
+      "premiumTitle": "プレミアムサーバー",
+      "freeTitle": "無料サーバー",
+      "premiumBody": "このサーバーではプレミアム機能が有効です！",
+      "freeBody": "このサーバーは無料プランを利用中です。\n\n`/premium link` でプレミアム機能を有効にしよう。",
+      "linked": "リンク日時",
+      "lastUsed": "最終使用",
+      "ownFooter": "このプレミアムリンクはあなたのものです",
+      "otherFooter": "プレミアムは別のユーザーが提供しています",
+      "freeQuality": "128kbps（無料）"
+    },
+    "config": {
+      "description": "このサーバーのプレミアム設定を変更",
+      "optionBitrate": "音声ビットレート（kbps）",
+      "optionIdentity": "このサーバー用のBotの外見",
+      "nothing": "設定する項目を1つ以上指定してください。\n\n例: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "設定を更新しました",
+      "failTitle": "更新に失敗しました"
+    },
+    "service": {
+      "needMembership": "サーバーをリンクするには有効なPatreonメンバーシップが必要です。\n\nPatreonで支援してプレミアム機能を解放しよう！",
+      "limitReached": "サーバー上限（{max}サーバー）に達しました。\n\n現在のティア: **{tier}**\nリンク済みサーバー: **{current}/{max}**\n\nティアをアップグレードしてもっとサーバーをリンクしよう！",
+      "patron": "パトロン",
+      "alreadyLinkedYou": "このサーバーはすでにあなたのアカウントにリンクされています。",
+      "alreadyLinkedOther": "このサーバーはすでに別のPatreonアカウントにリンクされています。\n\n1つのサーバーでプレミアム機能を有効にできるPatreonアカウントは1つだけです。",
+      "linked": "サーバーをリンクしました！",
+      "servers": "サーバー",
+      "linkedActive": "このサーバーでプレミアム機能が有効になりました！",
+      "linkError": "サーバーのリンク中にエラー: {error}",
+      "notLinked": "このサーバーはあなたのアカウントにリンクされていません。",
+      "unlinked": "サーバーのリンクを解除しました！",
+      "unlinkedBody": "このサーバーのプレミアム機能は無効になりました。\n空いた枠で別のサーバーをリンクできます。",
+      "unlinkError": "リンク解除中にエラー: {error}",
+      "invalidBitrate": "無効なビットレートです。128、192、256、320 kbpsから選んでください",
+      "updated": "サーバー設定を更新しました！",
+      "updateError": "設定の更新中にエラー: {error}"
+    },
+    "feature": {
+      "audio_filters": "オーディオフィルター",
+      "stay_24_7": "24時間モード",
+      "max_quality": "最高音質",
+      "priority_queue": "優先キュー",
+      "unlimited_playlists": "プレイリスト無制限",
+      "longer_songs": "再生時間の制限なし",
+      "vote_features": "新機能への投票",
+      "founder_role": "Founderロール",
+      "direct_support": "直接サポート"
+    }
   },
   "queuemanage": {
-    "description": "キューの詳細管理"
+    "description": "キューの詳細管理",
+    "empty": "キューは空です。",
+    "invalidPosition": "無効な位置です。キューには{count}曲あります。",
+    "removedupes": {
+      "description": "キューから重複したトラックを削除",
+      "none": "重複は見つかりませんでした！",
+      "title": "重複を削除しました",
+      "result": "重複したトラックを**{count}**曲削除しました"
+    },
+    "sort": {
+      "description": "キューを並べ替える",
+      "optionBy": "並べ替えの基準",
+      "choice": {
+        "title_asc": "タイトル (A-Z)",
+        "title_desc": "タイトル (Z-A)",
+        "duration_asc": "再生時間 (短い順)",
+        "duration_desc": "再生時間 (長い順)"
+      },
+      "label": {
+        "title_asc": "タイトル (A-Z)",
+        "title_desc": "タイトル (Z-A)",
+        "duration_asc": "再生時間 (短い順)",
+        "duration_desc": "再生時間 (長い順)"
+      },
+      "result": "キューを **{label}** で並べ替えました"
+    },
+    "swap": {
+      "description": "キュー内の2曲を入れ替える",
+      "optionPosition1": "1つ目の位置",
+      "optionPosition2": "2つ目の位置",
+      "samePosition": "異なる位置を指定してね。",
+      "result": "**{pos1}** 番と **{pos2}** 番の曲を入れ替えました"
+    },
+    "removeuser": {
+      "description": "ユーザーの曲をすべて削除する",
+      "optionUser": "曲を削除するユーザー",
+      "none": "{user} の曲は見つかりませんでした。",
+      "result": "{user} の曲を **{count}** 曲削除しました"
+    },
+    "removeabsent": {
+      "description": "ボイスチャンネルにいないユーザーの曲を削除する",
+      "notInVoice": "ボイスチャンネルに参加している必要があります。",
+      "none": "リクエストした全員がボイスチャンネルにいます。",
+      "result": "不在ユーザーの曲を **{count}** 曲削除しました"
+    },
+    "removelast": {
+      "description": "最後のN曲を削除する",
+      "optionCount": "削除する曲数",
+      "result": "最後の **{count}** 曲を削除しました"
+    },
+    "removerange": {
+      "description": "指定範囲の曲を削除する",
+      "optionStart": "開始位置",
+      "optionEnd": "終了位置",
+      "startAfterEnd": "開始位置は終了位置以下にしてね。",
+      "startTooHigh": "開始位置がキューの長さ ({count}) を超えています。",
+      "result": "**{count}** 曲を削除しました (位置 {start}-{end})"
+    },
+    "reverse": {
+      "description": "キューの順番を逆にする",
+      "result": "キューの順番を逆にしました"
+    }
   },
   "settings": {
-    "description": "このサーバーのBot設定を変更（管理者のみ）"
+    "description": "このサーバーのBot設定を変更（管理者のみ）",
+    "noPermission": "Botの設定を管理する権限がありません。",
+    "unknownSubcommand": "不明なサブコマンドです。",
+    "current": "**現在:** {value}",
+    "allChannels": "すべてのチャンネルで許可",
+    "allAllowed": "すべて許可",
+    "on": "オン",
+    "off": "オフ",
+    "yes": "はい",
+    "no": "いいえ",
+    "enabled": "有効",
+    "disabled": "無効",
+    "view": {
+      "description": "現在の設定を表示する",
+      "title": "Bot設定",
+      "roles": "ロール",
+      "djRole": "DJロール",
+      "djNotSet": "未設定 (全員がDJ可能)",
+      "adminRole": "管理者ロール",
+      "adminNotSet": "サーバー管理者のみ",
+      "volume": "音量",
+      "default": "デフォルト",
+      "maximum": "最大",
+      "queue": "キュー",
+      "maxSize": "最大サイズ",
+      "songs": "{count} 曲",
+      "preventDuplicates": "重複を防止",
+      "behavior": "動作",
+      "announcements": "再生通知",
+      "autoLeave": "自動退出",
+      "leaveTimeout": "退出までの時間",
+      "channels": "チャンネル",
+      "voiceChannels": "ボイスチャンネル",
+      "textChannels": "テキストチャンネル",
+      "logChannel": "ログチャンネル",
+      "logDefault": "デフォルト (#bot-commands)",
+      "blacklist": "ブラックリスト",
+      "noBlacklist": "ブラックリストのユーザーはいません",
+      "premium": "プレミアム",
+      "tier": "プラン",
+      "expires": "有効期限",
+      "never": "無期限",
+      "notActive": "未有効",
+      "customization": "カスタマイズ",
+      "language": "言語",
+      "embedColor": "埋め込みの色",
+      "footer": "/settings <option> で設定を変更できます"
+    },
+    "djrole": {
+      "description": "音楽操作用のDJロールを設定する",
+      "prompt": "DJロールを選んでね。このロールを持つユーザーは音楽の再生を操作できます。",
+      "placeholder": "DJロールを選択",
+      "clear": "DJロールを解除 (全員がDJ可能)",
+      "set": "DJロールを {role} に設定しました",
+      "cleared": "DJロールを解除しました。",
+      "clearedEveryone": "DJロールを解除しました。全員がDJコマンドを使えるようになりました。"
+    },
+    "adminrole": {
+      "description": "設定管理用の管理者ロールを設定する",
+      "prompt": "管理者ロールを選んでね。このロールを持つユーザーはBotの設定を変更できます。",
+      "placeholder": "管理者ロールを選択",
+      "clear": "管理者ロールを解除（サーバー管理者のみ）",
+      "set": "管理者ロールを{role}に設定しました",
+      "cleared": "管理者ロールを解除しました。",
+      "clearedAdmins": "管理者ロールを解除しました。設定を変更できるのはサーバー管理者のみです。"
+    },
+    "volume": {
+      "description": "デフォルト音量と最大音量を設定",
+      "optionDefault": "デフォルト音量（0-100）",
+      "optionMax": "最大許容音量（0-100）",
+      "currentTitle": "現在の音量設定",
+      "defaultSet": "デフォルト音量を{value}%に設定しました",
+      "maxSet": "最大音量を{value}%に設定しました",
+      "logDefault": "デフォルト音量",
+      "logMax": "最大音量"
+    },
+    "queue": {
+      "description": "キューの設定",
+      "optionMaxSize": "キューの最大曲数（1-1000）",
+      "optionPreventDuplicates": "キュー内の重複曲を防ぐ",
+      "currentTitle": "現在のキュー設定",
+      "maxSet": "キューの最大曲数を{value}曲に設定しました",
+      "duplicatesSet": "重複防止：{value}"
+    },
+    "behavior": {
+      "description": "Botの動作を設定",
+      "optionAnnouncements": "再生中の曲をテキストチャンネルで通知",
+      "optionAutoLeave": "誰もいなくなったらボイスチャンネルから退出",
+      "optionLeaveTimeout": "空のチャンネルから退出するまでの秒数（30-3600）",
+      "currentTitle": "現在の動作設定",
+      "announcementsSet": "再生中の通知：{value}",
+      "autoLeaveSet": "無人時の自動退出：{value}",
+      "timeoutSet": "退出までの時間を{value}秒に設定しました"
+    },
+    "voicechannels": {
+      "description": "許可するボイスチャンネルを設定",
+      "prompt": "Botが参加できるボイスチャンネルを選んでね。",
+      "placeholder": "許可するボイスチャンネルを選択",
+      "allowAll": "すべてのチャンネルを許可",
+      "set": "許可されたボイスチャンネル：{channels}",
+      "cleared": "すべてのボイスチャンネルが許可されました。"
+    },
+    "textchannels": {
+      "description": "コマンドを使えるテキストチャンネルを設定",
+      "prompt": "Botのコマンドを使えるテキストチャンネルを選んでね。",
+      "placeholder": "許可するテキストチャンネルを選択",
+      "allowAll": "すべてのチャンネルを許可",
+      "set": "許可されたテキストチャンネル：{channels}",
+      "cleared": "すべてのテキストチャンネルが許可されました。"
+    },
+    "logchannel": {
+      "description": "Botのログ（再生中など）を送るチャンネルを設定",
+      "prompt": "Botのログメッセージ（再生中、キュー終了など）を送るチャンネルを選んでね。",
+      "note": "**注意：** ログチャンネルが未設定の場合、Botは#bot-commandsという名前のチャンネルを探します。存在しない場合、ログメッセージは送信されません。",
+      "placeholder": "Botメッセージ用のログチャンネルを選択",
+      "useDefault": "デフォルトを使用（bot-commands）",
+      "disable": "ログメッセージを無効化",
+      "statusDefault": "デフォルト動作を使用中（#bot-commandsを探します）",
+      "statusDisabled": "ログメッセージは無効です",
+      "set": "ログチャンネルを{channel}に設定しました",
+      "reset": "ログチャンネルをデフォルトに戻しました（#bot-commandsがあればそこを使います）。",
+      "disabled": "ログメッセージを無効にしました。"
+    },
+    "blacklist": {
+      "description": "ユーザーのブラックリストを管理",
+      "optionAdd": "ユーザーをブラックリストに追加",
+      "optionRemove": "ユーザーをブラックリストから削除",
+      "title": "ブラックリストのユーザー",
+      "none": "ブラックリストに登録されたユーザーはいません。",
+      "already": "{user}はすでにブラックリストに登録されています。",
+      "added": "{user}をブラックリストに追加し、Botを使えないようにしました。",
+      "notListed": "{user}はブラックリストに登録されていません。",
+      "removed": "{user}をブラックリストから削除しました。"
+    },
+    "language": {
+      "description": "このサーバーでのBotの言語を設定",
+      "prompt": "このサーバーでのBotの言語を選んでね。",
+      "placeholder": "言語を選択",
+      "more": "Botが対応しているすべての言語は{command}で選べます。"
+    },
+    "embedcolor": {
+      "description": "埋め込みの色をカスタマイズ",
+      "optionColor": "16進カラーコード（例：#FF5500）",
+      "invalid": "無効なカラーコードです。#RRGGBBの形式で入力してね（例：#FF5500）",
+      "set": "埋め込みの色を{color}に設定しました"
+    },
+    "reset": {
+      "description": "すべての設定をデフォルトに戻す",
+      "prompt": "本当にすべての設定をデフォルトに戻しますか？この操作は元に戻せません。",
+      "confirm": "はい、すべてリセット",
+      "cancel": "キャンセル",
+      "done": "すべての設定をデフォルトに戻しました。",
+      "cancelled": "リセットをキャンセルしました。"
+    },
+    "stats": {
+      "description": "サーバーの音楽統計を表示",
+      "title": "音楽統計",
+      "songsPlayed": "総再生曲数",
+      "playtime": "総再生時間",
+      "playtimeValue": "{hours}時間{minutes}分"
+    }
   },
   "stats": {
-    "description": "Botとセッションの統計を見る"
+    "description": "Botとセッションの統計を見る",
+    "bot": {
+      "description": "Botの統計を表示",
+      "title": "Bot統計",
+      "servers": "サーバー",
+      "users": "ユーザー",
+      "channels": "チャンネル",
+      "activeQueues": "アクティブなキュー",
+      "tracksPlaying": "再生中のトラック",
+      "uptime": "稼働時間",
+      "memory": "メモリ",
+      "platform": "プラットフォーム"
+    },
+    "uptime": {
+      "description": "Botの稼働時間を表示"
+    },
+    "leaderboard": {
+      "description": "キューのランキングを表示",
+      "line": "{user} - {count}曲"
+    },
+    "history": {
+      "description": "最近再生した曲を表示"
+    },
+    "session": {
+      "description": "現在のセッション情報を表示",
+      "noSession": "このサーバーにはアクティブなセッションがありません。",
+      "title": "セッション情報",
+      "nowPlaying": "再生中",
+      "nothing": "なし",
+      "tracksInQueue": "キュー内の曲",
+      "totalDuration": "合計時間"
+    }
   },
   "user": {
-    "description": "ユーザープロフィールと設定"
+    "description": "ユーザープロフィールと設定",
+    "profile": {
+      "description": "ユーザープロフィールを表示",
+      "optionTarget": "表示するユーザー",
+      "free": "無料"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "再生を開始",
+      "pause": "再生を一時停止",
+      "resume": "再生を再開",
+      "stop": "再生を停止",
+      "skip": "曲をスキップ",
+      "seek": "指定位置にシーク",
+      "seek_forward": "早送りシーク",
+      "seek_backward": "巻き戻しシーク",
+      "forward": "早送り",
+      "rewind": "巻き戻し",
+      "backward": "巻き戻し",
+      "replay": "曲を最初から再生",
+      "restart": "キューを最初から再生",
+      "volume_change": "音量を変更",
+      "shuffle": "キューをシャッフル",
+      "loop": "ループモードを変更",
+      "loopqueue": "キューのループモードを変更",
+      "setting_change": "設定を更新",
+      "queue_clear": "キューをクリア",
+      "clear": "キューをクリア",
+      "join": "チャンネルに参加",
+      "leave": "チャンネルから退出",
+      "autoplay": "自動再生を切り替え",
+      "previous": "前の曲を再生",
+      "jump": "曲にジャンプ",
+      "swap": "曲を入れ替え",
+      "reverse": "キューを逆順に",
+      "sort": "キューを並べ替え",
+      "removerange": "範囲を削除",
+      "removeduplicates": "重複を削除",
+      "removelast": "最後の曲を削除",
+      "voteskip": "投票でスキップ",
+      "grab": "曲を保存",
+      "insert": "曲を挿入",
+      "removecurrent": "再生中の曲を削除"
+    },
+    "detail": {
+      "on": "オン",
+      "off": "オフ",
+      "tracks": "{count}曲",
+      "effectsCleared": "エフェクトをクリア",
+      "bassBoost": "低音ブースト {level}",
+      "effectOn": "{effect}を有効化",
+      "effectOff": "{effect}を無効化",
+      "previousTrack": "前の曲",
+      "currentTrack": "再生中の曲",
+      "queue": "キュー"
+    },
+    "settings": {
+      "title": "設定が更新されました",
+      "changed": "{user}が{setting}を変更しました",
+      "before": "変更前",
+      "after": "変更後",
+      "notSet": "未設定",
+      "userId": "ユーザーID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature}はFounder特典です",
+    "description": "Founderは月額{price}、先着{spots}名限定で、320kbps音質、24時間モード、曲の長さ制限なし、Founderロールが利用できます。",
+    "afterJoin": "参加後の手順",
+    "afterJoinSteps": "1. Patreonの設定でDiscordアカウントを連携\n2. このサーバーで`/premium link`を実行",
+    "becomeFounder": "Founderになる",
+    "voteTitle": "または無料で投票",
+    "voteBody": "top.ggで投票すると12時間利用できます。`/vote`を使ってね。",
+    "voteButton": "top.ggで投票"
+  },
+  "dashboardPlay": {
+    "noQuery": "まず曲名かリンクを入力してね。",
+    "notMember": "このサーバーで音楽を再生するにはメンバーである必要があります。",
+    "noVoiceChannel": "Discordでボイスチャンネルに参加するか、ここで選んでからもう一度試してね。",
+    "channelGone": "そのボイスチャンネルはもう存在しません。別のチャンネルを選んでね。",
+    "memberCantJoin": "{channel}にアクセスできません。参加できるボイスチャンネルを選んでね。",
+    "nowPlaying": "再生中: {title}",
+    "added": "キューに追加しました (#{position}): {title}",
+    "playlist": "{title}から{count}曲を追加しました"
+  },
+  "voiceStatus": {
+    "title": "ボイスチャンネルのステータス",
+    "missing": "**ボイスチャンネルステータスの設定**権限がないため、ボイスチャンネル名の下に再生中の曲を表示できません。再認証して権限を追加してね。設定はそのまま残ります。",
+    "reauthorize": "再認証"
+  },
+  "guess": {
+    "description": "30秒のプレビューで曲を当てよう。ボイスで友達と一緒に",
+    "startDescription": "ボイスチャンネルで曲当てゲームを開始",
+    "stopDescription": "曲当てゲームを停止",
+    "optionRounds": "出題する曲数（3〜15、デフォルト5）",
+    "optionGenre": "流す音楽のジャンル（デフォルト：トップヒット）",
+    "genre": {
+      "top": "トップヒット",
+      "pop": "ポップ",
+      "rock": "ロック",
+      "hiphop": "ヒップホップ",
+      "latin": "ラテン",
+      "electronic": "エレクトロニック",
+      "80s": "80年代",
+      "90s": "90年代",
+      "2000s": "2000年代"
+    },
+    "title": "曲当てゲーム",
+    "trackTitle": "曲当てゲーム · ラウンド {round}",
+    "notInVoice": "まずボイスチャンネルに参加してから、ゲームを開始してね。",
+    "alreadyRunning": "このサーバーではすでに曲当てゲームが進行中です。",
+    "musicPlaying": "ここで音楽が再生中です。先に停止（/stop）してからゲームを開始してね。",
+    "otherChannel": "{channel} に常駐中（24/7）です。そこからゲームを開始してね。",
+    "noVoicePermission": "あなたのボイスチャンネルに参加または発言できません。",
+    "noChannelAccess": "このチャンネルには投稿できません。メッセージを送れるチャンネルでゲームを開始してね。",
+    "noTracks": "今はそのジャンルの曲を読み込めませんでした。別のジャンルを試すか、少し待ってからもう一度どうぞ。",
+    "connectFailed": "ボイスチャンネルに参加できませんでした。もう一度試してね。",
+    "introMeta": "{rounds} ラウンド · {genre}",
+    "introBody": "{channel} で聴いて、流れている曲を選んでね。最初に正解した人に得点が入り、早いほど高得点。間違えるとそのラウンドは回答できなくなります。",
+    "introStarting": "まもなく1曲目…",
+    "introOver": "このゲームは終了しました。",
+    "stopButton": "ゲームを停止",
+    "roundTitle": "ラウンド {round}/{total}",
+    "roundPrompt": "流れている曲はどれ？",
+    "roundCloses": "回答締め切り {time}",
+    "roundRules": "最初の正解者に得点",
+    "correctBy": "{user} が {seconds} 秒で正解！（+{points}）",
+    "timeUp": "時間切れ！正解者なし。",
+    "roundStopped": "ゲームを停止しました。",
+    "answerWas": "正解は **{artist}** の **{title}** でした",
+    "scores": "スコア",
+    "scoreLine": "{user} · {points} pt（{correct} 問正解）",
+    "noScores": "まだ得点はありません。",
+    "nextSoon": "まもなく次の曲…",
+    "finalSoon": "まもなく最終スコア発表…",
+    "finalTitle": "最終スコア",
+    "winner": "{user} が {points} ポイントで優勝！",
+    "noWinner": "今回は誰も得点しませんでした。",
+    "playAgain": "{command} でもう一度遊ぼう",
+    "stoppedBy": "{user} がゲームを停止しました。",
+    "stoppedPlain": "ゲームを停止しました。",
+    "endedEmpty": "全員がボイスチャンネルから退出したため、ゲームは終了しました。",
+    "endedDisconnected": "ボイスから切断されたため、ゲームは終了しました。",
+    "endedMusic": "音楽の再生が始まったため、ゲームは終了しました。",
+    "endedError": "曲のプレビューを再生できなかったため、ゲームは終了しました。",
+    "wrong": "不正解！このラウンドはもう回答できません。",
+    "alreadyAnswered": "このラウンドはもう回答済みです。",
+    "roundOver": "このラウンドは終了しました。",
+    "gameOver": "このゲームは終了しました。",
+    "joinToPlay": "{channel} に参加して遊ぼう。",
+    "stopNotAllowed": "ゲームを停止できるのは、開始した人か「サーバー管理」権限を持つ人だけです。",
+    "noGame": "ここでは曲当てゲームは行われていません。",
+    "stopped": "ゲームを停止しました。",
+    "blockedDuringGame": "このサーバーで曲当てゲームが進行中です。終わるまで待つか、{stop} で終了してね。"
   }
 }

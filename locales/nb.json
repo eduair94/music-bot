@@ -29,13 +29,31 @@
   "loop": {
     "description": "Slå på loop",
     "errorNotQueue": "Det er ingenting som spilles av.",
-    "result": "Loop er nå {loop}"
+    "result": "Loop er nå {loop}",
+    "optionMode": "Hva som skal gjentas",
+    "mode": {
+      "off": "Av",
+      "track": "Denne sangen",
+      "queue": "Hele køen"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Det er ingenting som spilles av.",
     "lyricsNotFound": "Ingen tekster funnet for {title}.",
     "embedTitle": "{title} - Sangtekster",
-    "description": "Sangtekst for sangen som spilles nå, eller en hvilken som helst sang"
+    "description": "Sangtekst for sangen som spilles nå, eller en hvilken som helst sang",
+    "liveTitle": "Live-sangtekst",
+    "liveButton": "Live-sangtekst",
+    "liveHint": "Synkronisert sangtekst er tilgjengelig: trykk på Live-sangtekst for å følge med.",
+    "liveStop": "Stopp",
+    "livePaused": "Satt på pause",
+    "liveEnded": "Live-sangteksten er avsluttet.",
+    "liveReplaced": "Live-sangteksten er flyttet til en nyere melding.",
+    "liveStoppedBy": "Live-sangteksten ble stoppet av {user}.",
+    "liveNoSync": "Denne sangen har ingen synkronisert tekst, så live-modus er ikke tilgjengelig.",
+    "liveNoPermission": "Bare den som startet live-sangteksten eller noen med Administrer meldinger kan stoppe den.",
+    "liveNotDuringGame": "Sangtekster er skjult mens et gjett sangen-spill pågår.",
+    "liveVersionHint": "Tilpasset en annen versjon av sangen, så linjene kan komme litt i utakt"
   },
   "move": {
     "description": "Flytt sanger rundt i køen",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Ingenting spilles på denne serveren**",
     "currentPage": "Gjeldende side -",
     "embedTitle": "Sangkø\n",
-    "embedCurrentSong": "**Gjeldende sang – [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Gjeldende sang – [{title}]({url})**\n\n{info}",
+    "optionPage": "Sidenummer"
   },
   "remove": {
     "description": "Fjern sang fra køen",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Gjeldende volumet er: **{volume}%**",
     "errorNotNumber": "Bruk et tall for å stille inn volumet.",
     "errorNotValid": "Vennligst bruk et tall mellom 0 - 100.",
-    "result": "Volum satt til: **{arg}%**"
+    "result": "Volum satt til: **{arg}%**",
+    "errorRange": "Volumet må være mellom 0 og {max}."
   },
   "common": {
     "on": "**på**",
@@ -208,7 +228,41 @@
     "disabled": "**deaktivert**",
     "errorNotChannel": "Du må først bli med i en talekanal!",
     "cooldownMessage": "vennligst vent {time} sekund(er) til før du bruker `{name}`-kommandoen på nytt.",
-    "errorCommand": "Det oppsto en feil under utførelse av denne kommandoen."
+    "errorCommand": "Det oppsto en feil under utførelse av denne kommandoen.",
+    "djRequired": "Du trenger DJ-rollen for å bruke denne kommandoen.",
+    "guild_only": "Denne kommandoen fungerer bare i en server.",
+    "unknown": "Ukjent",
+    "unknownError": "Ukjent feil",
+    "unknownSubcommand": "Ukjent underkommando.",
+    "voiceChannel": "talekanal",
+    "playerInitializing": "Musikkspilleren starter fortsatt opp. Prøv igjen om noen sekunder.",
+    "voiceChannelNotAllowed": "Boten har ikke lov til å spille i denne talekanalen. Bruk en tillatt kanal.",
+    "queueFull": "Køen er full! Maks {max} sanger er tillatt.",
+    "invalidFileType": "Ugyldig filtype. Støttede formater: {formats}",
+    "fileTooLarge": "Filen er for stor ({size}MB). Maks størrelse er {max}MB.",
+    "optionToggle": "På eller av (standard: veksle)",
+    "requestedBy": "Ønsket av {user}",
+    "yes": "Ja",
+    "no": "Nei",
+    "loop": {
+      "off": "Av",
+      "track": "Spor",
+      "queue": "Kø"
+    },
+    "field": {
+      "title": "Tittel",
+      "artist": "Artist",
+      "duration": "Varighet",
+      "tracks": "Spor",
+      "source": "Kilde",
+      "requestedBy": "Ønsket av",
+      "loopMode": "Gjentakelsesmodus",
+      "volume": "Volum",
+      "loadTime": "Lastetid",
+      "positionInQueue": "Plass i køen",
+      "status": "Status",
+      "tier": "Nivå"
+    }
   },
   "Invite me to your server!": "Inviter meg til serveren din!",
   "Invite": "Inviter",
@@ -217,7 +271,8 @@
     "errorNotQueue": "Ingenting spilles nå.",
     "errorInvalidTime": "Ugyldig tidsformat. Bruk formater som: 1:30, 90, 1m30s",
     "errorOutOfRange": "Tiden må være mellom 0:00 og {duration}",
-    "result": "<@{author}> ⏩ hoppet til **{time}**"
+    "result": "<@{author}> ⏩ hoppet til **{time}**",
+    "optionTime": "Tidspunkt å hoppe til (f.eks. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Spol fremover i sporet med angitt antall sekunder",
@@ -228,7 +283,8 @@
   "rewind": {
     "description": "Spol tilbake i sporet med angitt antall sekunder",
     "errorNotQueue": "Ingenting spilles nå.",
-    "result": "<@{author}> ⏪ spolte **{seconds}s** tilbake (nå på {position})"
+    "result": "<@{author}> ⏪ spolte **{seconds}s** tilbake (nå på {position})",
+    "optionSeconds": "Antall sekunder å spole tilbake"
   },
   "replay": {
     "description": "Start nåværende spor på nytt fra begynnelsen",
@@ -265,14 +321,24 @@
   "autoplay": {
     "description": "Slå autoavspilling av/på (spiller lignende sanger når køen er tom)",
     "errorNotQueue": "Det finnes ingen aktiv kø.",
-    "result": "🔄 Autoavspilling er nå {status}"
+    "result": "🔄 Autoavspilling er nå {status}",
+    "optionDefault": "Gjør dette også til standard for denne serveren (Administrer server)"
   },
   "history": {
     "description": "Vis nylig spilte spor",
     "errorNotQueue": "Det finnes ingen aktiv kø.",
     "errorEmpty": "Ingen spor i historikken ennå.",
     "embedTitle": "Nylig spilt",
-    "footer": "Viser de siste {count} sporene"
+    "footer": "Viser de siste {count} sporene",
+    "title": "Nylig spilt",
+    "titleUser": "Nylig spilt · ønsket av {user}",
+    "empty": "Ingenting har blitt spilt i denne serveren de siste 30 dagene.",
+    "emptyUser": "{user} har ikke ønsket noen sanger her de siste 30 dagene.",
+    "summary": "Siste {count} avspillinger",
+    "playAgain": "Spill igjen …",
+    "optionUser": "Vis bare sanger dette medlemmet har ønsket",
+    "unavailable": "Avspillingshistorikken er ikke tilgjengelig akkurat nå. Prøv igjen om et minutt.",
+    "gone": "Den sangen er ikke lenger i historikken."
   },
   "previous": {
     "description": "Spill forrige spor",
@@ -285,7 +351,8 @@
     "errorNotQueue": "Det finnes ingen kø.",
     "errorInvalidPosition": "Ugyldig posisjon. Køen har bare {max} spor.",
     "errorNotFound": "Fant ikke noe spor på den posisjonen.",
-    "result": "<@{author}> ⏭️ hoppet til **{title}**"
+    "result": "<@{author}> ⏭️ hoppet til **{title}**",
+    "optionPosition": "Plass i køen å hoppe til"
   },
   "about": {
     "description": "Vis informasjon om boten",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Få lenken til dashbordet",
     "embedDescription": "Gå til nettdashbordet for å administrere serverinnstillingene, se køen og mer!",
-    "footer": "Styr musikkopplevelsen din"
+    "footer": "Styr musikkopplevelsen din",
+    "title": "Bot-dashbord",
+    "features": "Funksjoner",
+    "featuresList": "• Konfigurer serverinnstillinger\n• Se køen og avspillingskontroller\n• Administrer spillelister og samlinger\n• Se lyttestatistikk\n• Administrer premiumfunksjoner",
+    "open": "Åpne dashbord"
   },
   "clean": {
     "description": "Slett botmeldinger fra kanalen",
@@ -377,7 +448,9 @@
       "description": "Se alle samlingene dine",
       "title": "📁 Dine samlinger",
       "empty": "Du har ingen samlinger ennå. Lag en med `/collections create`!",
-      "footer": "Totalt: {count} samlinger"
+      "footer": "Totalt: {count} samlinger",
+      "select": "Åpne en samling …",
+      "more": "… og {count} til. Åpne dem med /collections view."
     },
     "create": {
       "description": "Lag en ny samling",
@@ -399,7 +472,12 @@
       "tracksField": "Spor",
       "durationField": "Varighet",
       "shareCodeField": "Delingskode",
-      "andMore": "...og {count} spor til"
+      "andMore": "...og {count} spor til",
+      "play": "Spill",
+      "addToQueue": "Legg til i køen",
+      "summary": "{count} spor · {duration}",
+      "page": "Side {page}/{pages}",
+      "importedFrom": "Importert fra {source}"
     },
     "save": {
       "description": "Lagre gjeldende kø som en samling",
@@ -411,7 +489,9 @@
       "description": "Last inn en samling i køen",
       "nameOption": "Navn på samlingen som skal lastes inn",
       "empty": "Denne samlingen er tom.",
-      "success": "📂 Lastet inn **{count}** spor fra samlingen **{name}**!"
+      "success": "📂 Lastet inn **{count}** spor fra samlingen **{name}**!",
+      "queuedNext": "De spilles rett etter den nåværende sangen.",
+      "skipped": "{count} hoppet over (lengre enn serveren tillater, over køgrensen eller ikke funnet)."
     },
     "rename": {
       "description": "Gi nytt navn til en samling",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Delingskoden du vil klone fra",
       "nameOption": "Navn på den nye samlingen din",
       "invalidCode": "Ugyldig eller utløpt delingskode.",
-      "success": "📋 Klonet **{count}** spor til den nye samlingen **{name}**!"
+      "success": "📋 Klonet **{count}** spor til den nye samlingen **{name}**!",
+      "clonedFrom": "Klonet fra {name}"
     },
     "merge": {
       "description": "Slå sammen en samling med en annen",
@@ -457,6 +538,21 @@
       "positionOption": "Posisjonen til sporet som skal fjernes (starter på 1)",
       "invalidPosition": "Ugyldig posisjon. Samlingen har {max} spor.",
       "success": "🗑️ Fjernet **{track}** fra samlingen **{name}**."
+    },
+    "error": "Noe gikk galt med samlingene dine. Prøv igjen.",
+    "trackCount": "{count} spor",
+    "gone": "Den samlingen finnes ikke lenger.",
+    "notYours": "Denne menyen tilhører noen andre. Bruk /collections list for å se dine egne.",
+    "import": {
+      "description": "Importer en spilleliste fra Spotify, YouTube, Deezer eller Apple Music",
+      "urlOption": "Lenke til spilleliste (Spotify, YouTube, Deezer, Apple Music-album)",
+      "nameOption": "Navn på den nye samlingen (standard: spillelistens tittel)",
+      "invalidUrl": "Det ser ikke ut som en lenke. Lim inn en spilleliste-URL fra Spotify, YouTube, Deezer eller et Apple Music-album.",
+      "failed": "Jeg klarte ikke å lese den spillelisten. Sjekk at den er offentlig og at lenken er fra Spotify, YouTube, Deezer eller et Apple Music-album.",
+      "exists": "Du har allerede en samling som heter **{name}**. Velg et annet navn med `name`-valget.",
+      "success": "📥 Importerte **{count}** spor fra {source} til **{name}**.",
+      "skipped": "{count} hoppet over (over grensen på {max} spor per samling, eller ikke spillbare).",
+      "spotifyCap": "Spotify deler bare de første 100 sangene fra en spillelistelenke."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Gjør om tekst til tale og spill den av i talekanalen",
     "errorNotAvailable": "❌ TTS-tjenesten er ikke tilgjengelig. Kontakt bot-administratoren.",
     "errorGenerate": "❌ Kunne ikke generere tale. Prøv igjen.",
-    "success": "🎤 Spiller: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Spiller: \"{text}\" ({language}, {voice})",
+    "optionText": "Tekst som skal gjøres om til tale",
+    "optionLanguage": "Språk for tale (bruker lagret oppsett hvis ikke angitt)",
+    "optionVoice": "Stemme som skal brukes (bruker lagret oppsett hvis ikke angitt)"
   },
   "sayconfig": {
-    "description": "Konfigurer TTS-innstillingene dine (tekst til tale)"
+    "description": "Konfigurer TTS-innstillingene dine (tekst til tale)",
+    "view": {
+      "description": "Se ditt nåværende TTS-oppsett",
+      "title": "TTS-oppsett",
+      "noConfig": "Ingen egendefinert konfigurasjon. Bruker standardverdier.",
+      "mode": "Modus",
+      "language": "Språk",
+      "voice": "Stemme",
+      "voiceDescription": "Stemmebeskrivelse",
+      "styleInstruction": "Stilinstruksjon",
+      "referenceAudio": "Referanselyd",
+      "referenceAudioSet": "Angitt",
+      "referenceText": "Referansetekst"
+    },
+    "mode": {
+      "description": "Velg TTS-modus (custom_voice eller voice_clone)",
+      "option": "TTS-modus",
+      "customVoice": "Egendefinert stemme (standard)",
+      "voiceClone": "Stemmekloning",
+      "set": "TTS-modus satt til **{mode}**"
+    },
+    "language": {
+      "description": "Velg standardspråk",
+      "option": "Språk for tale",
+      "set": "Standardspråk satt til **{language}**"
+    },
+    "voice": {
+      "description": "Velg standardstemme/-taler",
+      "option": "Stemme som skal brukes",
+      "set": "Standardstemme satt til **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Angi stemmebeskrivelse for generering av egendefinert stemme",
+      "option": "Stemmebeskrivelse (f.eks. 'dyp mannsstemme med rolig tone')",
+      "set": "Stemmebeskrivelse satt til: \"{text}\""
+    },
+    "style": {
+      "description": "Angi stilinstruksjon for stemmegenerering",
+      "option": "Stilinstruksjon (f.eks. 'snakk sakte og tydelig')",
+      "set": "Stilinstruksjon satt til: \"{text}\""
+    },
+    "reference": {
+      "description": "Angi referanselyd og -tekst for stemmekloning",
+      "optionAudio": "Referanselydfil (MP3, WAV osv.)",
+      "optionText": "Transkripsjon av referanselyden",
+      "saved": "Referanselyd lastet opp og lagret!",
+      "text": "Referansetekst: \"{text}\"",
+      "modeSet": "Modus automatisk satt til **{mode}**",
+      "failed": "Kunne ikke laste opp referanselyd. Prøv igjen."
+    },
+    "reset": {
+      "description": "Tilbakestill TTS-innstillingene dine til standard",
+      "done": "TTS-innstillinger tilbakestilt til standard.",
+      "none": "Fant ingen egendefinerte innstillinger å tilbakestille."
+    }
   },
   "radio": {
     "notInVoice": "Du må være i en talekanal.",
@@ -649,7 +802,8 @@
     "body": "Stemmer hjelper flere servere å finne boten. Hver stemme på top.gg låser opp **24/7-modus** og **studiokvalitet** for deg i 12 timer.",
     "active": "Stemmefordelene dine er aktive i {time} til.",
     "inactive": "Ingen aktiv stemme. Stem under, fordelene starter innen ett minutt.",
-    "notListed": "Stemming åpner når boten er listet. Takk for at du vil hjelpe!"
+    "notListed": "Stemming åpner når boten er listet. Takk for at du vil hjelpe!",
+    "heading": "Stem på {bot}"
   },
   "leaderboard": {
     "description": "Se toppliste over spor i økten",
@@ -742,7 +896,8 @@
     "noQueue": "Det finnes ingen aktiv kø.",
     "invalidChannel": "Ugyldig kanal. Velg en tekstkanal.",
     "title": "📢 Kanal byttet",
-    "success": "Sender nå kunngjøringer til {channel}."
+    "success": "Sender nå kunngjøringer til {channel}.",
+    "optionChannel": "Kanal å koble til på nytt (standard er nåværende)"
   },
   "disabledcommands": {
     "description": "Vis alle deaktiverte kommandoer på denne serveren",
@@ -939,7 +1094,28 @@
     "user_free": "Du er på **Free**-nivået.",
     "upgrade": "Oppgrader til premium",
     "upgrade_message": "Få premium-funksjoner ved å støtte oss på Patreon!",
-    "description": "Se premium-fordeler"
+    "description": "Se premium-fordeler",
+    "view": {
+      "description": "Se tilgjengelige fordeler"
+    },
+    "user": {
+      "description": "Se dine nåværende fordeler",
+      "title": "Dine fordeler",
+      "premium": "Du har **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Lyd: {bitrate}kbps",
+      "audioFilters": "Lydfiltre",
+      "stay247": "24/7-modus",
+      "free": "Du er på **Gratis**-nivået. Skaff deg premium på Patreon!"
+    },
+    "overview": {
+      "title": "Premium-fordeler",
+      "intro": "Founder er begrenset til {spots} plasser, og prisen er låst.",
+      "freeName": "Gratis — {price}",
+      "freePerks": "128kbps lyd\nKø, spillelister og sangtekster\nAlle kommandoer",
+      "founderName": "Founder / Betatester — {price}/måned",
+      "founderPerks": "320kbps lyd\nLydfiltre\n24/7-modus\nPrioritert kø\nFounder-rolle og direkte support"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Ingen premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Autoplay av.",
     "volumeLimit": "Denne serveren begrenser volumet til {max}%.",
     "lyricsButton": "Sangtekst",
-    "saveButton": "Lagre"
+    "saveButton": "Lagre",
+    "trackFailed": "Klarte ikke å spille **{title}**, hopper over. Prøv en annen lenke eller et annet søk.",
+    "guessRunning": "Et gjett sangen-spill pågår her. Spilleren kommer tilbake når det er ferdig."
   },
   "queueView": {
     "title": "Kø",
@@ -1040,7 +1218,8 @@
     "commands": "Kommandoer",
     "dashboard": "Dashbord",
     "support": "Supportserver",
-    "vote": "Stem"
+    "vote": "Stem",
+    "voiceStatusHint": "Vil du vise sangen som spilles under navnet på talekanalen? [Autoriser meg på nytt]({url}) for å gi tillatelsen Angi status for talekanal."
   },
   "router": {
     "guildOnly": "Denne kommandoen fungerer bare i en server.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Språk (auto følger hvert medlems Discord-språk)",
     "auto": "Automatisk (hvert medlems Discord-språk)",
     "set": "Språket er satt til {language}.",
-    "needManage": "Du trenger tillatelsen Administrer server for å endre språket."
+    "needManage": "Du trenger tillatelsen Administrer server for å endre språket.",
+    "unknown": "Ukjent språk."
   },
   "links": {
     "website": "Nettside",
@@ -1100,45 +1280,741 @@
     "invite": "Inviter"
   },
   "commanddisable": {
-    "description": "Deaktiver kommandoer på denne serveren"
+    "description": "Deaktiver kommandoer på denne serveren",
+    "optionCommand": "Kommando som skal deaktiveres",
+    "protected": "Kan ikke deaktivere viktig kommando: {command}",
+    "notFound": "Fant ikke kommando: {command}",
+    "alreadyDisabled": "Kommandoen {command} er allerede deaktivert.",
+    "title": "Kommando deaktivert",
+    "done": "Kommandoen {command} er deaktivert på denne serveren.\n\nBruk `/commandenable` for å aktivere den igjen."
   },
   "commanddisableall": {
-    "description": "Deaktiver alle kommandoer unntatt de viktigste"
+    "description": "Deaktiver alle kommandoer unntatt de viktigste",
+    "title": "Alle kommandoer deaktivert",
+    "done": "Deaktiverte **{count}** kommandoer.\n\nBeskyttede kommandoer som fortsatt er tilgjengelige:\n{commands}\n\nBruk `/commandenableall` for å gjenopprette alle kommandoer."
   },
   "commandenable": {
-    "description": "Aktiver en deaktivert kommando"
+    "description": "Aktiver en deaktivert kommando",
+    "optionCommand": "Kommando som skal aktiveres",
+    "notDisabled": "Kommandoen {command} er ikke deaktivert.",
+    "title": "Kommando aktivert",
+    "done": "Kommandoen {command} er aktivert igjen på denne serveren."
   },
   "commandenableall": {
-    "description": "Aktiver alle deaktiverte kommandoer"
+    "description": "Aktiver alle deaktiverte kommandoer",
+    "title": "Alle kommandoer aktivert",
+    "done": "Aktiverte **{count}** kommandoer igjen.\n\nAlle kommandoer er nå tilgjengelige.",
+    "none": "Ingen kommandoer var deaktivert."
   },
   "effects": {
-    "description": "Administrer lydeffekter"
+    "description": "Administrer lydeffekter",
+    "optionEnabled": "Slå på eller av",
+    "nothingPlaying": "Ingen musikk spilles akkurat nå.",
+    "unknown": "Ukjent effekt.",
+    "enabledBy": "{effect}-effekt slått på av {user}",
+    "disabledBy": "{effect}-effekt slått av av {user}",
+    "8d": {
+      "description": "Bruk 8D-lydeffekt (roterende lyd)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Bruk bassforsterkning",
+      "optionLevel": "Bassnivå",
+      "level": {
+        "off": "Av",
+        "low": "Lav",
+        "medium": "Middels",
+        "high": "Høy"
+      },
+      "disabledBy": "Bassforsterkning slått av av {user}",
+      "alreadyOff": "Bassforsterkning er allerede av.",
+      "setBy": "Bassforsterkning satt til **{level}** av {user}"
+    },
+    "distortion": {
+      "description": "Bruk forvrengningseffekt",
+      "name": "Forvrengning"
+    },
+    "haas": {
+      "description": "Bruk haas-effekt (romlig lyd)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Demp vokal (karaokemodus)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Bruk nightcore-effekt (høyere tonehøyde + tempo)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Bruk vaporwave-effekt (lavere tonehøyde + tempo)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Bruk pulsator-effekt",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Spill av lyden baklengs",
+      "name": "Revers"
+    },
+    "tremolo": {
+      "description": "Legg på tremolo-effekt",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Legg på vibrato-effekt",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Legg på lofi-effekt",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Legg på surround-lydeffekt",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Vis aktive effekter",
+      "title": "Aktive effekter",
+      "empty": "Ingen aktive effekter"
+    },
+    "clear": {
+      "description": "Fjern alle effekter",
+      "done": "Alle effekter er fjernet."
+    }
   },
   "info": {
-    "description": "Botinformasjon og hjelp"
+    "description": "Botinformasjon og hjelp",
+    "about": {
+      "description": "Om denne boten",
+      "statistics": "Statistikk",
+      "servers": "Servere",
+      "commands": "Kommandoer",
+      "uptime": "Oppetid",
+      "system": "System",
+      "memory": "Minne"
+    },
+    "faq": {
+      "description": "Ofte stilte spørsmål"
+    },
+    "support": {
+      "description": "Få lenke til supportserveren",
+      "title": "Support",
+      "body": "Trenger du hjelp? Bli med på supportserveren vår:",
+      "join": "Klikk for å bli med",
+      "reportIssues": "Rapporter problemer",
+      "reportIssuesValue": "Sjekk `/info faq` først, og spør så i support",
+      "suggestions": "Forslag",
+      "suggestionsValue": "Del ideer i forslagskanalen vår"
+    },
+    "queue": {
+      "description": "Detaljert køinformasjon",
+      "noQueue": "Ingen aktiv kø.",
+      "title": "Køinformasjon",
+      "contributors": "Bidragsytere"
+    },
+    "song": {
+      "description": "Detaljer om gjeldende sang",
+      "noTrack": "Ingenting spilles nå.",
+      "title": "Spilles nå"
+    },
+    "nextup": {
+      "description": "Vis neste spor i køen",
+      "empty": "Ingen spor i køen.",
+      "title": "Kommer snart",
+      "footer": "{count} spor i køen"
+    },
+    "changelogs": {
+      "description": "Siste oppdateringer og endringer",
+      "title": "Siste oppdateringer",
+      "intro": "Siste endringer og forbedringer:",
+      "newFeatures": "Nye funksjoner",
+      "newFeaturesList": "• Samlede kommandoer for bedre oversikt\n• Forbedret system for lydeffekter\n• Bedre køhåndtering",
+      "improvements": "Forbedringer",
+      "improvementsList": "• Raskere responstid på kommandoer\n• Bedre feilhåndtering\n• Lavere minnebruk",
+      "bugFixes": "Feilrettinger",
+      "bugFixesList": "• Rettet avspillingsproblemer\n• Løst problemer med køsynkronisering"
+    }
   },
   "patreon": {
-    "description": "Sjekk Patreon-statusen din og synkroniser fordeler"
+    "description": "Sjekk Patreon-statusen din og synkroniser fordeler",
+    "notConfigured": "Patreon-integrasjon er ikke satt opp for denne boten.",
+    "howToLink": "Slik kobler du til",
+    "premiumActive": "Premium aktiv",
+    "patronStatus": {
+      "active": "Aktiv patron",
+      "declined": "Betaling avvist",
+      "former": "Tidligere patron",
+      "none": "Ikke patron"
+    },
+    "status": {
+      "description": "Sjekk Patreon-statusen og fordelene dine",
+      "title": "Patreon-status",
+      "yourTitle": "Din Patreon-status",
+      "notLinked": "Du er ikke koblet til en Patreon-konto ennå.",
+      "howToLinkSteps": "1. Gå til [Patreon]({patreon})\n2. Koble til Discord-kontoen din under Settings → Connections\n3. Abonner på Patreon-siden vår\n4. Bruk `/patreon sync` for å oppdatere fordelene dine",
+      "pledgeAmount": "Beløp",
+      "perMonth": "{amount}/måned",
+      "lifetimeSupport": "Total støtte",
+      "lastCharge": "Siste trekk",
+      "thanks": "Takk for støtten! Du har tilgang til premium-funksjoner.",
+      "declined": "Den siste betalingen din ble avvist. Oppdater betalingsmåten på Patreon for å få tilbake fordelene.",
+      "former": "Støtten din er avsluttet. Forny på Patreon for å få tilbake fordelene!",
+      "error": "Det oppstod en feil under sjekk av Patreon-statusen din. Prøv igjen senere."
+    },
+    "sync": {
+      "description": "Synkroniser Patreon-dataene dine for å oppdatere fordelene",
+      "completeTitle": "Patreon-synkronisering fullført",
+      "success": "Patreon-dataene dine er synkronisert!",
+      "title": "Patreon-synkronisering",
+      "notFound": "Fant ingen Patreon-konto koblet til Discord-kontoen din.",
+      "howToLinkSteps": "1. Gå til [Patreon-innstillinger]({settings})\n2. Klikk på **Connections**\n3. Koble til **Discord**-kontoen din\n4. Sørg for at du støtter kampanjen vår\n5. Kjør `/patreon sync` på nytt",
+      "error": "Det oppstod en feil under synkronisering av Patreon-dataene dine. Prøv igjen senere."
+    },
+    "info": {
+      "description": "Les om Patreon-fordeler og hvordan du kobler til kontoen din",
+      "title": "Patreon-fordeler",
+      "intro": "Støtt oss på Patreon for å låse opp eksklusive fordeler!",
+      "benefits": "Premium-fordeler",
+      "benefitsList": "• Høyere lydkvalitet\n• Lengre spillelister\n• Prioritert kø\n• Eksklusive kommandoer\n• Tidlig tilgang til nye funksjoner",
+      "howToGet": "Slik får du Premium",
+      "howToGetSteps": "1. Besøk [Patreon-siden]({patreon}) vår\n2. Velg et nivå som passer deg\n3. Koble til Discord under Patreon Settings → Connections\n4. Bruk `/patreon sync` for å aktivere fordelene",
+      "troubleshooting": "Feilsøking",
+      "troubleshootingList": "• Sørg for at Discord er koblet til i Patreon-innstillingene dine\n• Betalingen må være gjennomført (ikke avvist)\n• Prøv `/patreon sync` etter tilkobling\n• Fordelene oppdateres automatisk hvert 30. minutt"
+    }
   },
   "play_file": {
-    "description": "Spill av en lydfil fra et vedlegg"
+    "description": "Spill av en lydfil fra et vedlegg",
+    "optionFile": "Lydfil som skal spilles (MP3, WAV, FLAC, M4A, OGG osv.)",
+    "optionTitle": "Valgfri egen tittel for sporet",
+    "cantPlay": "Kunne ikke spille av filen: {name}",
+    "nowPlayingTitle": "Spiller fil nå",
+    "addedTitle": "Fil lagt til i køen",
+    "format": "Format",
+    "size": "Størrelse",
+    "error": {
+      "load": "Kunne ikke laste inn filen: {name}\n\nMulige årsaker:\n• Filformatet støttes ikke\n• Filen er skadet\n• Fil-URL-en har utløpt",
+      "timeout": "Nedlastingen av filen tok for lang tid. Filen kan være for stor, eller tilkoblingen er treg.",
+      "forbidden": "Ingen tilgang til filen. Last den opp på nytt og prøv igjen.",
+      "notFound": "Fant ikke filen. Vedleggs-URL-en kan ha utløpt.",
+      "generic": "Det oppstod en feil under avspilling av filen."
+    }
   },
   "play_spotify": {
-    "description": "Søk etter og spill av en sang fra Spotify"
+    "description": "Søk etter og spill av en sang fra Spotify",
+    "optionQuery": "Sangnavn, artist eller Spotify-URL å søke etter",
+    "cantPlayLink": "Kunne ikke spille av Spotify-lenken: {query}",
+    "playlistFallback": "Spotify-spilleliste",
+    "playlistAdded": "Spotify-spilleliste lagt til",
+    "songs": "{count} sanger",
+    "nowPlaying": "Spilles nå",
+    "trackBy": "{title} av {author}",
+    "nowPlayingTitle": "Spilles nå fra Spotify",
+    "addedTitle": "Lagt til i køen fra Spotify",
+    "noResults": "Fant ingen resultater på Spotify for: {query}\n\nPrøv:\n• Andre søkeord\n• Å legge til artistnavnet\n• En direkte Spotify-lenke",
+    "notOnYoutube": "Fant ikke på YouTube: {title} av {artist}",
+    "error": {
+      "auth": "Dette Spotify-sporet krever autentisering. Prøv et annet spor.",
+      "premium": "Dette sporet krever Spotify Premium.",
+      "private": "Dette Spotify-sporet er privat og kan ikke spilles av.",
+      "region": "Dette sporet er ikke tilgjengelig i din region.",
+      "generic": "Det oppstod en feil under avspilling av Spotify-sporet."
+    }
   },
   "premium": {
-    "description": "Administrer premium-funksjoner og serverkoblinger"
+    "description": "Administrer premium-funksjoner og serverkoblinger",
+    "audioQuality": "Lydkvalitet",
+    "botIdentity": "Bot-identitet",
+    "serverSlots": "Serverplasser",
+    "patreonTier": "Patreon-nivå",
+    "supporter": "Supporter",
+    "dbUnavailable": "**Databasen er midlertidig utilgjengelig**\n\nBoten har problemer med å koble til databasen. Prøv igjen om litt.\n\nHvis problemet vedvarer, har bot-administratoren blitt varslet.",
+    "error": "Det oppstod en feil: {error}",
+    "link": {
+      "description": "Koble denne serveren til Patreon-kontoen din",
+      "successTitle": "Server koblet til",
+      "failTitle": "Tilkobling mislyktes"
+    },
+    "unlink": {
+      "description": "Koble denne serveren fra Patreon-kontoen din",
+      "successTitle": "Server koblet fra",
+      "failTitle": "Frakobling mislyktes"
+    },
+    "list": {
+      "description": "Vis alle servere koblet til Patreon-kontoen din",
+      "title": "Dine tilkoblede servere",
+      "empty": "Du har ikke koblet til noen servere ennå.\n\nBruk `/premium link` for å koble til denne serveren!",
+      "linkedAt": "Koblet til: {time}",
+      "slotsUsed": "{used}/{max} brukt",
+      "noMembership": "Du har ikke et aktivt Patreon-medlemskap.\n\nStøtt oss på Patreon for å låse opp premium-funksjoner!"
+    },
+    "status": {
+      "description": "Vis premium-status for denne serveren",
+      "premiumTitle": "Premium-server",
+      "freeTitle": "Gratis server",
+      "premiumBody": "Denne serveren har premium-funksjoner aktivert!",
+      "freeBody": "Denne serveren bruker gratisnivået.\n\nBruk `/premium link` for å aktivere premium-funksjoner.",
+      "linked": "Koblet til",
+      "lastUsed": "Sist brukt",
+      "ownFooter": "Du eier denne premium-koblingen",
+      "otherFooter": "Premium levert av en annen bruker",
+      "freeQuality": "128kbps (gratis)"
+    },
+    "config": {
+      "description": "Konfigurer premium-innstillinger for denne serveren",
+      "optionBitrate": "Lydbitrate i kbps",
+      "optionIdentity": "Egendefinert bot-identitet for denne serveren",
+      "nothing": "Angi minst én innstilling som skal konfigureres.\n\nEksempel: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Innstillinger oppdatert",
+      "failTitle": "Oppdatering mislyktes"
+    },
+    "service": {
+      "needMembership": "Du trenger et aktivt Patreon-medlemskap for å koble til servere.\n\nStøtt oss på Patreon for å låse opp premium-funksjoner!",
+      "limitReached": "Du har nådd servergrensen din ({max} servere).\n\nNåværende nivå: **{tier}**\nTilkoblede servere: **{current}/{max}**\n\nOppgrader nivået ditt for å koble til flere servere!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Denne serveren er allerede koblet til kontoen din.",
+      "alreadyLinkedOther": "Denne serveren er allerede koblet til en annen Patreon-konto.\n\nBare én Patreon-konto kan ha premium-funksjoner aktive per server.",
+      "linked": "Serveren ble koblet til!",
+      "servers": "Servere",
+      "linkedActive": "Premium-funksjoner er nå aktive på denne serveren!",
+      "linkError": "Feil ved tilkobling av server: {error}",
+      "notLinked": "Denne serveren er ikke koblet til kontoen din.",
+      "unlinked": "Serveren ble koblet fra!",
+      "unlinkedBody": "Premium-funksjoner er deaktivert for denne serveren.\nDu kan koble til en annen server med de ledige plassene dine.",
+      "unlinkError": "Feil ved frakobling av server: {error}",
+      "invalidBitrate": "Ugyldig bitrate. Velg: 128, 192, 256 eller 320 kbps",
+      "updated": "Serverinnstillingene ble oppdatert!",
+      "updateError": "Feil ved oppdatering av innstillinger: {error}"
+    },
+    "feature": {
+      "audio_filters": "Lydfiltre",
+      "stay_24_7": "24/7-modus",
+      "max_quality": "Maksimal kvalitet",
+      "priority_queue": "Prioritert kø",
+      "unlimited_playlists": "Ubegrensede spillelister",
+      "longer_songs": "Ingen lengdegrense",
+      "vote_features": "Stem på funksjoner",
+      "founder_role": "Founder-rolle",
+      "direct_support": "Direkte støtte"
+    }
   },
   "queuemanage": {
-    "description": "Avansert køadministrasjon"
+    "description": "Avansert køadministrasjon",
+    "empty": "Køen er tom.",
+    "invalidPosition": "Ugyldig posisjon. Køen har {count} spor.",
+    "removedupes": {
+      "description": "Fjern dupliserte spor fra køen",
+      "none": "Fant ingen duplikater!",
+      "title": "Duplikater fjernet",
+      "result": "Fjernet **{count}** dupliserte spor"
+    },
+    "sort": {
+      "description": "Sorter køen",
+      "optionBy": "Sorter etter",
+      "choice": {
+        "title_asc": "Tittel (A-Å)",
+        "title_desc": "Tittel (Å-A)",
+        "duration_asc": "Varighet (kort)",
+        "duration_desc": "Varighet (lang)"
+      },
+      "label": {
+        "title_asc": "Tittel (A-Å)",
+        "title_desc": "Tittel (Å-A)",
+        "duration_asc": "Varighet (kortest)",
+        "duration_desc": "Varighet (lengst)"
+      },
+      "result": "Køen er sortert etter **{label}**"
+    },
+    "swap": {
+      "description": "Bytt plass på to spor i køen",
+      "optionPosition1": "Første posisjon",
+      "optionPosition2": "Andre posisjon",
+      "samePosition": "Posisjonene må være forskjellige.",
+      "result": "Byttet plass på sporene i posisjon **{pos1}** og **{pos2}**"
+    },
+    "removeuser": {
+      "description": "Fjern alle spor fra en bruker",
+      "optionUser": "Brukeren du vil fjerne spor fra",
+      "none": "Fant ingen spor fra {user}.",
+      "result": "Fjernet **{count}** spor fra {user}"
+    },
+    "removeabsent": {
+      "description": "Fjern spor fra brukere som ikke er i talekanalen",
+      "notInVoice": "Du må være i en talekanal.",
+      "none": "Alle som har lagt til spor er i talekanalen.",
+      "result": "Fjernet **{count}** spor fra fraværende brukere"
+    },
+    "removelast": {
+      "description": "Fjern de siste N sporene",
+      "optionCount": "Antall som skal fjernes",
+      "result": "Fjernet de siste **{count}** sporene"
+    },
+    "removerange": {
+      "description": "Fjern spor i et område",
+      "optionStart": "Startposisjon",
+      "optionEnd": "Sluttposisjon",
+      "startAfterEnd": "Start må være mindre enn eller lik slutt.",
+      "startTooHigh": "Startposisjonen er større enn lengden på køen ({count}).",
+      "result": "Fjernet **{count}** spor (posisjon {start}-{end})"
+    },
+    "reverse": {
+      "description": "Snu rekkefølgen i køen",
+      "result": "Rekkefølgen i køen er snudd"
+    }
   },
   "settings": {
-    "description": "Konfigurer botinnstillinger for denne serveren (kun admin)"
+    "description": "Konfigurer botinnstillinger for denne serveren (kun admin)",
+    "noPermission": "Du har ikke tillatelse til å endre botinnstillingene.",
+    "unknownSubcommand": "Ukjent underkommando.",
+    "current": "**Nå:** {value}",
+    "allChannels": "Alle kanaler er tillatt",
+    "allAllowed": "Alle tillatt",
+    "on": "På",
+    "off": "Av",
+    "yes": "Ja",
+    "no": "Nei",
+    "enabled": "Aktivert",
+    "disabled": "Deaktivert",
+    "view": {
+      "description": "Vis gjeldende innstillinger",
+      "title": "Botinnstillinger",
+      "roles": "Roller",
+      "djRole": "DJ-rolle",
+      "djNotSet": "Ikke satt (alle kan være DJ)",
+      "adminRole": "Admin-rolle",
+      "adminNotSet": "Kun serveradministratorer",
+      "volume": "Volum",
+      "default": "Standard",
+      "maximum": "Maksimum",
+      "queue": "Kø",
+      "maxSize": "Maks størrelse",
+      "songs": "{count} sanger",
+      "preventDuplicates": "Hindre duplikater",
+      "behavior": "Oppførsel",
+      "announcements": "Kunngjøringer",
+      "autoLeave": "Forlat automatisk",
+      "leaveTimeout": "Tidsavbrudd før forlating",
+      "channels": "Kanaler",
+      "voiceChannels": "Talekanaler",
+      "textChannels": "Tekstkanaler",
+      "logChannel": "Loggkanal",
+      "logDefault": "Standard (#bot-commands)",
+      "blacklist": "Svarteliste",
+      "noBlacklist": "Ingen svartelistede brukere",
+      "premium": "Premium",
+      "tier": "Nivå",
+      "expires": "Utløper",
+      "never": "Aldri",
+      "notActive": "Ikke aktiv",
+      "customization": "Tilpasning",
+      "language": "Språk",
+      "embedColor": "Embed-farge",
+      "footer": "Bruk /settings <option> for å endre innstillinger"
+    },
+    "djrole": {
+      "description": "Velg DJ-rollen for musikkstyring",
+      "prompt": "Velg DJ-rollen. Brukere med denne rollen kan styre musikkavspillingen.",
+      "placeholder": "Velg DJ-rolle",
+      "clear": "Fjern DJ-rolle (alle kan være DJ)",
+      "set": "DJ-rollen er satt til {role}",
+      "cleared": "DJ-rollen er fjernet.",
+      "clearedEveryone": "DJ-rollen er fjernet. Nå kan alle bruke DJ-kommandoer."
+    },
+    "adminrole": {
+      "description": "Velg admin-rollen for å styre innstillinger",
+      "prompt": "Velg admin-rollen. Brukere med denne rollen kan endre botinnstillingene.",
+      "placeholder": "Velg admin-rolle",
+      "clear": "Fjern adminrolle (kun serveradministratorer)",
+      "set": "Adminrollen er satt til {role}",
+      "cleared": "Adminrollen er fjernet.",
+      "clearedAdmins": "Adminrollen er fjernet. Bare serveradministratorer kan endre innstillinger."
+    },
+    "volume": {
+      "description": "Angi standard og maksimalt volum",
+      "optionDefault": "Standardvolum (0-100)",
+      "optionMax": "Maksimalt tillatt volum (0-100)",
+      "currentTitle": "Gjeldende voluminnstillinger",
+      "defaultSet": "Standardvolumet er satt til {value}%",
+      "maxSet": "Maksimalt volum er satt til {value}%",
+      "logDefault": "Standardvolum",
+      "logMax": "Maksimalt volum"
+    },
+    "queue": {
+      "description": "Konfigurer køinnstillinger",
+      "optionMaxSize": "Maksimal køstørrelse (1-1000)",
+      "optionPreventDuplicates": "Hindre duplikate sanger i køen",
+      "currentTitle": "Gjeldende køinnstillinger",
+      "maxSet": "Maksimal køstørrelse er satt til {value} sanger",
+      "duplicatesSet": "Hindre duplikater: {value}"
+    },
+    "behavior": {
+      "description": "Konfigurer botens oppførsel",
+      "optionAnnouncements": "Kunngjør hva som spilles nå i tekstkanalen",
+      "optionAutoLeave": "Forlat talekanalen når den er tom",
+      "optionLeaveTimeout": "Sekunder før en tom kanal forlates (30-3600)",
+      "currentTitle": "Gjeldende oppførselsinnstillinger",
+      "announcementsSet": "Kunngjøringer av hva som spilles nå: {value}",
+      "autoLeaveSet": "Forlat automatisk når tom: {value}",
+      "timeoutSet": "Tidsavbrudd for å forlate er satt til {value} sekunder"
+    },
+    "voicechannels": {
+      "description": "Angi tillatte talekanaler",
+      "prompt": "Velg hvilke talekanaler boten kan bli med i.",
+      "placeholder": "Velg tillatte talekanaler",
+      "allowAll": "Tillat alle kanaler",
+      "set": "Tillatte talekanaler: {channels}",
+      "cleared": "Alle talekanaler er nå tillatt."
+    },
+    "textchannels": {
+      "description": "Angi tillatte tekstkanaler for kommandoer",
+      "prompt": "Velg hvilke tekstkanaler som kan bruke botkommandoer.",
+      "placeholder": "Velg tillatte tekstkanaler",
+      "allowAll": "Tillat alle kanaler",
+      "set": "Tillatte tekstkanaler: {channels}",
+      "cleared": "Alle tekstkanaler er nå tillatt."
+    },
+    "logchannel": {
+      "description": "Angi kanalen for botlogger (spilles nå osv.)",
+      "prompt": "Velg en kanal for botens loggmeldinger (spilles nå, køen er ferdig osv.).",
+      "note": "**Merk:** Hvis ingen loggkanal er angitt, ser boten etter en kanal som heter #bot-commands. Finnes ikke den, sendes ingen loggmeldinger.",
+      "placeholder": "Velg loggkanal for botmeldinger",
+      "useDefault": "Bruk standard (bot-commands)",
+      "disable": "Slå av loggmeldinger",
+      "statusDefault": "Bruker standardoppførsel (ser etter #bot-commands)",
+      "statusDisabled": "Loggmeldinger er slått av",
+      "set": "Loggkanalen er satt til {channel}",
+      "reset": "Loggkanalen er tilbakestilt til standard (bruker #bot-commands hvis den finnes).",
+      "disabled": "Loggmeldinger er slått av."
+    },
+    "blacklist": {
+      "description": "Administrer svartelisten for brukere",
+      "optionAdd": "Legg til bruker på svartelisten",
+      "optionRemove": "Fjern bruker fra svartelisten",
+      "title": "Svartelistede brukere",
+      "none": "Ingen brukere er svartelistet.",
+      "already": "{user} er allerede svartelistet.",
+      "added": "{user} er svartelistet og kan ikke bruke boten.",
+      "notListed": "{user} er ikke svartelistet.",
+      "removed": "{user} er fjernet fra svartelisten."
+    },
+    "language": {
+      "description": "Angi botens språk for denne serveren",
+      "prompt": "Velg botens språk for denne serveren.",
+      "placeholder": "Velg et språk",
+      "more": "Alle språkene boten snakker er tilgjengelige med {command}."
+    },
+    "embedcolor": {
+      "description": "Angi egendefinert embed-farge",
+      "optionColor": "Hex-fargekode (f.eks. #FF5500)",
+      "invalid": "Ugyldig hex-farge. Bruk formatet #RRGGBB (f.eks. #FF5500)",
+      "set": "Embed-fargen er satt til: {color}"
+    },
+    "reset": {
+      "description": "Tilbakestill alle innstillinger til standard",
+      "prompt": "Er du sikker på at du vil tilbakestille ALLE innstillinger til standard? Dette kan ikke angres.",
+      "confirm": "Ja, tilbakestill alle innstillinger",
+      "cancel": "Avbryt",
+      "done": "Alle innstillinger er tilbakestilt til standard.",
+      "cancelled": "Tilbakestilling avbrutt."
+    },
+    "stats": {
+      "description": "Vis musikkstatistikk for serveren",
+      "title": "Musikkstatistikk",
+      "songsPlayed": "Totalt antall sanger spilt",
+      "playtime": "Total spilletid",
+      "playtimeValue": "{hours}t {minutes}m"
+    }
   },
   "stats": {
-    "description": "Se bot- og øktstatistikk"
+    "description": "Se bot- og øktstatistikk",
+    "bot": {
+      "description": "Vis botstatistikk",
+      "title": "Botstatistikk",
+      "servers": "Servere",
+      "users": "Brukere",
+      "channels": "Kanaler",
+      "activeQueues": "Aktive køer",
+      "tracksPlaying": "Spor som spilles",
+      "uptime": "Oppetid",
+      "memory": "Minne",
+      "platform": "Plattform"
+    },
+    "uptime": {
+      "description": "Vis botens oppetid"
+    },
+    "leaderboard": {
+      "description": "Vis køens toppliste",
+      "line": "{user} - {count} spor"
+    },
+    "history": {
+      "description": "Vis nylig spilte låter"
+    },
+    "session": {
+      "description": "Vis info om gjeldende økt",
+      "noSession": "Ingen aktiv økt på denne serveren.",
+      "title": "Øktinfo",
+      "nowPlaying": "Spilles nå",
+      "nothing": "Ingenting",
+      "tracksInQueue": "Låter i køen",
+      "totalDuration": "Total varighet"
+    }
   },
   "user": {
-    "description": "Brukerprofil og preferanser"
+    "description": "Brukerprofil og preferanser",
+    "profile": {
+      "description": "Vis brukerprofil",
+      "optionTarget": "Brukeren du vil se",
+      "free": "Gratis"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Startet avspilling",
+      "pause": "Satte avspilling på pause",
+      "resume": "Fortsatte avspilling",
+      "stop": "Stoppet avspilling",
+      "skip": "Hoppet over låt",
+      "seek": "Spolte til posisjon",
+      "seek_forward": "Spolte fremover",
+      "seek_backward": "Spolte bakover",
+      "forward": "Spolte fremover",
+      "rewind": "Spolte tilbake",
+      "backward": "Spolte tilbake",
+      "replay": "Startet låten på nytt",
+      "restart": "Startet køen på nytt",
+      "volume_change": "Endret volum",
+      "shuffle": "Stokket køen",
+      "loop": "Endret gjentakelsesmodus",
+      "loopqueue": "Endret gjentakelse av kø",
+      "setting_change": "Oppdaterte innstillinger",
+      "queue_clear": "Tømte køen",
+      "clear": "Tømte køen",
+      "join": "Ble med i kanal",
+      "leave": "Forlot kanal",
+      "autoplay": "Slo autoavspilling av/på",
+      "previous": "Spilte forrige låt",
+      "jump": "Hoppet til låt",
+      "swap": "Byttet om låter",
+      "reverse": "Snudde køen",
+      "sort": "Sorterte køen",
+      "removerange": "Fjernet område",
+      "removeduplicates": "Fjernet duplikater",
+      "removelast": "Fjernet siste låt",
+      "voteskip": "Stemte for å hoppe over",
+      "grab": "Lagret låt",
+      "insert": "Satte inn låt",
+      "removecurrent": "Fjernet gjeldende låt"
+    },
+    "detail": {
+      "on": "På",
+      "off": "Av",
+      "tracks": "{count} låter",
+      "effectsCleared": "Effekter fjernet",
+      "bassBoost": "Bassforsterkning {level}",
+      "effectOn": "{effect} slått på",
+      "effectOff": "{effect} slått av",
+      "previousTrack": "forrige låt",
+      "currentTrack": "gjeldende låt",
+      "queue": "Kø"
+    },
+    "settings": {
+      "title": "Innstillinger oppdatert",
+      "changed": "{user} endret {setting}",
+      "before": "Før",
+      "after": "Etter",
+      "notSet": "Ikke angitt",
+      "userId": "Bruker-ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} er en Founder-fordel",
+    "description": "Founder koster {price}/måned, er begrenset til {spots} plasser, og låser opp 320kbps lyd, 24/7-modus, ingen grense for låtlengde og Founder-rollen.",
+    "afterJoin": "Etter at du har blitt med",
+    "afterJoinSteps": "1. koble Discord-kontoen din i Patreon-innstillingene\n2. kjør `/premium link` på denne serveren",
+    "becomeFounder": "Bli Founder",
+    "voteTitle": "Eller stem gratis",
+    "voteBody": "En stemme på top.gg låser opp dette i 12 timer. Bruk `/vote`.",
+    "voteButton": "Stem på top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Skriv inn et låtnavn eller en lenke først.",
+    "notMember": "Du må være medlem av denne serveren for å spille musikk her.",
+    "noVoiceChannel": "Bli med i en talekanal i Discord, eller velg en her, og prøv igjen.",
+    "channelGone": "Den talekanalen finnes ikke lenger. Velg en annen.",
+    "memberCantJoin": "Du har ikke tilgang til {channel}. Velg en talekanal du kan bli med i.",
+    "nowPlaying": "Spilles nå: {title}",
+    "added": "Lagt til i køen (#{position}): {title}",
+    "playlist": "La til {count} låter fra {title}"
+  },
+  "voiceStatus": {
+    "title": "Status for talekanal",
+    "missing": "Jeg kan ikke vise låten som spilles under navnet på talekanalen fordi jeg mangler tillatelsen **Set Voice Channel Status**. Autoriser meg på nytt for å legge den til; innstillingene dine forblir som de er.",
+    "reauthorize": "Autoriser på nytt"
+  },
+  "guess": {
+    "description": "Gjett sangen fra 30 sekunders smakebiter, sammen med venner i talekanalen",
+    "startDescription": "Start et gjett sangen-spill i talekanalen din",
+    "stopDescription": "Stopp gjett sangen-spillet",
+    "optionRounds": "Hvor mange sanger som skal gjettes (3–15, standard 5)",
+    "optionGenre": "Hvilken musikk som skal spilles (standard: topphits)",
+    "genre": {
+      "top": "Topphits",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin",
+      "electronic": "Elektronisk",
+      "80s": "80-tallet",
+      "90s": "90-tallet",
+      "2000s": "2000-tallet"
+    },
+    "title": "Gjett sangen",
+    "trackTitle": "Gjett sangen · runde {round}",
+    "notInVoice": "Bli med i en talekanal først, og start så spillet.",
+    "alreadyRunning": "Et gjett sangen-spill pågår allerede på denne serveren.",
+    "musicPlaying": "Det spilles musikk her. Stopp den først (/stop), og start så spillet.",
+    "otherChannel": "Jeg blir værende i {channel} (24/7). Start spillet derfra.",
+    "noVoicePermission": "Jeg kan ikke bli med eller snakke i talekanalen din.",
+    "noChannelAccess": "Jeg kan ikke skrive i denne kanalen. Start spillet der jeg kan sende meldinger.",
+    "noTracks": "Klarte ikke å laste inn sanger for den sjangeren akkurat nå. Prøv en annen sjanger, eller igjen om et minutt.",
+    "connectFailed": "Klarte ikke å bli med i talekanalen din. Prøv igjen.",
+    "introMeta": "{rounds} runder · {genre}",
+    "introBody": "Lytt i {channel} og velg sangen som spilles. Første riktige svar får poeng, og raskere svar gir flere poeng. Et feil svar stenger deg ute resten av runden.",
+    "introStarting": "Første sang om noen sekunder…",
+    "introOver": "Dette spillet er over.",
+    "stopButton": "Stopp spillet",
+    "roundTitle": "Runde {round}/{total}",
+    "roundPrompt": "Hvilken sang spilles?",
+    "roundCloses": "Svarfristen går ut {time}",
+    "roundRules": "første riktige svar får poeng",
+    "correctBy": "{user} klarte det på {seconds} s (+{points})",
+    "timeUp": "Tiden er ute! Ingen klarte det.",
+    "roundStopped": "Spillet er stoppet.",
+    "answerWas": "Det var **{title}** av **{artist}**",
+    "scores": "Poeng",
+    "scoreLine": "{user} · {points} poeng ({correct} riktige)",
+    "noScores": "Ingen poeng ennå.",
+    "nextSoon": "Neste sang om noen sekunder…",
+    "finalSoon": "Sluttresultatet kommer snart…",
+    "finalTitle": "Sluttresultat",
+    "winner": "{user} vinner med {points} poeng!",
+    "noWinner": "Ingen fikk poeng denne gangen.",
+    "playAgain": "Spill igjen med {command}",
+    "stoppedBy": "Spillet ble stoppet av {user}.",
+    "stoppedPlain": "Spillet er stoppet.",
+    "endedEmpty": "Alle forlot talekanalen, så spillet ble avsluttet.",
+    "endedDisconnected": "Jeg ble koblet fra talekanalen, så spillet ble avsluttet.",
+    "endedMusic": "Det begynte å spilles musikk, så spillet ble avsluttet.",
+    "endedError": "Smakebitene ville ikke spilles, så spillet ble avsluttet.",
+    "wrong": "Feil! Du er ute denne runden.",
+    "alreadyAnswered": "Du har allerede svart denne runden.",
+    "roundOver": "Denne runden er over.",
+    "gameOver": "Dette spillet er over.",
+    "joinToPlay": "Bli med i {channel} for å spille.",
+    "stopNotAllowed": "Bare den som startet spillet eller noen med Administrer server kan stoppe det.",
+    "noGame": "Det pågår ikke noe gjett sangen-spill her.",
+    "stopped": "Spillet er stoppet.",
+    "blockedDuringGame": "Et gjett sangen-spill pågår på denne serveren. Vent til det er ferdig, eller avslutt det med {stop}."
   }
 }

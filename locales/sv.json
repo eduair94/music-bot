@@ -11,9 +11,9 @@
   },
   "clip": {
     "description": "Spelar upp ett klippljud",
-    "usagesReply": "Användning: /klipp <namn>",
     "errorQueue": "Det går inte att spela upp klipp eftersom det finns en aktiv kö.",
-    "errorNotChannel": "Du måste gå med i en röstkanal först!"
+    "errorNotChannel": "Du måste gå med i en röstkanal först!",
+    "usagesReply": "Användning: {prefix}clip <namn>"
   },
   "clips": {
     "description": "Lista alla klipp"
@@ -29,13 +29,31 @@
   "loop": {
     "description": "Växla musikslinga",
     "errorNotQueue": "Det är inget i kön",
-    "result": "Musikslinga {loop}"
+    "result": "Musikslinga {loop}",
+    "optionMode": "Vad ska upprepas",
+    "mode": {
+      "off": "Av",
+      "track": "Den här låten",
+      "queue": "Hela kön"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Det spelar ingenting.",
     "lyricsNotFound": "Inga texter hittades för {title}.",
     "embedTitle": "{title} - Text",
-    "description": "Låttext för den aktuella låten eller valfri låt"
+    "description": "Låttext för den aktuella låten eller valfri låt",
+    "liveTitle": "Livetext",
+    "liveButton": "Livetext",
+    "liveHint": "Synkad låttext finns: tryck på Livetext för att följa med.",
+    "liveStop": "Stoppa",
+    "livePaused": "Pausad",
+    "liveEnded": "Livetexten har avslutats.",
+    "liveReplaced": "Livetexten flyttades till ett nyare meddelande.",
+    "liveStoppedBy": "Livetexten stoppades av {user}.",
+    "liveNoSync": "Den här låten har ingen synkad text, så det finns inget liveläge för den.",
+    "liveNoPermission": "Bara den som startade livetexten eller någon med Hantera meddelanden kan stoppa den.",
+    "liveNotDuringGame": "Låttexter döljs medan ett gissa låten-spel pågår.",
+    "liveVersionHint": "Tidsatt för en annan version av låten, så raderna kan hamna ur synk"
   },
   "move": {
     "description": "Flytta låtar i kön",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Ingenting spelas på den här servern**",
     "currentPage": "Nuvarande sida -",
     "embedTitle": "Låtkö\n",
-    "embedCurrentSong": "**Aktuell låt - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Aktuell låt - [{title}]({url})**\n\n{info}",
+    "optionPage": "Sidnummer"
   },
   "remove": {
     "description": "Ta bort låten från kön",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Den aktuella volymen är: **{volume}%**",
     "errorNotNumber": "Använd ett nummer för att ställa in volymen.",
     "errorNotValid": "Använd ett nummer mellan 0 - 100.",
-    "result": "Volym inställd på: **{arg}%**"
+    "result": "Volym inställd på: **{arg}%**",
+    "errorRange": "Volymen måste vara mellan 0 och {max}."
   },
   "common": {
     "on": "**på**",
@@ -208,14 +228,49 @@
     "disabled": "**Inaktiverad**",
     "errorNotChannel": "Du måste gå med i en röstkanal först!",
     "cooldownMessage": "vänta {time} sekunder till innan du återanvänder kommandot `{name}`.",
-    "errorCommand": "Det uppstod ett fel vid körningen av kommandot."
+    "errorCommand": "Det uppstod ett fel vid körningen av kommandot.",
+    "djRequired": "Du behöver DJ-rollen för att använda det här kommandot.",
+    "guild_only": "Det här kommandot fungerar bara på en server.",
+    "unknown": "Okänd",
+    "unknownError": "Okänt fel",
+    "unknownSubcommand": "Okänt underkommando.",
+    "voiceChannel": "röstkanal",
+    "playerInitializing": "Musikspelaren startar fortfarande. Försök igen om några sekunder.",
+    "voiceChannelNotAllowed": "Boten får inte spela i den här röstkanalen. Använd en tillåten kanal.",
+    "queueFull": "Kön är full! Max {max} låtar tillåtna.",
+    "invalidFileType": "Ogiltig filtyp. Format som stöds: {formats}",
+    "fileTooLarge": "Filen är för stor ({size}MB). Maxstorleken är {max}MB.",
+    "optionToggle": "På eller av (standard: växla)",
+    "requestedBy": "Önskad av {user}",
+    "yes": "Ja",
+    "no": "Nej",
+    "loop": {
+      "off": "Av",
+      "track": "Låt",
+      "queue": "Kö"
+    },
+    "field": {
+      "title": "Titel",
+      "artist": "Artist",
+      "duration": "Längd",
+      "tracks": "Låtar",
+      "source": "Källa",
+      "requestedBy": "Önskad av",
+      "loopMode": "Upprepningsläge",
+      "volume": "Volym",
+      "loadTime": "Laddningstid",
+      "positionInQueue": "Plats i kön",
+      "status": "Status",
+      "tier": "Nivå"
+    }
   },
   "seek": {
     "description": "Spola till en viss tid i låten",
     "errorNotQueue": "Inget spelas just nu.",
     "errorInvalidTime": "Ogiltigt tidsformat. Använd t.ex.: 1:30, 90, 1m30s",
     "errorOutOfRange": "Tiden måste vara mellan 0:00 och {duration}",
-    "result": "<@{author}> ⏩ spolade till **{time}**"
+    "result": "<@{author}> ⏩ spolade till **{time}**",
+    "optionTime": "Tid att hoppa till (t.ex. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Spola framåt i låten ett visst antal sekunder",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Spola bakåt i låten ett visst antal sekunder",
     "errorNotQueue": "Inget spelas just nu.",
-    "result": "<@{author}> ⏪ spolade tillbaka **{seconds}s** (nu vid {position})"
+    "result": "<@{author}> ⏪ spolade tillbaka **{seconds}s** (nu vid {position})",
+    "optionSeconds": "Antal sekunder att spola tillbaka"
   },
   "replay": {
     "description": "Starta om den aktuella låten från början",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Växla autouppspelning (spelar liknande låtar när kön tar slut)",
     "errorNotQueue": "Det finns ingen aktiv kö.",
-    "result": "🔄 Autouppspelning är nu {status}"
+    "result": "🔄 Autouppspelning är nu {status}",
+    "optionDefault": "Gör även detta till standard för den här servern (Hantera server)"
   },
   "history": {
     "description": "Visa nyligen spelade låtar",
     "errorNotQueue": "Det finns ingen aktiv kö.",
     "errorEmpty": "Inga låtar i historiken än.",
     "embedTitle": "Nyligen spelade",
-    "footer": "Visar de senaste {count} låtarna"
+    "footer": "Visar de senaste {count} låtarna",
+    "title": "Nyligen spelat",
+    "titleUser": "Nyligen spelat · önskat av {user}",
+    "empty": "Inget har spelats på den här servern de senaste 30 dagarna.",
+    "emptyUser": "{user} har inte önskat några låtar här de senaste 30 dagarna.",
+    "summary": "Senaste {count} uppspelningarna",
+    "playAgain": "Spela igen…",
+    "optionUser": "Visa bara låtar som den här medlemmen önskat",
+    "unavailable": "Uppspelningshistoriken är inte tillgänglig just nu. Försök igen om en minut.",
+    "gone": "Den låten finns inte längre i historiken."
   },
   "previous": {
     "description": "Spela föregående låt",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Det finns ingen kö.",
     "errorInvalidPosition": "Ogiltig plats. Kön har bara {max} låtar.",
     "errorNotFound": "Ingen låt hittades på den platsen.",
-    "result": "<@{author}> ⏭️ hoppade till **{title}**"
+    "result": "<@{author}> ⏭️ hoppade till **{title}**",
+    "optionPosition": "Plats i kön att hoppa till"
   },
   "Invite me to your server!": "Bjud in mig till din server!",
   "Invite": "Bjud in",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Få länken till kontrollpanelen",
     "embedDescription": "Öppna webbpanelen för att hantera serverinställningar, se kön och mycket mer!",
-    "footer": "Styr din musikupplevelse"
+    "footer": "Styr din musikupplevelse",
+    "title": "Botens instrumentpanel",
+    "features": "Funktioner",
+    "featuresList": "• Konfigurera serverinställningar\n• Visa kön och uppspelningskontroller\n• Hantera spellistor och samlingar\n• Visa lyssningsstatistik\n• Hantera premiumfunktioner",
+    "open": "Öppna instrumentpanelen"
   },
   "clean": {
     "description": "Radera botmeddelanden från kanalen",
@@ -377,7 +448,9 @@
       "description": "Visa alla dina samlingar",
       "title": "📁 Dina samlingar",
       "empty": "Du har inga samlingar än. Skapa en med `/collections create`!",
-      "footer": "Totalt: {count} samlingar"
+      "footer": "Totalt: {count} samlingar",
+      "select": "Öppna en samling…",
+      "more": "…och {count} till. Öppna dem med /collections view."
     },
     "create": {
       "description": "Skapa en ny samling",
@@ -399,7 +472,12 @@
       "tracksField": "Låtar",
       "durationField": "Längd",
       "shareCodeField": "Delningskod",
-      "andMore": "...och {count} låtar till"
+      "andMore": "...och {count} låtar till",
+      "play": "Spela",
+      "addToQueue": "Lägg till i kön",
+      "summary": "{count} låtar · {duration}",
+      "page": "Sida {page}/{pages}",
+      "importedFrom": "Importerad från {source}"
     },
     "save": {
       "description": "Spara aktuell kö som en samling",
@@ -411,7 +489,9 @@
       "description": "Lägg in en samling i kön",
       "nameOption": "Namn på samlingen som ska läsas in",
       "empty": "Den här samlingen är tom.",
-      "success": "📂 Läste in **{count}** låtar från samlingen **{name}**!"
+      "success": "📂 Läste in **{count}** låtar från samlingen **{name}**!",
+      "queuedNext": "De spelas direkt efter den aktuella låten.",
+      "skipped": "{count} hoppades över (längre än servern tillåter, över kögränsen eller hittades inte)."
     },
     "rename": {
       "description": "Byt namn på en samling",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Delningskoden att klona från",
       "nameOption": "Namn på din nya samling",
       "invalidCode": "Ogiltig eller utgången delningskod.",
-      "success": "📋 Klonade **{count}** låtar till den nya samlingen **{name}**!"
+      "success": "📋 Klonade **{count}** låtar till den nya samlingen **{name}**!",
+      "clonedFrom": "Klonad från {name}"
     },
     "merge": {
       "description": "Slå ihop en samling med en annan",
@@ -457,6 +538,21 @@
       "positionOption": "Position för låten som ska tas bort (börjar på 1)",
       "invalidPosition": "Ogiltig position. Samlingen har {max} låtar.",
       "success": "🗑️ Tog bort **{track}** från samlingen **{name}**."
+    },
+    "error": "Något gick fel med dina samlingar. Försök igen.",
+    "trackCount": "{count} låtar",
+    "gone": "Den samlingen finns inte längre.",
+    "notYours": "Den här menyn tillhör någon annan. Använd /collections list för att se dina egna.",
+    "import": {
+      "description": "Importera en spellista från Spotify, YouTube, Deezer eller Apple Music",
+      "urlOption": "Länk till spellista (Spotify, YouTube, Deezer, Apple Music-album)",
+      "nameOption": "Namn på den nya samlingen (standard: spellistans titel)",
+      "invalidUrl": "Det där ser inte ut som en länk. Klistra in en spellistelänk från Spotify, YouTube, Deezer eller ett Apple Music-album.",
+      "failed": "Jag kunde inte läsa spellistan. Se till att den är offentlig och att länken är från Spotify, YouTube, Deezer eller ett Apple Music-album.",
+      "exists": "Du har redan en samling som heter **{name}**. Välj ett annat namn med alternativet `name`.",
+      "success": "📥 Importerade **{count}** låtar från {source} till **{name}**.",
+      "skipped": "{count} hoppades över (över gränsen på {max} låtar per samling, eller inte spelbara).",
+      "spotifyCap": "Spotify delar bara de första 100 låtarna i en spellistelänk."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Gör om text till tal och spela upp det i röstkanalen",
     "errorNotAvailable": "❌ TTS-tjänsten är inte tillgänglig. Kontakta botens administratör.",
     "errorGenerate": "❌ Kunde inte generera tal. Försök igen.",
-    "success": "🎤 Spelar: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Spelar: \"{text}\" ({language}, {voice})",
+    "optionText": "Text att omvandla till tal",
+    "optionLanguage": "Språk för talet (använder sparad konfiguration om inget anges)",
+    "optionVoice": "Röst att använda (använder sparad konfiguration om inget anges)"
   },
   "sayconfig": {
-    "description": "Ställ in dina TTS-inställningar (text till tal)"
+    "description": "Ställ in dina TTS-inställningar (text till tal)",
+    "view": {
+      "description": "Visa din nuvarande TTS-konfiguration",
+      "title": "TTS-konfiguration",
+      "noConfig": "Ingen egen konfiguration inställd. Använder standardvärden.",
+      "mode": "Läge",
+      "language": "Språk",
+      "voice": "Röst",
+      "voiceDescription": "Röstbeskrivning",
+      "styleInstruction": "Stilinstruktion",
+      "referenceAudio": "Referensljud",
+      "referenceAudioSet": "Inställt",
+      "referenceText": "Referenstext"
+    },
+    "mode": {
+      "description": "Ställ in TTS-läge (custom_voice eller voice_clone)",
+      "option": "TTS-läge",
+      "customVoice": "Anpassad röst (standard)",
+      "voiceClone": "Röstkloning",
+      "set": "TTS-läge inställt på **{mode}**"
+    },
+    "language": {
+      "description": "Ställ in standardspråk",
+      "option": "Språk för tal",
+      "set": "Standardspråk inställt på **{language}**"
+    },
+    "voice": {
+      "description": "Ställ in standardröst/talare",
+      "option": "Röst att använda",
+      "set": "Standardröst inställd på **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Ställ in röstbeskrivning för generering av anpassad röst",
+      "option": "Röstbeskrivning (t.ex. 'djup mansröst med lugn ton')",
+      "set": "Röstbeskrivning inställd på: \"{text}\""
+    },
+    "style": {
+      "description": "Ställ in stilinstruktion för röstgenerering",
+      "option": "Stilinstruktion (t.ex. 'tala långsamt och tydligt')",
+      "set": "Stilinstruktion inställd på: \"{text}\""
+    },
+    "reference": {
+      "description": "Ställ in referensljud och text för röstkloning",
+      "optionAudio": "Referensljudfil (MP3, WAV osv.)",
+      "optionText": "Transkription av referensljudet",
+      "saved": "Referensljudet har laddats upp och sparats!",
+      "text": "Referenstext: \"{text}\"",
+      "modeSet": "Läget har automatiskt ställts in på **{mode}**",
+      "failed": "Det gick inte att ladda upp referensljudet. Försök igen."
+    },
+    "reset": {
+      "description": "Återställ din TTS-konfiguration till standard",
+      "done": "TTS-konfigurationen har återställts till standard.",
+      "none": "Ingen anpassad konfiguration att återställa."
+    }
   },
   "radio": {
     "notInVoice": "Du måste vara i en röstkanal.",
@@ -649,7 +802,8 @@
     "body": "Röster hjälper fler servrar att hitta botten. Varje röst på top.gg låser upp **24/7-läge** och **studiokvalitet** åt dig i 12 timmar.",
     "active": "Dina röstförmåner är aktiva i {time} till.",
     "inactive": "Ingen aktiv röst. Rösta nedan, förmånerna aktiveras inom en minut.",
-    "notListed": "Röstningen öppnar när botten är listad. Tack för att du vill hjälpa till!"
+    "notListed": "Röstningen öppnar när botten är listad. Tack för att du vill hjälpa till!",
+    "heading": "Rösta på {bot}"
   },
   "leaderboard": {
     "description": "Visa sessionens topplista för låtar",
@@ -742,7 +896,8 @@
     "noQueue": "Det finns ingen aktiv kö.",
     "invalidChannel": "Ogiltig kanal. Välj en textkanal.",
     "title": "📢 Kanal bytt",
-    "success": "Skickar nu meddelanden till {channel}."
+    "success": "Skickar nu meddelanden till {channel}.",
+    "optionChannel": "Kanal att koppla om till (standard är nuvarande)"
   },
   "disabledcommands": {
     "description": "Visa alla inaktiverade kommandon på servern",
@@ -939,7 +1094,28 @@
     "user_free": "Du har nivån **Gratis**.",
     "upgrade": "Uppgradera till Premium",
     "upgrade_message": "Få premiumfunktioner genom att stödja oss på Patreon!",
-    "description": "Visa premiumförmåner"
+    "description": "Visa premiumförmåner",
+    "view": {
+      "description": "Visa tillgängliga förmåner"
+    },
+    "user": {
+      "description": "Visa dina nuvarande förmåner",
+      "title": "Dina förmåner",
+      "premium": "Du har **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Ljud: {bitrate}kbps",
+      "audioFilters": "Ljudfilter",
+      "stay247": "24/7-läge",
+      "free": "Du har nivån **Gratis**. Skaffa premium på Patreon!"
+    },
+    "overview": {
+      "title": "Premiumförmåner",
+      "intro": "Founder är begränsat till {spots} platser och priset är låst.",
+      "freeName": "Gratis — {price}",
+      "freePerks": "128kbps ljud\nKö, spellistor och låttexter\nAlla kommandon",
+      "founderName": "Founder / Betatestare — {price}/månad",
+      "founderPerks": "320kbps ljud\nLjudfilter\n24/7-läge\nPrioriterad kö\nFounder-roll och direktsupport"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Ingen premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Autoplay av.",
     "volumeLimit": "Den här servern begränsar volymen till {max}%.",
     "lyricsButton": "Låttext",
-    "saveButton": "Spara"
+    "saveButton": "Spara",
+    "trackFailed": "Kunde inte spela **{title}**, hoppar över den. Testa en annan länk eller sökning.",
+    "guessRunning": "Ett gissa låten-spel pågår här. Spelaren kommer tillbaka när det är slut."
   },
   "queueView": {
     "title": "Kö",
@@ -1040,7 +1218,8 @@
     "commands": "Kommandon",
     "dashboard": "Kontrollpanel",
     "support": "Supportserver",
-    "vote": "Rösta"
+    "vote": "Rösta",
+    "voiceStatusHint": "Vill du att låten som spelas visas under röstkanalens namn? [Auktorisera mig igen]({url}) för att ge behörigheten Ange röstkanalstatus."
   },
   "router": {
     "guildOnly": "Det här kommandot fungerar bara på en server.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Språk (auto följer varje medlems Discord-språk)",
     "auto": "Automatiskt (varje medlems Discord-språk)",
     "set": "Språket är nu {language}.",
-    "needManage": "Du behöver behörigheten Hantera server för att ändra språket."
+    "needManage": "Du behöver behörigheten Hantera server för att ändra språket.",
+    "unknown": "Okänt språk."
   },
   "links": {
     "website": "Webbplats",
@@ -1100,45 +1280,741 @@
     "invite": "Bjud in"
   },
   "commanddisable": {
-    "description": "Inaktivera kommandon på den här servern"
+    "description": "Inaktivera kommandon på den här servern",
+    "optionCommand": "Kommando att inaktivera",
+    "protected": "Kan inte inaktivera viktigt kommando: {command}",
+    "notFound": "Kommandot hittades inte: {command}",
+    "alreadyDisabled": "Kommandot {command} är redan inaktiverat.",
+    "title": "Kommando inaktiverat",
+    "done": "Kommandot {command} har inaktiverats på den här servern.\n\nAnvänd `/commandenable` för att aktivera det igen."
   },
   "commanddisableall": {
-    "description": "Inaktivera alla kommandon utom de viktigaste"
+    "description": "Inaktivera alla kommandon utom de viktigaste",
+    "title": "Alla kommandon inaktiverade",
+    "done": "Inaktiverade **{count}** kommandon.\n\nSkyddade kommandon som fortfarande är tillgängliga:\n{commands}\n\nAnvänd `/commandenableall` för att återställa alla kommandon."
   },
   "commandenable": {
-    "description": "Aktivera ett inaktiverat kommando"
+    "description": "Aktivera ett inaktiverat kommando",
+    "optionCommand": "Kommando att aktivera",
+    "notDisabled": "Kommandot {command} är inte inaktiverat.",
+    "title": "Kommando aktiverat",
+    "done": "Kommandot {command} har aktiverats igen på den här servern."
   },
   "commandenableall": {
-    "description": "Aktivera alla inaktiverade kommandon"
+    "description": "Aktivera alla inaktiverade kommandon",
+    "title": "Alla kommandon aktiverade",
+    "done": "Aktiverade **{count}** kommandon igen.\n\nAlla kommandon är nu tillgängliga.",
+    "none": "Inga kommandon var inaktiverade."
   },
   "effects": {
-    "description": "Hantera ljudeffekter"
+    "description": "Hantera ljudeffekter",
+    "optionEnabled": "Aktivera eller inaktivera",
+    "nothingPlaying": "Ingen musik spelas just nu.",
+    "unknown": "Okänd effekt.",
+    "enabledBy": "Effekten {effect} aktiverades av {user}",
+    "disabledBy": "Effekten {effect} inaktiverades av {user}",
+    "8d": {
+      "description": "Använd 8D-ljudeffekt (roterande ljud)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Använd basförstärkning",
+      "optionLevel": "Basnivå",
+      "level": {
+        "off": "Av",
+        "low": "Låg",
+        "medium": "Medel",
+        "high": "Hög"
+      },
+      "disabledBy": "Basförstärkning inaktiverades av {user}",
+      "alreadyOff": "Basförstärkning är redan av.",
+      "setBy": "Basförstärkning inställd på **{level}** av {user}"
+    },
+    "distortion": {
+      "description": "Använd distorsionseffekt",
+      "name": "Distorsion"
+    },
+    "haas": {
+      "description": "Använd haas-effekt (rumsligt ljud)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Minska sång (karaokeläge)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Använd nightcore-effekt (högre tonhöjd + tempo)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Använd vaporwave-effekt (lägre tonhöjd + tempo)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Använd pulsatoreffekt",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Spela upp ljudet baklänges",
+      "name": "Baklänges"
+    },
+    "tremolo": {
+      "description": "Använd tremoloeffekt",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Använd vibratoeffekt",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Använd lofi-effekt",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Använd surroundljudeffekt",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Visa aktiva effekter",
+      "title": "Aktiva effekter",
+      "empty": "Inga aktiva effekter"
+    },
+    "clear": {
+      "description": "Rensa alla effekter",
+      "done": "Alla effekter rensade."
+    }
   },
   "info": {
-    "description": "Botinformation och hjälp"
+    "description": "Botinformation och hjälp",
+    "about": {
+      "description": "Om den här boten",
+      "statistics": "Statistik",
+      "servers": "Servrar",
+      "commands": "Kommandon",
+      "uptime": "Drifttid",
+      "system": "System",
+      "memory": "Minne"
+    },
+    "faq": {
+      "description": "Vanliga frågor"
+    },
+    "support": {
+      "description": "Få länk till supportservern",
+      "title": "Support",
+      "body": "Behöver du hjälp? Gå med i vår supportserver:",
+      "join": "Klicka för att gå med",
+      "reportIssues": "Rapportera problem",
+      "reportIssuesValue": "Kolla `/info faq` först och fråga sedan i supporten",
+      "suggestions": "Förslag",
+      "suggestionsValue": "Dela idéer i vår förslagskanal"
+    },
+    "queue": {
+      "description": "Detaljerad köinformation",
+      "noQueue": "Ingen aktiv kö.",
+      "title": "Köinformation",
+      "contributors": "Bidragsgivare"
+    },
+    "song": {
+      "description": "Detaljer om aktuell låt",
+      "noTrack": "Inget spår spelas.",
+      "title": "Spelas nu"
+    },
+    "nextup": {
+      "description": "Visa nästa spår i kön",
+      "empty": "Inga spår i kön.",
+      "title": "Härnäst",
+      "footer": "{count} spår i kön"
+    },
+    "changelogs": {
+      "description": "Senaste uppdateringar och ändringar",
+      "title": "Senaste uppdateringar",
+      "intro": "Senaste ändringar och förbättringar:",
+      "newFeatures": "Nya funktioner",
+      "newFeaturesList": "• Sammanslagna kommandon för bättre struktur\n• Förbättrat system för ljudeffekter\n• Bättreköhantering",
+      "improvements": "Förbättringar",
+      "improvementsList": "• Snabbare svarstider för kommandon\n• Bättre felhantering\n• Minskad minnesanvändning",
+      "bugFixes": "Buggfixar",
+      "bugFixesList": "• Fixade uppspelningsproblem\n• Löste problem med kösynkning"
+    }
   },
   "patreon": {
-    "description": "Kolla din Patreon-status och synka förmåner"
+    "description": "Kolla din Patreon-status och synka förmåner",
+    "notConfigured": "Patreon-integrationen är inte konfigurerad för den här boten.",
+    "howToLink": "Så länkar du",
+    "premiumActive": "Premium aktivt",
+    "patronStatus": {
+      "active": "Aktiv patron",
+      "declined": "Betalning nekad",
+      "former": "Tidigare patron",
+      "none": "Inte patron"
+    },
+    "status": {
+      "description": "Kolla din nuvarande Patreon-status och dina förmåner",
+      "title": "Patreon-status",
+      "yourTitle": "Din Patreon-status",
+      "notLinked": "Du är för närvarande inte länkad till ett Patreon-konto.",
+      "howToLinkSteps": "1. Gå till [Patreon]({patreon})\n2. Anslut ditt Discord-konto under Inställningar → Anslutningar\n3. Prenumerera på vår Patreon-sida\n4. Använd `/patreon sync` för att uppdatera dina förmåner",
+      "pledgeAmount": "Bidragsbelopp",
+      "perMonth": "{amount}/månad",
+      "lifetimeSupport": "Totalt stöd",
+      "lastCharge": "Senaste debitering",
+      "thanks": "Tack för ditt stöd! Du har tillgång till premiumfunktioner.",
+      "declined": "Din senaste betalning nekades. Uppdatera din betalningsmetod på Patreon för att återfå förmånerna.",
+      "former": "Ditt bidrag har upphört. Förnya på Patreon för att återfå dina förmåner!",
+      "error": "Ett fel uppstod när din Patreon-status kontrollerades. Försök igen senare."
+    },
+    "sync": {
+      "description": "Synka din Patreon-data för att uppdatera dina förmåner",
+      "completeTitle": "Patreon-synk klar",
+      "success": "Din Patreon-data har synkats!",
+      "title": "Patreon-synk",
+      "notFound": "Inget Patreon-konto hittades kopplat till ditt Discord.",
+      "howToLinkSteps": "1. Gå till [Patreon-inställningar]({settings})\n2. Klicka på **Anslutningar**\n3. Anslut ditt **Discord**-konto\n4. Se till att du stöttar vår kampanj\n5. Kör `/patreon sync` igen",
+      "error": "Ett fel uppstod när din Patreon-data synkades. Försök igen senare."
+    },
+    "info": {
+      "description": "Läs om Patreon-förmåner och hur du länkar ditt konto",
+      "title": "Patreon-förmåner",
+      "intro": "Stöd oss på Patreon för att låsa upp exklusiva förmåner!",
+      "benefits": "Premiumförmåner",
+      "benefitsList": "• Högre ljudkvalitet\n• Längre spellistor\n• Prioriterad kö\n• Exklusiva kommandon\n• Tidig tillgång till nya funktioner",
+      "howToGet": "Så får du Premium",
+      "howToGetSteps": "1. Besök vår [Patreon-sida]({patreon})\n2. Välj en nivå som passar dig\n3. Länka ditt Discord under Patreon-inställningar → Anslutningar\n4. Använd `/patreon sync` för att aktivera förmånerna",
+      "troubleshooting": "Felsökning",
+      "troubleshootingList": "• Se till att Discord är länkat i dina Patreon-inställningar\n• Din betalning måste ha gått igenom (inte nekats)\n• Testa `/patreon sync` efter att du länkat\n• Förmånerna uppdateras automatiskt var 30:e minut"
+    }
   },
   "play_file": {
-    "description": "Spela upp en ljudfil från en bilaga"
+    "description": "Spela upp en ljudfil från en bilaga",
+    "optionFile": "Ljudfil att spela (MP3, WAV, FLAC, M4A, OGG osv.)",
+    "optionTitle": "Valfri egen titel för spåret",
+    "cantPlay": "Kunde inte spela filen: {name}",
+    "nowPlayingTitle": "Spelar fil nu",
+    "addedTitle": "Fil tillagd i kön",
+    "format": "Format",
+    "size": "Storlek",
+    "error": {
+      "load": "Kunde inte läsa in filen: {name}\n\nMöjliga orsaker:\n• Filformatet stöds inte\n• Filen är skadad\n• Filens URL har gått ut",
+      "timeout": "Nedladdningen av filen tog för lång tid. Filen kan vara för stor eller anslutningen långsam.",
+      "forbidden": "Åtkomst till filen nekad. Ladda upp den igen och försök på nytt.",
+      "notFound": "Filen hittades inte. Bilagans URL kan ha gått ut.",
+      "generic": "Ett fel uppstod när filen skulle spelas upp."
+    }
   },
   "play_spotify": {
-    "description": "Sök och spela en låt från Spotify"
+    "description": "Sök och spela en låt från Spotify",
+    "optionQuery": "Låtnamn, artist eller Spotify-URL att söka efter",
+    "cantPlayLink": "Kunde inte spela Spotify-länken: {query}",
+    "playlistFallback": "Spotify-spellista",
+    "playlistAdded": "Spotify-spellista tillagd",
+    "songs": "{count} låtar",
+    "nowPlaying": "Spelas nu",
+    "trackBy": "{title} av {author}",
+    "nowPlayingTitle": "Spelas nu från Spotify",
+    "addedTitle": "Tillagd i kön från Spotify",
+    "noResults": "Inga resultat på Spotify för: {query}\n\nTesta:\n• Andra sökord\n• Att lägga till artistnamnet\n• En direktlänk till Spotify",
+    "notOnYoutube": "Kunde inte hitta på YouTube: {title} av {artist}",
+    "error": {
+      "auth": "Det här Spotify-spåret kräver autentisering. Testa ett annat spår.",
+      "premium": "Det här spåret kräver Spotify Premium.",
+      "private": "Det här Spotify-spåret är privat och kan inte spelas.",
+      "region": "Det här spåret är inte tillgängligt i din region.",
+      "generic": "Ett fel uppstod när Spotify-spåret skulle spelas upp."
+    }
   },
   "premium": {
-    "description": "Hantera premiumfunktioner och serverkopplingar"
+    "description": "Hantera premiumfunktioner och serverkopplingar",
+    "audioQuality": "Ljudkvalitet",
+    "botIdentity": "Botidentitet",
+    "serverSlots": "Serverplatser",
+    "patreonTier": "Patreon-nivå",
+    "supporter": "Supporter",
+    "dbUnavailable": "**Databasen är tillfälligt otillgänglig**\n\nBoten har problem med att ansluta till databasen. Försök igen om en liten stund.\n\nOm problemet kvarstår har botens administratör meddelats.",
+    "error": "Ett fel uppstod: {error}",
+    "link": {
+      "description": "Koppla den här servern till ditt Patreon-konto",
+      "successTitle": "Server kopplad",
+      "failTitle": "Koppling misslyckades"
+    },
+    "unlink": {
+      "description": "Koppla bort den här servern från ditt Patreon-konto",
+      "successTitle": "Server bortkopplad",
+      "failTitle": "Bortkoppling misslyckades"
+    },
+    "list": {
+      "description": "Visa alla servrar kopplade till ditt Patreon-konto",
+      "title": "Dina kopplade servrar",
+      "empty": "Du har inte kopplat några servrar än.\n\nAnvänd `/premium link` för att koppla den här servern!",
+      "linkedAt": "Kopplad: {time}",
+      "slotsUsed": "{used}/{max} använda",
+      "noMembership": "Du har inget aktivt Patreon-medlemskap.\n\nStöd oss på Patreon för att låsa upp premiumfunktioner!"
+    },
+    "status": {
+      "description": "Visa premiumstatus för den här servern",
+      "premiumTitle": "Premiumserver",
+      "freeTitle": "Gratisserver",
+      "premiumBody": "Den här servern har premiumfunktioner aktiverade!",
+      "freeBody": "Den här servern använder gratisnivån.\n\nAnvänd `/premium link` för att aktivera premiumfunktioner.",
+      "linked": "Kopplad",
+      "lastUsed": "Senast använd",
+      "ownFooter": "Du äger den här premiumkopplingen",
+      "otherFooter": "Premium tillhandahålls av en annan användare",
+      "freeQuality": "128kbps (Gratis)"
+    },
+    "config": {
+      "description": "Konfigurera premiuminställningar för den här servern",
+      "optionBitrate": "Ljudbithastighet i kbps",
+      "optionIdentity": "Anpassad botidentitet för den här servern",
+      "nothing": "Ange minst en inställning att konfigurera.\n\nExempel: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Inställningar uppdaterade",
+      "failTitle": "Uppdatering misslyckades"
+    },
+    "service": {
+      "needMembership": "Du behöver ett aktivt Patreon-medlemskap för att koppla servrar.\n\nStöd oss på Patreon för att låsa upp premiumfunktioner!",
+      "limitReached": "Du har nått din servergräns ({max} servrar).\n\nNuvarande nivå: **{tier}**\nKopplade servrar: **{current}/{max}**\n\nUppgradera din nivå för att koppla fler servrar!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Den här servern är redan kopplad till ditt konto.",
+      "alreadyLinkedOther": "Den här servern är redan kopplad till ett annat Patreon-konto.\n\nBara ett Patreon-konto per server kan ha premiumfunktioner aktiva.",
+      "linked": "Servern har kopplats!",
+      "servers": "Servrar",
+      "linkedActive": "Premiumfunktioner är nu aktiva på den här servern!",
+      "linkError": "Fel vid koppling av server: {error}",
+      "notLinked": "Den här servern är inte kopplad till ditt konto.",
+      "unlinked": "Servern har kopplats bort!",
+      "unlinkedBody": "Premiumfunktioner har inaktiverats för den här servern.\nDu kan koppla en annan server med dina lediga platser.",
+      "unlinkError": "Fel vid bortkoppling av server: {error}",
+      "invalidBitrate": "Ogiltig bithastighet. Välj: 128, 192, 256 eller 320 kbps",
+      "updated": "Serverinställningarna har uppdaterats!",
+      "updateError": "Fel vid uppdatering av inställningar: {error}"
+    },
+    "feature": {
+      "audio_filters": "Ljudfilter",
+      "stay_24_7": "24/7-läge",
+      "max_quality": "Maximal kvalitet",
+      "priority_queue": "Prioriterad kö",
+      "unlimited_playlists": "Obegränsade spellistor",
+      "longer_songs": "Ingen längdgräns",
+      "vote_features": "Rösta på funktioner",
+      "founder_role": "Founder-roll",
+      "direct_support": "Direktsupport"
+    }
   },
   "queuemanage": {
-    "description": "Avancerad köhantering"
+    "description": "Avancerad köhantering",
+    "empty": "Kön är tom.",
+    "invalidPosition": "Ogiltig position. Kön har {count} spår.",
+    "removedupes": {
+      "description": "Ta bort dubbletter från kön",
+      "none": "Inga dubbletter hittades!",
+      "title": "Dubbletter borttagna",
+      "result": "Tog bort **{count}** dubbletter"
+    },
+    "sort": {
+      "description": "Sortera kön",
+      "optionBy": "Sortera efter",
+      "choice": {
+        "title_asc": "Titel (A-Ö)",
+        "title_desc": "Titel (Ö-A)",
+        "duration_asc": "Längd (kort)",
+        "duration_desc": "Längd (lång)"
+      },
+      "label": {
+        "title_asc": "Titel (A-Ö)",
+        "title_desc": "Titel (Ö-A)",
+        "duration_asc": "Längd (kortast)",
+        "duration_desc": "Längd (längst)"
+      },
+      "result": "Kön sorterad efter **{label}**"
+    },
+    "swap": {
+      "description": "Byt plats på två låtar i kön",
+      "optionPosition1": "Första position",
+      "optionPosition2": "Andra position",
+      "samePosition": "Positionerna måste vara olika.",
+      "result": "Bytte plats på låtarna på position **{pos1}** och **{pos2}**"
+    },
+    "removeuser": {
+      "description": "Ta bort alla låtar från en användare",
+      "optionUser": "Användare vars låtar ska tas bort",
+      "none": "Inga låtar hittades från {user}.",
+      "result": "Tog bort **{count}** låtar från {user}"
+    },
+    "removeabsent": {
+      "description": "Ta bort låtar från användare som inte är i röstkanalen",
+      "notInVoice": "Du måste vara i en röstkanal.",
+      "none": "Alla som har lagt till låtar är i röstkanalen.",
+      "result": "Tog bort **{count}** låtar från frånvarande användare"
+    },
+    "removelast": {
+      "description": "Ta bort de sista N låtarna",
+      "optionCount": "Antal att ta bort",
+      "result": "Tog bort de sista **{count}** låtarna"
+    },
+    "removerange": {
+      "description": "Ta bort låtar inom ett intervall",
+      "optionStart": "Startposition",
+      "optionEnd": "Slutposition",
+      "startAfterEnd": "Start måste vara mindre än eller lika med slut.",
+      "startTooHigh": "Startpositionen överstiger köns längd ({count}).",
+      "result": "Tog bort **{count}** låtar (position {start}-{end})"
+    },
+    "reverse": {
+      "description": "Vänd på köns ordning",
+      "result": "Köns ordning omvänd"
+    }
   },
   "settings": {
-    "description": "Konfigurera botinställningar för den här servern (endast admin)"
+    "description": "Konfigurera botinställningar för den här servern (endast admin)",
+    "noPermission": "Du har inte behörighet att hantera botens inställningar.",
+    "unknownSubcommand": "Okänt underkommando.",
+    "current": "**Nuvarande:** {value}",
+    "allChannels": "Alla kanaler tillåtna",
+    "allAllowed": "Alla tillåtna",
+    "on": "På",
+    "off": "Av",
+    "yes": "Ja",
+    "no": "Nej",
+    "enabled": "Aktiverad",
+    "disabled": "Inaktiverad",
+    "view": {
+      "description": "Visa nuvarande inställningar",
+      "title": "Botinställningar",
+      "roles": "Roller",
+      "djRole": "DJ-roll",
+      "djNotSet": "Inte angiven (alla kan vara DJ)",
+      "adminRole": "Adminroll",
+      "adminNotSet": "Endast serveradmins",
+      "volume": "Volym",
+      "default": "Standard",
+      "maximum": "Max",
+      "queue": "Kö",
+      "maxSize": "Maxstorlek",
+      "songs": "{count} låtar",
+      "preventDuplicates": "Förhindra dubbletter",
+      "behavior": "Beteende",
+      "announcements": "Meddelanden",
+      "autoLeave": "Lämna automatiskt",
+      "leaveTimeout": "Tid innan den lämnar",
+      "channels": "Kanaler",
+      "voiceChannels": "Röstkanaler",
+      "textChannels": "Textkanaler",
+      "logChannel": "Loggkanal",
+      "logDefault": "Standard (#bot-commands)",
+      "blacklist": "Svartlista",
+      "noBlacklist": "Inga svartlistade användare",
+      "premium": "Premium",
+      "tier": "Nivå",
+      "expires": "Går ut",
+      "never": "Aldrig",
+      "notActive": "Inte aktiv",
+      "customization": "Anpassning",
+      "language": "Språk",
+      "embedColor": "Embed-färg",
+      "footer": "Använd /settings <option> för att ändra inställningar"
+    },
+    "djrole": {
+      "description": "Ange DJ-rollen för musikstyrning",
+      "prompt": "Välj DJ-roll. Användare med den här rollen kan styra musikuppspelningen.",
+      "placeholder": "Välj DJ-roll",
+      "clear": "Rensa DJ-roll (alla kan vara DJ)",
+      "set": "DJ-rollen är nu {role}",
+      "cleared": "DJ-rollen rensad.",
+      "clearedEveryone": "DJ-rollen rensad. Nu kan alla använda DJ-kommandon."
+    },
+    "adminrole": {
+      "description": "Ange adminrollen för hantering av inställningar",
+      "prompt": "Välj adminroll. Användare med den här rollen kan ändra botens inställningar.",
+      "placeholder": "Välj adminroll",
+      "clear": "Rensa adminroll (endast serveradmins)",
+      "set": "Adminrollen är nu {role}",
+      "cleared": "Adminrollen har rensats.",
+      "clearedAdmins": "Adminrollen har rensats. Bara serveradministratörer kan ändra inställningar."
+    },
+    "volume": {
+      "description": "Ställ in standard- och maxvolym",
+      "optionDefault": "Standardvolym (0-100)",
+      "optionMax": "Högsta tillåtna volym (0-100)",
+      "currentTitle": "Nuvarande volyminställningar",
+      "defaultSet": "Standardvolymen är nu {value}%",
+      "maxSet": "Maxvolymen är nu {value}%",
+      "logDefault": "Standardvolym",
+      "logMax": "Maxvolym"
+    },
+    "queue": {
+      "description": "Konfigurera köinställningar",
+      "optionMaxSize": "Maximal köstorlek (1-1000)",
+      "optionPreventDuplicates": "Förhindra dubbletter i kön",
+      "currentTitle": "Nuvarande köinställningar",
+      "maxSet": "Maximal köstorlek är nu {value} låtar",
+      "duplicatesSet": "Förhindra dubbletter: {value}"
+    },
+    "behavior": {
+      "description": "Konfigurera botens beteende",
+      "optionAnnouncements": "Meddela vad som spelas i textkanalen",
+      "optionAutoLeave": "Lämna röstkanalen när den är tom",
+      "optionLeaveTimeout": "Sekunder innan en tom kanal lämnas (30-3600)",
+      "currentTitle": "Nuvarande beteendeinställningar",
+      "announcementsSet": "Meddelanden om vad som spelas: {value}",
+      "autoLeaveSet": "Lämna automatiskt när tom: {value}",
+      "timeoutSet": "Tidsgräns för att lämna är nu {value} sekunder"
+    },
+    "voicechannels": {
+      "description": "Ställ in tillåtna röstkanaler",
+      "prompt": "Välj vilka röstkanaler boten får gå med i.",
+      "placeholder": "Välj tillåtna röstkanaler",
+      "allowAll": "Tillåt alla kanaler",
+      "set": "Tillåtna röstkanaler: {channels}",
+      "cleared": "Alla röstkanaler är nu tillåtna."
+    },
+    "textchannels": {
+      "description": "Ställ in tillåtna textkanaler för kommandon",
+      "prompt": "Välj vilka textkanaler som kan använda botkommandon.",
+      "placeholder": "Välj tillåtna textkanaler",
+      "allowAll": "Tillåt alla kanaler",
+      "set": "Tillåtna textkanaler: {channels}",
+      "cleared": "Alla textkanaler är nu tillåtna."
+    },
+    "logchannel": {
+      "description": "Ställ in kanalen för botloggar (spelas nu osv.)",
+      "prompt": "Välj en kanal för botens loggmeddelanden (spelas nu, kön klar osv.).",
+      "note": "**Obs:** Om ingen loggkanal är inställd letar boten efter en kanal som heter #bot-commands. Finns den inte skickas inga loggmeddelanden.",
+      "placeholder": "Välj loggkanal för botmeddelanden",
+      "useDefault": "Använd standard (bot-commands)",
+      "disable": "Stäng av loggmeddelanden",
+      "statusDefault": "Använder standardbeteende (letar efter #bot-commands)",
+      "statusDisabled": "Loggmeddelanden är avstängda",
+      "set": "Loggkanalen är nu {channel}",
+      "reset": "Loggkanalen har återställts till standard (använder #bot-commands om den finns).",
+      "disabled": "Loggmeddelanden har stängts av."
+    },
+    "blacklist": {
+      "description": "Hantera svartlistade användare",
+      "optionAdd": "Lägg till användare i svartlistan",
+      "optionRemove": "Ta bort användare från svartlistan",
+      "title": "Svartlistade användare",
+      "none": "Inga användare är svartlistade.",
+      "already": "{user} är redan svartlistad.",
+      "added": "{user} har svartlistats och kan inte använda boten.",
+      "notListed": "{user} är inte svartlistad.",
+      "removed": "{user} har tagits bort från svartlistan."
+    },
+    "language": {
+      "description": "Ställ in botens språk för den här servern",
+      "prompt": "Välj botens språk för den här servern.",
+      "placeholder": "Välj ett språk",
+      "more": "Alla språk som boten kan finns tillgängliga med {command}."
+    },
+    "embedcolor": {
+      "description": "Ställ in egen embed-färg",
+      "optionColor": "Hex-färgkod (t.ex. #FF5500)",
+      "invalid": "Ogiltig hex-färg. Använd formatet: #RRGGBB (t.ex. #FF5500)",
+      "set": "Embed-färgen är nu: {color}"
+    },
+    "reset": {
+      "description": "Återställ alla inställningar till standard",
+      "prompt": "Är du säker på att du vill återställa ALLA inställningar till standard? Det går inte att ångra.",
+      "confirm": "Ja, återställ alla inställningar",
+      "cancel": "Avbryt",
+      "done": "Alla inställningar har återställts till standard.",
+      "cancelled": "Återställningen avbröts."
+    },
+    "stats": {
+      "description": "Visa serverns musikstatistik",
+      "title": "Musikstatistik",
+      "songsPlayed": "Totalt antal spelade låtar",
+      "playtime": "Total speltid",
+      "playtimeValue": "{hours} h {minutes} min"
+    }
   },
   "stats": {
-    "description": "Visa bot- och sessionsstatistik"
+    "description": "Visa bot- och sessionsstatistik",
+    "bot": {
+      "description": "Visa botstatistik",
+      "title": "Botstatistik",
+      "servers": "Servrar",
+      "users": "Användare",
+      "channels": "Kanaler",
+      "activeQueues": "Aktiva köer",
+      "tracksPlaying": "Låtar som spelas",
+      "uptime": "Drifttid",
+      "memory": "Minne",
+      "platform": "Plattform"
+    },
+    "uptime": {
+      "description": "Visa botens drifttid"
+    },
+    "leaderboard": {
+      "description": "Visa topplistan för kön",
+      "line": "{user} - {count} låtar"
+    },
+    "history": {
+      "description": "Visa nyligen spelade låtar"
+    },
+    "session": {
+      "description": "Visa info om aktuell session",
+      "noSession": "Ingen aktiv session på den här servern.",
+      "title": "Sessionsinfo",
+      "nowPlaying": "Spelas nu",
+      "nothing": "Inget",
+      "tracksInQueue": "Låtar i kön",
+      "totalDuration": "Total längd"
+    }
   },
   "user": {
-    "description": "Användarprofil och inställningar"
+    "description": "Användarprofil och inställningar",
+    "profile": {
+      "description": "Visa användarprofil",
+      "optionTarget": "Användare att visa",
+      "free": "Gratis"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Började spela",
+      "pause": "Pausade uppspelningen",
+      "resume": "Återupptog uppspelningen",
+      "stop": "Stoppade uppspelningen",
+      "skip": "Hoppade över låt",
+      "seek": "Hoppade till position",
+      "seek_forward": "Spolade framåt",
+      "seek_backward": "Spolade bakåt",
+      "forward": "Snabbspolade framåt",
+      "rewind": "Spolade tillbaka",
+      "backward": "Spolade tillbaka",
+      "replay": "Startade om låten",
+      "restart": "Startade om kön",
+      "volume_change": "Ändrade volymen",
+      "shuffle": "Blandade kön",
+      "loop": "Ändrade upprepningsläge",
+      "loopqueue": "Ändrade upprepning av kön",
+      "setting_change": "Uppdaterade inställningar",
+      "queue_clear": "Rensade kön",
+      "clear": "Rensade kön",
+      "join": "Gick med i kanalen",
+      "leave": "Lämnade kanalen",
+      "autoplay": "Växlade autouppspelning",
+      "previous": "Spelade föregående låt",
+      "jump": "Hoppade till låt",
+      "swap": "Bytte plats på låtar",
+      "reverse": "Vände på kön",
+      "sort": "Sorterade kön",
+      "removerange": "Tog bort intervall",
+      "removeduplicates": "Tog bort dubbletter",
+      "removelast": "Tog bort sista låten",
+      "voteskip": "Röstade för att hoppa över",
+      "grab": "Sparade låt",
+      "insert": "Infogade låt",
+      "removecurrent": "Tog bort aktuell låt"
+    },
+    "detail": {
+      "on": "På",
+      "off": "Av",
+      "tracks": "{count} låtar",
+      "effectsCleared": "Effekter rensade",
+      "bassBoost": "Basförstärkning {level}",
+      "effectOn": "{effect} aktiverad",
+      "effectOff": "{effect} inaktiverad",
+      "previousTrack": "föregående låt",
+      "currentTrack": "aktuell låt",
+      "queue": "Kö"
+    },
+    "settings": {
+      "title": "Inställningar uppdaterade",
+      "changed": "{user} ändrade {setting}",
+      "before": "Före",
+      "after": "Efter",
+      "notSet": "Inte angiven",
+      "userId": "Användar-ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} är en Founder-förmån",
+    "description": "Founder kostar {price}/månad, är begränsat till {spots} platser och låser upp 320 kbps-ljud, 24/7-läge, ingen gräns för låtlängd och Founder-rollen.",
+    "afterJoin": "När du har gått med",
+    "afterJoinSteps": "1. koppla ditt Discord-konto i dina Patreon-inställningar\n2. kör `/premium link` på den här servern",
+    "becomeFounder": "Bli Founder",
+    "voteTitle": "Eller rösta gratis",
+    "voteBody": "En röst på top.gg låser upp detta i 12 timmar. Använd `/vote`.",
+    "voteButton": "Rösta på top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Ange ett låtnamn eller en länk först.",
+    "notMember": "Du måste vara medlem på den här servern för att spela musik här.",
+    "noVoiceChannel": "Gå med i en röstkanal i Discord, eller välj en här, och försök igen.",
+    "channelGone": "Den röstkanalen finns inte längre. Välj en annan.",
+    "memberCantJoin": "Du har inte åtkomst till {channel}. Välj en röstkanal som du kan gå med i.",
+    "nowPlaying": "Spelas nu: {title}",
+    "added": "Tillagd i kön (#{position}): {title}",
+    "playlist": "Lade till {count} låtar från {title}"
+  },
+  "voiceStatus": {
+    "title": "Röstkanalstatus",
+    "missing": "Jag kan inte visa låten som spelas under röstkanalens namn eftersom jag saknar behörigheten **Set Voice Channel Status**. Auktorisera mig igen för att lägga till den; dina inställningar förblir oförändrade.",
+    "reauthorize": "Auktorisera igen"
+  },
+  "guess": {
+    "description": "Gissa låten från 30-sekunders klipp, med vänner i röstkanalen",
+    "startDescription": "Starta ett gissa låten-spel i din röstkanal",
+    "stopDescription": "Stoppa gissa låten-spelet",
+    "optionRounds": "Hur många låtar att gissa (3-15, standard 5)",
+    "optionGenre": "Vilken musik som ska spelas (standard: topphits)",
+    "genre": {
+      "top": "Topphits",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin",
+      "electronic": "Elektroniskt",
+      "80s": "80-tal",
+      "90s": "90-tal",
+      "2000s": "2000-tal"
+    },
+    "title": "Gissa låten",
+    "trackTitle": "Gissa låten · runda {round}",
+    "notInVoice": "Gå med i en röstkanal först och starta sedan spelet.",
+    "alreadyRunning": "Ett gissa låten-spel pågår redan på den här servern.",
+    "musicPlaying": "Musik spelas här. Stoppa den först (/stop) och starta sedan spelet.",
+    "otherChannel": "Jag stannar i {channel} (24/7). Starta spelet därifrån.",
+    "noVoicePermission": "Jag kan inte gå med eller prata i din röstkanal.",
+    "noChannelAccess": "Jag kan inte skriva i den här kanalen. Starta spelet där jag kan skicka meddelanden.",
+    "noTracks": "Kunde inte ladda låtar för den genren just nu. Testa en annan genre eller försök igen om en minut.",
+    "connectFailed": "Kunde inte gå med i din röstkanal. Försök igen.",
+    "introMeta": "{rounds} rundor · {genre}",
+    "introBody": "Lyssna i {channel} och välj låten som spelas. Första rätta svaret får poäng, och snabbare svar ger mer poäng. Väljer du fel är du ute för den rundan.",
+    "introStarting": "Första låten om några sekunder…",
+    "introOver": "Det här spelet är slut.",
+    "stopButton": "Stoppa spelet",
+    "roundTitle": "Runda {round}/{total}",
+    "roundPrompt": "Vilken låt spelas?",
+    "roundCloses": "Svaren stängs {time}",
+    "roundRules": "första rätta svaret får poäng",
+    "correctBy": "{user} klarade det på {seconds} s (+{points})",
+    "timeUp": "Tiden är ute! Ingen klarade det.",
+    "roundStopped": "Spelet stoppades.",
+    "answerWas": "Det var **{title}** av **{artist}**",
+    "scores": "Poäng",
+    "scoreLine": "{user} · {points} p ({correct} rätt)",
+    "noScores": "Inga poäng än.",
+    "nextSoon": "Nästa låt om några sekunder…",
+    "finalSoon": "Slutresultatet kommer strax…",
+    "finalTitle": "Slutresultat",
+    "winner": "{user} vinner med {points} poäng!",
+    "noWinner": "Ingen fick poäng den här gången.",
+    "playAgain": "Spela igen med {command}",
+    "stoppedBy": "Spelet stoppades av {user}.",
+    "stoppedPlain": "Spelet stoppades.",
+    "endedEmpty": "Alla lämnade röstkanalen, så spelet avslutades.",
+    "endedDisconnected": "Jag kopplades bort från röstkanalen, så spelet avslutades.",
+    "endedMusic": "Musik började spelas, så spelet avslutades.",
+    "endedError": "Låtklippen gick inte att spela, så spelet avslutades.",
+    "wrong": "Fel! Du är ute den här rundan.",
+    "alreadyAnswered": "Du har redan svarat den här rundan.",
+    "roundOver": "Den här rundan är slut.",
+    "gameOver": "Det här spelet är slut.",
+    "joinToPlay": "Gå med i {channel} för att spela.",
+    "stopNotAllowed": "Bara den som startade spelet eller någon med Hantera server kan stoppa det.",
+    "noGame": "Inget gissa låten-spel pågår här.",
+    "stopped": "Spelet stoppades.",
+    "blockedDuringGame": "Ett gissa låten-spel pågår på den här servern. Vänta tills det är klart eller avsluta det med {stop}."
   }
 }

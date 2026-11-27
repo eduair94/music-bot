@@ -29,13 +29,31 @@
   "loop": {
     "description": "Toggle music loop",
     "errorNotQueue": "Er speelt niets af.",
-    "result": "Loop is nu {loop}"
+    "result": "Loop is nu {loop}",
+    "optionMode": "Wat herhalen",
+    "mode": {
+      "off": "Uit",
+      "track": "Dit nummer",
+      "queue": "Hele wachtrij"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Er is niks aan het afspelen.",
     "lyricsNotFound": "Geen lyrics gevonden voor {title}.",
     "embedTitle": "{title} - Lyrics",
-    "description": "Songtekst van het huidige nummer, of van elk ander nummer"
+    "description": "Songtekst van het huidige nummer, of van elk ander nummer",
+    "liveTitle": "Live songtekst",
+    "liveButton": "Live songtekst",
+    "liveHint": "Gesynchroniseerde songtekst beschikbaar: druk op Live songtekst om mee te lezen.",
+    "liveStop": "Stop",
+    "livePaused": "Gepauzeerd",
+    "liveEnded": "Live songtekst beëindigd.",
+    "liveReplaced": "Live songtekst is verplaatst naar een nieuwer bericht.",
+    "liveStoppedBy": "Live songtekst gestopt door {user}.",
+    "liveNoSync": "Dit nummer heeft geen gesynchroniseerde songtekst, dus er is geen live modus voor.",
+    "liveNoPermission": "Alleen degene die de live songtekst heeft gestart of iemand met Berichten beheren kan hem stoppen.",
+    "liveNotDuringGame": "Songteksten zijn verborgen zolang er een raad-het-nummer-spel bezig is.",
+    "liveVersionHint": "Getimed voor een andere versie van het nummer, dus regels kunnen verschuiven"
   },
   "move": {
     "description": "Verplaats nummers in de wachtrij",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Er wordt niets afgespeeld op deze server**",
     "currentPage": "Huidige pagina - ",
     "embedTitle": "Muziek Wachtrij\n",
-    "embedCurrentSong": "**Huidig lied - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Huidig lied - [{title}]({url})**\n\n{info}",
+    "optionPage": "Paginanummer"
   },
   "remove": {
     "description": "Verwijder liedje van de wachrij",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Het huidige volume is: **{volume}%**",
     "errorNotNumber": "Gebruik een nummer of het volume te veranderen.",
     "errorNotValid": "Gebruik een nummer tussen 0 - 100.",
-    "result": "Volume veranderd naar: **{arg}%**"
+    "result": "Volume veranderd naar: **{arg}%**",
+    "errorRange": "Volume moet tussen 0 en {max} liggen."
   },
   "common": {
     "on": "**aan**",
@@ -208,14 +228,49 @@
     "disabled": "**uitgeschakeld**",
     "errorNotChannel": "Je moet eerst een voice channel joinen!",
     "cooldownMessage": "Wacht nog {time} seconden voor je `{name}` hergebruikt.",
-    "errorCommand": "Er was een error tijdens het uitvoeren van deze command."
+    "errorCommand": "Er was een error tijdens het uitvoeren van deze command.",
+    "djRequired": "Je hebt de DJ-rol nodig om dit commando te gebruiken.",
+    "guild_only": "Dit commando werkt alleen in een server.",
+    "unknown": "Onbekend",
+    "unknownError": "Onbekende fout",
+    "unknownSubcommand": "Onbekend subcommando.",
+    "voiceChannel": "spraakkanaal",
+    "playerInitializing": "De muziekspeler wordt nog opgestart. Probeer het over een paar seconden opnieuw.",
+    "voiceChannelNotAllowed": "De bot mag niet afspelen in dit spraakkanaal. Gebruik een toegestaan kanaal.",
+    "queueFull": "Wachtrij is vol! Maximaal {max} nummers toegestaan.",
+    "invalidFileType": "Ongeldig bestandstype. Ondersteunde formaten: {formats}",
+    "fileTooLarge": "Bestand is te groot ({size}MB). Maximale grootte is {max}MB.",
+    "optionToggle": "Aan of uit (standaard: omschakelen)",
+    "requestedBy": "Aangevraagd door {user}",
+    "yes": "Ja",
+    "no": "Nee",
+    "loop": {
+      "off": "Uit",
+      "track": "Nummer",
+      "queue": "Wachtrij"
+    },
+    "field": {
+      "title": "Titel",
+      "artist": "Artiest",
+      "duration": "Duur",
+      "tracks": "Nummers",
+      "source": "Bron",
+      "requestedBy": "Aangevraagd door",
+      "loopMode": "Herhaalmodus",
+      "volume": "Volume",
+      "loadTime": "Laadtijd",
+      "positionInQueue": "Positie in wachtrij",
+      "status": "Status",
+      "tier": "Niveau"
+    }
   },
   "seek": {
     "description": "Spring naar een bepaald tijdstip in het nummer",
     "errorNotQueue": "Er wordt niets afgespeeld.",
     "errorInvalidTime": "Ongeldig tijdformaat. Gebruik bijvoorbeeld: 1:30, 90, 1m30s",
     "errorOutOfRange": "Tijd moet tussen 0:00 en {duration} liggen",
-    "result": "<@{author}> ⏩ gesprongen naar **{time}**"
+    "result": "<@{author}> ⏩ gesprongen naar **{time}**",
+    "optionTime": "Tijd om naartoe te springen (bijv. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Spoel het nummer een aantal seconden vooruit",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Spoel het nummer een aantal seconden terug",
     "errorNotQueue": "Er wordt niets afgespeeld.",
-    "result": "<@{author}> ⏪ **{seconds}s** teruggespoeld (nu op {position})"
+    "result": "<@{author}> ⏪ **{seconds}s** teruggespoeld (nu op {position})",
+    "optionSeconds": "Aantal seconden om terug te spoelen"
   },
   "replay": {
     "description": "Start het huidige nummer opnieuw vanaf het begin",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Autoplay aan/uit (speelt vergelijkbare nummers als de wachtrij op is)",
     "errorNotQueue": "Er is geen actieve wachtrij.",
-    "result": "🔄 Autoplay staat nu {status}"
+    "result": "🔄 Autoplay staat nu {status}",
+    "optionDefault": "Maak dit ook de standaard voor deze server (Server beheren)"
   },
   "history": {
     "description": "Toon recent afgespeelde nummers",
     "errorNotQueue": "Er is geen actieve wachtrij.",
     "errorEmpty": "Nog geen nummers in de geschiedenis.",
     "embedTitle": "Recent afgespeeld",
-    "footer": "Laatste {count} nummers"
+    "footer": "Laatste {count} nummers",
+    "title": "Recent afgespeeld",
+    "titleUser": "Recent afgespeeld · aangevraagd door {user}",
+    "empty": "Er is de afgelopen 30 dagen niets afgespeeld in deze server.",
+    "emptyUser": "{user} heeft hier de afgelopen 30 dagen geen nummers aangevraagd.",
+    "summary": "Laatste {count} keer afgespeeld",
+    "playAgain": "Opnieuw afspelen…",
+    "optionUser": "Toon alleen nummers die dit lid heeft aangevraagd",
+    "unavailable": "De afspeelgeschiedenis is nu niet beschikbaar. Probeer het over een minuut opnieuw.",
+    "gone": "Dat nummer staat niet meer in de geschiedenis."
   },
   "previous": {
     "description": "Speel het vorige nummer",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Er is geen wachtrij.",
     "errorInvalidPosition": "Ongeldige positie. De wachtrij heeft maar {max} nummers.",
     "errorNotFound": "Geen nummer gevonden op die positie.",
-    "result": "<@{author}> ⏭️ gesprongen naar **{title}**"
+    "result": "<@{author}> ⏭️ gesprongen naar **{title}**",
+    "optionPosition": "Positie in de wachtrij om naartoe te springen"
   },
   "Invite me to your server!": "Nodig me uit voor je server!",
   "Invite": "Uitnodigen",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Krijg de link naar het dashboard",
     "embedDescription": "Open het webdashboard om je serverinstellingen te beheren, de wachtrij te bekijken en meer!",
-    "footer": "Beheer je muziekervaring"
+    "footer": "Beheer je muziekervaring",
+    "title": "Bot-dashboard",
+    "features": "Functies",
+    "featuresList": "• Serverinstellingen configureren\n• Wachtrij en afspeelbediening bekijken\n• Afspeellijsten en collecties beheren\n• Luisterstatistieken bekijken\n• Premiumfuncties beheren",
+    "open": "Dashboard openen"
   },
   "clean": {
     "description": "Verwijder botberichten uit het kanaal",
@@ -377,7 +448,9 @@
       "description": "Bekijk al je collecties",
       "title": "📁 Jouw collecties",
       "empty": "Je hebt nog geen collecties. Maak er een met `/collections create`!",
-      "footer": "Totaal: {count} collecties"
+      "footer": "Totaal: {count} collecties",
+      "select": "Open een collectie…",
+      "more": "…en nog {count}. Open ze met /collections view."
     },
     "create": {
       "description": "Maak een nieuwe collectie",
@@ -399,7 +472,12 @@
       "tracksField": "Nummers",
       "durationField": "Duur",
       "shareCodeField": "Deelcode",
-      "andMore": "...en nog {count} nummers"
+      "andMore": "...en nog {count} nummers",
+      "play": "Afspelen",
+      "addToQueue": "Toevoegen aan wachtrij",
+      "summary": "{count} nummers · {duration}",
+      "page": "Pagina {page}/{pages}",
+      "importedFrom": "Geïmporteerd van {source}"
     },
     "save": {
       "description": "Sla de huidige wachtrij op als collectie",
@@ -411,7 +489,9 @@
       "description": "Laad een collectie in de wachtrij",
       "nameOption": "Naam van de collectie die je wilt laden",
       "empty": "Deze collectie is leeg.",
-      "success": "📂 **{count}** nummers geladen uit collectie **{name}**!"
+      "success": "📂 **{count}** nummers geladen uit collectie **{name}**!",
+      "queuedNext": "Ze worden direct na het huidige nummer afgespeeld.",
+      "skipped": "{count} overgeslagen (langer dan deze server toestaat, boven de wachtrijlimiet of niet gevonden)."
     },
     "rename": {
       "description": "Hernoem een collectie",
@@ -435,7 +515,8 @@
       "shareCodeOption": "De deelcode om van te klonen",
       "nameOption": "Naam voor je nieuwe collectie",
       "invalidCode": "Ongeldige of verlopen deelcode.",
-      "success": "📋 **{count}** nummers gekloond naar nieuwe collectie **{name}**!"
+      "success": "📋 **{count}** nummers gekloond naar nieuwe collectie **{name}**!",
+      "clonedFrom": "Gekloond van {name}"
     },
     "merge": {
       "description": "Voeg een collectie samen met een andere",
@@ -457,6 +538,21 @@
       "positionOption": "Positie van het nummer om te verwijderen (begint bij 1)",
       "invalidPosition": "Ongeldige positie. De collectie heeft {max} nummers.",
       "success": "🗑️ **{track}** verwijderd uit collectie **{name}**."
+    },
+    "error": "Er ging iets mis met je collecties. Probeer het opnieuw.",
+    "trackCount": "{count} nummers",
+    "gone": "Die collectie bestaat niet meer.",
+    "notYours": "Dit menu is van iemand anders. Gebruik /collections list om je eigen collecties te zien.",
+    "import": {
+      "description": "Importeer een afspeellijst van Spotify, YouTube, Deezer of Apple Music",
+      "urlOption": "Afspeellijstlink (Spotify, YouTube, Deezer, Apple Music-album)",
+      "nameOption": "Naam voor de nieuwe collectie (standaard: de titel van de afspeellijst)",
+      "invalidUrl": "Dat lijkt geen link. Plak een afspeellijst-URL van Spotify, YouTube, Deezer of een Apple Music-album.",
+      "failed": "Ik kon die afspeellijst niet lezen. Zorg dat hij openbaar is en dat de link van Spotify, YouTube, Deezer of een Apple Music-album komt.",
+      "exists": "Je hebt al een collectie met de naam **{name}**. Kies een andere naam met de optie `name`.",
+      "success": "📥 **{count}** nummers van {source} geïmporteerd in **{name}**.",
+      "skipped": "{count} overgeslagen (boven de limiet van {max} nummers per collectie, of niet afspeelbaar).",
+      "spotifyCap": "Spotify deelt alleen de eerste 100 nummers van een afspeellijstlink."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Zet tekst om in spraak en speel het af in het spraakkanaal",
     "errorNotAvailable": "❌ TTS-service is niet beschikbaar. Neem contact op met de botbeheerder.",
     "errorGenerate": "❌ Spraak genereren mislukt. Probeer het opnieuw.",
-    "success": "🎤 Speelt af: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Speelt af: \"{text}\" ({language}, {voice})",
+    "optionText": "Tekst om om te zetten naar spraak",
+    "optionLanguage": "Taal voor spraak (gebruikt opgeslagen configuratie als niets is opgegeven)",
+    "optionVoice": "Stem om te gebruiken (gebruikt opgeslagen configuratie als niets is opgegeven)"
   },
   "sayconfig": {
-    "description": "Stel je TTS-instellingen (tekst-naar-spraak) in"
+    "description": "Stel je TTS-instellingen (tekst-naar-spraak) in",
+    "view": {
+      "description": "Bekijk je huidige TTS-configuratie",
+      "title": "TTS-configuratie",
+      "noConfig": "Geen aangepaste configuratie ingesteld. Standaardinstellingen worden gebruikt.",
+      "mode": "Modus",
+      "language": "Taal",
+      "voice": "Stem",
+      "voiceDescription": "Stembeschrijving",
+      "styleInstruction": "Stijlinstructie",
+      "referenceAudio": "Referentieaudio",
+      "referenceAudioSet": "Ingesteld",
+      "referenceText": "Referentietekst"
+    },
+    "mode": {
+      "description": "Stel de TTS-modus in (custom_voice of voice_clone)",
+      "option": "TTS-modus",
+      "customVoice": "Eigen stem (standaard)",
+      "voiceClone": "Stem klonen",
+      "set": "TTS-modus ingesteld op **{mode}**"
+    },
+    "language": {
+      "description": "Stel de standaardtaal in",
+      "option": "Taal voor spraak",
+      "set": "Standaardtaal ingesteld op **{language}**"
+    },
+    "voice": {
+      "description": "Stel de standaardstem/spreker in",
+      "option": "Te gebruiken stem",
+      "set": "Standaardstem ingesteld op **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Stel een stembeschrijving in voor het genereren van een eigen stem",
+      "option": "Stembeschrijving (bijv. 'diepe mannenstem met rustige toon')",
+      "set": "Stembeschrijving ingesteld op: \"{text}\""
+    },
+    "style": {
+      "description": "Stel een stijlinstructie in voor het genereren van de stem",
+      "option": "Stijlinstructie (bijv. 'spreek langzaam en duidelijk')",
+      "set": "Stijlinstructie ingesteld op: \"{text}\""
+    },
+    "reference": {
+      "description": "Stel referentie-audio en -tekst in voor het klonen van een stem",
+      "optionAudio": "Referentie-audiobestand (MP3, WAV, enz.)",
+      "optionText": "Transcriptie van de referentie-audio",
+      "saved": "Referentie-audio geüpload en opgeslagen!",
+      "text": "Referentietekst: \"{text}\"",
+      "modeSet": "Modus automatisch ingesteld op **{mode}**",
+      "failed": "Uploaden van referentie-audio mislukt. Probeer het opnieuw."
+    },
+    "reset": {
+      "description": "Zet je TTS-configuratie terug naar de standaardwaarden",
+      "done": "TTS-configuratie teruggezet naar standaardwaarden.",
+      "none": "Geen aangepaste configuratie gevonden om terug te zetten."
+    }
   },
   "radio": {
     "notInVoice": "Je moet in een spraakkanaal zitten.",
@@ -649,7 +802,8 @@
     "body": "Door te stemmen vinden meer servers de bot. Elke stem op top.gg ontgrendelt **24/7-modus** en **studiokwaliteit** voor je, 12 uur lang.",
     "active": "Je stemvoordelen zijn nog {time} actief.",
     "inactive": "Geen actieve stem. Stem hieronder, de voordelen starten binnen een minuut.",
-    "notListed": "Stemmen kan zodra de bot vermeld staat. Bedankt dat je wilt helpen!"
+    "notListed": "Stemmen kan zodra de bot vermeld staat. Bedankt dat je wilt helpen!",
+    "heading": "Stem op {bot}"
   },
   "leaderboard": {
     "description": "Bekijk het klassement van deze sessie",
@@ -742,7 +896,8 @@
     "noQueue": "Er is geen actieve wachtrij.",
     "invalidChannel": "Ongeldig kanaal. Kies een tekstkanaal.",
     "title": "📢 Kanaal gewijzigd",
-    "success": "Meldingen worden nu naar {channel} gestuurd."
+    "success": "Meldingen worden nu naar {channel} gestuurd.",
+    "optionChannel": "Kanaal om aan te koppelen (standaard het huidige)"
   },
   "disabledcommands": {
     "description": "Bekijk alle uitgeschakelde commando's in deze server",
@@ -939,7 +1094,28 @@
     "user_free": "Je zit op het **Free**-niveau.",
     "upgrade": "Upgrade naar Premium",
     "upgrade_message": "Krijg premiumfuncties door ons te steunen op Patreon!",
-    "description": "Bekijk premium-voordelen"
+    "description": "Bekijk premium-voordelen",
+    "view": {
+      "description": "Bekijk beschikbare voordelen"
+    },
+    "user": {
+      "description": "Bekijk je huidige voordelen",
+      "title": "Jouw voordelen",
+      "premium": "Je hebt **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Audio: {bitrate}kbps",
+      "audioFilters": "Audiofilters",
+      "stay247": "24/7-modus",
+      "free": "Je zit op het **Gratis** niveau. Haal premium via Patreon!"
+    },
+    "overview": {
+      "title": "Premium-voordelen",
+      "intro": "Founder is beperkt tot {spots} plekken en de prijs ligt vast.",
+      "freeName": "Gratis — {price}",
+      "freePerks": "128kbps audio\nWachtrij, afspeellijsten en songteksten\nAlle commando's",
+      "founderName": "Founder / Bètatester — {price}/maand",
+      "founderPerks": "320kbps audio\nAudiofilters\n24/7-modus\nVoorrang in de wachtrij\nFounder-rol en directe support"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Geen premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Autoplay uit.",
     "volumeLimit": "Deze server beperkt het volume tot {max}%.",
     "lyricsButton": "Songtekst",
-    "saveButton": "Opslaan"
+    "saveButton": "Opslaan",
+    "trackFailed": "Kon **{title}** niet afspelen, wordt overgeslagen. Probeer een andere link of zoekopdracht.",
+    "guessRunning": "Er is hier een raad-het-nummer-spel bezig. De speler komt terug als het afgelopen is."
   },
   "queueView": {
     "title": "Wachtrij",
@@ -1040,7 +1218,8 @@
     "commands": "Commando's",
     "dashboard": "Dashboard",
     "support": "Supportserver",
-    "vote": "Stemmen"
+    "vote": "Stemmen",
+    "voiceStatusHint": "Wil je het nummer dat speelt onder de naam van het spraakkanaal zien? [Autoriseer me opnieuw]({url}) om de machtiging Spraakkanaalstatus instellen te geven."
   },
   "router": {
     "guildOnly": "Dit commando werkt alleen in een server.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Taal (automatisch volgt de Discord-taal van elk lid)",
     "auto": "Automatisch (Discord-taal van elk lid)",
     "set": "Taal ingesteld op {language}.",
-    "needManage": "Je hebt de permissie Server beheren nodig om de taal te wijzigen."
+    "needManage": "Je hebt de permissie Server beheren nodig om de taal te wijzigen.",
+    "unknown": "Onbekende taal."
   },
   "links": {
     "website": "Website",
@@ -1100,45 +1280,741 @@
     "invite": "Uitnodigen"
   },
   "commanddisable": {
-    "description": "Schakel commando's uit in deze server"
+    "description": "Schakel commando's uit in deze server",
+    "optionCommand": "Commando om uit te schakelen",
+    "protected": "Essentieel commando kan niet worden uitgeschakeld: {command}",
+    "notFound": "Commando niet gevonden: {command}",
+    "alreadyDisabled": "Commando {command} is al uitgeschakeld.",
+    "title": "Commando uitgeschakeld",
+    "done": "Commando {command} is uitgeschakeld in deze server.\n\nGebruik `/commandenable` om het weer in te schakelen."
   },
   "commanddisableall": {
-    "description": "Schakel alle commando's uit behalve de essentiële"
+    "description": "Schakel alle commando's uit behalve de essentiële",
+    "title": "Alle commando's uitgeschakeld",
+    "done": "**{count}** commando's uitgeschakeld.\n\nBeschermde commando's die nog beschikbaar zijn:\n{commands}\n\nGebruik `/commandenableall` om alle commando's te herstellen."
   },
   "commandenable": {
-    "description": "Schakel een uitgeschakeld commando in"
+    "description": "Schakel een uitgeschakeld commando in",
+    "optionCommand": "Commando om in te schakelen",
+    "notDisabled": "Commando {command} is niet uitgeschakeld.",
+    "title": "Commando ingeschakeld",
+    "done": "Commando {command} is weer ingeschakeld in deze server."
   },
   "commandenableall": {
-    "description": "Schakel alle uitgeschakelde commando's in"
+    "description": "Schakel alle uitgeschakelde commando's in",
+    "title": "Alle commando's ingeschakeld",
+    "done": "**{count}** commando's weer ingeschakeld.\n\nAlle commando's zijn nu beschikbaar.",
+    "none": "Er waren geen commando's uitgeschakeld."
   },
   "effects": {
-    "description": "Beheer audio-effecten"
+    "description": "Beheer audio-effecten",
+    "optionEnabled": "In- of uitschakelen",
+    "nothingPlaying": "Er speelt momenteel geen muziek.",
+    "unknown": "Onbekend effect.",
+    "enabledBy": "{effect}-effect ingeschakeld door {user}",
+    "disabledBy": "{effect}-effect uitgeschakeld door {user}",
+    "8d": {
+      "description": "Pas 8D-audio-effect toe (draait het geluid rond)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Pas bass boost-effect toe",
+      "optionLevel": "Basniveau",
+      "level": {
+        "off": "Uit",
+        "low": "Laag",
+        "medium": "Gemiddeld",
+        "high": "Hoog"
+      },
+      "disabledBy": "Bass boost uitgeschakeld door {user}",
+      "alreadyOff": "Bass boost staat al uit.",
+      "setBy": "Bass boost ingesteld op **{level}** door {user}"
+    },
+    "distortion": {
+      "description": "Pas distortion-effect toe",
+      "name": "Distortion"
+    },
+    "haas": {
+      "description": "Pas haas-effect toe (ruimtelijke audio)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Verminder zang (karaokemodus)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Pas nightcore-effect toe (hogere toonhoogte + snelheid)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Pas vaporwave-effect toe (lagere toonhoogte + snelheid)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Pas pulsator-effect toe",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Speel audio achterstevoren af",
+      "name": "Omkeren"
+    },
+    "tremolo": {
+      "description": "Tremolo-effect toepassen",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Vibrato-effect toepassen",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Lofi-effect toepassen",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Surround-geluidseffect toepassen",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Actieve effecten tonen",
+      "title": "Actieve effecten",
+      "empty": "Geen actieve effecten"
+    },
+    "clear": {
+      "description": "Alle effecten wissen",
+      "done": "Alle effecten gewist."
+    }
   },
   "info": {
-    "description": "Botinformatie en hulp"
+    "description": "Botinformatie en hulp",
+    "about": {
+      "description": "Over deze bot",
+      "statistics": "Statistieken",
+      "servers": "Servers",
+      "commands": "Commando's",
+      "uptime": "Uptime",
+      "system": "Systeem",
+      "memory": "Geheugen"
+    },
+    "faq": {
+      "description": "Veelgestelde vragen"
+    },
+    "support": {
+      "description": "Link naar de supportserver",
+      "title": "Support",
+      "body": "Hulp nodig? Join onze supportserver:",
+      "join": "Klik om te joinen",
+      "reportIssues": "Problemen melden",
+      "reportIssuesValue": "Check eerst `/info faq` en vraag het daarna in support",
+      "suggestions": "Suggesties",
+      "suggestionsValue": "Deel je ideeën in ons suggestiekanaal"
+    },
+    "queue": {
+      "description": "Gedetailleerde wachtrij-info",
+      "noQueue": "Geen actieve wachtrij.",
+      "title": "Wachtrij-info",
+      "contributors": "Bijdragers"
+    },
+    "song": {
+      "description": "Details van het huidige nummer",
+      "noTrack": "Er speelt niets.",
+      "title": "Nu aan het spelen"
+    },
+    "nextup": {
+      "description": "Volgend nummer in de wachtrij tonen",
+      "empty": "Geen nummers in de wachtrij.",
+      "title": "Hierna",
+      "footer": "{count} nummers in de wachtrij"
+    },
+    "changelogs": {
+      "description": "Recente updates en wijzigingen",
+      "title": "Recente updates",
+      "intro": "Nieuwste wijzigingen en verbeteringen:",
+      "newFeatures": "Nieuwe functies",
+      "newFeaturesList": "• Commando's samengevoegd voor betere organisatie\n• Verbeterd systeem voor audio-effecten\n• Beter wachtrijbeheer",
+      "improvements": "Verbeteringen",
+      "improvementsList": "• Snellere reactie op commando's\n• Betere foutafhandeling\n• Minder geheugengebruik",
+      "bugFixes": "Bugfixes",
+      "bugFixesList": "• Afspeelproblemen opgelost\n• Synchronisatieproblemen met de wachtrij opgelost"
+    }
   },
   "patreon": {
-    "description": "Controleer je Patreon-status en synchroniseer voordelen"
+    "description": "Controleer je Patreon-status en synchroniseer voordelen",
+    "notConfigured": "Patreon-integratie is niet ingesteld voor deze bot.",
+    "howToLink": "Zo koppel je het",
+    "premiumActive": "Premium actief",
+    "patronStatus": {
+      "active": "Actieve patron",
+      "declined": "Betaling geweigerd",
+      "former": "Voormalige patron",
+      "none": "Geen patron"
+    },
+    "status": {
+      "description": "Bekijk je huidige Patreon-status en voordelen",
+      "title": "Patreon-status",
+      "yourTitle": "Jouw Patreon-status",
+      "notLinked": "Je bent momenteel niet gekoppeld aan een Patreon-account.",
+      "howToLinkSteps": "1. Ga naar [Patreon]({patreon})\n2. Koppel je Discord-account via Instellingen → Connecties\n3. Abonneer je op onze Patreon-pagina\n4. Gebruik `/patreon sync` om je voordelen bij te werken",
+      "pledgeAmount": "Bijdragebedrag",
+      "perMonth": "{amount}/maand",
+      "lifetimeSupport": "Totale steun",
+      "lastCharge": "Laatste betaling",
+      "thanks": "Bedankt voor je steun! Je hebt toegang tot premiumfuncties.",
+      "declined": "Je laatste betaling is geweigerd. Werk je betaalmethode bij op Patreon om je voordelen terug te krijgen.",
+      "former": "Je bijdrage is beëindigd. Verleng op Patreon om je voordelen terug te krijgen!",
+      "error": "Er ging iets mis bij het checken van je Patreon-status. Probeer het later opnieuw."
+    },
+    "sync": {
+      "description": "Synchroniseer je Patreon-gegevens om je voordelen bij te werken",
+      "completeTitle": "Patreon-synchronisatie voltooid",
+      "success": "Je Patreon-gegevens zijn gesynchroniseerd!",
+      "title": "Patreon-synchronisatie",
+      "notFound": "Geen Patreon-account gevonden dat aan je Discord is gekoppeld.",
+      "howToLinkSteps": "1. Ga naar [Patreon-instellingen]({settings})\n2. Klik op **Connecties**\n3. Koppel je **Discord**-account\n4. Zorg dat je onze campagne steunt\n5. Voer `/patreon sync` opnieuw uit",
+      "error": "Er ging iets mis bij het synchroniseren van je Patreon-gegevens. Probeer het later opnieuw."
+    },
+    "info": {
+      "description": "Lees over Patreon-voordelen en hoe je je account koppelt",
+      "title": "Patreon-voordelen",
+      "intro": "Steun ons op Patreon en ontgrendel exclusieve voordelen!",
+      "benefits": "Premiumvoordelen",
+      "benefitsList": "• Hogere audiokwaliteit\n• Langere playlists\n• Voorrang in de wachtrij\n• Exclusieve commando's\n• Vroege toegang tot nieuwe functies",
+      "howToGet": "Zo krijg je Premium",
+      "howToGetSteps": "1. Bezoek onze [Patreon-pagina]({patreon})\n2. Kies een tier die bij je past\n3. Koppel je Discord via Patreon-instellingen → Connecties\n4. Gebruik `/patreon sync` om je voordelen te activeren",
+      "troubleshooting": "Probleemoplossing",
+      "troubleshootingList": "• Zorg dat Discord gekoppeld is in je Patreon-instellingen\n• Je betaling moet gelukt zijn (niet geweigerd)\n• Probeer `/patreon sync` na het koppelen\n• Voordelen worden elke 30 minuten automatisch bijgewerkt"
+    }
   },
   "play_file": {
-    "description": "Speel een audiobestand uit een bijlage af"
+    "description": "Speel een audiobestand uit een bijlage af",
+    "optionFile": "Audiobestand om af te spelen (MP3, WAV, FLAC, M4A, OGG, enz.)",
+    "optionTitle": "Optionele eigen titel voor het nummer",
+    "cantPlay": "Kon het bestand niet afspelen: {name}",
+    "nowPlayingTitle": "Bestand wordt afgespeeld",
+    "addedTitle": "Bestand toegevoegd aan wachtrij",
+    "format": "Formaat",
+    "size": "Grootte",
+    "error": {
+      "load": "Kon het bestand niet laden: {name}\n\nMogelijke oorzaken:\n• Bestandsformaat niet ondersteund\n• Bestand is beschadigd\n• Bestands-URL is verlopen",
+      "timeout": "Downloaden van het bestand duurde te lang. Het bestand is misschien te groot of de verbinding is traag.",
+      "forbidden": "Geen toegang tot het bestand. Upload het opnieuw en probeer het nog eens.",
+      "notFound": "Bestand niet gevonden. De bijlage-URL is mogelijk verlopen.",
+      "generic": "Er ging iets mis bij het afspelen van het bestand."
+    }
   },
   "play_spotify": {
-    "description": "Zoek en speel een nummer van Spotify"
+    "description": "Zoek en speel een nummer van Spotify",
+    "optionQuery": "Songtitel, artiest of Spotify-URL om te zoeken",
+    "cantPlayLink": "Kon de Spotify-link niet afspelen: {query}",
+    "playlistFallback": "Spotify-playlist",
+    "playlistAdded": "Spotify-playlist toegevoegd",
+    "songs": "{count} nummers",
+    "nowPlaying": "Nu aan het spelen",
+    "trackBy": "{title} van {author}",
+    "nowPlayingTitle": "Nu aan het spelen via Spotify",
+    "addedTitle": "Toegevoegd aan wachtrij via Spotify",
+    "noResults": "Geen resultaten gevonden op Spotify voor: {query}\n\nProbeer:\n• Andere zoekwoorden\n• De naam van de artiest toe te voegen\n• Een directe Spotify-link",
+    "notOnYoutube": "Niet gevonden op YouTube: {title} van {artist}",
+    "error": {
+      "auth": "Dit Spotify-nummer vereist authenticatie. Probeer een ander nummer.",
+      "premium": "Dit nummer vereist Spotify Premium.",
+      "private": "Dit Spotify-nummer is privé en kan niet worden afgespeeld.",
+      "region": "Dit nummer is niet beschikbaar in jouw regio.",
+      "generic": "Er ging iets mis bij het afspelen van het Spotify-nummer."
+    }
   },
   "premium": {
-    "description": "Beheer premium-functies en serverkoppelingen"
+    "description": "Beheer premium-functies en serverkoppelingen",
+    "audioQuality": "Audiokwaliteit",
+    "botIdentity": "Bot-identiteit",
+    "serverSlots": "Serverplekken",
+    "patreonTier": "Patreon-tier",
+    "supporter": "Supporter",
+    "dbUnavailable": "**Database tijdelijk niet beschikbaar**\n\nDe bot heeft problemen met verbinden met de database. Probeer het over een paar momenten opnieuw.\n\nAls dit probleem aanhoudt, is de botbeheerder op de hoogte gebracht.",
+    "error": "Er is een fout opgetreden: {error}",
+    "link": {
+      "description": "Koppel deze server aan je Patreon-account",
+      "successTitle": "Server gekoppeld",
+      "failTitle": "Koppelen mislukt"
+    },
+    "unlink": {
+      "description": "Ontkoppel deze server van je Patreon-account",
+      "successTitle": "Server ontkoppeld",
+      "failTitle": "Ontkoppelen mislukt"
+    },
+    "list": {
+      "description": "Toon alle servers die aan je Patreon-account gekoppeld zijn",
+      "title": "Jouw gekoppelde servers",
+      "empty": "Je hebt nog geen servers gekoppeld.\n\nGebruik `/premium link` om deze server te koppelen!",
+      "linkedAt": "Gekoppeld: {time}",
+      "slotsUsed": "{used}/{max} gebruikt",
+      "noMembership": "Je hebt geen actief Patreon-lidmaatschap.\n\nSteun ons op Patreon om premiumfuncties te ontgrendelen!"
+    },
+    "status": {
+      "description": "Toon de premiumstatus van deze server",
+      "premiumTitle": "Premiumserver",
+      "freeTitle": "Gratis server",
+      "premiumBody": "Deze server heeft premiumfuncties ingeschakeld!",
+      "freeBody": "Deze server gebruikt de gratis versie.\n\nGebruik `/premium link` om premiumfuncties in te schakelen.",
+      "linked": "Gekoppeld",
+      "lastUsed": "Laatst gebruikt",
+      "ownFooter": "Jij bent eigenaar van deze premiumkoppeling",
+      "otherFooter": "Premium aangeboden door een andere gebruiker",
+      "freeQuality": "128kbps (gratis)"
+    },
+    "config": {
+      "description": "Stel premiuminstellingen in voor deze server",
+      "optionBitrate": "Audiobitrate in kbps",
+      "optionIdentity": "Aangepaste bot-identiteit voor deze server",
+      "nothing": "Geef minstens één instelling op om aan te passen.\n\nVoorbeeld: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Instellingen bijgewerkt",
+      "failTitle": "Bijwerken mislukt"
+    },
+    "service": {
+      "needMembership": "Je hebt een actief Patreon-lidmaatschap nodig om servers te koppelen.\n\nSteun ons op Patreon om premiumfuncties te ontgrendelen!",
+      "limitReached": "Je hebt je serverlimiet bereikt ({max} servers).\n\nHuidige tier: **{tier}**\nGekoppelde servers: **{current}/{max}**\n\nUpgrade je tier om meer servers te koppelen!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Deze server is al aan jouw account gekoppeld.",
+      "alreadyLinkedOther": "Deze server is al gekoppeld aan een ander Patreon-account.\n\nPer server kan maar één Patreon-account premiumfuncties actief hebben.",
+      "linked": "Server succesvol gekoppeld!",
+      "servers": "Servers",
+      "linkedActive": "Premiumfuncties zijn nu actief op deze server!",
+      "linkError": "Fout bij koppelen van server: {error}",
+      "notLinked": "Deze server is niet aan jouw account gekoppeld.",
+      "unlinked": "Server succesvol ontkoppeld!",
+      "unlinkedBody": "Premiumfuncties zijn uitgeschakeld voor deze server.\nJe kunt een andere server koppelen met je beschikbare plekken.",
+      "unlinkError": "Fout bij ontkoppelen van server: {error}",
+      "invalidBitrate": "Ongeldige bitrate. Kies: 128, 192, 256 of 320 kbps",
+      "updated": "Serverinstellingen succesvol bijgewerkt!",
+      "updateError": "Fout bij bijwerken van instellingen: {error}"
+    },
+    "feature": {
+      "audio_filters": "Audiofilters",
+      "stay_24_7": "24/7-modus",
+      "max_quality": "Maximale kwaliteit",
+      "priority_queue": "Voorrangswachtrij",
+      "unlimited_playlists": "Onbeperkte playlists",
+      "longer_songs": "Geen duurlimiet",
+      "vote_features": "Stemmen op functies",
+      "founder_role": "Founder-rol",
+      "direct_support": "Directe support"
+    }
   },
   "queuemanage": {
-    "description": "Geavanceerd wachtrijbeheer"
+    "description": "Geavanceerd wachtrijbeheer",
+    "empty": "De wachtrij is leeg.",
+    "invalidPosition": "Ongeldige positie. De wachtrij heeft {count} nummers.",
+    "removedupes": {
+      "description": "Verwijder dubbele nummers uit de wachtrij",
+      "none": "Geen dubbele nummers gevonden!",
+      "title": "Dubbele nummers verwijderd",
+      "result": "**{count}** dubbele nummers verwijderd"
+    },
+    "sort": {
+      "description": "Sorteer de wachtrij",
+      "optionBy": "Sorteren op",
+      "choice": {
+        "title_asc": "Titel (A-Z)",
+        "title_desc": "Titel (Z-A)",
+        "duration_asc": "Duur (kort)",
+        "duration_desc": "Duur (lang)"
+      },
+      "label": {
+        "title_asc": "Titel (A-Z)",
+        "title_desc": "Titel (Z-A)",
+        "duration_asc": "Duur (kortste)",
+        "duration_desc": "Duur (langste)"
+      },
+      "result": "Wachtrij gesorteerd op **{label}**"
+    },
+    "swap": {
+      "description": "Wissel twee nummers in de wachtrij om",
+      "optionPosition1": "Eerste positie",
+      "optionPosition2": "Tweede positie",
+      "samePosition": "De posities moeten verschillend zijn.",
+      "result": "Nummers op positie **{pos1}** en **{pos2}** omgewisseld"
+    },
+    "removeuser": {
+      "description": "Verwijder alle nummers van een gebruiker",
+      "optionUser": "Gebruiker van wie je nummers wilt verwijderen",
+      "none": "Geen nummers gevonden van {user}.",
+      "result": "**{count}** nummers van {user} verwijderd"
+    },
+    "removeabsent": {
+      "description": "Verwijder nummers van gebruikers die niet in het spraakkanaal zitten",
+      "notInVoice": "Je moet in een spraakkanaal zitten.",
+      "none": "Iedereen die nummers heeft aangevraagd zit in het spraakkanaal.",
+      "result": "**{count}** nummers van afwezige gebruikers verwijderd"
+    },
+    "removelast": {
+      "description": "Verwijder de laatste N nummers",
+      "optionCount": "Aantal om te verwijderen",
+      "result": "Laatste **{count}** nummers verwijderd"
+    },
+    "removerange": {
+      "description": "Verwijder nummers binnen een bereik",
+      "optionStart": "Startpositie",
+      "optionEnd": "Eindpositie",
+      "startAfterEnd": "De start moet kleiner dan of gelijk aan het einde zijn.",
+      "startTooHigh": "Startpositie is groter dan de lengte van de wachtrij ({count}).",
+      "result": "**{count}** nummers verwijderd (posities {start}-{end})"
+    },
+    "reverse": {
+      "description": "Draai de volgorde van de wachtrij om",
+      "result": "Volgorde van de wachtrij omgedraaid"
+    }
   },
   "settings": {
-    "description": "Configureer botinstellingen voor deze server (alleen admins)"
+    "description": "Configureer botinstellingen voor deze server (alleen admins)",
+    "noPermission": "Je hebt geen toestemming om de botinstellingen te beheren.",
+    "unknownSubcommand": "Onbekend subcommando.",
+    "current": "**Huidig:** {value}",
+    "allChannels": "Alle kanalen toegestaan",
+    "allAllowed": "Alles toegestaan",
+    "on": "Aan",
+    "off": "Uit",
+    "yes": "Ja",
+    "no": "Nee",
+    "enabled": "Ingeschakeld",
+    "disabled": "Uitgeschakeld",
+    "view": {
+      "description": "Bekijk de huidige instellingen",
+      "title": "Botinstellingen",
+      "roles": "Rollen",
+      "djRole": "DJ-rol",
+      "djNotSet": "Niet ingesteld (iedereen kan DJ zijn)",
+      "adminRole": "Adminrol",
+      "adminNotSet": "Alleen serverbeheerders",
+      "volume": "Volume",
+      "default": "Standaard",
+      "maximum": "Maximum",
+      "queue": "Wachtrij",
+      "maxSize": "Max. grootte",
+      "songs": "{count} nummers",
+      "preventDuplicates": "Dubbele nummers voorkomen",
+      "behavior": "Gedrag",
+      "announcements": "Aankondigingen",
+      "autoLeave": "Automatisch verlaten",
+      "leaveTimeout": "Time-out voor verlaten",
+      "channels": "Kanalen",
+      "voiceChannels": "Spraakkanalen",
+      "textChannels": "Tekstkanalen",
+      "logChannel": "Logkanaal",
+      "logDefault": "Standaard (#bot-commands)",
+      "blacklist": "Blacklist",
+      "noBlacklist": "Geen gebruikers op de blacklist",
+      "premium": "Premium",
+      "tier": "Niveau",
+      "expires": "Verloopt",
+      "never": "Nooit",
+      "notActive": "Niet actief",
+      "customization": "Personalisatie",
+      "language": "Taal",
+      "embedColor": "Embedkleur",
+      "footer": "Gebruik /settings <optie> om instellingen te wijzigen"
+    },
+    "djrole": {
+      "description": "Stel de DJ-rol in voor muziekbediening",
+      "prompt": "Kies de DJ-rol. Gebruikers met deze rol kunnen het afspelen van muziek bedienen.",
+      "placeholder": "Kies DJ-rol",
+      "clear": "DJ-rol wissen (iedereen kan DJ zijn)",
+      "set": "DJ-rol ingesteld op {role}",
+      "cleared": "DJ-rol gewist.",
+      "clearedEveryone": "DJ-rol gewist. Iedereen kan nu DJ-commando's gebruiken."
+    },
+    "adminrole": {
+      "description": "Stel de adminrol in voor het beheren van instellingen",
+      "prompt": "Kies de adminrol. Gebruikers met deze rol kunnen de botinstellingen wijzigen.",
+      "placeholder": "Kies adminrol",
+      "clear": "Adminrol wissen (alleen serverbeheerders)",
+      "set": "Adminrol ingesteld op {role}",
+      "cleared": "Adminrol gewist.",
+      "clearedAdmins": "Adminrol gewist. Alleen serverbeheerders kunnen nu instellingen wijzigen."
+    },
+    "volume": {
+      "description": "Stel het standaard- en maximumvolume in",
+      "optionDefault": "Standaardvolume (0-100)",
+      "optionMax": "Maximaal toegestaan volume (0-100)",
+      "currentTitle": "Huidige volume-instellingen",
+      "defaultSet": "Standaardvolume ingesteld op {value}%",
+      "maxSet": "Maximumvolume ingesteld op {value}%",
+      "logDefault": "Standaardvolume",
+      "logMax": "Maximumvolume"
+    },
+    "queue": {
+      "description": "Wachtrij-instellingen configureren",
+      "optionMaxSize": "Maximale wachtrijgrootte (1-1000)",
+      "optionPreventDuplicates": "Dubbele nummers in de wachtrij voorkomen",
+      "currentTitle": "Huidige wachtrij-instellingen",
+      "maxSet": "Maximale wachtrijgrootte ingesteld op {value} nummers",
+      "duplicatesSet": "Dubbele nummers voorkomen: {value}"
+    },
+    "behavior": {
+      "description": "Botgedrag configureren",
+      "optionAnnouncements": "Meld het huidige nummer in het tekstkanaal",
+      "optionAutoLeave": "Spraakkanaal verlaten als het leeg is",
+      "optionLeaveTimeout": "Seconden voordat een leeg kanaal wordt verlaten (30-3600)",
+      "currentTitle": "Huidige gedragsinstellingen",
+      "announcementsSet": "Meldingen van huidig nummer: {value}",
+      "autoLeaveSet": "Automatisch verlaten als leeg: {value}",
+      "timeoutSet": "Verlaattijd ingesteld op {value} seconden"
+    },
+    "voicechannels": {
+      "description": "Toegestane spraakkanalen instellen",
+      "prompt": "Kies welke spraakkanalen de bot mag joinen.",
+      "placeholder": "Kies toegestane spraakkanalen",
+      "allowAll": "Alle kanalen toestaan",
+      "set": "Toegestane spraakkanalen: {channels}",
+      "cleared": "Alle spraakkanalen zijn nu toegestaan."
+    },
+    "textchannels": {
+      "description": "Toegestane tekstkanalen voor commando's instellen",
+      "prompt": "Kies in welke tekstkanalen botcommando's gebruikt mogen worden.",
+      "placeholder": "Kies toegestane tekstkanalen",
+      "allowAll": "Alle kanalen toestaan",
+      "set": "Toegestane tekstkanalen: {channels}",
+      "cleared": "Alle tekstkanalen zijn nu toegestaan."
+    },
+    "logchannel": {
+      "description": "Stel het kanaal in voor botlogs (huidig nummer, enz.)",
+      "prompt": "Kies een kanaal voor logberichten van de bot (huidig nummer, wachtrij klaar, enz.).",
+      "note": "**Let op:** Als er geen logkanaal is ingesteld, zoekt de bot naar een kanaal met de naam #bot-commands. Bestaat dat niet, dan worden er geen logberichten verstuurd.",
+      "placeholder": "Kies een logkanaal voor botberichten",
+      "useDefault": "Standaard gebruiken (bot-commands)",
+      "disable": "Logberichten uitschakelen",
+      "statusDefault": "Standaardgedrag (zoekt naar #bot-commands)",
+      "statusDisabled": "Logberichten zijn uitgeschakeld",
+      "set": "Logkanaal ingesteld op {channel}",
+      "reset": "Logkanaal teruggezet naar standaard (gebruikt #bot-commands als dat bestaat).",
+      "disabled": "Logberichten zijn uitgeschakeld."
+    },
+    "blacklist": {
+      "description": "Zwarte lijst van gebruikers beheren",
+      "optionAdd": "Gebruiker aan zwarte lijst toevoegen",
+      "optionRemove": "Gebruiker van zwarte lijst verwijderen",
+      "title": "Gebruikers op de zwarte lijst",
+      "none": "Er staan geen gebruikers op de zwarte lijst.",
+      "already": "{user} staat al op de zwarte lijst.",
+      "added": "{user} staat nu op de zwarte lijst en kan de bot niet meer gebruiken.",
+      "notListed": "{user} staat niet op de zwarte lijst.",
+      "removed": "{user} is van de zwarte lijst verwijderd."
+    },
+    "language": {
+      "description": "Stel de taal van de bot in voor deze server",
+      "prompt": "Kies de taal van de bot voor deze server.",
+      "placeholder": "Kies een taal",
+      "more": "Alle talen die de bot spreekt zijn beschikbaar via {command}."
+    },
+    "embedcolor": {
+      "description": "Eigen embedkleur instellen",
+      "optionColor": "Hex-kleurcode (bijv. #FF5500)",
+      "invalid": "Ongeldige hex-kleur. Gebruik het formaat #RRGGBB (bijv. #FF5500)",
+      "set": "Embedkleur ingesteld op: {color}"
+    },
+    "reset": {
+      "description": "Alle instellingen terugzetten naar standaard",
+      "prompt": "Weet je zeker dat je ALLE instellingen wilt terugzetten naar standaard? Dit kan niet ongedaan worden gemaakt.",
+      "confirm": "Ja, alle instellingen resetten",
+      "cancel": "Annuleren",
+      "done": "Alle instellingen zijn teruggezet naar standaard.",
+      "cancelled": "Reset geannuleerd."
+    },
+    "stats": {
+      "description": "Bekijk de muziekstatistieken van de server",
+      "title": "Muziekstatistieken",
+      "songsPlayed": "Totaal afgespeelde nummers",
+      "playtime": "Totale afspeeltijd",
+      "playtimeValue": "{hours}u {minutes}m"
+    }
   },
   "stats": {
-    "description": "Bekijk bot- en sessiestatistieken"
+    "description": "Bekijk bot- en sessiestatistieken",
+    "bot": {
+      "description": "Botstatistieken tonen",
+      "title": "Botstatistieken",
+      "servers": "Servers",
+      "users": "Gebruikers",
+      "channels": "Kanalen",
+      "activeQueues": "Actieve wachtrijen",
+      "tracksPlaying": "Nummers die spelen",
+      "uptime": "Uptime",
+      "memory": "Geheugen",
+      "platform": "Platform"
+    },
+    "uptime": {
+      "description": "Uptime van de bot tonen"
+    },
+    "leaderboard": {
+      "description": "Wachtrij-ranglijst tonen",
+      "line": "{user} - {count} nummers"
+    },
+    "history": {
+      "description": "Toon recent afgespeelde nummers"
+    },
+    "session": {
+      "description": "Toon info over de huidige sessie",
+      "noSession": "Geen actieve sessie in deze server.",
+      "title": "Sessie-info",
+      "nowPlaying": "Speelt nu",
+      "nothing": "Niets",
+      "tracksInQueue": "Nummers in wachtrij",
+      "totalDuration": "Totale duur"
+    }
   },
   "user": {
-    "description": "Gebruikersprofiel en voorkeuren"
+    "description": "Gebruikersprofiel en voorkeuren",
+    "profile": {
+      "description": "Bekijk gebruikersprofiel",
+      "optionTarget": "Gebruiker om te bekijken",
+      "free": "Gratis"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Begon met afspelen",
+      "pause": "Afspelen gepauzeerd",
+      "resume": "Afspelen hervat",
+      "stop": "Afspelen gestopt",
+      "skip": "Nummer overgeslagen",
+      "seek": "Naar positie gesprongen",
+      "seek_forward": "Vooruitgespoeld",
+      "seek_backward": "Teruggespoeld",
+      "forward": "Snel vooruitgespoeld",
+      "rewind": "Teruggespoeld",
+      "backward": "Teruggespoeld",
+      "replay": "Nummer opnieuw gestart",
+      "restart": "Wachtrij opnieuw gestart",
+      "volume_change": "Volume gewijzigd",
+      "shuffle": "Wachtrij geshuffeld",
+      "loop": "Herhaalmodus gewijzigd",
+      "loopqueue": "Herhaalmodus wachtrij gewijzigd",
+      "setting_change": "Instellingen bijgewerkt",
+      "queue_clear": "Wachtrij gewist",
+      "clear": "Wachtrij gewist",
+      "join": "Kanaal gejoind",
+      "leave": "Kanaal verlaten",
+      "autoplay": "Autoplay omgeschakeld",
+      "previous": "Vorig nummer afgespeeld",
+      "jump": "Naar nummer gesprongen",
+      "swap": "Nummers verwisseld",
+      "reverse": "Wachtrij omgedraaid",
+      "sort": "Wachtrij gesorteerd",
+      "removerange": "Bereik verwijderd",
+      "removeduplicates": "Duplicaten verwijderd",
+      "removelast": "Laatste nummer verwijderd",
+      "voteskip": "Overgeslagen via stemming",
+      "grab": "Nummer opgeslagen",
+      "insert": "Nummer ingevoegd",
+      "removecurrent": "Huidig nummer verwijderd"
+    },
+    "detail": {
+      "on": "Aan",
+      "off": "Uit",
+      "tracks": "{count} nummers",
+      "effectsCleared": "Effecten gewist",
+      "bassBoost": "Bass boost {level}",
+      "effectOn": "{effect} ingeschakeld",
+      "effectOff": "{effect} uitgeschakeld",
+      "previousTrack": "vorig nummer",
+      "currentTrack": "huidig nummer",
+      "queue": "Wachtrij"
+    },
+    "settings": {
+      "title": "Instellingen bijgewerkt",
+      "changed": "{user} heeft {setting} gewijzigd",
+      "before": "Voor",
+      "after": "Na",
+      "notSet": "Niet ingesteld",
+      "userId": "Gebruikers-ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} is een Founder-voordeel",
+    "description": "Founder kost {price}/maand, is beperkt tot {spots} plekken en geeft je 320kbps-audio, 24/7-modus, geen limiet op nummerlengte en de Founder-rol.",
+    "afterJoin": "Nadat je lid bent geworden",
+    "afterJoinSteps": "1. koppel je Discord-account in je Patreon-instellingen\n2. voer `/premium link` uit in deze server",
+    "becomeFounder": "Word Founder",
+    "voteTitle": "Of stem gratis",
+    "voteBody": "Een stem op top.gg ontgrendelt dit voor 12 uur. Gebruik `/vote`.",
+    "voteButton": "Stem op top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Voer eerst een nummer of link in.",
+    "notMember": "Je moet lid zijn van deze server om er muziek af te spelen.",
+    "noVoiceChannel": "Join een spraakkanaal in Discord of kies er hier een, en probeer het opnieuw.",
+    "channelGone": "Dat spraakkanaal bestaat niet meer. Kies een ander.",
+    "memberCantJoin": "Je hebt geen toegang tot {channel}. Kies een spraakkanaal dat je kunt joinen.",
+    "nowPlaying": "Speelt nu: {title}",
+    "added": "Toegevoegd aan de wachtrij (#{position}): {title}",
+    "playlist": "{count} nummers toegevoegd uit {title}"
+  },
+  "voiceStatus": {
+    "title": "Status spraakkanaal",
+    "missing": "Ik kan het huidige nummer niet onder de naam van het spraakkanaal tonen, omdat ik de permissie **Set Voice Channel Status** mis. Autoriseer me opnieuw om die toe te voegen; je instellingen blijven zoals ze zijn.",
+    "reauthorize": "Opnieuw autoriseren"
+  },
+  "guess": {
+    "description": "Raad het nummer aan de hand van fragmenten van 30 seconden, samen met vrienden in voice",
+    "startDescription": "Start een raad-het-nummer-spel in je spraakkanaal",
+    "stopDescription": "Stop het raad-het-nummer-spel",
+    "optionRounds": "Hoeveel nummers je moet raden (3-15, standaard 5)",
+    "optionGenre": "Welke muziek er speelt (standaard: tophits)",
+    "genre": {
+      "top": "Tophits",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hiphop",
+      "latin": "Latin",
+      "electronic": "Elektronisch",
+      "80s": "Jaren 80",
+      "90s": "Jaren 90",
+      "2000s": "Jaren 2000"
+    },
+    "title": "Raad het nummer",
+    "trackTitle": "Raad het nummer · ronde {round}",
+    "notInVoice": "Join eerst een spraakkanaal en start dan het spel.",
+    "alreadyRunning": "Er is al een raad-het-nummer-spel bezig in deze server.",
+    "musicPlaying": "Er speelt hier muziek. Stop die eerst (/stop) en start dan het spel.",
+    "otherChannel": "Ik blijf in {channel} (24/7). Start het spel vanaf daar.",
+    "noVoicePermission": "Ik kan je spraakkanaal niet joinen of er niet in praten.",
+    "noChannelAccess": "Ik kan niet posten in dit kanaal. Start het spel waar ik berichten kan sturen.",
+    "noTracks": "Kon nu geen nummers laden voor dat genre. Probeer een ander genre, of over een minuutje opnieuw.",
+    "connectFailed": "Kon je spraakkanaal niet joinen. Probeer het opnieuw.",
+    "introMeta": "{rounds} rondes · {genre}",
+    "introBody": "Luister in {channel} en kies het nummer dat speelt. Het eerste goede antwoord scoort, en snellere antwoorden leveren meer op. Een fout antwoord sluit je uit voor die ronde.",
+    "introStarting": "Eerste nummer over een paar seconden…",
+    "introOver": "Dit spel is afgelopen.",
+    "stopButton": "Stop spel",
+    "roundTitle": "Ronde {round}/{total}",
+    "roundPrompt": "Welk nummer speelt er?",
+    "roundCloses": "Antwoorden sluiten {time}",
+    "roundRules": "eerste goede antwoord scoort",
+    "correctBy": "{user} had het in {seconds} s (+{points})",
+    "timeUp": "De tijd is om! Niemand had het.",
+    "roundStopped": "Spel gestopt.",
+    "answerWas": "Het was **{title}** van **{artist}**",
+    "scores": "Scores",
+    "scoreLine": "{user} · {points} ptn ({correct} goed)",
+    "noScores": "Nog geen punten.",
+    "nextSoon": "Volgend nummer over een paar seconden…",
+    "finalSoon": "Eindstand komt eraan…",
+    "finalTitle": "Eindstand",
+    "winner": "{user} wint met {points} punten!",
+    "noWinner": "Niemand heeft deze keer gescoord.",
+    "playAgain": "Speel opnieuw met {command}",
+    "stoppedBy": "Spel gestopt door {user}.",
+    "stoppedPlain": "Spel gestopt.",
+    "endedEmpty": "Iedereen heeft het spraakkanaal verlaten, dus het spel is afgelopen.",
+    "endedDisconnected": "Mijn verbinding met voice is verbroken, dus het spel is afgelopen.",
+    "endedMusic": "Er begon muziek te spelen, dus het spel is afgelopen.",
+    "endedError": "De fragmenten wilden niet afspelen, dus het spel is afgelopen.",
+    "wrong": "Fout! Je ligt eruit voor deze ronde.",
+    "alreadyAnswered": "Je hebt deze ronde al geantwoord.",
+    "roundOver": "Deze ronde is voorbij.",
+    "gameOver": "Dit spel is afgelopen.",
+    "joinToPlay": "Join {channel} om mee te spelen.",
+    "stopNotAllowed": "Alleen degene die het spel heeft gestart of iemand met Server beheren kan het stoppen.",
+    "noGame": "Er is hier geen raad-het-nummer-spel bezig.",
+    "stopped": "Spel gestopt.",
+    "blockedDuringGame": "Er is een raad-het-nummer-spel bezig in deze server. Wacht tot het klaar is of beëindig het met {stop}."
   }
 }

@@ -29,13 +29,31 @@
   "loop": {
     "description": "Musikschleife umschalten",
     "errorNotQueue": "Es wird gerade nichts gespielt.",
-    "result": "Musikschleife ist nun auf {loop}"
+    "result": "Musikschleife ist nun auf {loop}",
+    "optionMode": "Was wiederholt werden soll",
+    "mode": {
+      "off": "Aus",
+      "track": "Dieser Song",
+      "queue": "Ganze Warteschlange"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Es wird gerade nichts gespielt.",
     "lyricsNotFound": "Keine Lyrics für {title} gefunden.",
     "embedTitle": "{title} - Lyrics",
-    "description": "Songtext des aktuellen Songs oder eines beliebigen Songs"
+    "description": "Songtext des aktuellen Songs oder eines beliebigen Songs",
+    "liveTitle": "Live-Lyrics",
+    "liveButton": "Live-Lyrics",
+    "liveHint": "Synchronisierte Lyrics verfügbar: Drück auf Live-Lyrics, um mitzulesen.",
+    "liveStop": "Stopp",
+    "livePaused": "Pausiert",
+    "liveEnded": "Live-Lyrics beendet.",
+    "liveReplaced": "Live-Lyrics wurden in eine neuere Nachricht verschoben.",
+    "liveStoppedBy": "Live-Lyrics von {user} gestoppt.",
+    "liveNoSync": "Dieser Song hat keine synchronisierten Lyrics, daher gibt es keinen Live-Modus.",
+    "liveNoPermission": "Nur die Person, die die Live-Lyrics gestartet hat, oder jemand mit „Nachrichten verwalten“ kann sie stoppen.",
+    "liveNotDuringGame": "Lyrics sind ausgeblendet, solange ein Song-Raten-Spiel läuft.",
+    "liveVersionHint": "Für eine andere Version des Songs getimt, Zeilen können daher verrutschen"
   },
   "move": {
     "description": "Verschiebe Songs in der Queue",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Auf diesem Server wird nichts gespielt**",
     "currentPage": "Aktuelle Seite - ",
     "embedTitle": "Song Queue\n",
-    "embedCurrentSong": "**Jetziges Lied - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Jetziges Lied - [{title}]({url})**\n\n{info}",
+    "optionPage": "Seitenzahl"
   },
   "remove": {
     "description": "Entfernen Sie das Lied aus der Queue",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Die Lautstärke ist: **{volume}%**",
     "errorNotNumber": "Bitte nutze eine Number um die Lautstärke zu ändern.",
     "errorNotValid": "Bitte nutze eine Number zwischen 0 - 100.",
-    "result": "Lautstärke wurde auf **{arg}%** gesetzt."
+    "result": "Lautstärke wurde auf **{arg}%** gesetzt.",
+    "errorRange": "Die Lautstärke muss zwischen 0 und {max} liegen."
   },
   "common": {
     "on": "**an**",
@@ -208,14 +228,49 @@
     "disabled": "**deaktiviert**",
     "errorNotChannel": "Betrete zuerst einen Voice-Channel!",
     "cooldownMessage": "Bitte warte noch {time} Sekunde(n) bevor du wieder den Command `{name}` nuzten kannst.",
-    "errorCommand": "Da war ein Fehler beim ausführen des Commands."
+    "errorCommand": "Da war ein Fehler beim ausführen des Commands.",
+    "djRequired": "Du brauchst die DJ-Rolle, um diesen Befehl zu nutzen.",
+    "guild_only": "Dieser Befehl funktioniert nur auf einem Server.",
+    "unknown": "Unbekannt",
+    "unknownError": "Unbekannter Fehler",
+    "unknownSubcommand": "Unbekannter Unterbefehl.",
+    "voiceChannel": "Sprachkanal",
+    "playerInitializing": "Der Musikplayer startet noch. Bitte versuch es in ein paar Sekunden erneut.",
+    "voiceChannelNotAllowed": "Der Bot darf in diesem Sprachkanal nicht spielen. Bitte nutze einen erlaubten Kanal.",
+    "queueFull": "Die Warteschlange ist voll! Maximal {max} Songs erlaubt.",
+    "invalidFileType": "Ungültiger Dateityp. Unterstützte Formate: {formats}",
+    "fileTooLarge": "Die Datei ist zu groß ({size}MB). Maximale Größe: {max}MB.",
+    "optionToggle": "An oder aus (Standard: umschalten)",
+    "requestedBy": "Angefragt von {user}",
+    "yes": "Ja",
+    "no": "Nein",
+    "loop": {
+      "off": "Aus",
+      "track": "Track",
+      "queue": "Warteschlange"
+    },
+    "field": {
+      "title": "Titel",
+      "artist": "Künstler",
+      "duration": "Dauer",
+      "tracks": "Tracks",
+      "source": "Quelle",
+      "requestedBy": "Angefragt von",
+      "loopMode": "Wiederholungsmodus",
+      "volume": "Lautstärke",
+      "loadTime": "Ladezeit",
+      "positionInQueue": "Position in der Warteschlange",
+      "status": "Status",
+      "tier": "Stufe"
+    }
   },
   "seek": {
     "description": "Zu einer bestimmten Stelle im Track springen",
     "errorNotQueue": "Gerade läuft nichts.",
     "errorInvalidTime": "Ungültiges Zeitformat. Nutze Formate wie: 1:30, 90, 1m30s",
     "errorOutOfRange": "Die Zeit muss zwischen 0:00 und {duration} liegen",
-    "result": "<@{author}> ⏩ zu **{time}** gesprungen"
+    "result": "<@{author}> ⏩ zu **{time}** gesprungen",
+    "optionTime": "Zielzeit (z. B. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Track um die angegebenen Sekunden vorspulen",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Track um die angegebenen Sekunden zurückspulen",
     "errorNotQueue": "Gerade läuft nichts.",
-    "result": "<@{author}> ⏪ **{seconds}s** zurückgespult (jetzt bei {position})"
+    "result": "<@{author}> ⏪ **{seconds}s** zurückgespult (jetzt bei {position})",
+    "optionSeconds": "Anzahl der Sekunden zum Zurückspulen"
   },
   "replay": {
     "description": "Aktuellen Track von vorne starten",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Autoplay umschalten (ähnliche Songs abspielen, wenn die Warteschlange endet)",
     "errorNotQueue": "Es gibt keine aktive Warteschlange.",
-    "result": "🔄 Autoplay ist jetzt {status}"
+    "result": "🔄 Autoplay ist jetzt {status}",
+    "optionDefault": "Auch als Standard für diesen Server festlegen (Server verwalten)"
   },
   "history": {
     "description": "Zuletzt gespielte Tracks anzeigen",
     "errorNotQueue": "Es gibt keine aktive Warteschlange.",
     "errorEmpty": "Noch keine Tracks im Verlauf.",
     "embedTitle": "Zuletzt gespielt",
-    "footer": "Zeigt die letzten {count} Tracks"
+    "footer": "Zeigt die letzten {count} Tracks",
+    "title": "Zuletzt gespielt",
+    "titleUser": "Zuletzt gespielt · angefragt von {user}",
+    "empty": "In den letzten 30 Tagen wurde auf diesem Server nichts gespielt.",
+    "emptyUser": "{user} hat hier in den letzten 30 Tagen keine Songs angefragt.",
+    "summary": "Letzte {count} Wiedergaben",
+    "playAgain": "Erneut abspielen…",
+    "optionUser": "Nur Songs anzeigen, die dieses Mitglied angefragt hat",
+    "unavailable": "Der Verlauf ist gerade nicht verfügbar. Bitte versuch es in einer Minute erneut.",
+    "gone": "Dieser Song ist nicht mehr im Verlauf."
   },
   "previous": {
     "description": "Vorherigen Track abspielen",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Es gibt keine Warteschlange.",
     "errorInvalidPosition": "Ungültige Position. Die Warteschlange hat nur {max} Tracks.",
     "errorNotFound": "An dieser Position wurde kein Track gefunden.",
-    "result": "<@{author}> ⏭️ zu **{title}** gesprungen"
+    "result": "<@{author}> ⏭️ zu **{title}** gesprungen",
+    "optionPosition": "Position in der Warteschlange, zu der gesprungen wird"
   },
   "Invite me to your server!": "Lade mich auf deinen Server ein!",
   "Invite": "Einladen",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Link zum Dashboard erhalten",
     "embedDescription": "Öffne das Web-Dashboard, um deine Servereinstellungen zu verwalten, die Warteschlange anzusehen und mehr!",
-    "footer": "Verwalte dein Musikerlebnis"
+    "footer": "Verwalte dein Musikerlebnis",
+    "title": "Bot-Dashboard",
+    "features": "Funktionen",
+    "featuresList": "• Servereinstellungen konfigurieren\n• Warteschlange und Wiedergabesteuerung ansehen\n• Playlists und Sammlungen verwalten\n• Hörstatistiken ansehen\n• Premium-Funktionen verwalten",
+    "open": "Dashboard öffnen"
   },
   "clean": {
     "description": "Bot-Nachrichten aus dem Kanal löschen",
@@ -377,7 +448,9 @@
       "description": "Alle deine Sammlungen anzeigen",
       "title": "📁 Deine Sammlungen",
       "empty": "Du hast noch keine Sammlungen. Erstelle eine mit `/collections create`!",
-      "footer": "Gesamt: {count} Sammlungen"
+      "footer": "Gesamt: {count} Sammlungen",
+      "select": "Sammlung öffnen…",
+      "more": "…und {count} weitere. Öffne sie mit /collections view."
     },
     "create": {
       "description": "Neue Sammlung erstellen",
@@ -399,7 +472,12 @@
       "tracksField": "Titel",
       "durationField": "Dauer",
       "shareCodeField": "Teilen-Code",
-      "andMore": "...und {count} weitere Titel"
+      "andMore": "...und {count} weitere Titel",
+      "play": "Abspielen",
+      "addToQueue": "Zur Warteschlange hinzufügen",
+      "summary": "{count} Tracks · {duration}",
+      "page": "Seite {page}/{pages}",
+      "importedFrom": "Importiert von {source}"
     },
     "save": {
       "description": "Aktuelle Warteschlange als Sammlung speichern",
@@ -411,7 +489,9 @@
       "description": "Sammlung in die Warteschlange laden",
       "nameOption": "Name der zu ladenden Sammlung",
       "empty": "Diese Sammlung ist leer.",
-      "success": "📂 **{count}** Titel aus Sammlung **{name}** geladen!"
+      "success": "📂 **{count}** Titel aus Sammlung **{name}** geladen!",
+      "queuedNext": "Sie werden direkt nach dem aktuellen Song gespielt.",
+      "skipped": "{count} übersprungen (länger als auf diesem Server erlaubt, über dem Warteschlangenlimit oder nicht gefunden)."
     },
     "rename": {
       "description": "Benenne eine Sammlung um",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Der Teilen-Code zum Klonen",
       "nameOption": "Name für deine neue Sammlung",
       "invalidCode": "Ungültiger oder abgelaufener Teilen-Code.",
-      "success": "📋 **{count}** Tracks in die neue Sammlung **{name}** geklont!"
+      "success": "📋 **{count}** Tracks in die neue Sammlung **{name}** geklont!",
+      "clonedFrom": "Geklont von {name}"
     },
     "merge": {
       "description": "Füge eine Sammlung mit einer anderen zusammen",
@@ -457,6 +538,21 @@
       "positionOption": "Position des zu entfernenden Tracks (ab 1)",
       "invalidPosition": "Ungültige Position. Die Sammlung hat {max} Tracks.",
       "success": "🗑️ **{track}** wurde aus der Sammlung **{name}** entfernt."
+    },
+    "error": "Bei deinen Sammlungen ist etwas schiefgelaufen. Bitte versuch es erneut.",
+    "trackCount": "{count} Tracks",
+    "gone": "Diese Sammlung existiert nicht mehr.",
+    "notYours": "Dieses Menü gehört jemand anderem. Nutze /collections list, um deine eigenen zu sehen.",
+    "import": {
+      "description": "Importiere eine Playlist von Spotify, YouTube, Deezer oder Apple Music",
+      "urlOption": "Playlist-Link (Spotify, YouTube, Deezer, Apple Music-Album)",
+      "nameOption": "Name der neuen Sammlung (Standard: Titel der Playlist)",
+      "invalidUrl": "Das sieht nicht nach einem Link aus. Füge eine Playlist-URL von Spotify, YouTube, Deezer oder ein Apple Music-Album ein.",
+      "failed": "Ich konnte diese Playlist nicht lesen. Stell sicher, dass sie öffentlich ist und der Link von Spotify, YouTube, Deezer oder einem Apple Music-Album stammt.",
+      "exists": "Du hast bereits eine Sammlung namens **{name}**. Wähle mit der Option `name` einen anderen Namen.",
+      "success": "📥 **{count}** Tracks von {source} in **{name}** importiert.",
+      "skipped": "{count} übersprungen (über dem Limit von {max} Tracks pro Sammlung oder nicht abspielbar).",
+      "spotifyCap": "Spotify gibt über einen Playlist-Link nur die ersten 100 Songs frei."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Wandle Text in Sprache um und spiele ihn im Sprachkanal ab",
     "errorNotAvailable": "❌ Der TTS-Dienst ist nicht verfügbar. Bitte kontaktiere den Bot-Administrator.",
     "errorGenerate": "❌ Sprachausgabe konnte nicht erzeugt werden. Bitte versuch es erneut.",
-    "success": "🎤 Spiele: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Spiele: \"{text}\" ({language}, {voice})",
+    "optionText": "Text, der in Sprache umgewandelt werden soll",
+    "optionLanguage": "Sprache für die Ausgabe (nutzt gespeicherte Einstellung, wenn nicht angegeben)",
+    "optionVoice": "Zu verwendende Stimme (nutzt gespeicherte Einstellung, wenn nicht angegeben)"
   },
   "sayconfig": {
-    "description": "Konfiguriere deine TTS-Einstellungen (Text-to-Speech)"
+    "description": "Konfiguriere deine TTS-Einstellungen (Text-to-Speech)",
+    "view": {
+      "description": "Zeige deine aktuelle TTS-Konfiguration",
+      "title": "TTS-Konfiguration",
+      "noConfig": "Keine eigene Konfiguration festgelegt. Standardwerte werden verwendet.",
+      "mode": "Modus",
+      "language": "Sprache",
+      "voice": "Stimme",
+      "voiceDescription": "Stimmbeschreibung",
+      "styleInstruction": "Stilanweisung",
+      "referenceAudio": "Referenz-Audio",
+      "referenceAudioSet": "Festgelegt",
+      "referenceText": "Referenztext"
+    },
+    "mode": {
+      "description": "TTS-Modus festlegen (custom_voice oder voice_clone)",
+      "option": "TTS-Modus",
+      "customVoice": "Eigene Stimme (Standard)",
+      "voiceClone": "Stimmklon",
+      "set": "TTS-Modus auf **{mode}** gesetzt"
+    },
+    "language": {
+      "description": "Standardsprache festlegen",
+      "option": "Sprache für die Sprachausgabe",
+      "set": "Standardsprache auf **{language}** gesetzt"
+    },
+    "voice": {
+      "description": "Standardstimme/-sprecher festlegen",
+      "option": "Zu verwendende Stimme",
+      "set": "Standardstimme auf **{voice}** gesetzt"
+    },
+    "voiceDescription": {
+      "description": "Stimmbeschreibung für die Generierung eigener Stimmen festlegen",
+      "option": "Stimmbeschreibung (z. B. 'tiefe Männerstimme mit ruhigem Ton')",
+      "set": "Stimmbeschreibung festgelegt: \"{text}\""
+    },
+    "style": {
+      "description": "Stilanweisung für die Stimmgenerierung festlegen",
+      "option": "Stilanweisung (z. B. 'langsam und deutlich sprechen')",
+      "set": "Stilanweisung festgelegt: \"{text}\""
+    },
+    "reference": {
+      "description": "Referenz-Audio und -Text für das Stimmklonen festlegen",
+      "optionAudio": "Referenz-Audiodatei (MP3, WAV usw.)",
+      "optionText": "Transkript des Referenz-Audios",
+      "saved": "Referenz-Audio hochgeladen und gespeichert!",
+      "text": "Referenztext: \"{text}\"",
+      "modeSet": "Modus automatisch auf **{mode}** gesetzt",
+      "failed": "Referenz-Audio konnte nicht hochgeladen werden. Bitte versuch es erneut."
+    },
+    "reset": {
+      "description": "Deine TTS-Konfiguration auf Standard zurücksetzen",
+      "done": "TTS-Konfiguration auf Standard zurückgesetzt.",
+      "none": "Keine eigene Konfiguration zum Zurücksetzen gefunden."
+    }
   },
   "radio": {
     "notInVoice": "Du musst in einem Sprachkanal sein.",
@@ -649,7 +802,8 @@
     "body": "Durch Abstimmen finden mehr Server den Bot. Jede Stimme auf top.gg schaltet für dich **24/7-Modus** und **Studioqualität** für 12 Stunden frei.",
     "active": "Deine Vote-Vorteile sind noch {time} aktiv.",
     "inactive": "Keine aktive Stimme. Stimm unten ab – die Vorteile starten innerhalb einer Minute.",
-    "notListed": "Abstimmen ist möglich, sobald der Bot gelistet ist. Danke, dass du helfen willst!"
+    "notListed": "Abstimmen ist möglich, sobald der Bot gelistet ist. Danke, dass du helfen willst!",
+    "heading": "Vote für {bot}"
   },
   "leaderboard": {
     "description": "Die Titel-Bestenliste der Session anzeigen",
@@ -742,7 +896,8 @@
     "noQueue": "Es gibt keine aktive Warteschlange.",
     "invalidChannel": "Ungültiger Kanal. Bitte wähle einen Textkanal.",
     "title": "📢 Kanal geändert",
-    "success": "Ankündigungen werden jetzt in {channel} gesendet."
+    "success": "Ankündigungen werden jetzt in {channel} gesendet.",
+    "optionChannel": "Kanal, an den gebunden werden soll (Standard: aktueller)"
   },
   "disabledcommands": {
     "description": "Alle deaktivierten Befehle auf diesem Server anzeigen",
@@ -939,7 +1094,28 @@
     "user_free": "Du bist auf der **Free**-Stufe.",
     "upgrade": "Auf Premium upgraden",
     "upgrade_message": "Hol dir Premium-Features, indem du uns auf Patreon unterstützt!",
-    "description": "Premium-Vorteile ansehen"
+    "description": "Premium-Vorteile ansehen",
+    "view": {
+      "description": "Verfügbare Vorteile anzeigen"
+    },
+    "user": {
+      "description": "Deine aktuellen Vorteile anzeigen",
+      "title": "Deine Vorteile",
+      "premium": "Du hast **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Audio: {bitrate}kbps",
+      "audioFilters": "Audiofilter",
+      "stay247": "24/7-Modus",
+      "free": "Du bist auf der **Free**-Stufe. Hol dir Premium auf Patreon!"
+    },
+    "overview": {
+      "title": "Premium-Vorteile",
+      "intro": "Founder ist auf {spots} Plätze begrenzt und der Preis bleibt fest.",
+      "freeName": "Free — {price}",
+      "freePerks": "128kbps Audio\nWarteschlange, Playlists und Songtexte\nAlle Befehle",
+      "founderName": "Founder / Beta-Tester — {price}/Monat",
+      "founderPerks": "320kbps Audio\nAudiofilter\n24/7-Modus\nPriorisierte Warteschlange\nFounder-Rolle und direkter Support"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Kein Premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Autoplay aus.",
     "volumeLimit": "Dieser Server begrenzt die Lautstärke auf {max}%.",
     "lyricsButton": "Songtext",
-    "saveButton": "Speichern"
+    "saveButton": "Speichern",
+    "trackFailed": "**{title}** konnte nicht abgespielt werden und wird übersprungen. Probier einen anderen Link oder eine andere Suche.",
+    "guessRunning": "Hier läuft gerade ein Song-Raten-Spiel. Der Player kommt zurück, wenn es vorbei ist."
   },
   "queueView": {
     "title": "Warteschlange",
@@ -1040,7 +1218,8 @@
     "commands": "Befehle",
     "dashboard": "Dashboard",
     "support": "Support-Server",
-    "vote": "Voten"
+    "vote": "Voten",
+    "voiceStatusHint": "Soll der aktuelle Song unter dem Namen des Sprachkanals angezeigt werden? [Autorisiere mich erneut]({url}), um die Berechtigung „Sprachkanalstatus festlegen“ zu erteilen."
   },
   "router": {
     "guildOnly": "Dieser Befehl funktioniert nur auf einem Server.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Sprache (automatisch folgt der Discord-Sprache jedes Mitglieds)",
     "auto": "Automatisch (Discord-Sprache jedes Mitglieds)",
     "set": "Sprache auf {language} gesetzt.",
-    "needManage": "Du brauchst die Berechtigung „Server verwalten“, um die Sprache zu ändern."
+    "needManage": "Du brauchst die Berechtigung „Server verwalten“, um die Sprache zu ändern.",
+    "unknown": "Unbekannte Sprache."
   },
   "links": {
     "website": "Website",
@@ -1100,45 +1280,741 @@
     "invite": "Einladen"
   },
   "commanddisable": {
-    "description": "Befehle auf diesem Server deaktivieren"
+    "description": "Befehle auf diesem Server deaktivieren",
+    "optionCommand": "Zu deaktivierender Befehl",
+    "protected": "Wichtiger Befehl kann nicht deaktiviert werden: {command}",
+    "notFound": "Befehl nicht gefunden: {command}",
+    "alreadyDisabled": "Befehl {command} ist bereits deaktiviert.",
+    "title": "Befehl deaktiviert",
+    "done": "Befehl {command} wurde auf diesem Server deaktiviert.\n\nNutze `/commandenable`, um ihn wieder zu aktivieren."
   },
   "commanddisableall": {
-    "description": "Alle Befehle außer den wichtigsten deaktivieren"
+    "description": "Alle Befehle außer den wichtigsten deaktivieren",
+    "title": "Alle Befehle deaktiviert",
+    "done": "**{count}** Befehle deaktiviert.\n\nGeschützte Befehle weiterhin verfügbar:\n{commands}\n\nNutze `/commandenableall`, um alle Befehle wiederherzustellen."
   },
   "commandenable": {
-    "description": "Einen deaktivierten Befehl aktivieren"
+    "description": "Einen deaktivierten Befehl aktivieren",
+    "optionCommand": "Zu aktivierender Befehl",
+    "notDisabled": "Befehl {command} ist nicht deaktiviert.",
+    "title": "Befehl aktiviert",
+    "done": "Befehl {command} wurde auf diesem Server wieder aktiviert."
   },
   "commandenableall": {
-    "description": "Alle deaktivierten Befehle aktivieren"
+    "description": "Alle deaktivierten Befehle aktivieren",
+    "title": "Alle Befehle aktiviert",
+    "done": "**{count}** Befehle wieder aktiviert.\n\nAlle Befehle sind jetzt verfügbar.",
+    "none": "Es waren keine Befehle deaktiviert."
   },
   "effects": {
-    "description": "Audioeffekte verwalten"
+    "description": "Audioeffekte verwalten",
+    "optionEnabled": "Aktivieren oder deaktivieren",
+    "nothingPlaying": "Gerade läuft keine Musik.",
+    "unknown": "Unbekannter Effekt.",
+    "enabledBy": "{effect}-Effekt von {user} aktiviert",
+    "disabledBy": "{effect}-Effekt von {user} deaktiviert",
+    "8d": {
+      "description": "8D-Audioeffekt anwenden (Klang rotiert)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Bass-Boost-Effekt anwenden",
+      "optionLevel": "Bass-Stufe",
+      "level": {
+        "off": "Aus",
+        "low": "Niedrig",
+        "medium": "Mittel",
+        "high": "Hoch"
+      },
+      "disabledBy": "Bass-Boost von {user} deaktiviert",
+      "alreadyOff": "Bass-Boost ist bereits aus.",
+      "setBy": "Bass-Boost von {user} auf **{level}** gesetzt"
+    },
+    "distortion": {
+      "description": "Verzerrungseffekt anwenden",
+      "name": "Verzerrung"
+    },
+    "haas": {
+      "description": "Haas-Effekt anwenden (räumlicher Klang)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Gesang reduzieren (Karaoke-Modus)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Nightcore-Effekt anwenden (höhere Tonhöhe + Tempo)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Vaporwave-Effekt anwenden (tiefere Tonhöhe + Tempo)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Pulsator-Effekt anwenden",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Audio rückwärts abspielen",
+      "name": "Rückwärts"
+    },
+    "tremolo": {
+      "description": "Tremolo-Effekt anwenden",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Vibrato-Effekt anwenden",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Lofi-Effekt anwenden",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Surround-Soundeffekt anwenden",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Aktive Effekte anzeigen",
+      "title": "Aktive Effekte",
+      "empty": "Keine Effekte aktiv"
+    },
+    "clear": {
+      "description": "Alle Effekte entfernen",
+      "done": "Alle Effekte entfernt."
+    }
   },
   "info": {
-    "description": "Bot-Infos und Hilfe"
+    "description": "Bot-Infos und Hilfe",
+    "about": {
+      "description": "Über diesen Bot",
+      "statistics": "Statistiken",
+      "servers": "Server",
+      "commands": "Befehle",
+      "uptime": "Laufzeit",
+      "system": "System",
+      "memory": "Arbeitsspeicher"
+    },
+    "faq": {
+      "description": "Häufig gestellte Fragen"
+    },
+    "support": {
+      "description": "Link zum Support-Server erhalten",
+      "title": "Support",
+      "body": "Brauchst du Hilfe? Tritt unserem Support-Server bei:",
+      "join": "Klicke zum Beitreten",
+      "reportIssues": "Probleme melden",
+      "reportIssuesValue": "Nutze zuerst `/info faq` und frag dann im Support",
+      "suggestions": "Vorschläge",
+      "suggestionsValue": "Teile deine Ideen in unserem Vorschläge-Kanal"
+    },
+    "queue": {
+      "description": "Detaillierte Infos zur Warteschlange",
+      "noQueue": "Keine aktive Warteschlange.",
+      "title": "Infos zur Warteschlange",
+      "contributors": "Beitragende"
+    },
+    "song": {
+      "description": "Details zum aktuellen Song",
+      "noTrack": "Es läuft gerade kein Track.",
+      "title": "Läuft gerade"
+    },
+    "nextup": {
+      "description": "Nächsten Track in der Warteschlange anzeigen",
+      "empty": "Keine Tracks in der Warteschlange.",
+      "title": "Als Nächstes",
+      "footer": "{count} Tracks in der Warteschlange"
+    },
+    "changelogs": {
+      "description": "Neueste Updates und Änderungen",
+      "title": "Neueste Updates",
+      "intro": "Neueste Änderungen und Verbesserungen:",
+      "newFeatures": "Neue Funktionen",
+      "newFeaturesList": "• Zusammengefasste Befehle für bessere Übersicht\n• Verbessertes Audioeffekt-System\n• Erweiterte Warteschlangenverwaltung",
+      "improvements": "Verbesserungen",
+      "improvementsList": "• Schnellere Reaktionszeiten bei Befehlen\n• Bessere Fehlerbehandlung\n• Geringerer Speicherverbrauch",
+      "bugFixes": "Fehlerbehebungen",
+      "bugFixesList": "• Wiedergabeprobleme behoben\n• Synchronisierungsprobleme der Warteschlange behoben"
+    }
   },
   "patreon": {
-    "description": "Prüfe deinen Patreon-Status und synchronisiere deine Vorteile"
+    "description": "Prüfe deinen Patreon-Status und synchronisiere deine Vorteile",
+    "notConfigured": "Die Patreon-Integration ist für diesen Bot nicht eingerichtet.",
+    "howToLink": "So verknüpfst du",
+    "premiumActive": "Premium aktiv",
+    "patronStatus": {
+      "active": "Aktiver Patron",
+      "declined": "Zahlung abgelehnt",
+      "former": "Ehemaliger Patron",
+      "none": "Kein Patron"
+    },
+    "status": {
+      "description": "Prüfe deinen aktuellen Patreon-Status und deine Vorteile",
+      "title": "Patreon-Status",
+      "yourTitle": "Dein Patreon-Status",
+      "notLinked": "Du bist derzeit mit keinem Patreon-Konto verknüpft.",
+      "howToLinkSteps": "1. Geh zu [Patreon]({patreon})\n2. Verbinde dein Discord-Konto unter Einstellungen → Verbindungen\n3. Abonniere unsere Patreon-Seite\n4. Nutze `/patreon sync`, um deine Vorteile zu aktualisieren",
+      "pledgeAmount": "Unterstützungsbetrag",
+      "perMonth": "{amount}/Monat",
+      "lifetimeSupport": "Gesamtunterstützung",
+      "lastCharge": "Letzte Abbuchung",
+      "thanks": "Danke für deine Unterstützung! Du hast Zugriff auf Premium-Funktionen.",
+      "declined": "Deine letzte Zahlung wurde abgelehnt. Bitte aktualisiere deine Zahlungsmethode auf Patreon, um deine Vorteile wiederherzustellen.",
+      "former": "Deine Unterstützung ist beendet. Erneuere sie auf Patreon, um deine Vorteile zurückzubekommen!",
+      "error": "Beim Prüfen deines Patreon-Status ist ein Fehler aufgetreten. Bitte versuch es später erneut."
+    },
+    "sync": {
+      "description": "Synchronisiere deine Patreon-Daten, um deine Vorteile zu aktualisieren",
+      "completeTitle": "Patreon-Synchronisierung abgeschlossen",
+      "success": "Deine Patreon-Daten wurden erfolgreich synchronisiert!",
+      "title": "Patreon-Synchronisierung",
+      "notFound": "Kein mit deinem Discord verknüpftes Patreon-Konto gefunden.",
+      "howToLinkSteps": "1. Geh zu den [Patreon-Einstellungen]({settings})\n2. Klicke auf **Verbindungen**\n3. Verbinde dein **Discord**-Konto\n4. Stell sicher, dass du unsere Kampagne unterstützt\n5. Führe `/patreon sync` erneut aus",
+      "error": "Beim Synchronisieren deiner Patreon-Daten ist ein Fehler aufgetreten. Bitte versuch es später erneut."
+    },
+    "info": {
+      "description": "Erfahre mehr über Patreon-Vorteile und wie du dein Konto verknüpfst",
+      "title": "Patreon-Vorteile",
+      "intro": "Unterstütze uns auf Patreon und schalte exklusive Vorteile frei!",
+      "benefits": "Premium-Vorteile",
+      "benefitsList": "• Höhere Audioqualität\n• Längere Playlists\n• Bevorzugte Warteschlange\n• Exklusive Befehle\n• Frühzeitiger Zugang zu neuen Funktionen",
+      "howToGet": "So bekommst du Premium",
+      "howToGetSteps": "1. Besuche unsere [Patreon-Seite]({patreon})\n2. Wähle eine Stufe, die zu dir passt\n3. Verknüpfe dein Discord in den Patreon-Einstellungen → Verbindungen\n4. Nutze `/patreon sync`, um die Vorteile zu aktivieren",
+      "troubleshooting": "Fehlerbehebung",
+      "troubleshootingList": "• Stell sicher, dass Discord in deinen Patreon-Einstellungen verknüpft ist\n• Deine Zahlung muss erfolgreich sein (nicht abgelehnt)\n• Versuch `/patreon sync` nach dem Verknüpfen\n• Vorteile werden automatisch alle 30 Minuten aktualisiert"
+    }
   },
   "play_file": {
-    "description": "Eine Audiodatei aus einem Anhang abspielen"
+    "description": "Eine Audiodatei aus einem Anhang abspielen",
+    "optionFile": "Abzuspielende Audiodatei (MP3, WAV, FLAC, M4A, OGG usw.)",
+    "optionTitle": "Optionaler eigener Titel für den Track",
+    "cantPlay": "Die Datei konnte nicht abgespielt werden: {name}",
+    "nowPlayingTitle": "Datei wird abgespielt",
+    "addedTitle": "Datei zur Warteschlange hinzugefügt",
+    "format": "Format",
+    "size": "Größe",
+    "error": {
+      "load": "Die Datei konnte nicht geladen werden: {name}\n\nMögliche Gründe:\n• Dateiformat wird nicht unterstützt\n• Datei ist beschädigt\n• Datei-URL ist abgelaufen",
+      "timeout": "Zeitüberschreitung beim Herunterladen der Datei. Die Datei ist vielleicht zu groß oder die Verbindung ist langsam.",
+      "forbidden": "Zugriff auf die Datei verweigert. Bitte lade sie erneut hoch und versuch es nochmal.",
+      "notFound": "Datei nicht gefunden. Die Anhang-URL ist möglicherweise abgelaufen.",
+      "generic": "Beim Abspielen der Datei ist ein Fehler aufgetreten."
+    }
   },
   "play_spotify": {
-    "description": "Einen Song auf Spotify suchen und abspielen"
+    "description": "Einen Song auf Spotify suchen und abspielen",
+    "optionQuery": "Songname, Künstler oder Spotify-URL zum Suchen",
+    "cantPlayLink": "Der Spotify-Link konnte nicht abgespielt werden: {query}",
+    "playlistFallback": "Spotify-Playlist",
+    "playlistAdded": "Spotify-Playlist hinzugefügt",
+    "songs": "{count} Songs",
+    "nowPlaying": "Läuft gerade",
+    "trackBy": "{title} von {author}",
+    "nowPlayingTitle": "Läuft gerade von Spotify",
+    "addedTitle": "Von Spotify zur Warteschlange hinzugefügt",
+    "noResults": "Keine Ergebnisse auf Spotify für: {query}\n\nVersuch es mit:\n• Anderen Suchbegriffen\n• Dem Namen des Künstlers\n• Einem direkten Spotify-Link",
+    "notOnYoutube": "Nicht auf YouTube gefunden: {title} von {artist}",
+    "error": {
+      "auth": "Dieser Spotify-Track erfordert eine Anmeldung. Versuch einen anderen Track.",
+      "premium": "Dieser Track erfordert Spotify Premium.",
+      "private": "Dieser Spotify-Track ist privat und kann nicht abgespielt werden.",
+      "region": "Dieser Track ist in deiner Region nicht verfügbar.",
+      "generic": "Beim Abspielen des Spotify-Tracks ist ein Fehler aufgetreten."
+    }
   },
   "premium": {
-    "description": "Premium-Funktionen und Server-Verknüpfungen verwalten"
+    "description": "Premium-Funktionen und Server-Verknüpfungen verwalten",
+    "audioQuality": "Audioqualität",
+    "botIdentity": "Bot-Identität",
+    "serverSlots": "Server-Slots",
+    "patreonTier": "Patreon-Stufe",
+    "supporter": "Unterstützer",
+    "dbUnavailable": "**Datenbank vorübergehend nicht verfügbar**\n\nDer Bot hat Probleme, sich mit der Datenbank zu verbinden. Bitte versuch es in ein paar Momenten erneut.\n\nFalls das Problem weiterhin besteht, wurde der Bot-Administrator benachrichtigt.",
+    "error": "Ein Fehler ist aufgetreten: {error}",
+    "link": {
+      "description": "Verknüpfe diesen Server mit deinem Patreon-Konto",
+      "successTitle": "Server verknüpft",
+      "failTitle": "Verknüpfung fehlgeschlagen"
+    },
+    "unlink": {
+      "description": "Trenne diesen Server von deinem Patreon-Konto",
+      "successTitle": "Server getrennt",
+      "failTitle": "Trennen fehlgeschlagen"
+    },
+    "list": {
+      "description": "Alle mit deinem Patreon-Konto verknüpften Server anzeigen",
+      "title": "Deine verknüpften Server",
+      "empty": "Du hast noch keine Server verknüpft.\n\nNutze `/premium link`, um diesen Server zu verknüpfen!",
+      "linkedAt": "Verknüpft: {time}",
+      "slotsUsed": "{used}/{max} belegt",
+      "noMembership": "Du hast keine aktive Patreon-Mitgliedschaft.\n\nUnterstütze uns auf Patreon, um Premium-Funktionen freizuschalten!"
+    },
+    "status": {
+      "description": "Premium-Status für diesen Server anzeigen",
+      "premiumTitle": "Premium-Server",
+      "freeTitle": "Kostenloser Server",
+      "premiumBody": "Auf diesem Server sind Premium-Funktionen aktiviert!",
+      "freeBody": "Dieser Server nutzt die kostenlose Stufe.\n\nNutze `/premium link`, um Premium-Funktionen zu aktivieren.",
+      "linked": "Verknüpft",
+      "lastUsed": "Zuletzt genutzt",
+      "ownFooter": "Diese Premium-Verknüpfung gehört dir",
+      "otherFooter": "Premium wird von einem anderen Nutzer bereitgestellt",
+      "freeQuality": "128kbps (Kostenlos)"
+    },
+    "config": {
+      "description": "Premium-Einstellungen für diesen Server konfigurieren",
+      "optionBitrate": "Audio-Bitrate in kbps",
+      "optionIdentity": "Eigene Bot-Identität für diesen Server",
+      "nothing": "Bitte gib mindestens eine Einstellung an.\n\nBeispiel: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Einstellungen aktualisiert",
+      "failTitle": "Aktualisierung fehlgeschlagen"
+    },
+    "service": {
+      "needMembership": "Du brauchst eine aktive Patreon-Mitgliedschaft, um Server zu verknüpfen.\n\nUnterstütze uns auf Patreon, um Premium-Funktionen freizuschalten!",
+      "limitReached": "Du hast dein Server-Limit erreicht ({max} Server).\n\nAktuelle Stufe: **{tier}**\nVerknüpfte Server: **{current}/{max}**\n\nUpgrade deine Stufe, um mehr Server zu verknüpfen!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Dieser Server ist bereits mit deinem Konto verknüpft.",
+      "alreadyLinkedOther": "Dieser Server ist bereits mit einem anderen Patreon-Konto verknüpft.\n\nPro Server kann nur ein Patreon-Konto Premium-Funktionen aktivieren.",
+      "linked": "Server erfolgreich verknüpft!",
+      "servers": "Server",
+      "linkedActive": "Premium-Funktionen sind auf diesem Server jetzt aktiv!",
+      "linkError": "Fehler beim Verknüpfen des Servers: {error}",
+      "notLinked": "Dieser Server ist nicht mit deinem Konto verknüpft.",
+      "unlinked": "Server erfolgreich getrennt!",
+      "unlinkedBody": "Premium-Funktionen wurden für diesen Server deaktiviert.\nDu kannst mit deinen freien Slots einen anderen Server verknüpfen.",
+      "unlinkError": "Fehler beim Trennen des Servers: {error}",
+      "invalidBitrate": "Ungültige Bitrate. Wähle: 128, 192, 256 oder 320 kbps",
+      "updated": "Server-Einstellungen erfolgreich aktualisiert!",
+      "updateError": "Fehler beim Aktualisieren der Einstellungen: {error}"
+    },
+    "feature": {
+      "audio_filters": "Audiofilter",
+      "stay_24_7": "24/7-Modus",
+      "max_quality": "Maximale Qualität",
+      "priority_queue": "Prioritäts-Warteschlange",
+      "unlimited_playlists": "Unbegrenzte Playlists",
+      "longer_songs": "Keine Längenbegrenzung",
+      "vote_features": "Über Funktionen abstimmen",
+      "founder_role": "Founder-Rolle",
+      "direct_support": "Direkter Support"
+    }
   },
   "queuemanage": {
-    "description": "Erweiterte Warteschlangenverwaltung"
+    "description": "Erweiterte Warteschlangenverwaltung",
+    "empty": "Die Warteschlange ist leer.",
+    "invalidPosition": "Ungültige Position. Die Warteschlange hat {count} Tracks.",
+    "removedupes": {
+      "description": "Doppelte Tracks aus der Warteschlange entfernen",
+      "none": "Keine Duplikate gefunden!",
+      "title": "Duplikate entfernt",
+      "result": "**{count}** doppelte Tracks entfernt"
+    },
+    "sort": {
+      "description": "Warteschlange sortieren",
+      "optionBy": "Sortieren nach",
+      "choice": {
+        "title_asc": "Titel (A-Z)",
+        "title_desc": "Titel (Z-A)",
+        "duration_asc": "Dauer (kurz)",
+        "duration_desc": "Dauer (lang)"
+      },
+      "label": {
+        "title_asc": "Titel (A-Z)",
+        "title_desc": "Titel (Z-A)",
+        "duration_asc": "Dauer (kürzeste zuerst)",
+        "duration_desc": "Dauer (längste zuerst)"
+      },
+      "result": "Warteschlange sortiert nach **{label}**"
+    },
+    "swap": {
+      "description": "Zwei Tracks in der Warteschlange tauschen",
+      "optionPosition1": "Erste Position",
+      "optionPosition2": "Zweite Position",
+      "samePosition": "Die Positionen müssen unterschiedlich sein.",
+      "result": "Tracks an Position **{pos1}** und **{pos2}** getauscht"
+    },
+    "removeuser": {
+      "description": "Alle Tracks eines Nutzers entfernen",
+      "optionUser": "Nutzer, dessen Tracks entfernt werden sollen",
+      "none": "Keine Tracks von {user} gefunden.",
+      "result": "**{count}** Tracks von {user} entfernt"
+    },
+    "removeabsent": {
+      "description": "Tracks von Nutzern entfernen, die nicht im Sprachkanal sind",
+      "notInVoice": "Du musst in einem Sprachkanal sein.",
+      "none": "Alle, die Tracks angefordert haben, sind im Sprachkanal.",
+      "result": "**{count}** Tracks von abwesenden Nutzern entfernt"
+    },
+    "removelast": {
+      "description": "Die letzten N Tracks entfernen",
+      "optionCount": "Anzahl zu entfernender Tracks",
+      "result": "Die letzten **{count}** Tracks entfernt"
+    },
+    "removerange": {
+      "description": "Tracks in einem Bereich entfernen",
+      "optionStart": "Startposition",
+      "optionEnd": "Endposition",
+      "startAfterEnd": "Der Start muss kleiner oder gleich dem Ende sein.",
+      "startTooHigh": "Die Startposition überschreitet die Länge der Warteschlange ({count}).",
+      "result": "**{count}** Tracks entfernt (Positionen {start}-{end})"
+    },
+    "reverse": {
+      "description": "Reihenfolge der Warteschlange umkehren",
+      "result": "Reihenfolge der Warteschlange umgekehrt"
+    }
   },
   "settings": {
-    "description": "Bot-Einstellungen für diesen Server konfigurieren (nur Admins)"
+    "description": "Bot-Einstellungen für diesen Server konfigurieren (nur Admins)",
+    "noPermission": "Du hast keine Berechtigung, die Bot-Einstellungen zu verwalten.",
+    "unknownSubcommand": "Unbekannter Unterbefehl.",
+    "current": "**Aktuell:** {value}",
+    "allChannels": "Alle Kanäle erlaubt",
+    "allAllowed": "Alle erlaubt",
+    "on": "An",
+    "off": "Aus",
+    "yes": "Ja",
+    "no": "Nein",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "view": {
+      "description": "Aktuelle Einstellungen anzeigen",
+      "title": "Bot-Einstellungen",
+      "roles": "Rollen",
+      "djRole": "DJ-Rolle",
+      "djNotSet": "Nicht festgelegt (jeder kann DJ sein)",
+      "adminRole": "Admin-Rolle",
+      "adminNotSet": "Nur Server-Admins",
+      "volume": "Lautstärke",
+      "default": "Standard",
+      "maximum": "Maximum",
+      "queue": "Warteschlange",
+      "maxSize": "Max. Größe",
+      "songs": "{count} Songs",
+      "preventDuplicates": "Duplikate verhindern",
+      "behavior": "Verhalten",
+      "announcements": "Ankündigungen",
+      "autoLeave": "Automatisch verlassen",
+      "leaveTimeout": "Verlassen nach",
+      "channels": "Kanäle",
+      "voiceChannels": "Sprachkanäle",
+      "textChannels": "Textkanäle",
+      "logChannel": "Log-Kanal",
+      "logDefault": "Standard (#bot-commands)",
+      "blacklist": "Blacklist",
+      "noBlacklist": "Keine Nutzer auf der Blacklist",
+      "premium": "Premium",
+      "tier": "Stufe",
+      "expires": "Läuft ab",
+      "never": "Nie",
+      "notActive": "Nicht aktiv",
+      "customization": "Anpassung",
+      "language": "Sprache",
+      "embedColor": "Embed-Farbe",
+      "footer": "Nutze /settings <option>, um Einstellungen zu ändern"
+    },
+    "djrole": {
+      "description": "DJ-Rolle für die Musiksteuerung festlegen",
+      "prompt": "Wähle die DJ-Rolle. Nutzer mit dieser Rolle können die Musikwiedergabe steuern.",
+      "placeholder": "DJ-Rolle auswählen",
+      "clear": "DJ-Rolle entfernen (jeder kann DJ sein)",
+      "set": "DJ-Rolle auf {role} gesetzt",
+      "cleared": "DJ-Rolle entfernt.",
+      "clearedEveryone": "DJ-Rolle entfernt. Jetzt kann jeder DJ-Befehle nutzen."
+    },
+    "adminrole": {
+      "description": "Admin-Rolle für die Verwaltung der Einstellungen festlegen",
+      "prompt": "Wähle die Admin-Rolle. Nutzer mit dieser Rolle können die Bot-Einstellungen ändern.",
+      "placeholder": "Admin-Rolle auswählen",
+      "clear": "Admin-Rolle entfernen (nur Server-Admins)",
+      "set": "Admin-Rolle auf {role} gesetzt",
+      "cleared": "Admin-Rolle entfernt.",
+      "clearedAdmins": "Admin-Rolle entfernt. Nur Server-Administratoren können jetzt Einstellungen ändern."
+    },
+    "volume": {
+      "description": "Standard- und Maximallautstärke festlegen",
+      "optionDefault": "Standardlautstärke (0-100)",
+      "optionMax": "Maximal erlaubte Lautstärke (0-100)",
+      "currentTitle": "Aktuelle Lautstärke-Einstellungen",
+      "defaultSet": "Standardlautstärke auf {value}% gesetzt",
+      "maxSet": "Maximallautstärke auf {value}% gesetzt",
+      "logDefault": "Standardlautstärke",
+      "logMax": "Maximallautstärke"
+    },
+    "queue": {
+      "description": "Warteschlangen-Einstellungen anpassen",
+      "optionMaxSize": "Maximale Größe der Warteschlange (1-1000)",
+      "optionPreventDuplicates": "Doppelte Songs in der Warteschlange verhindern",
+      "currentTitle": "Aktuelle Warteschlangen-Einstellungen",
+      "maxSet": "Maximale Warteschlangengröße auf {value} Songs gesetzt",
+      "duplicatesSet": "Duplikate verhindern: {value}"
+    },
+    "behavior": {
+      "description": "Bot-Verhalten anpassen",
+      "optionAnnouncements": "Aktuellen Song im Textkanal ankündigen",
+      "optionAutoLeave": "Sprachkanal verlassen, wenn er leer ist",
+      "optionLeaveTimeout": "Sekunden bis zum Verlassen eines leeren Kanals (30-3600)",
+      "currentTitle": "Aktuelle Verhaltens-Einstellungen",
+      "announcementsSet": "„Läuft gerade“-Ankündigungen: {value}",
+      "autoLeaveSet": "Automatisch verlassen, wenn leer: {value}",
+      "timeoutSet": "Timeout zum Verlassen auf {value} Sekunden gesetzt"
+    },
+    "voicechannels": {
+      "description": "Erlaubte Sprachkanäle festlegen",
+      "prompt": "Wähle aus, welchen Sprachkanälen der Bot beitreten darf.",
+      "placeholder": "Erlaubte Sprachkanäle auswählen",
+      "allowAll": "Alle Kanäle erlauben",
+      "set": "Erlaubte Sprachkanäle: {channels}",
+      "cleared": "Alle Sprachkanäle sind jetzt erlaubt."
+    },
+    "textchannels": {
+      "description": "Erlaubte Textkanäle für Befehle festlegen",
+      "prompt": "Wähle aus, in welchen Textkanälen Bot-Befehle genutzt werden können.",
+      "placeholder": "Erlaubte Textkanäle auswählen",
+      "allowAll": "Alle Kanäle erlauben",
+      "set": "Erlaubte Textkanäle: {channels}",
+      "cleared": "Alle Textkanäle sind jetzt erlaubt."
+    },
+    "logchannel": {
+      "description": "Kanal für Bot-Logs festlegen (aktueller Song usw.)",
+      "prompt": "Wähle einen Kanal für Bot-Log-Nachrichten (aktueller Song, Warteschlange beendet usw.).",
+      "note": "**Hinweis:** Wenn kein Log-Kanal festgelegt ist, sucht der Bot nach einem Kanal namens #bot-commands. Gibt es diesen nicht, werden keine Log-Nachrichten gesendet.",
+      "placeholder": "Log-Kanal für Bot-Nachrichten auswählen",
+      "useDefault": "Standard verwenden (bot-commands)",
+      "disable": "Log-Nachrichten deaktivieren",
+      "statusDefault": "Standardverhalten aktiv (sucht nach #bot-commands)",
+      "statusDisabled": "Log-Nachrichten sind deaktiviert",
+      "set": "Log-Kanal auf {channel} gesetzt",
+      "reset": "Log-Kanal auf Standard zurückgesetzt (#bot-commands wird verwendet, falls vorhanden).",
+      "disabled": "Log-Nachrichten wurden deaktiviert."
+    },
+    "blacklist": {
+      "description": "Nutzer-Blacklist verwalten",
+      "optionAdd": "Nutzer zur Blacklist hinzufügen",
+      "optionRemove": "Nutzer von der Blacklist entfernen",
+      "title": "Gesperrte Nutzer",
+      "none": "Es sind keine Nutzer auf der Blacklist.",
+      "already": "{user} ist bereits auf der Blacklist.",
+      "added": "{user} wurde für die Nutzung des Bots gesperrt.",
+      "notListed": "{user} ist nicht auf der Blacklist.",
+      "removed": "{user} wurde von der Blacklist entfernt."
+    },
+    "language": {
+      "description": "Bot-Sprache für diesen Server festlegen",
+      "prompt": "Wähle die Bot-Sprache für diesen Server.",
+      "placeholder": "Sprache auswählen",
+      "more": "Alle Sprachen, die der Bot spricht, findest du unter {command}."
+    },
+    "embedcolor": {
+      "description": "Eigene Embed-Farbe festlegen",
+      "optionColor": "Hex-Farbcode (z. B. #FF5500)",
+      "invalid": "Ungültige Hex-Farbe. Bitte nutze das Format #RRGGBB (z. B. #FF5500)",
+      "set": "Embed-Farbe gesetzt auf: {color}"
+    },
+    "reset": {
+      "description": "Alle Einstellungen auf Standard zurücksetzen",
+      "prompt": "Willst du wirklich ALLE Einstellungen auf Standard zurücksetzen? Das kann nicht rückgängig gemacht werden.",
+      "confirm": "Ja, alle Einstellungen zurücksetzen",
+      "cancel": "Abbrechen",
+      "done": "Alle Einstellungen wurden auf Standard zurückgesetzt.",
+      "cancelled": "Zurücksetzen abgebrochen."
+    },
+    "stats": {
+      "description": "Musikstatistiken des Servers anzeigen",
+      "title": "Musikstatistiken",
+      "songsPlayed": "Gespielte Songs insgesamt",
+      "playtime": "Gesamte Spielzeit",
+      "playtimeValue": "{hours} Std. {minutes} Min."
+    }
   },
   "stats": {
-    "description": "Bot- und Sitzungsstatistiken ansehen"
+    "description": "Bot- und Sitzungsstatistiken ansehen",
+    "bot": {
+      "description": "Bot-Statistiken anzeigen",
+      "title": "Bot-Statistiken",
+      "servers": "Server",
+      "users": "Nutzer",
+      "channels": "Kanäle",
+      "activeQueues": "Aktive Warteschlangen",
+      "tracksPlaying": "Laufende Tracks",
+      "uptime": "Laufzeit",
+      "memory": "Arbeitsspeicher",
+      "platform": "Plattform"
+    },
+    "uptime": {
+      "description": "Laufzeit des Bots anzeigen"
+    },
+    "leaderboard": {
+      "description": "Warteschlangen-Bestenliste anzeigen",
+      "line": "{user} - {count} Tracks"
+    },
+    "history": {
+      "description": "Zeigt kürzlich gespielte Tracks"
+    },
+    "session": {
+      "description": "Zeigt Infos zur aktuellen Session",
+      "noSession": "Keine aktive Session auf diesem Server.",
+      "title": "Session-Info",
+      "nowPlaying": "Läuft gerade",
+      "nothing": "Nichts",
+      "tracksInQueue": "Tracks in der Warteschlange",
+      "totalDuration": "Gesamtdauer"
+    }
   },
   "user": {
-    "description": "Benutzerprofil und Einstellungen"
+    "description": "Benutzerprofil und Einstellungen",
+    "profile": {
+      "description": "Nutzerprofil anzeigen",
+      "optionTarget": "Nutzer, den du ansehen willst",
+      "free": "Kostenlos"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Wiedergabe gestartet",
+      "pause": "Wiedergabe pausiert",
+      "resume": "Wiedergabe fortgesetzt",
+      "stop": "Wiedergabe gestoppt",
+      "skip": "Track übersprungen",
+      "seek": "Zu Position gesprungen",
+      "seek_forward": "Vorgespult",
+      "seek_backward": "Zurückgespult",
+      "forward": "Vorgespult",
+      "rewind": "Zurückgespult",
+      "backward": "Zurückgespult",
+      "replay": "Track neu gestartet",
+      "restart": "Warteschlange neu gestartet",
+      "volume_change": "Lautstärke geändert",
+      "shuffle": "Warteschlange gemischt",
+      "loop": "Loop-Modus geändert",
+      "loopqueue": "Warteschlangen-Loop geändert",
+      "setting_change": "Einstellungen aktualisiert",
+      "queue_clear": "Warteschlange geleert",
+      "clear": "Warteschlange geleert",
+      "join": "Channel beigetreten",
+      "leave": "Channel verlassen",
+      "autoplay": "Autoplay umgeschaltet",
+      "previous": "Vorherigen Track gespielt",
+      "jump": "Zu Track gesprungen",
+      "swap": "Tracks getauscht",
+      "reverse": "Warteschlange umgedreht",
+      "sort": "Warteschlange sortiert",
+      "removerange": "Bereich entfernt",
+      "removeduplicates": "Duplikate entfernt",
+      "removelast": "Letzten Track entfernt",
+      "voteskip": "Per Abstimmung übersprungen",
+      "grab": "Track gespeichert",
+      "insert": "Track eingefügt",
+      "removecurrent": "Aktuellen Track entfernt"
+    },
+    "detail": {
+      "on": "An",
+      "off": "Aus",
+      "tracks": "{count} Tracks",
+      "effectsCleared": "Effekte entfernt",
+      "bassBoost": "Bass-Boost {level}",
+      "effectOn": "{effect} aktiviert",
+      "effectOff": "{effect} deaktiviert",
+      "previousTrack": "vorheriger Track",
+      "currentTrack": "aktueller Track",
+      "queue": "Warteschlange"
+    },
+    "settings": {
+      "title": "Einstellungen aktualisiert",
+      "changed": "{user} hat {setting} geändert",
+      "before": "Vorher",
+      "after": "Nachher",
+      "notSet": "Nicht festgelegt",
+      "userId": "Nutzer-ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} ist ein Founder-Vorteil",
+    "description": "Founder kostet {price}/Monat, ist auf {spots} Plätze begrenzt und schaltet 320kbps-Audio, den 24/7-Modus, unbegrenzte Songlänge und die Founder-Rolle frei.",
+    "afterJoin": "Nach dem Beitritt",
+    "afterJoinSteps": "1. Verknüpfe deinen Discord-Account in deinen Patreon-Einstellungen\n2. Führe `/premium link` auf diesem Server aus",
+    "becomeFounder": "Werde Founder",
+    "voteTitle": "Oder stimme kostenlos ab",
+    "voteBody": "Eine Stimme auf top.gg schaltet das für 12 Stunden frei. Nutze `/vote`.",
+    "voteButton": "Auf top.gg abstimmen"
+  },
+  "dashboardPlay": {
+    "noQuery": "Gib zuerst einen Songnamen oder Link ein.",
+    "notMember": "Du musst Mitglied dieses Servers sein, um hier Musik abzuspielen.",
+    "noVoiceChannel": "Tritt in Discord einem Sprachkanal bei oder wähle hier einen aus und versuch es dann erneut.",
+    "channelGone": "Dieser Sprachkanal existiert nicht mehr. Wähle einen anderen.",
+    "memberCantJoin": "Du hast keinen Zugriff auf {channel}. Wähle einen Sprachkanal, dem du beitreten kannst.",
+    "nowPlaying": "Läuft jetzt: {title}",
+    "added": "Zur Warteschlange hinzugefügt (#{position}): {title}",
+    "playlist": "{count} Songs aus {title} hinzugefügt"
+  },
+  "voiceStatus": {
+    "title": "Sprachkanal-Status",
+    "missing": "Ich kann den laufenden Song nicht unter dem Sprachkanalnamen anzeigen, weil mir die Berechtigung **Sprachkanalstatus festlegen** fehlt. Autorisiere mich erneut, um sie hinzuzufügen – deine Einstellungen bleiben erhalten.",
+    "reauthorize": "Erneut autorisieren"
+  },
+  "guess": {
+    "description": "Errate Songs anhand von 30-Sekunden-Vorschauen, mit Freunden im Voice-Channel",
+    "startDescription": "Starte ein Song-Raten-Spiel in deinem Voice-Channel",
+    "stopDescription": "Beende das Song-Raten-Spiel",
+    "optionRounds": "Wie viele Songs erraten werden sollen (3-15, Standard 5)",
+    "optionGenre": "Welche Musik gespielt wird (Standard: Top-Hits)",
+    "genre": {
+      "top": "Top-Hits",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-Hop",
+      "latin": "Latin",
+      "electronic": "Electronic",
+      "80s": "80er",
+      "90s": "90er",
+      "2000s": "2000er"
+    },
+    "title": "Errate den Song",
+    "trackTitle": "Errate den Song · Runde {round}",
+    "notInVoice": "Tritt zuerst einem Voice-Channel bei und starte dann das Spiel.",
+    "alreadyRunning": "Auf diesem Server läuft bereits ein Song-Raten-Spiel.",
+    "musicPlaying": "Hier läuft gerade Musik. Stoppe sie zuerst (/stop) und starte dann das Spiel.",
+    "otherChannel": "Ich bleibe in {channel} (24/7). Starte das Spiel von dort aus.",
+    "noVoicePermission": "Ich kann deinem Voice-Channel nicht beitreten oder dort nicht sprechen.",
+    "noChannelAccess": "Ich kann in diesem Kanal nichts posten. Starte das Spiel dort, wo ich Nachrichten senden kann.",
+    "noTracks": "Für dieses Genre konnten gerade keine Songs geladen werden. Probier ein anderes Genre oder versuch es in einer Minute nochmal.",
+    "connectFailed": "Ich konnte deinem Voice-Channel nicht beitreten. Bitte versuch es nochmal.",
+    "introMeta": "{rounds} Runden · {genre}",
+    "introBody": "Hör in {channel} zu und wähl den Song, der gerade läuft. Die erste richtige Antwort punktet, und schnellere Antworten bringen mehr Punkte. Wer falsch tippt, ist für diese Runde raus.",
+    "introStarting": "Der erste Song kommt in ein paar Sekunden…",
+    "introOver": "Dieses Spiel ist vorbei.",
+    "stopButton": "Spiel beenden",
+    "roundTitle": "Runde {round}/{total}",
+    "roundPrompt": "Welcher Song läuft gerade?",
+    "roundCloses": "Antworten schließen {time}",
+    "roundRules": "die erste richtige Antwort punktet",
+    "correctBy": "{user} hat es in {seconds} s erraten (+{points})",
+    "timeUp": "Zeit abgelaufen! Niemand hat's erraten.",
+    "roundStopped": "Spiel beendet.",
+    "answerWas": "Es war **{title}** von **{artist}**",
+    "scores": "Punktestand",
+    "scoreLine": "{user} · {points} Pkt. ({correct} richtig)",
+    "noScores": "Noch keine Punkte.",
+    "nextSoon": "Der nächste Song kommt in ein paar Sekunden…",
+    "finalSoon": "Gleich kommt der Endstand…",
+    "finalTitle": "Endstand",
+    "winner": "{user} gewinnt mit {points} Punkten!",
+    "noWinner": "Diesmal hat niemand gepunktet.",
+    "playAgain": "Nochmal spielen mit {command}",
+    "stoppedBy": "Spiel von {user} beendet.",
+    "stoppedPlain": "Spiel beendet.",
+    "endedEmpty": "Alle haben den Voice-Channel verlassen, daher wurde das Spiel beendet.",
+    "endedDisconnected": "Ich wurde vom Voice-Channel getrennt, daher wurde das Spiel beendet.",
+    "endedMusic": "Es wurde Musik gestartet, daher wurde das Spiel beendet.",
+    "endedError": "Die Song-Vorschauen ließen sich nicht abspielen, daher wurde das Spiel beendet.",
+    "wrong": "Falsch! Du bist für diese Runde raus.",
+    "alreadyAnswered": "Du hast in dieser Runde schon geantwortet.",
+    "roundOver": "Diese Runde ist vorbei.",
+    "gameOver": "Dieses Spiel ist vorbei.",
+    "joinToPlay": "Tritt {channel} bei, um mitzuspielen.",
+    "stopNotAllowed": "Nur die Person, die das Spiel gestartet hat, oder jemand mit „Server verwalten“ kann es beenden.",
+    "noGame": "Hier läuft kein Song-Raten-Spiel.",
+    "stopped": "Spiel beendet.",
+    "blockedDuringGame": "Auf diesem Server läuft ein Song-Raten-Spiel. Warte, bis es vorbei ist, oder beende es mit {stop}."
   }
 }

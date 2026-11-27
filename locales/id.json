@@ -29,13 +29,31 @@
   "loop": {
     "description": "Mengatur ulang musik (Loop)",
     "errorNotQueue": "Tidak ada musik yang dimainkan.",
-    "result": "Putaran sekarang adalah {loop}"
+    "result": "Putaran sekarang adalah {loop}",
+    "optionMode": "Apa yang diulang",
+    "mode": {
+      "off": "Mati",
+      "track": "Lagu ini",
+      "queue": "Seluruh antrean"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Tidak ada musik yang dimainkan.",
     "lyricsNotFound": "Tidak ada lirik yang ditemukan untuk lagu {title}.",
     "embedTitle": "Lirik lagu - {title}",
-    "description": "Lirik lagu yang sedang diputar, atau lagu apa pun"
+    "description": "Lirik lagu yang sedang diputar, atau lagu apa pun",
+    "liveTitle": "Lirik live",
+    "liveButton": "Lirik live",
+    "liveHint": "Lirik tersinkron tersedia: tekan Lirik live untuk mengikutinya.",
+    "liveStop": "Berhenti",
+    "livePaused": "Dijeda",
+    "liveEnded": "Lirik live selesai.",
+    "liveReplaced": "Lirik live dipindah ke pesan yang lebih baru.",
+    "liveStoppedBy": "Lirik live dihentikan oleh {user}.",
+    "liveNoSync": "Lagu ini tidak punya lirik tersinkron, jadi tidak ada mode live.",
+    "liveNoPermission": "Hanya orang yang memulai lirik live atau yang punya izin Kelola Pesan yang bisa menghentikannya.",
+    "liveNotDuringGame": "Lirik disembunyikan selama game tebak lagu berlangsung.",
+    "liveVersionHint": "Waktunya dibuat untuk versi lain lagu ini, jadi baris lirik mungkin meleset"
   },
   "move": {
     "description": "Memindahkan lagu ke dalam antrian",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Tidak ada yang diputar di server ini**",
     "currentPage": "Halaman saat ini - ",
     "embedTitle": "Antrian Lagu\n",
-    "embedCurrentSong": "**Lagu saat ini - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Lagu saat ini - [{title}]({url})**\n\n{info}",
+    "optionPage": "Nomor halaman"
   },
   "remove": {
     "description": "Menghapus lagu dari antrian",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Volume saat ini adalah: **{volume}%**",
     "errorNotNumber": "Silakan gunakan nomor untuk mengatur volume.",
     "errorNotValid": "Silakan gunakan nomor diantara 0 sampai 100.",
-    "result": "Volume disetel ke: **{arg}%**"
+    "result": "Volume disetel ke: **{arg}%**",
+    "errorRange": "Volume harus antara 0 dan {max}."
   },
   "common": {
     "on": "**nyala**",
@@ -208,14 +228,49 @@
     "disabled": "**dinonaktifkan**",
     "errorNotChannel": "Kamu harus bergabung dengan saluran suara terlebih dahulu!",
     "cooldownMessage": "Mohon tunggu {time} lagi sebelum menggunakan perintah `{name}` ini kembali.",
-    "errorCommand": "Terjadi kesalahan saat menjalankan perintah ini."
+    "errorCommand": "Terjadi kesalahan saat menjalankan perintah ini.",
+    "djRequired": "Kamu butuh role DJ untuk memakai perintah ini.",
+    "guild_only": "Perintah ini hanya bisa dipakai di server.",
+    "unknown": "Tidak diketahui",
+    "unknownError": "Error tidak diketahui",
+    "unknownSubcommand": "Subperintah tidak dikenal.",
+    "voiceChannel": "voice channel",
+    "playerInitializing": "Pemutar musik masih disiapkan. Coba lagi dalam beberapa detik ya.",
+    "voiceChannelNotAllowed": "Bot tidak diizinkan memutar di voice channel ini. Gunakan channel yang diizinkan.",
+    "queueFull": "Antrean penuh! Maksimal {max} lagu.",
+    "invalidFileType": "Jenis file tidak valid. Format yang didukung: {formats}",
+    "fileTooLarge": "File terlalu besar ({size}MB). Ukuran maksimal {max}MB.",
+    "optionToggle": "Nyala atau mati (default: bergantian)",
+    "requestedBy": "Diminta oleh {user}",
+    "yes": "Ya",
+    "no": "Tidak",
+    "loop": {
+      "off": "Mati",
+      "track": "Lagu",
+      "queue": "Antrean"
+    },
+    "field": {
+      "title": "Judul",
+      "artist": "Artis",
+      "duration": "Durasi",
+      "tracks": "Lagu",
+      "source": "Sumber",
+      "requestedBy": "Diminta oleh",
+      "loopMode": "Mode Ulang",
+      "volume": "Volume",
+      "loadTime": "Waktu Muat",
+      "positionInQueue": "Posisi di Antrean",
+      "status": "Status",
+      "tier": "Tier"
+    }
   },
   "seek": {
     "description": "Lompat ke waktu tertentu dalam lagu",
     "errorNotQueue": "Tidak ada yang sedang diputar.",
     "errorInvalidTime": "Format waktu tidak valid. Gunakan format seperti: 1:30, 90, 1m30s",
     "errorOutOfRange": "Waktu harus antara 0:00 dan {duration}",
-    "result": "<@{author}> ⏩ melompat ke **{time}**"
+    "result": "<@{author}> ⏩ melompat ke **{time}**",
+    "optionTime": "Waktu tujuan (mis. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Majukan lagu beberapa detik",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Mundurkan lagu beberapa detik",
     "errorNotQueue": "Tidak ada yang sedang diputar.",
-    "result": "<@{author}> ⏪ memundurkan **{seconds} dtk** (sekarang di {position})"
+    "result": "<@{author}> ⏪ memundurkan **{seconds} dtk** (sekarang di {position})",
+    "optionSeconds": "Jumlah detik untuk mundur"
   },
   "replay": {
     "description": "Putar ulang lagu saat ini dari awal",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Aktifkan/nonaktifkan autoplay (putar lagu serupa saat antrean habis)",
     "errorNotQueue": "Tidak ada antrean aktif.",
-    "result": "🔄 Autoplay sekarang {status}"
+    "result": "🔄 Autoplay sekarang {status}",
+    "optionDefault": "Jadikan juga default untuk server ini (Kelola Server)"
   },
   "history": {
     "description": "Tampilkan lagu yang baru diputar",
     "errorNotQueue": "Tidak ada antrean aktif.",
     "errorEmpty": "Belum ada lagu di riwayat.",
     "embedTitle": "Baru Diputar",
-    "footer": "Menampilkan {count} lagu terakhir"
+    "footer": "Menampilkan {count} lagu terakhir",
+    "title": "Baru diputar",
+    "titleUser": "Baru diputar · diminta oleh {user}",
+    "empty": "Belum ada yang diputar di server ini dalam 30 hari terakhir.",
+    "emptyUser": "{user} belum meminta lagu apa pun di sini dalam 30 hari terakhir.",
+    "summary": "{count} putaran terakhir",
+    "playAgain": "Putar lagi…",
+    "optionUser": "Hanya tampilkan lagu yang diminta member ini",
+    "unavailable": "Riwayat putar sedang tidak tersedia. Coba lagi sebentar lagi ya.",
+    "gone": "Lagu itu sudah tidak ada di riwayat."
   },
   "previous": {
     "description": "Putar lagu sebelumnya",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Tidak ada antrean.",
     "errorInvalidPosition": "Posisi tidak valid. Antrean hanya berisi {max} lagu.",
     "errorNotFound": "Lagu tidak ditemukan di posisi itu.",
-    "result": "<@{author}> ⏭️ melompat ke **{title}**"
+    "result": "<@{author}> ⏭️ melompat ke **{title}**",
+    "optionPosition": "Posisi antrean yang dituju"
   },
   "Invite me to your server!": "Undang aku ke server kamu!",
   "Invite": "Undang",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Dapatkan link dashboard",
     "embedDescription": "Buka dashboard web untuk mengatur server, melihat antrean, dan lainnya!",
-    "footer": "Atur pengalaman musikmu"
+    "footer": "Atur pengalaman musikmu",
+    "title": "Dashboard Bot",
+    "features": "Fitur",
+    "featuresList": "• Atur pengaturan server\n• Lihat antrean dan kontrol pemutaran\n• Kelola playlist dan koleksi\n• Lihat statistik mendengarkan\n• Kelola fitur premium",
+    "open": "Buka Dashboard"
   },
   "clean": {
     "description": "Hapus pesan bot dari channel",
@@ -377,7 +448,9 @@
       "description": "Lihat semua koleksimu",
       "title": "📁 Koleksimu",
       "empty": "Kamu belum punya koleksi. Buat satu dengan `/collections create`!",
-      "footer": "Total: {count} koleksi"
+      "footer": "Total: {count} koleksi",
+      "select": "Buka koleksi…",
+      "more": "…dan {count} lainnya. Buka dengan /collections view."
     },
     "create": {
       "description": "Buat koleksi baru",
@@ -399,7 +472,12 @@
       "tracksField": "Lagu",
       "durationField": "Durasi",
       "shareCodeField": "Kode Berbagi",
-      "andMore": "...dan {count} lagu lainnya"
+      "andMore": "...dan {count} lagu lainnya",
+      "play": "Putar",
+      "addToQueue": "Tambah ke antrean",
+      "summary": "{count} lagu · {duration}",
+      "page": "Halaman {page}/{pages}",
+      "importedFrom": "Diimpor dari {source}"
     },
     "save": {
       "description": "Simpan antrean saat ini sebagai koleksi",
@@ -411,7 +489,9 @@
       "description": "Muat koleksi ke antrean",
       "nameOption": "Nama koleksi yang ingin dimuat",
       "empty": "Koleksi ini kosong.",
-      "success": "📂 **{count}** lagu dimuat dari koleksi **{name}**!"
+      "success": "📂 **{count}** lagu dimuat dari koleksi **{name}**!",
+      "queuedNext": "Lagu-lagu ini diputar tepat setelah lagu sekarang.",
+      "skipped": "{count} dilewati (lebih panjang dari batas server ini, melebihi batas antrean, atau tidak ditemukan)."
     },
     "rename": {
       "description": "Ganti nama koleksi",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Kode berbagi yang ingin disalin",
       "nameOption": "Nama untuk koleksi barumu",
       "invalidCode": "Kode berbagi tidak valid atau sudah kedaluwarsa.",
-      "success": "📋 **{count}** lagu disalin ke koleksi baru **{name}**!"
+      "success": "📋 **{count}** lagu disalin ke koleksi baru **{name}**!",
+      "clonedFrom": "Disalin dari {name}"
     },
     "merge": {
       "description": "Gabungkan satu koleksi ke koleksi lain",
@@ -457,6 +538,21 @@
       "positionOption": "Posisi lagu yang ingin dihapus (mulai dari 1)",
       "invalidPosition": "Posisi tidak valid. Koleksi berisi {max} lagu.",
       "success": "🗑️ **{track}** dihapus dari koleksi **{name}**."
+    },
+    "error": "Ada yang salah dengan koleksimu. Coba lagi ya.",
+    "trackCount": "{count} lagu",
+    "gone": "Koleksi itu sudah tidak ada.",
+    "notYours": "Menu ini milik orang lain. Pakai /collections list untuk melihat milikmu.",
+    "import": {
+      "description": "Impor playlist dari Spotify, YouTube, Deezer, atau Apple Music",
+      "urlOption": "Link playlist (Spotify, YouTube, Deezer, album Apple Music)",
+      "nameOption": "Nama koleksi baru (default: judul playlist)",
+      "invalidUrl": "Itu sepertinya bukan link. Tempel URL playlist dari Spotify, YouTube, Deezer, atau album Apple Music.",
+      "failed": "Aku tidak bisa membaca playlist itu. Pastikan playlist-nya publik dan link-nya dari Spotify, YouTube, Deezer, atau album Apple Music.",
+      "exists": "Kamu sudah punya koleksi bernama **{name}**. Pilih nama lain dengan opsi `name`.",
+      "success": "📥 **{count}** lagu dari {source} berhasil diimpor ke **{name}**.",
+      "skipped": "{count} dilewati (melebihi batas {max} lagu per koleksi, atau tidak bisa diputar).",
+      "spotifyCap": "Spotify hanya membagikan 100 lagu pertama dari link playlist."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Ubah teks jadi suara dan putar di voice channel",
     "errorNotAvailable": "❌ Layanan TTS tidak tersedia. Silakan hubungi administrator bot.",
     "errorGenerate": "❌ Gagal membuat suara. Silakan coba lagi.",
-    "success": "🎤 Memutar: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Memutar: \"{text}\" ({language}, {voice})",
+    "optionText": "Teks yang diubah jadi suara",
+    "optionLanguage": "Bahasa suara (pakai konfigurasi tersimpan jika tidak diisi)",
+    "optionVoice": "Suara yang dipakai (pakai konfigurasi tersimpan jika tidak diisi)"
   },
   "sayconfig": {
-    "description": "Atur pengaturan TTS (Text-to-Speech) kamu"
+    "description": "Atur pengaturan TTS (Text-to-Speech) kamu",
+    "view": {
+      "description": "Lihat konfigurasi TTS-mu saat ini",
+      "title": "Konfigurasi TTS",
+      "noConfig": "Belum ada konfigurasi khusus. Memakai default.",
+      "mode": "Mode",
+      "language": "Bahasa",
+      "voice": "Suara",
+      "voiceDescription": "Deskripsi Suara",
+      "styleInstruction": "Instruksi Gaya",
+      "referenceAudio": "Audio Referensi",
+      "referenceAudioSet": "Sudah diatur",
+      "referenceText": "Teks Referensi"
+    },
+    "mode": {
+      "description": "Atur mode TTS (custom_voice atau voice_clone)",
+      "option": "Mode TTS",
+      "customVoice": "Suara Kustom (default)",
+      "voiceClone": "Kloning Suara",
+      "set": "Mode TTS diatur ke **{mode}**"
+    },
+    "language": {
+      "description": "Atur bahasa default",
+      "option": "Bahasa untuk ucapan",
+      "set": "Bahasa default diatur ke **{language}**"
+    },
+    "voice": {
+      "description": "Atur suara/pembicara default",
+      "option": "Suara yang digunakan",
+      "set": "Suara default diatur ke **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Atur deskripsi suara untuk pembuatan suara kustom",
+      "option": "Deskripsi suara (mis. 'suara pria berat dengan nada tenang')",
+      "set": "Deskripsi suara diatur ke: \"{text}\""
+    },
+    "style": {
+      "description": "Atur instruksi gaya untuk pembuatan suara",
+      "option": "Instruksi gaya (mis. 'bicara pelan dan jelas')",
+      "set": "Instruksi gaya diatur ke: \"{text}\""
+    },
+    "reference": {
+      "description": "Atur audio dan teks referensi untuk kloning suara",
+      "optionAudio": "File audio referensi (MP3, WAV, dll.)",
+      "optionText": "Transkrip audio referensi",
+      "saved": "Audio referensi berhasil diunggah dan disimpan!",
+      "text": "Teks referensi: \"{text}\"",
+      "modeSet": "Mode otomatis diatur ke **{mode}**",
+      "failed": "Gagal mengunggah audio referensi. Coba lagi ya."
+    },
+    "reset": {
+      "description": "Kembalikan konfigurasi TTS kamu ke default",
+      "done": "Konfigurasi TTS dikembalikan ke default.",
+      "none": "Tidak ada konfigurasi kustom untuk direset."
+    }
   },
   "radio": {
     "notInVoice": "Kamu harus berada di voice channel.",
@@ -649,7 +802,8 @@
     "body": "Vote membantu lebih banyak server menemukan bot ini. Setiap vote di top.gg membuka **mode 24/7** dan **kualitas studio** untukmu selama 12 jam.",
     "active": "Keuntungan vote kamu aktif {time} lagi.",
     "inactive": "Belum ada vote aktif. Vote di bawah, keuntungannya aktif dalam semenit.",
-    "notListed": "Vote akan dibuka setelah bot terdaftar. Terima kasih sudah mau membantu!"
+    "notListed": "Vote akan dibuka setelah bot terdaftar. Terima kasih sudah mau membantu!",
+    "heading": "Vote untuk {bot}"
   },
   "leaderboard": {
     "description": "Lihat papan peringkat lagu sesi ini",
@@ -742,7 +896,8 @@
     "noQueue": "Tidak ada antrean aktif.",
     "invalidChannel": "Channel tidak valid. Silakan pilih text channel.",
     "title": "📢 Channel Dipindahkan",
-    "success": "Sekarang pengumuman dikirim ke {channel}."
+    "success": "Sekarang pengumuman dikirim ke {channel}.",
+    "optionChannel": "Channel tujuan rebind (default: channel saat ini)"
   },
   "disabledcommands": {
     "description": "Lihat semua perintah yang dinonaktifkan di server ini",
@@ -939,7 +1094,28 @@
     "user_free": "Kamu menggunakan tier **Free**.",
     "upgrade": "Upgrade ke Premium",
     "upgrade_message": "Dapatkan fitur premium dengan mendukung kami di Patreon!",
-    "description": "Lihat keuntungan premium"
+    "description": "Lihat keuntungan premium",
+    "view": {
+      "description": "Lihat keuntungan yang tersedia"
+    },
+    "user": {
+      "description": "Lihat keuntungan kamu saat ini",
+      "title": "Keuntungan Kamu",
+      "premium": "Kamu punya **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Audio: {bitrate}kbps",
+      "audioFilters": "Filter audio",
+      "stay247": "Mode 24/7",
+      "free": "Kamu berada di tier **Gratis**. Dapatkan premium di Patreon!"
+    },
+    "overview": {
+      "title": "Keuntungan premium",
+      "intro": "Founder terbatas hanya {spots} slot dan harganya terkunci.",
+      "freeName": "Gratis — {price}",
+      "freePerks": "Audio 128kbps\nAntrean, playlist, dan lirik\nSemua perintah",
+      "founderName": "Founder / Beta Tester — {price}/bulan",
+      "founderPerks": "Audio 320kbps\nFilter audio\nMode 24/7\nAntrean prioritas\nRole Founder dan dukungan langsung"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Tidak Ada Premium",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Autoplay mati.",
     "volumeLimit": "Server ini membatasi volume maksimal {max}%.",
     "lyricsButton": "Lirik",
-    "saveButton": "Simpan"
+    "saveButton": "Simpan",
+    "trackFailed": "Tidak bisa memutar **{title}**, dilewati. Coba link atau pencarian lain.",
+    "guessRunning": "Game tebak lagu sedang berlangsung di sini. Pemutar akan kembali setelah selesai."
   },
   "queueView": {
     "title": "Antrean",
@@ -1040,7 +1218,8 @@
     "commands": "Perintah",
     "dashboard": "Dasbor",
     "support": "Server dukungan",
-    "vote": "Vote"
+    "vote": "Vote",
+    "voiceStatusHint": "Mau lagu yang sedang diputar tampil di bawah nama voice channel? [Otorisasi ulang aku]({url}) untuk memberi izin Set Voice Channel Status."
   },
   "router": {
     "guildOnly": "Perintah ini hanya bisa digunakan di server.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Bahasa (otomatis mengikuti bahasa Discord tiap member)",
     "auto": "Otomatis (bahasa Discord tiap member)",
     "set": "Bahasa diatur ke {language}.",
-    "needManage": "Kamu butuh izin Manage Server untuk mengubah bahasa."
+    "needManage": "Kamu butuh izin Manage Server untuk mengubah bahasa.",
+    "unknown": "Bahasa tidak dikenal."
   },
   "links": {
     "website": "Situs Web",
@@ -1100,45 +1280,741 @@
     "invite": "Undang"
   },
   "commanddisable": {
-    "description": "Nonaktifkan perintah di server ini"
+    "description": "Nonaktifkan perintah di server ini",
+    "optionCommand": "Perintah yang ingin dinonaktifkan",
+    "protected": "Tidak bisa menonaktifkan perintah penting: {command}",
+    "notFound": "Perintah tidak ditemukan: {command}",
+    "alreadyDisabled": "Perintah {command} sudah nonaktif.",
+    "title": "Perintah Dinonaktifkan",
+    "done": "Perintah {command} telah dinonaktifkan di server ini.\n\nGunakan `/commandenable` untuk mengaktifkannya lagi."
   },
   "commanddisableall": {
-    "description": "Nonaktifkan semua perintah kecuali yang penting"
+    "description": "Nonaktifkan semua perintah kecuali yang penting",
+    "title": "Semua Perintah Dinonaktifkan",
+    "done": "**{count}** perintah dinonaktifkan.\n\nPerintah terlindungi yang masih tersedia:\n{commands}\n\nGunakan `/commandenableall` untuk memulihkan semua perintah."
   },
   "commandenable": {
-    "description": "Aktifkan perintah yang dinonaktifkan"
+    "description": "Aktifkan perintah yang dinonaktifkan",
+    "optionCommand": "Perintah yang ingin diaktifkan",
+    "notDisabled": "Perintah {command} tidak sedang nonaktif.",
+    "title": "Perintah Diaktifkan",
+    "done": "Perintah {command} telah diaktifkan kembali di server ini."
   },
   "commandenableall": {
-    "description": "Aktifkan semua perintah yang dinonaktifkan"
+    "description": "Aktifkan semua perintah yang dinonaktifkan",
+    "title": "Semua Perintah Diaktifkan",
+    "done": "**{count}** perintah diaktifkan kembali.\n\nSemua perintah sekarang tersedia.",
+    "none": "Tidak ada perintah yang dinonaktifkan."
   },
   "effects": {
-    "description": "Kelola efek audio"
+    "description": "Kelola efek audio",
+    "optionEnabled": "Aktifkan atau nonaktifkan",
+    "nothingPlaying": "Tidak ada musik yang sedang diputar.",
+    "unknown": "Efek tidak dikenal.",
+    "enabledBy": "Efek {effect} diaktifkan oleh {user}",
+    "disabledBy": "Efek {effect} dinonaktifkan oleh {user}",
+    "8d": {
+      "description": "Terapkan efek audio 8D (suara berputar)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Terapkan efek bass boost",
+      "optionLevel": "Level bass",
+      "level": {
+        "off": "Mati",
+        "low": "Rendah",
+        "medium": "Sedang",
+        "high": "Tinggi"
+      },
+      "disabledBy": "Bass boost dinonaktifkan oleh {user}",
+      "alreadyOff": "Bass boost sudah mati.",
+      "setBy": "Bass boost diatur ke **{level}** oleh {user}"
+    },
+    "distortion": {
+      "description": "Terapkan efek distorsi",
+      "name": "Distorsi"
+    },
+    "haas": {
+      "description": "Terapkan efek haas (audio spasial)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Kurangi vokal (mode karaoke)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Terapkan efek nightcore (pitch + kecepatan lebih tinggi)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Terapkan efek vaporwave (pitch + kecepatan lebih rendah)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Terapkan efek pulsator",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Putar audio secara terbalik",
+      "name": "Reverse"
+    },
+    "tremolo": {
+      "description": "Terapkan efek tremolo",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Terapkan efek vibrato",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Terapkan efek lofi",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Terapkan efek suara surround",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Tampilkan efek yang aktif",
+      "title": "Efek Aktif",
+      "empty": "Tidak ada efek yang aktif"
+    },
+    "clear": {
+      "description": "Hapus semua efek",
+      "done": "Semua efek sudah dihapus."
+    }
   },
   "info": {
-    "description": "Informasi dan bantuan bot"
+    "description": "Informasi dan bantuan bot",
+    "about": {
+      "description": "Tentang bot ini",
+      "statistics": "Statistik",
+      "servers": "Server",
+      "commands": "Perintah",
+      "uptime": "Waktu Aktif",
+      "system": "Sistem",
+      "memory": "Memori"
+    },
+    "faq": {
+      "description": "Pertanyaan yang sering diajukan"
+    },
+    "support": {
+      "description": "Dapatkan link server dukungan",
+      "title": "Dukungan",
+      "body": "Butuh bantuan? Gabung ke server dukungan kami:",
+      "join": "Klik untuk Gabung",
+      "reportIssues": "Laporkan Masalah",
+      "reportIssuesValue": "Cek `/info faq` dulu, lalu tanya di server dukungan",
+      "suggestions": "Saran",
+      "suggestionsValue": "Bagikan idemu di channel saran kami"
+    },
+    "queue": {
+      "description": "Info antrean secara detail",
+      "noQueue": "Tidak ada antrean aktif.",
+      "title": "Info Antrean",
+      "contributors": "Kontributor"
+    },
+    "song": {
+      "description": "Detail lagu saat ini",
+      "noTrack": "Tidak ada lagu yang diputar.",
+      "title": "Sedang Diputar"
+    },
+    "nextup": {
+      "description": "Tampilkan lagu berikutnya di antrean",
+      "empty": "Tidak ada lagu di antrean.",
+      "title": "Selanjutnya",
+      "footer": "{count} lagu di antrean"
+    },
+    "changelogs": {
+      "description": "Pembaruan dan perubahan terbaru",
+      "title": "Pembaruan Terbaru",
+      "intro": "Perubahan dan peningkatan terbaru:",
+      "newFeatures": "Fitur Baru",
+      "newFeaturesList": "• Perintah digabungkan agar lebih rapi\n• Sistem efek audio yang lebih baik\n• Pengelolaan antrean yang ditingkatkan",
+      "improvements": "Peningkatan",
+      "improvementsList": "• Respons perintah lebih cepat\n• Penanganan error lebih baik\n• Penggunaan memori lebih hemat",
+      "bugFixes": "Perbaikan Bug",
+      "bugFixesList": "• Memperbaiki masalah pemutaran\n• Mengatasi masalah sinkronisasi antrean"
+    }
   },
   "patreon": {
-    "description": "Cek status Patreon kamu dan sinkronkan keuntungan"
+    "description": "Cek status Patreon kamu dan sinkronkan keuntungan",
+    "notConfigured": "Integrasi Patreon belum dikonfigurasi untuk bot ini.",
+    "howToLink": "Cara Menghubungkan",
+    "premiumActive": "Premium Aktif",
+    "patronStatus": {
+      "active": "Patron Aktif",
+      "declined": "Pembayaran Ditolak",
+      "former": "Mantan Patron",
+      "none": "Bukan Patron"
+    },
+    "status": {
+      "description": "Cek status dan benefit Patreon kamu saat ini",
+      "title": "Status Patreon",
+      "yourTitle": "Status Patreon Kamu",
+      "notLinked": "Kamu belum terhubung ke akun Patreon.",
+      "howToLinkSteps": "1. Buka [Patreon]({patreon})\n2. Hubungkan akun Discord kamu di Settings → Connections\n3. Berlangganan ke halaman Patreon kami\n4. Gunakan `/patreon sync` untuk memperbarui benefit kamu",
+      "pledgeAmount": "Jumlah Pledge",
+      "perMonth": "{amount}/bulan",
+      "lifetimeSupport": "Total Dukungan",
+      "lastCharge": "Tagihan Terakhir",
+      "thanks": "Terima kasih atas dukunganmu! Kamu punya akses ke fitur premium.",
+      "declined": "Pembayaran terakhirmu ditolak. Silakan perbarui metode pembayaran di Patreon untuk memulihkan benefit.",
+      "former": "Pledge kamu sudah berakhir. Perpanjang di Patreon untuk memulihkan benefit kamu!",
+      "error": "Terjadi error saat mengecek status Patreon kamu. Coba lagi nanti."
+    },
+    "sync": {
+      "description": "Sinkronkan data Patreon untuk memperbarui benefit kamu",
+      "completeTitle": "Sinkronisasi Patreon Selesai",
+      "success": "Data Patreon kamu berhasil disinkronkan!",
+      "title": "Sinkronisasi Patreon",
+      "notFound": "Tidak ada akun Patreon yang terhubung ke Discord kamu.",
+      "howToLinkSteps": "1. Buka [Pengaturan Patreon]({settings})\n2. Klik **Connections**\n3. Hubungkan akun **Discord** kamu\n4. Pastikan kamu sudah pledge ke campaign kami\n5. Jalankan `/patreon sync` lagi",
+      "error": "Terjadi error saat menyinkronkan data Patreon kamu. Coba lagi nanti."
+    },
+    "info": {
+      "description": "Pelajari benefit Patreon dan cara menghubungkan akunmu",
+      "title": "Benefit Patreon",
+      "intro": "Dukung kami di Patreon untuk membuka benefit eksklusif!",
+      "benefits": "Benefit Premium",
+      "benefitsList": "• Kualitas audio lebih tinggi\n• Playlist lebih panjang\n• Antrean prioritas\n• Perintah eksklusif\n• Akses awal ke fitur baru",
+      "howToGet": "Cara Mendapatkan Premium",
+      "howToGetSteps": "1. Kunjungi [halaman Patreon]({patreon}) kami\n2. Pilih tier yang cocok untukmu\n3. Hubungkan Discord kamu di Patreon Settings → Connections\n4. Gunakan `/patreon sync` untuk mengaktifkan benefit",
+      "troubleshooting": "Pemecahan Masalah",
+      "troubleshootingList": "• Pastikan Discord sudah terhubung di pengaturan Patreon kamu\n• Pembayaranmu harus berhasil (tidak ditolak)\n• Coba `/patreon sync` setelah menghubungkan\n• Benefit diperbarui otomatis setiap 30 menit"
+    }
   },
   "play_file": {
-    "description": "Putar file audio dari lampiran"
+    "description": "Putar file audio dari lampiran",
+    "optionFile": "File audio yang mau diputar (MP3, WAV, FLAC, M4A, OGG, dll.)",
+    "optionTitle": "Judul kustom untuk lagu (opsional)",
+    "cantPlay": "Tidak bisa memutar file: {name}",
+    "nowPlayingTitle": "Sedang Memutar File",
+    "addedTitle": "File Ditambahkan ke Antrean",
+    "format": "Format",
+    "size": "Ukuran",
+    "error": {
+      "load": "Gagal memuat file: {name}\n\nKemungkinan penyebab:\n• Format file tidak didukung\n• File rusak\n• URL file sudah kedaluwarsa",
+      "timeout": "Waktu unduh file habis. File mungkin terlalu besar atau koneksinya lambat.",
+      "forbidden": "Akses ke file ditolak. Unggah ulang lalu coba lagi.",
+      "notFound": "File tidak ditemukan. URL lampiran mungkin sudah kedaluwarsa.",
+      "generic": "Terjadi kesalahan saat memutar file."
+    }
   },
   "play_spotify": {
-    "description": "Cari dan putar lagu dari Spotify"
+    "description": "Cari dan putar lagu dari Spotify",
+    "optionQuery": "Judul lagu, artis, atau URL Spotify yang ingin dicari",
+    "cantPlayLink": "Gagal memutar link Spotify: {query}",
+    "playlistFallback": "Playlist Spotify",
+    "playlistAdded": "Playlist Spotify Ditambahkan",
+    "songs": "{count} lagu",
+    "nowPlaying": "Sedang Diputar",
+    "trackBy": "{title} oleh {author}",
+    "nowPlayingTitle": "Sedang Diputar dari Spotify",
+    "addedTitle": "Ditambahkan ke Antrean dari Spotify",
+    "noResults": "Tidak ada hasil di Spotify untuk: {query}\n\nCoba:\n• Kata kunci lain\n• Tambahkan nama artis\n• Gunakan link Spotify langsung",
+    "notOnYoutube": "Tidak ditemukan di YouTube: {title} oleh {artist}",
+    "error": {
+      "auth": "Lagu Spotify ini memerlukan autentikasi. Coba lagu lain.",
+      "premium": "Lagu ini memerlukan Spotify Premium.",
+      "private": "Lagu Spotify ini bersifat privat dan tidak bisa diputar.",
+      "region": "Lagu ini tidak tersedia di wilayahmu.",
+      "generic": "Terjadi kesalahan saat memutar lagu Spotify."
+    }
   },
   "premium": {
-    "description": "Kelola fitur premium dan tautan server"
+    "description": "Kelola fitur premium dan tautan server",
+    "audioQuality": "Kualitas Audio",
+    "botIdentity": "Identitas Bot",
+    "serverSlots": "Slot Server",
+    "patreonTier": "Tier Patreon",
+    "supporter": "Pendukung",
+    "dbUnavailable": "**Database Sementara Tidak Tersedia**\n\nBot sedang kesulitan terhubung ke database. Coba lagi sebentar lagi.\n\nJika masalah berlanjut, administrator bot sudah diberi tahu.",
+    "error": "Terjadi kesalahan: {error}",
+    "link": {
+      "description": "Tautkan server ini ke akun Patreon-mu",
+      "successTitle": "Server Ditautkan",
+      "failTitle": "Gagal Menautkan"
+    },
+    "unlink": {
+      "description": "Lepas tautan server ini dari akun Patreon-mu",
+      "successTitle": "Tautan Server Dilepas",
+      "failTitle": "Gagal Melepas Tautan"
+    },
+    "list": {
+      "description": "Tampilkan semua server yang ditautkan ke akun Patreon-mu",
+      "title": "Server Tertautmu",
+      "empty": "Kamu belum menautkan server apa pun.\n\nGunakan `/premium link` untuk menautkan server ini!",
+      "linkedAt": "Ditautkan: {time}",
+      "slotsUsed": "{used}/{max} terpakai",
+      "noMembership": "Kamu belum punya keanggotaan Patreon aktif.\n\nDukung kami di Patreon untuk membuka fitur premium!"
+    },
+    "status": {
+      "description": "Tampilkan status premium server ini",
+      "premiumTitle": "Server Premium",
+      "freeTitle": "Server Gratis",
+      "premiumBody": "Fitur premium aktif di server ini!",
+      "freeBody": "Server ini menggunakan tier gratis.\n\nGunakan `/premium link` untuk mengaktifkan fitur premium.",
+      "linked": "Ditautkan",
+      "lastUsed": "Terakhir Digunakan",
+      "ownFooter": "Kamu pemilik tautan premium ini",
+      "otherFooter": "Premium disediakan oleh pengguna lain",
+      "freeQuality": "128kbps (Gratis)"
+    },
+    "config": {
+      "description": "Atur pengaturan premium untuk server ini",
+      "optionBitrate": "Bitrate audio dalam kbps",
+      "optionIdentity": "Identitas bot kustom untuk server ini",
+      "nothing": "Tentukan minimal satu pengaturan yang ingin diubah.\n\nContoh: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Pengaturan Diperbarui",
+      "failTitle": "Gagal Memperbarui"
+    },
+    "service": {
+      "needMembership": "Kamu perlu keanggotaan Patreon aktif untuk menautkan server.\n\nDukung kami di Patreon untuk membuka fitur premium!",
+      "limitReached": "Kamu sudah mencapai batas server ({max} server).\n\nTier saat ini: **{tier}**\nServer tertaut: **{current}/{max}**\n\nTingkatkan tier-mu untuk menautkan lebih banyak server!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Server ini sudah ditautkan ke akunmu.",
+      "alreadyLinkedOther": "Server ini sudah ditautkan ke akun Patreon lain.\n\nHanya satu akun Patreon yang bisa mengaktifkan fitur premium per server.",
+      "linked": "Server berhasil ditautkan!",
+      "servers": "Server",
+      "linkedActive": "Fitur premium sekarang aktif di server ini!",
+      "linkError": "Gagal menautkan server: {error}",
+      "notLinked": "Server ini tidak ditautkan ke akunmu.",
+      "unlinked": "Tautan server berhasil dilepas!",
+      "unlinkedBody": "Fitur premium telah dinonaktifkan untuk server ini.\nKamu bisa menautkan server lain dengan slot yang tersedia.",
+      "unlinkError": "Gagal melepas tautan server: {error}",
+      "invalidBitrate": "Bitrate tidak valid. Pilih: 128, 192, 256, atau 320 kbps",
+      "updated": "Pengaturan server berhasil diperbarui!",
+      "updateError": "Gagal memperbarui pengaturan: {error}"
+    },
+    "feature": {
+      "audio_filters": "Filter Audio",
+      "stay_24_7": "Mode 24/7",
+      "max_quality": "Kualitas Maksimal",
+      "priority_queue": "Antrean Prioritas",
+      "unlimited_playlists": "Playlist Tanpa Batas",
+      "longer_songs": "Tanpa Batas Durasi",
+      "vote_features": "Voting Fitur",
+      "founder_role": "Role Founder",
+      "direct_support": "Dukungan Langsung"
+    }
   },
   "queuemanage": {
-    "description": "Pengelolaan antrean lanjutan"
+    "description": "Pengelolaan antrean lanjutan",
+    "empty": "Antrean kosong.",
+    "invalidPosition": "Posisi tidak valid. Antrean berisi {count} lagu.",
+    "removedupes": {
+      "description": "Hapus lagu duplikat dari antrean",
+      "none": "Tidak ada duplikat!",
+      "title": "Duplikat Dihapus",
+      "result": "**{count}** lagu duplikat dihapus"
+    },
+    "sort": {
+      "description": "Urutkan antrean",
+      "optionBy": "Urutkan berdasarkan",
+      "choice": {
+        "title_asc": "Judul (A-Z)",
+        "title_desc": "Judul (Z-A)",
+        "duration_asc": "Durasi (Pendek)",
+        "duration_desc": "Durasi (Panjang)"
+      },
+      "label": {
+        "title_asc": "Judul (A-Z)",
+        "title_desc": "Judul (Z-A)",
+        "duration_asc": "Durasi (Terpendek)",
+        "duration_desc": "Durasi (Terpanjang)"
+      },
+      "result": "Antrean diurutkan berdasarkan **{label}**"
+    },
+    "swap": {
+      "description": "Tukar dua lagu di antrean",
+      "optionPosition1": "Posisi pertama",
+      "optionPosition2": "Posisi kedua",
+      "samePosition": "Posisinya harus berbeda.",
+      "result": "Lagu di posisi **{pos1}** dan **{pos2}** sudah ditukar"
+    },
+    "removeuser": {
+      "description": "Hapus semua lagu dari seorang pengguna",
+      "optionUser": "Pengguna yang lagunya ingin dihapus",
+      "none": "Tidak ada lagu dari {user}.",
+      "result": "**{count}** lagu dari {user} dihapus"
+    },
+    "removeabsent": {
+      "description": "Hapus lagu dari pengguna yang tidak ada di voice",
+      "notInVoice": "Kamu harus berada di voice channel.",
+      "none": "Semua peminta lagu ada di voice channel.",
+      "result": "**{count}** lagu dari pengguna yang tidak hadir dihapus"
+    },
+    "removelast": {
+      "description": "Hapus N lagu terakhir",
+      "optionCount": "Jumlah yang dihapus",
+      "result": "**{count}** lagu terakhir dihapus"
+    },
+    "removerange": {
+      "description": "Hapus lagu dalam rentang tertentu",
+      "optionStart": "Posisi awal",
+      "optionEnd": "Posisi akhir",
+      "startAfterEnd": "Posisi awal harus kurang dari atau sama dengan posisi akhir.",
+      "startTooHigh": "Posisi awal melebihi panjang antrean ({count}).",
+      "result": "**{count}** lagu dihapus (posisi {start}-{end})"
+    },
+    "reverse": {
+      "description": "Balik urutan antrean",
+      "result": "Urutan antrean dibalik"
+    }
   },
   "settings": {
-    "description": "Atur pengaturan bot untuk server ini (khusus Admin)"
+    "description": "Atur pengaturan bot untuk server ini (khusus Admin)",
+    "noPermission": "Kamu tidak punya izin untuk mengelola pengaturan bot.",
+    "unknownSubcommand": "Subcommand tidak dikenal.",
+    "current": "**Saat ini:** {value}",
+    "allChannels": "Semua channel diizinkan",
+    "allAllowed": "Semua diizinkan",
+    "on": "Aktif",
+    "off": "Nonaktif",
+    "yes": "Ya",
+    "no": "Tidak",
+    "enabled": "Diaktifkan",
+    "disabled": "Dinonaktifkan",
+    "view": {
+      "description": "Lihat pengaturan saat ini",
+      "title": "Pengaturan Bot",
+      "roles": "Role",
+      "djRole": "Role DJ",
+      "djNotSet": "Belum diatur (semua orang bisa jadi DJ)",
+      "adminRole": "Role Admin",
+      "adminNotSet": "Hanya admin server",
+      "volume": "Volume",
+      "default": "Default",
+      "maximum": "Maksimum",
+      "queue": "Antrean",
+      "maxSize": "Ukuran Maks",
+      "songs": "{count} lagu",
+      "preventDuplicates": "Cegah Duplikat",
+      "behavior": "Perilaku",
+      "announcements": "Pengumuman",
+      "autoLeave": "Keluar Otomatis",
+      "leaveTimeout": "Batas Waktu Keluar",
+      "channels": "Channel",
+      "voiceChannels": "Voice Channel",
+      "textChannels": "Text Channel",
+      "logChannel": "Channel Log",
+      "logDefault": "Default (#bot-commands)",
+      "blacklist": "Blacklist",
+      "noBlacklist": "Tidak ada pengguna di blacklist",
+      "premium": "Premium",
+      "tier": "Tier",
+      "expires": "Berakhir",
+      "never": "Tidak pernah",
+      "notActive": "Tidak aktif",
+      "customization": "Kustomisasi",
+      "language": "Bahasa",
+      "embedColor": "Warna Embed",
+      "footer": "Gunakan /settings <option> untuk mengubah pengaturan"
+    },
+    "djrole": {
+      "description": "Atur role DJ untuk kontrol musik",
+      "prompt": "Pilih role DJ. Pengguna dengan role ini bisa mengontrol pemutaran musik.",
+      "placeholder": "Pilih role DJ",
+      "clear": "Hapus Role DJ (Semua orang bisa jadi DJ)",
+      "set": "Role DJ diatur ke {role}",
+      "cleared": "Role DJ dihapus.",
+      "clearedEveryone": "Role DJ dihapus. Sekarang semua orang bisa memakai perintah DJ."
+    },
+    "adminrole": {
+      "description": "Atur role admin untuk mengelola pengaturan",
+      "prompt": "Pilih role Admin. Pengguna dengan role ini bisa mengubah pengaturan bot.",
+      "placeholder": "Pilih role Admin",
+      "clear": "Hapus Role Admin (Khusus admin server)",
+      "set": "Role admin diatur ke {role}",
+      "cleared": "Role admin dihapus.",
+      "clearedAdmins": "Role admin dihapus. Hanya administrator server yang bisa mengubah pengaturan."
+    },
+    "volume": {
+      "description": "Atur volume default dan maksimum",
+      "optionDefault": "Volume default (0-100)",
+      "optionMax": "Volume maksimum yang diizinkan (0-100)",
+      "currentTitle": "Pengaturan Volume Saat Ini",
+      "defaultSet": "Volume default diatur ke {value}%",
+      "maxSet": "Volume maksimum diatur ke {value}%",
+      "logDefault": "Volume Default",
+      "logMax": "Volume Maksimum"
+    },
+    "queue": {
+      "description": "Atur pengaturan antrean",
+      "optionMaxSize": "Ukuran antrean maksimum (1-1000)",
+      "optionPreventDuplicates": "Cegah lagu duplikat di antrean",
+      "currentTitle": "Pengaturan Antrean Saat Ini",
+      "maxSet": "Ukuran antrean maksimum diatur ke {value} lagu",
+      "duplicatesSet": "Cegah duplikat: {value}"
+    },
+    "behavior": {
+      "description": "Atur perilaku bot",
+      "optionAnnouncements": "Umumkan lagu yang sedang diputar di channel teks",
+      "optionAutoLeave": "Keluar dari voice channel saat kosong",
+      "optionLeaveTimeout": "Detik sebelum keluar dari channel kosong (30-3600)",
+      "currentTitle": "Pengaturan Perilaku Saat Ini",
+      "announcementsSet": "Pengumuman lagu yang diputar: {value}",
+      "autoLeaveSet": "Keluar otomatis saat kosong: {value}",
+      "timeoutSet": "Batas waktu keluar diatur ke {value} detik"
+    },
+    "voicechannels": {
+      "description": "Atur voice channel yang diizinkan",
+      "prompt": "Pilih voice channel yang boleh dimasuki bot.",
+      "placeholder": "Pilih voice channel yang diizinkan",
+      "allowAll": "Izinkan Semua Channel",
+      "set": "Voice channel yang diizinkan: {channels}",
+      "cleared": "Semua voice channel sekarang diizinkan."
+    },
+    "textchannels": {
+      "description": "Atur channel teks yang diizinkan untuk perintah",
+      "prompt": "Pilih channel teks yang bisa memakai perintah bot.",
+      "placeholder": "Pilih channel teks yang diizinkan",
+      "allowAll": "Izinkan Semua Channel",
+      "set": "Channel teks yang diizinkan: {channels}",
+      "cleared": "Semua channel teks sekarang diizinkan."
+    },
+    "logchannel": {
+      "description": "Atur channel untuk log bot (lagu yang diputar, dll.)",
+      "prompt": "Pilih channel untuk pesan log bot (lagu yang diputar, antrean selesai, dll.).",
+      "note": "**Catatan:** Jika channel log belum diatur, bot akan mencari channel bernama #bot-commands. Jika tidak ada, pesan log tidak akan dikirim.",
+      "placeholder": "Pilih channel log untuk pesan bot",
+      "useDefault": "Pakai Default (bot-commands)",
+      "disable": "Nonaktifkan Pesan Log",
+      "statusDefault": "Memakai perilaku default (mencari #bot-commands)",
+      "statusDisabled": "Pesan log dinonaktifkan",
+      "set": "Channel log diatur ke {channel}",
+      "reset": "Channel log dikembalikan ke default (akan memakai #bot-commands jika ada).",
+      "disabled": "Pesan log telah dinonaktifkan."
+    },
+    "blacklist": {
+      "description": "Kelola blacklist pengguna",
+      "optionAdd": "Tambahkan pengguna ke blacklist",
+      "optionRemove": "Hapus pengguna dari blacklist",
+      "title": "Pengguna yang Di-blacklist",
+      "none": "Tidak ada pengguna yang di-blacklist.",
+      "already": "{user} sudah di-blacklist.",
+      "added": "{user} telah di-blacklist dari penggunaan bot.",
+      "notListed": "{user} tidak di-blacklist.",
+      "removed": "{user} telah dihapus dari blacklist."
+    },
+    "language": {
+      "description": "Atur bahasa bot untuk server ini",
+      "prompt": "Pilih bahasa bot untuk server ini.",
+      "placeholder": "Pilih bahasa",
+      "more": "Semua bahasa yang didukung bot tersedia lewat {command}."
+    },
+    "embedcolor": {
+      "description": "Atur warna embed kustom",
+      "optionColor": "Kode warna hex (mis., #FF5500)",
+      "invalid": "Warna hex tidak valid. Gunakan format: #RRGGBB (mis., #FF5500)",
+      "set": "Warna embed diatur ke: {color}"
+    },
+    "reset": {
+      "description": "Kembalikan semua pengaturan ke default",
+      "prompt": "Kamu yakin ingin mengembalikan SEMUA pengaturan ke default? Ini tidak bisa dibatalkan.",
+      "confirm": "Ya, Reset Semua Pengaturan",
+      "cancel": "Batal",
+      "done": "Semua pengaturan telah dikembalikan ke default.",
+      "cancelled": "Reset dibatalkan."
+    },
+    "stats": {
+      "description": "Lihat statistik musik server",
+      "title": "Statistik Musik",
+      "songsPlayed": "Total Lagu Diputar",
+      "playtime": "Total Waktu Putar",
+      "playtimeValue": "{hours}j {minutes}m"
+    }
   },
   "stats": {
-    "description": "Lihat statistik bot dan sesi"
+    "description": "Lihat statistik bot dan sesi",
+    "bot": {
+      "description": "Tampilkan statistik bot",
+      "title": "Statistik Bot",
+      "servers": "Server",
+      "users": "Pengguna",
+      "channels": "Channel",
+      "activeQueues": "Antrean Aktif",
+      "tracksPlaying": "Lagu Diputar",
+      "uptime": "Uptime",
+      "memory": "Memori",
+      "platform": "Platform"
+    },
+    "uptime": {
+      "description": "Tampilkan uptime bot"
+    },
+    "leaderboard": {
+      "description": "Tampilkan papan peringkat antrean",
+      "line": "{user} - {count} lagu"
+    },
+    "history": {
+      "description": "Tampilkan lagu yang baru diputar"
+    },
+    "session": {
+      "description": "Tampilkan info sesi saat ini",
+      "noSession": "Tidak ada sesi aktif di server ini.",
+      "title": "Info Sesi",
+      "nowPlaying": "Sedang Diputar",
+      "nothing": "Tidak ada",
+      "tracksInQueue": "Lagu di Antrean",
+      "totalDuration": "Total Durasi"
+    }
   },
   "user": {
-    "description": "Profil dan preferensi pengguna"
+    "description": "Profil dan preferensi pengguna",
+    "profile": {
+      "description": "Lihat profil pengguna",
+      "optionTarget": "Pengguna yang ingin dilihat",
+      "free": "Gratis"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Mulai memutar",
+      "pause": "Menjeda pemutaran",
+      "resume": "Melanjutkan pemutaran",
+      "stop": "Menghentikan pemutaran",
+      "skip": "Melewati lagu",
+      "seek": "Melompat ke posisi",
+      "seek_forward": "Maju",
+      "seek_backward": "Mundur",
+      "forward": "Mempercepat maju",
+      "rewind": "Memutar mundur",
+      "backward": "Memutar mundur",
+      "replay": "Mengulang lagu dari awal",
+      "restart": "Mengulang antrean dari awal",
+      "volume_change": "Mengubah volume",
+      "shuffle": "Mengacak antrean",
+      "loop": "Mengubah mode loop",
+      "loopqueue": "Mengubah mode loop antrean",
+      "setting_change": "Memperbarui pengaturan",
+      "queue_clear": "Mengosongkan antrean",
+      "clear": "Mengosongkan antrean",
+      "join": "Bergabung ke channel",
+      "leave": "Keluar dari channel",
+      "autoplay": "Mengubah autoplay",
+      "previous": "Memutar lagu sebelumnya",
+      "jump": "Melompat ke lagu",
+      "swap": "Menukar lagu",
+      "reverse": "Membalik antrean",
+      "sort": "Mengurutkan antrean",
+      "removerange": "Menghapus rentang",
+      "removeduplicates": "Menghapus duplikat",
+      "removelast": "Menghapus lagu terakhir",
+      "voteskip": "Vote skip",
+      "grab": "Menyimpan lagu",
+      "insert": "Menyisipkan lagu",
+      "removecurrent": "Menghapus lagu saat ini"
+    },
+    "detail": {
+      "on": "Aktif",
+      "off": "Nonaktif",
+      "tracks": "{count} lagu",
+      "effectsCleared": "Efek dihapus",
+      "bassBoost": "Bass boost {level}",
+      "effectOn": "{effect} diaktifkan",
+      "effectOff": "{effect} dinonaktifkan",
+      "previousTrack": "lagu sebelumnya",
+      "currentTrack": "lagu saat ini",
+      "queue": "Antrean"
+    },
+    "settings": {
+      "title": "Pengaturan Diperbarui",
+      "changed": "{user} mengubah {setting}",
+      "before": "Sebelum",
+      "after": "Sesudah",
+      "notSet": "Belum diatur",
+      "userId": "ID Pengguna: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} adalah keuntungan Founder",
+    "description": "Founder seharga {price}/bulan, terbatas hanya {spots} slot, dan membuka audio 320kbps, mode 24/7, tanpa batas durasi lagu, serta role Founder.",
+    "afterJoin": "Setelah kamu bergabung",
+    "afterJoinSteps": "1. hubungkan akun Discord kamu di pengaturan Patreon\n2. jalankan `/premium link` di server ini",
+    "becomeFounder": "Jadi Founder",
+    "voteTitle": "Atau vote gratis",
+    "voteBody": "Satu vote di top.gg membuka fitur ini selama 12 jam. Gunakan `/vote`.",
+    "voteButton": "Vote di top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Masukkan judul lagu atau link dulu.",
+    "notMember": "Kamu harus jadi anggota server ini untuk memutar musik di sini.",
+    "noVoiceChannel": "Masuk ke voice channel di Discord, atau pilih di sini, lalu coba lagi.",
+    "channelGone": "Voice channel itu sudah tidak ada. Pilih yang lain.",
+    "memberCantJoin": "Kamu tidak punya akses ke {channel}. Pilih voice channel yang bisa kamu masuki.",
+    "nowPlaying": "Sedang diputar: {title}",
+    "added": "Ditambahkan ke antrean (#{position}): {title}",
+    "playlist": "Menambahkan {count} lagu dari {title}"
+  },
+  "voiceStatus": {
+    "title": "Status voice channel",
+    "missing": "Aku tidak bisa menampilkan lagu yang sedang diputar di bawah nama voice channel karena tidak punya izin **Set Voice Channel Status**. Otorisasi ulang aku untuk menambahkannya; pengaturanmu tetap seperti semula.",
+    "reauthorize": "Otorisasi ulang"
+  },
+  "guess": {
+    "description": "Tebak lagu dari cuplikan 30 detik bareng teman di voice",
+    "startDescription": "Mulai game tebak lagu di channel voice kamu",
+    "stopDescription": "Hentikan game tebak lagu",
+    "optionRounds": "Berapa lagu yang ditebak (3-15, default 5)",
+    "optionGenre": "Musik apa yang diputar (default: lagu hits)",
+    "genre": {
+      "top": "Lagu hits",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin",
+      "electronic": "Elektronik",
+      "80s": "Era 80-an",
+      "90s": "Era 90-an",
+      "2000s": "Era 2000-an"
+    },
+    "title": "Tebak Lagu",
+    "trackTitle": "Tebak lagu · ronde {round}",
+    "notInVoice": "Masuk ke channel voice dulu, lalu mulai game-nya.",
+    "alreadyRunning": "Game tebak lagu sudah berlangsung di server ini.",
+    "musicPlaying": "Musik sedang diputar di sini. Hentikan dulu (/stop), lalu mulai game-nya.",
+    "otherChannel": "Aku tetap di {channel} (24/7). Mulai game-nya dari sana.",
+    "noVoicePermission": "Aku tidak bisa masuk atau bicara di channel voice kamu.",
+    "noChannelAccess": "Aku tidak bisa mengirim pesan di channel ini. Mulai game di tempat aku bisa mengirim pesan.",
+    "noTracks": "Tidak bisa memuat lagu untuk genre itu sekarang. Coba genre lain, atau coba lagi sebentar lagi.",
+    "connectFailed": "Tidak bisa masuk ke channel voice kamu. Coba lagi ya.",
+    "introMeta": "{rounds} ronde · {genre}",
+    "introBody": "Dengarkan di {channel} dan pilih lagu yang sedang diputar. Jawaban benar pertama dapat poin, dan makin cepat makin banyak poinnya. Salah pilih berarti kamu tidak bisa menjawab lagi di ronde itu.",
+    "introStarting": "Lagu pertama dalam beberapa detik…",
+    "introOver": "Game ini sudah selesai.",
+    "stopButton": "Hentikan game",
+    "roundTitle": "Ronde {round}/{total}",
+    "roundPrompt": "Lagu apa yang sedang diputar?",
+    "roundCloses": "Jawaban ditutup {time}",
+    "roundRules": "jawaban benar pertama dapat poin",
+    "correctBy": "{user} menebak dalam {seconds} dtk (+{points})",
+    "timeUp": "Waktu habis! Tidak ada yang benar.",
+    "roundStopped": "Game dihentikan.",
+    "answerWas": "Jawabannya **{title}** oleh **{artist}**",
+    "scores": "Skor",
+    "scoreLine": "{user} · {points} poin ({correct} benar)",
+    "noScores": "Belum ada poin.",
+    "nextSoon": "Lagu berikutnya dalam beberapa detik…",
+    "finalSoon": "Skor akhir segera muncul…",
+    "finalTitle": "Skor akhir",
+    "winner": "{user} menang dengan {points} poin!",
+    "noWinner": "Tidak ada yang dapat poin kali ini.",
+    "playAgain": "Main lagi dengan {command}",
+    "stoppedBy": "Game dihentikan oleh {user}.",
+    "stoppedPlain": "Game dihentikan.",
+    "endedEmpty": "Semua orang keluar dari channel voice, jadi game berakhir.",
+    "endedDisconnected": "Aku terputus dari voice, jadi game berakhir.",
+    "endedMusic": "Musik mulai diputar, jadi game berakhir.",
+    "endedError": "Cuplikan lagu tidak bisa diputar, jadi game berakhir.",
+    "wrong": "Salah! Kamu tidak bisa menjawab lagi di ronde ini.",
+    "alreadyAnswered": "Kamu sudah menjawab di ronde ini.",
+    "roundOver": "Ronde ini sudah selesai.",
+    "gameOver": "Game ini sudah selesai.",
+    "joinToPlay": "Masuk ke {channel} untuk ikut main.",
+    "stopNotAllowed": "Hanya orang yang memulai game atau yang punya izin Kelola Server yang bisa menghentikannya.",
+    "noGame": "Tidak ada game tebak lagu yang berlangsung di sini.",
+    "stopped": "Game dihentikan.",
+    "blockedDuringGame": "Game tebak lagu sedang berlangsung di server ini. Tunggu sampai selesai atau hentikan dengan {stop}."
   }
 }

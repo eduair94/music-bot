@@ -29,13 +29,31 @@
   "loop": {
     "description": "Comută repetarea melodiilor",
     "errorNotQueue": "Nu se redă nimic.",
-    "result": "Repetarea este acum {loop}"
+    "result": "Repetarea este acum {loop}",
+    "optionMode": "Ce să se repete",
+    "mode": {
+      "off": "Oprit",
+      "track": "Melodia asta",
+      "queue": "Toată coada"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Nu se redă nimic.",
     "lyricsNotFound": "Nu s-au găsit versuri pentru {title}.",
     "embedTitle": "{title} - Versuri",
-    "description": "Versurile melodiei curente sau ale oricărei melodii"
+    "description": "Versurile melodiei curente sau ale oricărei melodii",
+    "liveTitle": "Versuri live",
+    "liveButton": "Versuri live",
+    "liveHint": "Versuri sincronizate disponibile: apasă Versuri live ca să le urmărești.",
+    "liveStop": "Oprește",
+    "livePaused": "Pe pauză",
+    "liveEnded": "Versurile live s-au încheiat.",
+    "liveReplaced": "Versurile live s-au mutat într-un mesaj mai nou.",
+    "liveStoppedBy": "Versurile live au fost oprite de {user}.",
+    "liveNoSync": "Melodia asta nu are versuri sincronizate, deci nu are mod live.",
+    "liveNoPermission": "Doar cine a pornit versurile live sau cineva cu permisiunea Manage Messages le poate opri.",
+    "liveNotDuringGame": "Versurile sunt ascunse cât timp rulează un joc de ghicit melodia.",
+    "liveVersionHint": "Sincronizate pentru altă versiune a melodiei, așa că versurile pot fi decalate"
   },
   "move": {
     "description": "Mută melodiile în coadă",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ Nimic nu se redă în acest server",
     "currentPage": "Pagina curentă - ",
     "embedTitle": "Coada de melodii\n",
-    "embedCurrentSong": "Melodia curentă - {title}\n\n{info}"
+    "optionPage": "Numărul paginii",
+    "embedCurrentSong": "**Melodia curentă - [{title}]({url})**\n\n{info}"
   },
   "remove": {
     "description": "Elimină melodia din coadă",
@@ -190,17 +209,18 @@
   },
   "uptime": {
     "description": "Verifică timpul de funcționare",
-    "result": "Timpul de funcționare: {uptime}"
+    "result": "Timp de funcționare: `{days} zi(le), {hours} ore, {minutes} minute, {seconds} secunde`"
   },
   "volume": {
     "description": "Ajustează volumul muzicii",
     "usageReply": "Utilizare: {prefix}volume <Volum>",
     "errorNotQueue": "Nu se redă nimic.",
-    "result": "Volumul este acum {volume}%",
     "errorNotChannel": "Mai întâi intră într-un canal vocal!",
     "currentVolume": "🔊 Volumul curent este: **{volume}%**",
     "errorNotNumber": "Folosește un număr pentru volum.",
-    "errorNotValid": "Folosește un număr între 0 - 100."
+    "errorNotValid": "Folosește un număr între 0 - 100.",
+    "errorRange": "Volumul trebuie să fie între 0 și {max}.",
+    "result": "Volum setat la: **{arg}%**"
   },
   "common": {
     "on": "**pornit**",
@@ -209,14 +229,49 @@
     "disabled": "**dezactivat**",
     "errorNotChannel": "Mai întâi intră într-un canal vocal!",
     "cooldownMessage": "te rog așteaptă încă {time} secunde înainte să folosești din nou comanda `{name}`.",
-    "errorCommand": "A apărut o eroare la executarea comenzii."
+    "errorCommand": "A apărut o eroare la executarea comenzii.",
+    "djRequired": "Ai nevoie de rolul DJ ca să folosești comanda asta.",
+    "guild_only": "Comanda asta funcționează doar pe un server.",
+    "unknown": "Necunoscut",
+    "unknownError": "Eroare necunoscută",
+    "unknownSubcommand": "Subcomandă necunoscută.",
+    "voiceChannel": "canal vocal",
+    "playerInitializing": "Playerul de muzică încă se inițializează. Încearcă din nou în câteva secunde.",
+    "voiceChannelNotAllowed": "Botul nu are voie să cânte în acest canal vocal. Folosește un canal permis.",
+    "queueFull": "Coada e plină! Sunt permise maximum {max} melodii.",
+    "invalidFileType": "Tip de fișier invalid. Formate acceptate: {formats}",
+    "fileTooLarge": "Fișierul e prea mare ({size}MB). Dimensiunea maximă este {max}MB.",
+    "optionToggle": "Pornit sau oprit (implicit: comută)",
+    "requestedBy": "Cerut de {user}",
+    "yes": "Da",
+    "no": "Nu",
+    "loop": {
+      "off": "Oprit",
+      "track": "Melodie",
+      "queue": "Coadă"
+    },
+    "field": {
+      "title": "Titlu",
+      "artist": "Artist",
+      "duration": "Durată",
+      "tracks": "Melodii",
+      "source": "Sursă",
+      "requestedBy": "Cerut de",
+      "loopMode": "Mod repetare",
+      "volume": "Volum",
+      "loadTime": "Timp de încărcare",
+      "positionInQueue": "Poziția în coadă",
+      "status": "Stare",
+      "tier": "Nivel"
+    }
   },
   "seek": {
     "description": "Sari la un moment anume din piesă",
     "errorNotQueue": "Nu se redă nimic.",
     "errorInvalidTime": "Format de timp invalid. Folosește formate ca: 1:30, 90, 1m30s",
     "errorOutOfRange": "Timpul trebuie să fie între 0:00 și {duration}",
-    "result": "<@{author}> ⏩ a sărit la **{time}**"
+    "result": "<@{author}> ⏩ a sărit la **{time}**",
+    "optionTime": "Momentul la care să sari (ex.: 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Derulează piesa înainte cu un număr de secunde",
@@ -227,7 +282,8 @@
   "rewind": {
     "description": "Derulează piesa înapoi cu un număr de secunde",
     "errorNotQueue": "Nu se redă nimic.",
-    "result": "<@{author}> ⏪ a derulat înapoi **{seconds}s** (acum la {position})"
+    "result": "<@{author}> ⏪ a derulat înapoi **{seconds}s** (acum la {position})",
+    "optionSeconds": "Numărul de secunde pentru derulare înapoi"
   },
   "replay": {
     "description": "Reia piesa curentă de la început",
@@ -264,14 +320,24 @@
   "autoplay": {
     "description": "Comută redarea automată (piese similare când se termină coada)",
     "errorNotQueue": "Nu există nicio coadă activă.",
-    "result": "🔄 Redarea automată este acum {status}"
+    "result": "🔄 Redarea automată este acum {status}",
+    "optionDefault": "Setează asta și ca implicit pentru server (Gestionare server)"
   },
   "history": {
     "description": "Arată piesele redate recent",
     "errorNotQueue": "Nu există nicio coadă activă.",
     "errorEmpty": "Încă nu există piese în istoric.",
     "embedTitle": "Redate recent",
-    "footer": "Ultimele {count} piese"
+    "footer": "Ultimele {count} piese",
+    "title": "Redate recent",
+    "titleUser": "Redate recent · cerute de {user}",
+    "empty": "Nu s-a redat nimic pe acest server în ultimele 30 de zile.",
+    "emptyUser": "{user} nu a cerut nicio melodie aici în ultimele 30 de zile.",
+    "summary": "Ultimele {count} redări",
+    "playAgain": "Redă din nou…",
+    "optionUser": "Arată doar melodiile cerute de acest membru",
+    "unavailable": "Istoricul redărilor nu e disponibil acum. Încearcă din nou peste un minut.",
+    "gone": "Melodia aceea nu mai e în istoric."
   },
   "previous": {
     "description": "Redă piesa anterioară",
@@ -284,7 +350,8 @@
     "errorNotQueue": "Nu există nicio coadă.",
     "errorInvalidPosition": "Poziție invalidă. Coada are doar {max} piese.",
     "errorNotFound": "Nu am găsit nicio piesă la acea poziție.",
-    "result": "<@{author}> ⏭️ a sărit la **{title}**"
+    "result": "<@{author}> ⏭️ a sărit la **{title}**",
+    "optionPosition": "Poziția din coadă la care să sari"
   },
   "Invite me to your server!": "Invită-mă pe serverul tău!",
   "Invite": "Invită",
@@ -301,7 +368,11 @@
   "dashboard": {
     "description": "Primește linkul către dashboard",
     "embedDescription": "Accesează dashboard-ul web ca să gestionezi setările serverului, să vezi coada și multe altele!",
-    "footer": "Gestionează-ți experiența muzicală"
+    "footer": "Gestionează-ți experiența muzicală",
+    "title": "Panoul botului",
+    "features": "Funcții",
+    "featuresList": "• Configurează setările serverului\n• Vezi coada și controalele de redare\n• Gestionează playlisturi și colecții\n• Vezi statistici de ascultare\n• Gestionează funcțiile Premium",
+    "open": "Deschide panoul"
   },
   "clean": {
     "description": "Șterge mesajele botului din canal",
@@ -378,7 +449,9 @@
       "description": "Vezi toate colecțiile tale",
       "title": "📁 Colecțiile tale",
       "empty": "Nu ai încă nicio colecție. Creează una cu `/collections create`!",
-      "footer": "Total: {count} colecții"
+      "footer": "Total: {count} colecții",
+      "select": "Deschide o colecție…",
+      "more": "…și încă {count}. Deschide-le cu /collections view."
     },
     "create": {
       "description": "Creează o colecție nouă",
@@ -400,7 +473,12 @@
       "tracksField": "Piese",
       "durationField": "Durată",
       "shareCodeField": "Cod de partajare",
-      "andMore": "...și încă {count} piese"
+      "andMore": "...și încă {count} piese",
+      "play": "Redă",
+      "addToQueue": "Adaugă în coadă",
+      "summary": "{count} melodii · {duration}",
+      "page": "Pagina {page}/{pages}",
+      "importedFrom": "Importată din {source}"
     },
     "save": {
       "description": "Salvează coada curentă ca o colecție",
@@ -412,7 +490,9 @@
       "description": "Încarcă o colecție în coadă",
       "nameOption": "Numele colecției de încărcat",
       "empty": "Colecția asta e goală.",
-      "success": "📂 Am încărcat **{count}** piese din colecția **{name}**!"
+      "success": "📂 Am încărcat **{count}** piese din colecția **{name}**!",
+      "queuedNext": "Vor fi redate imediat după melodia curentă.",
+      "skipped": "{count} omise (mai lungi decât permite serverul, peste limita cozii sau negăsite)."
     },
     "rename": {
       "description": "Redenumește o colecție",
@@ -436,7 +516,8 @@
       "shareCodeOption": "Codul de partajare din care clonezi",
       "nameOption": "Numele noii tale colecții",
       "invalidCode": "Cod de partajare invalid sau expirat.",
-      "success": "📋 Am clonat **{count}** piese în noua colecție **{name}**!"
+      "success": "📋 Am clonat **{count}** piese în noua colecție **{name}**!",
+      "clonedFrom": "Clonată din {name}"
     },
     "merge": {
       "description": "Unește o colecție cu alta",
@@ -458,6 +539,21 @@
       "positionOption": "Poziția piesei de eliminat (începând de la 1)",
       "invalidPosition": "Poziție invalidă. Colecția are {max} piese.",
       "success": "🗑️ Am eliminat **{track}** din colecția **{name}**."
+    },
+    "error": "Ceva n-a mers cu colecțiile tale. Încearcă din nou.",
+    "trackCount": "{count} melodii",
+    "gone": "Colecția aceea nu mai există.",
+    "notYours": "Meniul ăsta aparține altcuiva. Folosește /collections list ca să le vezi pe ale tale.",
+    "import": {
+      "description": "Importă un playlist din Spotify, YouTube, Deezer sau Apple Music",
+      "urlOption": "Link playlist (Spotify, YouTube, Deezer, album Apple Music)",
+      "nameOption": "Numele noii colecții (implicit: titlul playlistului)",
+      "invalidUrl": "Asta nu pare un link. Lipește URL-ul unui playlist din Spotify, YouTube, Deezer sau al unui album Apple Music.",
+      "failed": "Nu am putut citi playlistul. Asigură-te că e public și că linkul e din Spotify, YouTube, Deezer sau de la un album Apple Music.",
+      "exists": "Ai deja o colecție numită **{name}**. Alege alt nume cu opțiunea `name`.",
+      "success": "📥 Am importat **{count}** melodii din {source} în **{name}**.",
+      "skipped": "{count} omise (peste limita de {max} melodii per colecție sau imposibil de redat).",
+      "spotifyCap": "Spotify oferă doar primele 100 de melodii dintr-un link de playlist."
     }
   },
   "endtime": {
@@ -521,10 +617,67 @@
     "description": "Transformă textul în voce și redă-l în canalul vocal",
     "errorNotAvailable": "❌ Serviciul TTS nu este disponibil. Te rog contactează administratorul botului.",
     "errorGenerate": "❌ Nu am putut genera vocea. Te rog încearcă din nou.",
-    "success": "🎤 Se redă: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Se redă: \"{text}\" ({language}, {voice})",
+    "optionText": "Textul de transformat în vorbire",
+    "optionLanguage": "Limba vorbirii (folosește configurația salvată dacă nu e specificată)",
+    "optionVoice": "Vocea folosită (folosește configurația salvată dacă nu e specificată)"
   },
   "sayconfig": {
-    "description": "Configurează setările TTS (text în voce)"
+    "description": "Configurează setările TTS (text în voce)",
+    "view": {
+      "description": "Vezi configurația TTS curentă",
+      "title": "Configurație TTS",
+      "noConfig": "Nicio configurație personalizată. Se folosesc valorile implicite.",
+      "mode": "Mod",
+      "language": "Limbă",
+      "voice": "Voce",
+      "voiceDescription": "Descrierea vocii",
+      "styleInstruction": "Instrucțiune de stil",
+      "referenceAudio": "Audio de referință",
+      "referenceAudioSet": "Setat",
+      "referenceText": "Text de referință"
+    },
+    "mode": {
+      "description": "Setează modul TTS (custom_voice sau voice_clone)",
+      "option": "Modul TTS",
+      "customVoice": "Voce personalizată (implicit)",
+      "voiceClone": "Clonare voce",
+      "set": "Modul TTS a fost setat la **{mode}**"
+    },
+    "language": {
+      "description": "Setează limba implicită",
+      "option": "Limba pentru vorbire",
+      "set": "Limba implicită a fost setată la **{language}**"
+    },
+    "voice": {
+      "description": "Setează vocea/vorbitorul implicit",
+      "option": "Vocea folosită",
+      "set": "Vocea implicită a fost setată la **{voice}**"
+    },
+    "voiceDescription": {
+      "description": "Setează descrierea vocii pentru generarea vocii personalizate",
+      "option": "Descrierea vocii (ex.: „voce masculină gravă, cu ton calm”)",
+      "set": "Descrierea vocii a fost setată la: \"{text}\""
+    },
+    "style": {
+      "description": "Setează instrucțiunea de stil pentru generarea vocii",
+      "option": "Instrucțiune de stil (ex.: „vorbește rar și clar”)",
+      "set": "Instrucțiunea de stil a fost setată la: \"{text}\""
+    },
+    "reference": {
+      "description": "Setează audio și textul de referință pentru clonarea vocii",
+      "optionAudio": "Fișier audio de referință (MP3, WAV etc.)",
+      "optionText": "Transcrierea audio-ului de referință",
+      "saved": "Audio-ul de referință a fost încărcat și salvat!",
+      "text": "Text de referință: \"{text}\"",
+      "modeSet": "Modul a fost setat automat la **{mode}**",
+      "failed": "Nu am putut încărca audio-ul de referință. Încearcă din nou."
+    },
+    "reset": {
+      "description": "Resetează configurația TTS la valorile implicite",
+      "done": "Configurația TTS a fost resetată la valorile implicite.",
+      "none": "Nu există nicio configurație personalizată de resetat."
+    }
   },
   "radio": {
     "notInVoice": "Trebuie să fii într-un canal vocal.",
@@ -650,7 +803,8 @@
     "body": "Votul ajută mai multe servere să descopere botul. Fiecare vot pe top.gg îți deblochează **modul 24/7** și **calitatea de studio** timp de 12 ore.",
     "active": "Beneficiile votului tău mai sunt active încă {time}.",
     "inactive": "Niciun vot activ. Votează mai jos, beneficiile pornesc în mai puțin de un minut.",
-    "notListed": "Votul se deschide după ce botul este listat. Mulțumim că vrei să ajuți!"
+    "notListed": "Votul se deschide după ce botul este listat. Mulțumim că vrei să ajuți!",
+    "heading": "Votează pentru {bot}"
   },
   "leaderboard": {
     "description": "Vezi clasamentul pieselor din sesiune",
@@ -743,7 +897,8 @@
     "noQueue": "Nu există nicio coadă activă.",
     "invalidChannel": "Canal invalid. Te rog alege un canal text.",
     "title": "📢 Canal schimbat",
-    "success": "Anunțurile se trimit acum în {channel}."
+    "success": "Anunțurile se trimit acum în {channel}.",
+    "optionChannel": "Canalul la care să fie legat (implicit cel curent)"
   },
   "disabledcommands": {
     "description": "Vezi toate comenzile dezactivate pe acest server",
@@ -940,7 +1095,28 @@
     "user_free": "Ești pe nivelul **Free**.",
     "upgrade": "Treci la Premium",
     "upgrade_message": "Obține funcții premium susținându-ne pe Patreon!",
-    "description": "Vezi beneficiile premium"
+    "description": "Vezi beneficiile premium",
+    "view": {
+      "description": "Vezi beneficiile disponibile"
+    },
+    "user": {
+      "description": "Vezi beneficiile tale actuale",
+      "title": "Beneficiile tale",
+      "premium": "Ai **{tier}**!",
+      "premiumTier": "Premium",
+      "audio": "Audio: {bitrate}kbps",
+      "audioFilters": "Filtre audio",
+      "stay247": "Mod 24/7",
+      "free": "Ești pe nivelul **Gratuit**. Ia premium pe Patreon!"
+    },
+    "overview": {
+      "title": "Beneficii premium",
+      "intro": "Founder e limitat la {spots} locuri, iar prețul rămâne blocat.",
+      "freeName": "Gratuit — {price}",
+      "freePerks": "Audio 128kbps\nCoadă, playlisturi și versuri\nToate comenzile",
+      "founderName": "Founder / Beta Tester — {price}/lună",
+      "founderPerks": "Audio 320kbps\nFiltre audio\nMod 24/7\nCoadă prioritară\nRol Founder și suport direct"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Fără Premium",
@@ -1018,7 +1194,9 @@
     "autoplayDisabled": "Autoplay oprit.",
     "volumeLimit": "Acest server limitează volumul la {max}%.",
     "lyricsButton": "Versuri",
-    "saveButton": "Salvează"
+    "saveButton": "Salvează",
+    "trackFailed": "Nu am putut reda **{title}**, trec peste. Încearcă alt link sau altă căutare.",
+    "guessRunning": "Aici rulează un joc de ghicit melodia. Playerul revine când se termină."
   },
   "queueView": {
     "title": "Coadă",
@@ -1041,7 +1219,8 @@
     "commands": "Comenzi",
     "dashboard": "Panou de control",
     "support": "Server de suport",
-    "vote": "Votează"
+    "vote": "Votează",
+    "voiceStatusHint": "Vrei ca melodia care rulează să apară sub numele canalului vocal? [Reautorizează-mă]({url}) ca să acorzi permisiunea Set Voice Channel Status."
   },
   "router": {
     "guildOnly": "Această comandă funcționează doar pe un server.",
@@ -1090,7 +1269,8 @@
     "optionLanguage": "Limba (automat urmează limba de Discord a fiecărui membru)",
     "auto": "Automat (limba de Discord a fiecărui membru)",
     "set": "Limba a fost setată la {language}.",
-    "needManage": "Ai nevoie de permisiunea Gestionare server ca să schimbi limba."
+    "needManage": "Ai nevoie de permisiunea Gestionare server ca să schimbi limba.",
+    "unknown": "Limbă necunoscută."
   },
   "links": {
     "website": "Site web",
@@ -1101,45 +1281,741 @@
     "invite": "Invită"
   },
   "commanddisable": {
-    "description": "Dezactivează comenzi pe acest server"
+    "description": "Dezactivează comenzi pe acest server",
+    "optionCommand": "Comanda de dezactivat",
+    "protected": "Nu poți dezactiva o comandă esențială: {command}",
+    "notFound": "Comanda nu a fost găsită: {command}",
+    "alreadyDisabled": "Comanda {command} este deja dezactivată.",
+    "title": "Comandă dezactivată",
+    "done": "Comanda {command} a fost dezactivată pe acest server.\n\nFolosește `/commandenable` ca s-o reactivezi."
   },
   "commanddisableall": {
-    "description": "Dezactivează toate comenzile, cu excepția celor esențiale"
+    "description": "Dezactivează toate comenzile, cu excepția celor esențiale",
+    "title": "Toate comenzile au fost dezactivate",
+    "done": "Am dezactivat **{count}** comenzi.\n\nComenzi protejate încă disponibile:\n{commands}\n\nFolosește `/commandenableall` ca să restaurezi toate comenzile."
   },
   "commandenable": {
-    "description": "Activează o comandă dezactivată"
+    "description": "Activează o comandă dezactivată",
+    "optionCommand": "Comanda de activat",
+    "notDisabled": "Comanda {command} nu este dezactivată.",
+    "title": "Comandă activată",
+    "done": "Comanda {command} a fost reactivată pe acest server."
   },
   "commandenableall": {
-    "description": "Activează toate comenzile dezactivate"
+    "description": "Activează toate comenzile dezactivate",
+    "title": "Toate comenzile au fost activate",
+    "done": "Am reactivat **{count}** comenzi.\n\nToate comenzile sunt acum disponibile.",
+    "none": "Nicio comandă nu era dezactivată."
   },
   "effects": {
-    "description": "Gestionează efectele audio"
+    "description": "Gestionează efectele audio",
+    "optionEnabled": "Activează sau dezactivează",
+    "nothingPlaying": "Nu rulează nicio muzică acum.",
+    "unknown": "Efect necunoscut.",
+    "enabledBy": "Efectul {effect} a fost activat de {user}",
+    "disabledBy": "Efectul {effect} a fost dezactivat de {user}",
+    "8d": {
+      "description": "Aplică efectul audio 8D (sunet rotativ)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Aplică efectul bass boost",
+      "optionLevel": "Nivelul basului",
+      "level": {
+        "off": "Oprit",
+        "low": "Scăzut",
+        "medium": "Mediu",
+        "high": "Ridicat"
+      },
+      "disabledBy": "Bass boost dezactivat de {user}",
+      "alreadyOff": "Bass boost este deja oprit.",
+      "setBy": "Bass boost setat la **{level}** de {user}"
+    },
+    "distortion": {
+      "description": "Aplică efectul de distorsiune",
+      "name": "Distorsiune"
+    },
+    "haas": {
+      "description": "Aplică efectul Haas (audio spațial)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Reduce vocea (mod karaoke)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Aplică efectul nightcore (ton + viteză mai mari)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Aplică efectul vaporwave (ton + viteză mai mici)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Aplică efectul pulsator",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Redă audio invers",
+      "name": "Invers"
+    },
+    "tremolo": {
+      "description": "Aplică efectul tremolo",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Aplică efectul vibrato",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Aplică efectul lofi",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Aplică efectul de sunet surround",
+      "name": "Surround"
+    },
+    "list": {
+      "description": "Arată efectele active",
+      "title": "Efecte active",
+      "empty": "Niciun efect activ"
+    },
+    "clear": {
+      "description": "Șterge toate efectele",
+      "done": "Toate efectele au fost șterse."
+    }
   },
   "info": {
-    "description": "Informații despre bot și ajutor"
+    "description": "Informații despre bot și ajutor",
+    "about": {
+      "description": "Despre acest bot",
+      "statistics": "Statistici",
+      "servers": "Servere",
+      "commands": "Comenzi",
+      "uptime": "Timp de funcționare",
+      "system": "Sistem",
+      "memory": "Memorie"
+    },
+    "faq": {
+      "description": "Întrebări frecvente"
+    },
+    "support": {
+      "description": "Primește linkul serverului de suport",
+      "title": "Suport",
+      "body": "Ai nevoie de ajutor? Intră pe serverul nostru de suport:",
+      "join": "Apasă pentru a intra",
+      "reportIssues": "Raportează probleme",
+      "reportIssuesValue": "Folosește mai întâi `/info faq`, apoi întreabă la suport",
+      "suggestions": "Sugestii",
+      "suggestionsValue": "Împărtășește idei în canalul nostru de sugestii"
+    },
+    "queue": {
+      "description": "Informații detaliate despre coadă",
+      "noQueue": "Nicio coadă activă.",
+      "title": "Informații despre coadă",
+      "contributors": "Contribuitori"
+    },
+    "song": {
+      "description": "Detalii despre melodia curentă",
+      "noTrack": "Nu se redă nicio piesă.",
+      "title": "Se redă acum"
+    },
+    "nextup": {
+      "description": "Arată următoarea piesă din coadă",
+      "empty": "Nicio piesă în coadă.",
+      "title": "Urmează",
+      "footer": "{count} piese în coadă"
+    },
+    "changelogs": {
+      "description": "Actualizări și schimbări recente",
+      "title": "Actualizări recente",
+      "intro": "Cele mai noi schimbări și îmbunătățiri:",
+      "newFeatures": "Funcții noi",
+      "newFeaturesList": "• Comenzi grupate pentru o organizare mai bună\n• Sistem de efecte audio îmbunătățit\n• Gestionare mai bună a cozii",
+      "improvements": "Îmbunătățiri",
+      "improvementsList": "• Răspuns mai rapid la comenzi\n• Gestionare mai bună a erorilor\n• Consum redus de memorie",
+      "bugFixes": "Remedieri de bug-uri",
+      "bugFixesList": "• Probleme de redare rezolvate\n• Probleme de sincronizare a cozii rezolvate"
+    }
   },
   "patreon": {
-    "description": "Verifică-ți statusul Patreon și sincronizează beneficiile"
+    "description": "Verifică-ți statusul Patreon și sincronizează beneficiile",
+    "notConfigured": "Integrarea Patreon nu este configurată pentru acest bot.",
+    "howToLink": "Cum să conectezi contul",
+    "premiumActive": "Premium activ",
+    "patronStatus": {
+      "active": "Patron activ",
+      "declined": "Plată refuzată",
+      "former": "Fost patron",
+      "none": "Nu ești patron"
+    },
+    "status": {
+      "description": "Verifică-ți statusul Patreon și beneficiile",
+      "title": "Status Patreon",
+      "yourTitle": "Statusul tău Patreon",
+      "notLinked": "Momentan nu ai un cont Patreon conectat.",
+      "howToLinkSteps": "1. Mergi pe [Patreon]({patreon})\n2. Conectează-ți contul Discord în Settings → Connections\n3. Abonează-te la pagina noastră de Patreon\n4. Folosește `/patreon sync` pentru a-ți actualiza beneficiile",
+      "pledgeAmount": "Suma contribuției",
+      "perMonth": "{amount}/lună",
+      "lifetimeSupport": "Susținere totală",
+      "lastCharge": "Ultima plată",
+      "thanks": "Mulțumim pentru susținere! Ai acces la funcțiile premium.",
+      "declined": "Ultima ta plată a fost refuzată. Actualizează metoda de plată pe Patreon ca să-ți recuperezi beneficiile.",
+      "former": "Contribuția ta s-a încheiat. Reînnoiește pe Patreon ca să-ți recuperezi beneficiile!",
+      "error": "A apărut o eroare la verificarea statusului Patreon. Încearcă din nou mai târziu."
+    },
+    "sync": {
+      "description": "Sincronizează datele Patreon ca să-ți actualizezi beneficiile",
+      "completeTitle": "Sincronizare Patreon finalizată",
+      "success": "Datele tale Patreon au fost sincronizate cu succes!",
+      "title": "Sincronizare Patreon",
+      "notFound": "Nu am găsit niciun cont Patreon conectat la Discord-ul tău.",
+      "howToLinkSteps": "1. Mergi la [Setările Patreon]({settings})\n2. Apasă pe **Connections**\n3. Conectează-ți contul **Discord**\n4. Asigură-te că susții campania noastră\n5. Rulează din nou `/patreon sync`",
+      "error": "A apărut o eroare la sincronizarea datelor Patreon. Încearcă din nou mai târziu."
+    },
+    "info": {
+      "description": "Află despre beneficiile Patreon și cum să-ți conectezi contul",
+      "title": "Beneficii Patreon",
+      "intro": "Susține-ne pe Patreon ca să deblochezi beneficii exclusive!",
+      "benefits": "Beneficii Premium",
+      "benefitsList": "• Audio de calitate superioară\n• Playlisturi mai lungi\n• Coadă prioritară\n• Comenzi exclusive\n• Acces timpuriu la funcții noi",
+      "howToGet": "Cum obții Premium",
+      "howToGetSteps": "1. Vizitează [pagina noastră de Patreon]({patreon})\n2. Alege un nivel care ți se potrivește\n3. Conectează-ți Discord-ul în Patreon Settings → Connections\n4. Folosește `/patreon sync` pentru a activa beneficiile",
+      "troubleshooting": "Depanare",
+      "troubleshootingList": "• Asigură-te că Discord este conectat în setările Patreon\n• Plata ta trebuie să fie reușită (nu refuzată)\n• Încearcă `/patreon sync` după conectare\n• Beneficiile se actualizează automat la fiecare 30 de minute"
+    }
   },
   "play_file": {
-    "description": "Redă un fișier audio din atașament"
+    "description": "Redă un fișier audio din atașament",
+    "optionFile": "Fișierul audio de redat (MP3, WAV, FLAC, M4A, OGG etc.)",
+    "optionTitle": "Titlu personalizat opțional pentru piesă",
+    "cantPlay": "Nu am putut reda fișierul: {name}",
+    "nowPlayingTitle": "Se redă fișierul",
+    "addedTitle": "Fișier adăugat în coadă",
+    "format": "Format",
+    "size": "Dimensiune",
+    "error": {
+      "load": "Nu am putut încărca fișierul: {name}\n\nMotive posibile:\n• Formatul fișierului nu e suportat\n• Fișierul e corupt\n• URL-ul fișierului a expirat",
+      "timeout": "Descărcarea fișierului a expirat. Fișierul poate fi prea mare sau conexiunea e lentă.",
+      "forbidden": "Accesul la fișier a fost refuzat. Reîncarcă-l și încearcă din nou.",
+      "notFound": "Fișierul nu a fost găsit. URL-ul atașamentului poate fi expirat.",
+      "generic": "A apărut o eroare la redarea fișierului."
+    }
   },
   "play_spotify": {
-    "description": "Caută și redă o melodie de pe Spotify"
+    "description": "Caută și redă o melodie de pe Spotify",
+    "optionQuery": "Numele piesei, artistul sau URL-ul Spotify de căutat",
+    "cantPlayLink": "Nu am putut reda linkul Spotify: {query}",
+    "playlistFallback": "Playlist Spotify",
+    "playlistAdded": "Playlist Spotify adăugat",
+    "songs": "{count} piese",
+    "nowPlaying": "Se redă acum",
+    "trackBy": "{title} de {author}",
+    "nowPlayingTitle": "Se redă acum de pe Spotify",
+    "addedTitle": "Adăugat în coadă de pe Spotify",
+    "noResults": "Niciun rezultat pe Spotify pentru: {query}\n\nÎncearcă:\n• Alte cuvinte cheie\n• Să adaugi numele artistului\n• Un link Spotify direct",
+    "notOnYoutube": "Nu am găsit pe YouTube: {title} de {artist}",
+    "error": {
+      "auth": "Această piesă Spotify necesită autentificare. Încearcă altă piesă.",
+      "premium": "Această piesă necesită Spotify Premium.",
+      "private": "Această piesă Spotify e privată și nu poate fi redată.",
+      "region": "Această piesă nu e disponibilă în regiunea ta.",
+      "generic": "A apărut o eroare la redarea piesei Spotify."
+    }
   },
   "premium": {
-    "description": "Gestionează funcțiile premium și serverele asociate"
+    "description": "Gestionează funcțiile premium și serverele asociate",
+    "audioQuality": "Calitate audio",
+    "botIdentity": "Identitatea botului",
+    "serverSlots": "Sloturi de servere",
+    "patreonTier": "Nivel Patreon",
+    "supporter": "Susținător",
+    "dbUnavailable": "**Baza de date temporar indisponibilă**\n\nBotul are probleme la conectarea cu baza de date. Încearcă din nou în câteva momente.\n\nDacă problema persistă, administratorul botului a fost notificat.",
+    "error": "A apărut o eroare: {error}",
+    "link": {
+      "description": "Leagă acest server de contul tău Patreon",
+      "successTitle": "Server legat",
+      "failTitle": "Legarea a eșuat"
+    },
+    "unlink": {
+      "description": "Dezleagă acest server de contul tău Patreon",
+      "successTitle": "Server dezlegat",
+      "failTitle": "Dezlegarea a eșuat"
+    },
+    "list": {
+      "description": "Listează toate serverele legate de contul tău Patreon",
+      "title": "Serverele tale legate",
+      "empty": "Nu ai legat încă niciun server.\n\nFolosește `/premium link` ca să legi acest server!",
+      "linkedAt": "Legat: {time}",
+      "slotsUsed": "{used}/{max} folosite",
+      "noMembership": "Nu ai un abonament Patreon activ.\n\nSusține-ne pe Patreon ca să deblochezi funcțiile premium!"
+    },
+    "status": {
+      "description": "Arată statusul premium pentru acest server",
+      "premiumTitle": "Server premium",
+      "freeTitle": "Server gratuit",
+      "premiumBody": "Acest server are funcțiile premium activate!",
+      "freeBody": "Acest server folosește nivelul gratuit.\n\nFolosește `/premium link` ca să activezi funcțiile premium.",
+      "linked": "Legat",
+      "lastUsed": "Ultima utilizare",
+      "ownFooter": "Tu deții această legătură premium",
+      "otherFooter": "Premium oferit de alt utilizator",
+      "freeQuality": "128kbps (Gratuit)"
+    },
+    "config": {
+      "description": "Configurează setările premium pentru acest server",
+      "optionBitrate": "Bitrate audio în kbps",
+      "optionIdentity": "Identitate personalizată a botului pentru acest server",
+      "nothing": "Specifică cel puțin o setare de configurat.\n\nExemplu: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Setări actualizate",
+      "failTitle": "Actualizarea a eșuat"
+    },
+    "service": {
+      "needMembership": "Ai nevoie de un abonament Patreon activ ca să legi servere.\n\nSusține-ne pe Patreon ca să deblochezi funcțiile premium!",
+      "limitReached": "Ai atins limita de servere ({max} servere).\n\nNivel actual: **{tier}**\nServere legate: **{current}/{max}**\n\nTreci la un nivel superior ca să legi mai multe servere!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Acest server este deja legat de contul tău.",
+      "alreadyLinkedOther": "Acest server este deja legat de alt cont Patreon.\n\nDoar un singur cont Patreon poate avea funcțiile premium active pe un server.",
+      "linked": "Server legat cu succes!",
+      "servers": "Servere",
+      "linkedActive": "Funcțiile premium sunt acum active pe acest server!",
+      "linkError": "Eroare la legarea serverului: {error}",
+      "notLinked": "Acest server nu este legat de contul tău.",
+      "unlinked": "Server dezlegat cu succes!",
+      "unlinkedBody": "Funcțiile premium au fost dezactivate pentru acest server.\nPoți lega alt server cu sloturile disponibile.",
+      "unlinkError": "Eroare la dezlegarea serverului: {error}",
+      "invalidBitrate": "Bitrate invalid. Alege: 128, 192, 256 sau 320 kbps",
+      "updated": "Setările serverului au fost actualizate cu succes!",
+      "updateError": "Eroare la actualizarea setărilor: {error}"
+    },
+    "feature": {
+      "audio_filters": "Filtre audio",
+      "stay_24_7": "Mod 24/7",
+      "max_quality": "Calitate maximă",
+      "priority_queue": "Coadă prioritară",
+      "unlimited_playlists": "Playlisturi nelimitate",
+      "longer_songs": "Fără limită de durată",
+      "vote_features": "Votează funcții noi",
+      "founder_role": "Rol Founder",
+      "direct_support": "Suport direct"
+    }
   },
   "queuemanage": {
-    "description": "Gestionare avansată a cozii"
+    "description": "Gestionare avansată a cozii",
+    "empty": "Coada este goală.",
+    "invalidPosition": "Poziție invalidă. Coada are {count} piese.",
+    "removedupes": {
+      "description": "Elimină piesele duplicate din coadă",
+      "none": "Nu s-au găsit duplicate!",
+      "title": "Duplicate eliminate",
+      "result": "Am eliminat **{count}** piese duplicate"
+    },
+    "sort": {
+      "description": "Sortează coada",
+      "optionBy": "Sortează după",
+      "choice": {
+        "title_asc": "Titlu (A-Z)",
+        "title_desc": "Titlu (Z-A)",
+        "duration_asc": "Durată (scurte)",
+        "duration_desc": "Durată (lungi)"
+      },
+      "label": {
+        "title_asc": "Titlu (A-Z)",
+        "title_desc": "Titlu (Z-A)",
+        "duration_asc": "Durată (cele mai scurte)",
+        "duration_desc": "Durată (cele mai lungi)"
+      },
+      "result": "Coada a fost sortată după **{label}**"
+    },
+    "swap": {
+      "description": "Schimbă între ele două piese din coadă",
+      "optionPosition1": "Prima poziție",
+      "optionPosition2": "A doua poziție",
+      "samePosition": "Pozițiile trebuie să fie diferite.",
+      "result": "Am schimbat piesele de pe pozițiile **{pos1}** și **{pos2}**"
+    },
+    "removeuser": {
+      "description": "Elimină toate piesele unui utilizator",
+      "optionUser": "Utilizatorul ale cărui piese le elimini",
+      "none": "Nu am găsit piese de la {user}.",
+      "result": "Am eliminat **{count}** piese de la {user}"
+    },
+    "removeabsent": {
+      "description": "Elimină piesele utilizatorilor care nu sunt pe voice",
+      "notInVoice": "Trebuie să fii într-un canal vocal.",
+      "none": "Toți cei care au cerut piese sunt în canalul vocal.",
+      "result": "Am eliminat **{count}** piese de la utilizatori absenți"
+    },
+    "removelast": {
+      "description": "Elimină ultimele N piese",
+      "optionCount": "Câte să elimini",
+      "result": "Am eliminat ultimele **{count}** piese"
+    },
+    "removerange": {
+      "description": "Elimină piesele dintr-un interval",
+      "optionStart": "Poziția de început",
+      "optionEnd": "Poziția de final",
+      "startAfterEnd": "Începutul trebuie să fie mai mic sau egal cu finalul.",
+      "startTooHigh": "Poziția de început depășește lungimea cozii ({count}).",
+      "result": "Am eliminat **{count}** piese (pozițiile {start}-{end})"
+    },
+    "reverse": {
+      "description": "Inversează ordinea cozii",
+      "result": "Ordinea cozii a fost inversată"
+    }
   },
   "settings": {
-    "description": "Configurează setările botului pentru acest server (doar admini)"
+    "description": "Configurează setările botului pentru acest server (doar admini)",
+    "noPermission": "Nu ai permisiunea să gestionezi setările botului.",
+    "unknownSubcommand": "Subcomandă necunoscută.",
+    "current": "**Actual:** {value}",
+    "allChannels": "Toate canalele sunt permise",
+    "allAllowed": "Toate permise",
+    "on": "Pornit",
+    "off": "Oprit",
+    "yes": "Da",
+    "no": "Nu",
+    "enabled": "Activat",
+    "disabled": "Dezactivat",
+    "view": {
+      "description": "Vezi setările actuale",
+      "title": "Setările botului",
+      "roles": "Roluri",
+      "djRole": "Rol DJ",
+      "djNotSet": "Nesetat (oricine poate fi DJ)",
+      "adminRole": "Rol admin",
+      "adminNotSet": "Doar adminii serverului",
+      "volume": "Volum",
+      "default": "Implicit",
+      "maximum": "Maxim",
+      "queue": "Coadă",
+      "maxSize": "Dimensiune maximă",
+      "songs": "{count} melodii",
+      "preventDuplicates": "Previne duplicatele",
+      "behavior": "Comportament",
+      "announcements": "Anunțuri",
+      "autoLeave": "Ieșire automată",
+      "leaveTimeout": "Timp până la ieșire",
+      "channels": "Canale",
+      "voiceChannels": "Canale vocale",
+      "textChannels": "Canale text",
+      "logChannel": "Canal de loguri",
+      "logDefault": "Implicit (#bot-commands)",
+      "blacklist": "Listă neagră",
+      "noBlacklist": "Niciun utilizator în lista neagră",
+      "premium": "Premium",
+      "tier": "Nivel",
+      "expires": "Expiră",
+      "never": "Niciodată",
+      "notActive": "Inactiv",
+      "customization": "Personalizare",
+      "language": "Limbă",
+      "embedColor": "Culoare embed",
+      "footer": "Folosește /settings <opțiune> ca să schimbi setările"
+    },
+    "djrole": {
+      "description": "Setează rolul de DJ pentru controlul muzicii",
+      "prompt": "Alege rolul de DJ. Utilizatorii cu acest rol pot controla redarea muzicii.",
+      "placeholder": "Alege rolul de DJ",
+      "clear": "Șterge rolul de DJ (oricine poate fi DJ)",
+      "set": "Rolul de DJ a fost setat la {role}",
+      "cleared": "Rolul de DJ a fost șters.",
+      "clearedEveryone": "Rolul de DJ a fost șters. Acum oricine poate folosi comenzile de DJ."
+    },
+    "adminrole": {
+      "description": "Setează rolul de admin pentru gestionarea setărilor",
+      "prompt": "Alege rolul de admin. Utilizatorii cu acest rol pot schimba setările botului.",
+      "placeholder": "Alege rolul de admin",
+      "clear": "Șterge rolul de admin (doar pentru adminii serverului)",
+      "set": "Rolul de admin a fost setat la {role}",
+      "cleared": "Rolul de admin a fost șters.",
+      "clearedAdmins": "Rolul de admin a fost șters. Doar administratorii serverului pot modifica setările."
+    },
+    "volume": {
+      "description": "Setează volumul implicit și maxim",
+      "optionDefault": "Volum implicit (0-100)",
+      "optionMax": "Volum maxim permis (0-100)",
+      "currentTitle": "Setări actuale de volum",
+      "defaultSet": "Volumul implicit a fost setat la {value}%",
+      "maxSet": "Volumul maxim a fost setat la {value}%",
+      "logDefault": "Volum implicit",
+      "logMax": "Volum maxim"
+    },
+    "queue": {
+      "description": "Configurează setările cozii",
+      "optionMaxSize": "Dimensiunea maximă a cozii (1-1000)",
+      "optionPreventDuplicates": "Previne melodiile duplicate în coadă",
+      "currentTitle": "Setări actuale ale cozii",
+      "maxSet": "Dimensiunea maximă a cozii a fost setată la {value} melodii",
+      "duplicatesSet": "Prevenire duplicate: {value}"
+    },
+    "behavior": {
+      "description": "Configurează comportamentul botului",
+      "optionAnnouncements": "Anunță melodia curentă în canalul text",
+      "optionAutoLeave": "Părăsește canalul vocal când e gol",
+      "optionLeaveTimeout": "Secunde până la părăsirea canalului gol (30-3600)",
+      "currentTitle": "Setări actuale de comportament",
+      "announcementsSet": "Anunțuri pentru melodia curentă: {value}",
+      "autoLeaveSet": "Ieșire automată când e gol: {value}",
+      "timeoutSet": "Timpul de ieșire a fost setat la {value} secunde"
+    },
+    "voicechannels": {
+      "description": "Setează canalele vocale permise",
+      "prompt": "Alege în ce canale vocale poate intra botul.",
+      "placeholder": "Alege canalele vocale permise",
+      "allowAll": "Permite toate canalele",
+      "set": "Canale vocale permise: {channels}",
+      "cleared": "Toate canalele vocale sunt acum permise."
+    },
+    "textchannels": {
+      "description": "Setează canalele text permise pentru comenzi",
+      "prompt": "Alege în ce canale text se pot folosi comenzile botului.",
+      "placeholder": "Alege canalele text permise",
+      "allowAll": "Permite toate canalele",
+      "set": "Canale text permise: {channels}",
+      "cleared": "Toate canalele text sunt acum permise."
+    },
+    "logchannel": {
+      "description": "Setează canalul pentru logurile botului (melodia curentă etc.)",
+      "prompt": "Alege un canal pentru mesajele de log ale botului (melodia curentă, coadă terminată etc.).",
+      "note": "**Notă:** Dacă nu e setat niciun canal de log, botul va căuta un canal numit #bot-commands. Dacă acesta nu există, nu se vor trimite mesaje de log.",
+      "placeholder": "Alege canalul de log pentru mesajele botului",
+      "useDefault": "Folosește implicit (bot-commands)",
+      "disable": "Dezactivează mesajele de log",
+      "statusDefault": "Se folosește comportamentul implicit (caută #bot-commands)",
+      "statusDisabled": "Mesajele de log sunt dezactivate",
+      "set": "Canalul de log a fost setat la {channel}",
+      "reset": "Canalul de log a fost resetat la implicit (se va folosi #bot-commands dacă există).",
+      "disabled": "Mesajele de log au fost dezactivate."
+    },
+    "blacklist": {
+      "description": "Gestionează lista neagră de utilizatori",
+      "optionAdd": "Adaugă un utilizator în lista neagră",
+      "optionRemove": "Scoate un utilizator din lista neagră",
+      "title": "Utilizatori din lista neagră",
+      "none": "Niciun utilizator nu e în lista neagră.",
+      "already": "{user} este deja în lista neagră.",
+      "added": "{user} a fost adăugat în lista neagră și nu mai poate folosi botul.",
+      "notListed": "{user} nu este în lista neagră.",
+      "removed": "{user} a fost scos din lista neagră."
+    },
+    "language": {
+      "description": "Setează limba botului pentru acest server",
+      "prompt": "Alege limba botului pentru acest server.",
+      "placeholder": "Alege o limbă",
+      "more": "Toate limbile vorbite de bot sunt disponibile cu {command}."
+    },
+    "embedcolor": {
+      "description": "Setează o culoare personalizată pentru embed",
+      "optionColor": "Cod de culoare hex (ex.: #FF5500)",
+      "invalid": "Culoare hex invalidă. Folosește formatul: #RRGGBB (ex.: #FF5500)",
+      "set": "Culoarea embed-ului a fost setată la: {color}"
+    },
+    "reset": {
+      "description": "Resetează toate setările la valorile implicite",
+      "prompt": "Sigur vrei să resetezi TOATE setările la valorile implicite? Acțiunea nu poate fi anulată.",
+      "confirm": "Da, resetează toate setările",
+      "cancel": "Anulează",
+      "done": "Toate setările au fost resetate la valorile implicite.",
+      "cancelled": "Resetare anulată."
+    },
+    "stats": {
+      "description": "Vezi statisticile muzicale ale serverului",
+      "title": "Statistici muzicale",
+      "songsPlayed": "Total melodii redate",
+      "playtime": "Timp total de redare",
+      "playtimeValue": "{hours}h {minutes}m"
+    }
   },
   "stats": {
-    "description": "Vezi statisticile botului și ale sesiunii"
+    "description": "Vezi statisticile botului și ale sesiunii",
+    "bot": {
+      "description": "Arată statisticile botului",
+      "title": "Statistici bot",
+      "servers": "Servere",
+      "users": "Utilizatori",
+      "channels": "Canale",
+      "activeQueues": "Cozi active",
+      "tracksPlaying": "Piese în redare",
+      "uptime": "Timp de funcționare",
+      "memory": "Memorie",
+      "platform": "Platformă"
+    },
+    "uptime": {
+      "description": "Arată timpul de funcționare al botului"
+    },
+    "leaderboard": {
+      "description": "Arată clasamentul cozii",
+      "line": "{user} - {count} piese"
+    },
+    "history": {
+      "description": "Arată piesele redate recent"
+    },
+    "session": {
+      "description": "Arată informații despre sesiunea curentă",
+      "noSession": "Nicio sesiune activă pe acest server.",
+      "title": "Info sesiune",
+      "nowPlaying": "Se redă acum",
+      "nothing": "Nimic",
+      "tracksInQueue": "Piese în coadă",
+      "totalDuration": "Durată totală"
+    }
   },
   "user": {
-    "description": "Profilul și preferințele tale"
+    "description": "Profilul și preferințele tale",
+    "profile": {
+      "description": "Vezi profilul utilizatorului",
+      "optionTarget": "Utilizatorul de vizualizat",
+      "free": "Gratuit"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "A pornit redarea",
+      "pause": "A pus pauză",
+      "resume": "A reluat redarea",
+      "stop": "A oprit redarea",
+      "skip": "A sărit piesa",
+      "seek": "A sărit la poziție",
+      "seek_forward": "A derulat înainte",
+      "seek_backward": "A derulat înapoi",
+      "forward": "A derulat rapid înainte",
+      "rewind": "A derulat înapoi",
+      "backward": "A derulat înapoi",
+      "replay": "A reluat piesa",
+      "restart": "A reluat coada",
+      "volume_change": "A schimbat volumul",
+      "shuffle": "A amestecat coada",
+      "loop": "A schimbat modul de repetare",
+      "loopqueue": "A schimbat repetarea cozii",
+      "setting_change": "A actualizat setările",
+      "queue_clear": "A golit coada",
+      "clear": "A golit coada",
+      "join": "A intrat pe canal",
+      "leave": "A ieșit de pe canal",
+      "autoplay": "A comutat redarea automată",
+      "previous": "A redat piesa anterioară",
+      "jump": "A sărit la piesă",
+      "swap": "A schimbat piesele între ele",
+      "reverse": "A inversat coada",
+      "sort": "A sortat coada",
+      "removerange": "A eliminat un interval",
+      "removeduplicates": "A eliminat duplicatele",
+      "removelast": "A eliminat ultima piesă",
+      "voteskip": "Piesă sărită prin vot",
+      "grab": "A salvat piesa",
+      "insert": "A inserat o piesă",
+      "removecurrent": "A eliminat piesa curentă"
+    },
+    "detail": {
+      "on": "Pornit",
+      "off": "Oprit",
+      "tracks": "{count} piese",
+      "effectsCleared": "Efecte eliminate",
+      "bassBoost": "Bass boost {level}",
+      "effectOn": "{effect} activat",
+      "effectOff": "{effect} dezactivat",
+      "previousTrack": "piesa anterioară",
+      "currentTrack": "piesa curentă",
+      "queue": "Coadă"
+    },
+    "settings": {
+      "title": "Setări actualizate",
+      "changed": "{user} a schimbat {setting}",
+      "before": "Înainte",
+      "after": "După",
+      "notSet": "Nesetat",
+      "userId": "ID utilizator: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} este un avantaj Founder",
+    "description": "Founder costă {price}/lună, are doar {spots} locuri și deblochează audio 320kbps, modul 24/7, fără limită de durată a pieselor și rolul Founder.",
+    "afterJoin": "După ce te alături",
+    "afterJoinSteps": "1. conectează-ți contul Discord în setările Patreon\n2. rulează `/premium link` pe acest server",
+    "becomeFounder": "Devino Founder",
+    "voteTitle": "Sau votează gratuit",
+    "voteBody": "Un vot pe top.gg deblochează asta pentru 12 ore. Folosește `/vote`.",
+    "voteButton": "Votează pe top.gg"
+  },
+  "dashboardPlay": {
+    "noQuery": "Introdu mai întâi numele unei piese sau un link.",
+    "notMember": "Trebuie să fii membru al acestui server ca să redai muzică pe el.",
+    "noVoiceChannel": "Intră pe un canal vocal în Discord sau alege unul aici, apoi încearcă din nou.",
+    "channelGone": "Canalul vocal nu mai există. Alege altul.",
+    "memberCantJoin": "Nu ai acces la {channel}. Alege un canal vocal în care poți intra.",
+    "nowPlaying": "Se redă acum: {title}",
+    "added": "Adăugat în coadă (#{position}): {title}",
+    "playlist": "Am adăugat {count} piese din {title}"
+  },
+  "voiceStatus": {
+    "title": "Starea canalului vocal",
+    "missing": "Nu pot afișa piesa redată sub numele canalului vocal pentru că îmi lipsește permisiunea **Set Voice Channel Status**. Autorizează-mă din nou ca s-o adaugi; setările tale rămân neschimbate.",
+    "reauthorize": "Reautorizează"
+  },
+  "guess": {
+    "description": "Ghicește melodia din fragmente de 30 de secunde, cu prietenii pe voice",
+    "startDescription": "Pornește un joc de ghicit melodia în canalul tău de voce",
+    "stopDescription": "Oprește jocul de ghicit melodia",
+    "optionRounds": "Câte melodii de ghicit (3-15, implicit 5)",
+    "optionGenre": "Ce muzică să pun (implicit: hituri de top)",
+    "genre": {
+      "top": "Hituri de top",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latino",
+      "electronic": "Electronică",
+      "80s": "Anii '80",
+      "90s": "Anii '90",
+      "2000s": "Anii 2000"
+    },
+    "title": "Ghicește melodia",
+    "trackTitle": "Ghicește melodia · runda {round}",
+    "notInVoice": "Intră mai întâi într-un canal de voce, apoi pornește jocul.",
+    "alreadyRunning": "Un joc de ghicit melodia rulează deja pe acest server.",
+    "musicPlaying": "Aici se redă muzică. Oprește-o mai întâi (/stop), apoi pornește jocul.",
+    "otherChannel": "Rămân în {channel} (24/7). Pornește jocul de acolo.",
+    "noVoicePermission": "Nu pot intra sau vorbi în canalul tău de voce.",
+    "noChannelAccess": "Nu pot posta în acest canal. Pornește jocul unde pot trimite mesaje.",
+    "noTracks": "Nu am putut încărca melodii pentru genul ăsta acum. Încearcă alt gen sau din nou peste un minut.",
+    "connectFailed": "Nu am putut intra în canalul tău de voce. Încearcă din nou.",
+    "introMeta": "{rounds} runde · {genre}",
+    "introBody": "Ascultă în {channel} și alege melodia care se aude. Primul răspuns corect primește puncte, iar răspunsurile mai rapide primesc mai multe. O alegere greșită te scoate din runda respectivă.",
+    "introStarting": "Prima melodie în câteva secunde…",
+    "introOver": "Jocul s-a terminat.",
+    "stopButton": "Oprește jocul",
+    "roundTitle": "Runda {round}/{total}",
+    "roundPrompt": "Ce melodie se aude?",
+    "roundCloses": "Răspunsurile se închid {time}",
+    "roundRules": "primul răspuns corect primește puncte",
+    "correctBy": "{user} a ghicit în {seconds} s (+{points})",
+    "timeUp": "Timpul a expirat! Nimeni n-a ghicit.",
+    "roundStopped": "Joc oprit.",
+    "answerWas": "Era **{title}** de **{artist}**",
+    "scores": "Scoruri",
+    "scoreLine": "{user} · {points} pct. ({correct} corecte)",
+    "noScores": "Niciun punct încă.",
+    "nextSoon": "Următoarea melodie în câteva secunde…",
+    "finalSoon": "Urmează scorurile finale…",
+    "finalTitle": "Scoruri finale",
+    "winner": "{user} câștigă cu {points} puncte!",
+    "noWinner": "Nimeni n-a punctat de data asta.",
+    "playAgain": "Joacă din nou cu {command}",
+    "stoppedBy": "Joc oprit de {user}.",
+    "stoppedPlain": "Joc oprit.",
+    "endedEmpty": "Toți au ieșit din canalul de voce, așa că jocul s-a încheiat.",
+    "endedDisconnected": "Am fost deconectat de pe voice, așa că jocul s-a încheiat.",
+    "endedMusic": "A pornit muzica, așa că jocul s-a încheiat.",
+    "endedError": "Fragmentele melodiilor nu au putut fi redate, așa că jocul s-a încheiat.",
+    "wrong": "Greșit! Ești eliminat din runda asta.",
+    "alreadyAnswered": "Ai răspuns deja în runda asta.",
+    "roundOver": "Runda s-a terminat.",
+    "gameOver": "Jocul s-a terminat.",
+    "joinToPlay": "Intră în {channel} ca să joci.",
+    "stopNotAllowed": "Doar cine a pornit jocul sau cineva cu permisiunea Manage Server îl poate opri.",
+    "noGame": "Aici nu rulează niciun joc de ghicit melodia.",
+    "stopped": "Joc oprit.",
+    "blockedDuringGame": "Pe acest server rulează un joc de ghicit melodia. Așteaptă să se termine sau oprește-l cu {stop}."
   }
 }

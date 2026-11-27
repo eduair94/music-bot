@@ -29,13 +29,31 @@
   "loop": {
     "description": "Müzik döngüsünü aç/kapa",
     "errorNotQueue": "Hiçbir şey oynatılmıyor.",
-    "result": "Döngü {loop}"
+    "result": "Döngü {loop}",
+    "optionMode": "Neyi tekrarlayalım",
+    "mode": {
+      "off": "Kapalı",
+      "track": "Bu şarkı",
+      "queue": "Tüm kuyruk"
+    }
   },
   "lyrics": {
     "errorNotQueue": "Hiçbir şey oynatılmıyor.",
     "lyricsNotFound": "Şarkı sözü bulunamadı {title}.",
     "embedTitle": "{title} - Sözleri",
-    "description": "Çalan şarkının ya da herhangi bir şarkının sözleri"
+    "description": "Çalan şarkının ya da herhangi bir şarkının sözleri",
+    "liveTitle": "Canlı şarkı sözleri",
+    "liveButton": "Canlı sözler",
+    "liveHint": "Senkronize sözler mevcut: takip etmek için Canlı sözler'e bas.",
+    "liveStop": "Durdur",
+    "livePaused": "Duraklatıldı",
+    "liveEnded": "Canlı sözler sona erdi.",
+    "liveReplaced": "Canlı sözler daha yeni bir mesaja taşındı.",
+    "liveStoppedBy": "Canlı sözler {user} tarafından durduruldu.",
+    "liveNoSync": "Bu şarkının senkronize sözleri yok, bu yüzden canlı modu da yok.",
+    "liveNoPermission": "Canlı sözleri yalnızca başlatan kişi veya Mesajları Yönet yetkisi olan biri durdurabilir.",
+    "liveNotDuringGame": "Şarkı tahmin oyunu sürerken sözler gizlenir.",
+    "liveVersionHint": "Şarkının farklı bir versiyonuna göre zamanlandı, satırlar kayabilir"
   },
   "move": {
     "description": "Şarkıyı sırada taşı",
@@ -139,7 +157,8 @@
     "errorNotQueue": "❌ **Bu sunucuda hiçbir şey oynatılmıyor**",
     "currentPage": "Mevcut sayfa - ",
     "embedTitle": "Şarkı listesi\n",
-    "embedCurrentSong": "**Çalan şarkı - [{title}]({url})**\n\n{info}"
+    "embedCurrentSong": "**Çalan şarkı - [{title}]({url})**\n\n{info}",
+    "optionPage": "Sayfa numarası"
   },
   "remove": {
     "description": "Şarkı listeden kaldırıldı",
@@ -199,7 +218,8 @@
     "currentVolume": "🔊 Mevcut ses yüksekliği: **{volume}%**",
     "errorNotNumber": "Lütfen ses seviyesini ayarlamak için sayı giriniz.",
     "errorNotValid": "Lütfen 0-100 arasında bir sayı giriniz",
-    "result": "Ses seviyesi: **{arg}%**"
+    "result": "Ses seviyesi: **{arg}%**",
+    "errorRange": "Ses seviyesi 0 ile {max} arasında olmalı."
   },
   "common": {
     "on": "**açık**",
@@ -208,14 +228,49 @@
     "disabled": "**devre dışı bırakıldı**",
     "errorNotChannel": "Önce sesli sohbet kanalına girmelisiniz!",
     "cooldownMessage": "`{name}` komutunu kullanmak için {time} saniye beklemelisiniz .",
-    "errorCommand": "Komutu gerçekleştirirken bir hata oluştu."
+    "errorCommand": "Komutu gerçekleştirirken bir hata oluştu.",
+    "djRequired": "Bu komutu kullanmak için DJ rolüne ihtiyacın var.",
+    "guild_only": "Bu komut yalnızca bir sunucuda çalışır.",
+    "unknown": "Bilinmiyor",
+    "unknownError": "Bilinmeyen hata",
+    "unknownSubcommand": "Bilinmeyen alt komut.",
+    "voiceChannel": "ses kanalı",
+    "playerInitializing": "Müzik çalar hâlâ başlatılıyor. Lütfen birkaç saniye sonra tekrar dene.",
+    "voiceChannelNotAllowed": "Botun bu ses kanalında çalmasına izin verilmiyor. Lütfen izin verilen bir kanal kullan.",
+    "queueFull": "Kuyruk dolu! En fazla {max} şarkıya izin veriliyor.",
+    "invalidFileType": "Geçersiz dosya türü. Desteklenen formatlar: {formats}",
+    "fileTooLarge": "Dosya çok büyük ({size}MB). En fazla {max}MB olabilir.",
+    "optionToggle": "Açık veya kapalı (varsayılan: değiştir)",
+    "requestedBy": "{user} tarafından istendi",
+    "yes": "Evet",
+    "no": "Hayır",
+    "loop": {
+      "off": "Kapalı",
+      "track": "Parça",
+      "queue": "Kuyruk"
+    },
+    "field": {
+      "title": "Başlık",
+      "artist": "Sanatçı",
+      "duration": "Süre",
+      "tracks": "Parçalar",
+      "source": "Kaynak",
+      "requestedBy": "İsteyen",
+      "loopMode": "Döngü Modu",
+      "volume": "Ses Seviyesi",
+      "loadTime": "Yükleme Süresi",
+      "positionInQueue": "Kuyruktaki Sıra",
+      "status": "Durum",
+      "tier": "Seviye"
+    }
   },
   "seek": {
     "description": "Parçada belirli bir zamana git",
     "errorNotQueue": "Şu anda hiçbir şey çalmıyor.",
     "errorInvalidTime": "Geçersiz zaman formatı. Şu formatları kullan: 1:30, 90, 1m30s",
     "errorOutOfRange": "Zaman 0:00 ile {duration} arasında olmalı",
-    "result": "<@{author}> ⏩ **{time}** anına gitti"
+    "result": "<@{author}> ⏩ **{time}** anına gitti",
+    "optionTime": "Atlanacak zaman (ör. 1:30, 90, 1m30s)"
   },
   "forward": {
     "description": "Parçayı belirtilen saniye kadar ileri sar",
@@ -226,7 +281,8 @@
   "rewind": {
     "description": "Parçayı belirtilen saniye kadar geri sar",
     "errorNotQueue": "Şu anda hiçbir şey çalmıyor.",
-    "result": "<@{author}> ⏪ **{seconds} sn** geri sardı (şu an {position})"
+    "result": "<@{author}> ⏪ **{seconds} sn** geri sardı (şu an {position})",
+    "optionSeconds": "Geri sarılacak saniye sayısı"
   },
   "replay": {
     "description": "Mevcut parçayı baştan başlat",
@@ -263,14 +319,24 @@
   "autoplay": {
     "description": "Otomatik oynatmayı aç/kapat (sıra bitince benzer şarkılar çalar)",
     "errorNotQueue": "Aktif bir sıra yok.",
-    "result": "🔄 Otomatik oynatma artık {status}"
+    "result": "🔄 Otomatik oynatma artık {status}",
+    "optionDefault": "Bunu bu sunucu için varsayılan da yap (Sunucuyu Yönet)"
   },
   "history": {
     "description": "Son çalınan parçaları göster",
     "errorNotQueue": "Aktif bir sıra yok.",
     "errorEmpty": "Geçmişte henüz parça yok.",
     "embedTitle": "Son Çalınanlar",
-    "footer": "Son {count} parça gösteriliyor"
+    "footer": "Son {count} parça gösteriliyor",
+    "title": "Son çalınanlar",
+    "titleUser": "Son çalınanlar · {user} tarafından istenen",
+    "empty": "Son 30 günde bu sunucuda hiçbir şey çalınmadı.",
+    "emptyUser": "{user} son 30 günde burada hiç şarkı istemedi.",
+    "summary": "Son {count} çalma",
+    "playAgain": "Tekrar çal…",
+    "optionUser": "Yalnızca bu üyenin istediği şarkıları göster",
+    "unavailable": "Çalma geçmişi şu anda kullanılamıyor. Lütfen bir dakika sonra tekrar dene.",
+    "gone": "Bu şarkı artık geçmişte değil."
   },
   "previous": {
     "description": "Önceki parçayı çal",
@@ -283,7 +349,8 @@
     "errorNotQueue": "Sıra yok.",
     "errorInvalidPosition": "Geçersiz konum. Sırada yalnızca {max} parça var.",
     "errorNotFound": "Bu konumda parça bulunamadı.",
-    "result": "<@{author}> ⏭️ **{title}** parçasına atladı"
+    "result": "<@{author}> ⏭️ **{title}** parçasına atladı",
+    "optionPosition": "Atlanacak kuyruk sırası"
   },
   "Invite me to your server!": "Beni sunucuna davet et!",
   "Invite": "Davet Et",
@@ -300,7 +367,11 @@
   "dashboard": {
     "description": "Panel bağlantısını al",
     "embedDescription": "Sunucu ayarlarını yönetmek, sırayı görüntülemek ve daha fazlası için web paneline eriş!",
-    "footer": "Müzik deneyimini yönet"
+    "footer": "Müzik deneyimini yönet",
+    "title": "Bot Paneli",
+    "features": "Özellikler",
+    "featuresList": "• Sunucu ayarlarını yapılandır\n• Kuyruğu ve oynatma kontrollerini görüntüle\n• Çalma listelerini ve koleksiyonları yönet\n• Dinleme istatistiklerini görüntüle\n• Premium özellik yönetimi",
+    "open": "Paneli Aç"
   },
   "clean": {
     "description": "Kanaldaki bot mesajlarını sil",
@@ -377,7 +448,9 @@
       "description": "Tüm koleksiyonlarını görüntüle",
       "title": "📁 Koleksiyonların",
       "empty": "Henüz hiç koleksiyonun yok. `/collections create` ile bir tane oluştur!",
-      "footer": "Toplam: {count} koleksiyon"
+      "footer": "Toplam: {count} koleksiyon",
+      "select": "Bir koleksiyon aç…",
+      "more": "…ve {count} tane daha. /collections view ile açabilirsin."
     },
     "create": {
       "description": "Yeni bir koleksiyon oluştur",
@@ -399,7 +472,12 @@
       "tracksField": "Şarkılar",
       "durationField": "Süre",
       "shareCodeField": "Paylaşım Kodu",
-      "andMore": "...ve {count} şarkı daha"
+      "andMore": "...ve {count} şarkı daha",
+      "play": "Çal",
+      "addToQueue": "Kuyruğa ekle",
+      "summary": "{count} parça · {duration}",
+      "page": "Sayfa {page}/{pages}",
+      "importedFrom": "{source} kaynağından içe aktarıldı"
     },
     "save": {
       "description": "Mevcut sırayı koleksiyon olarak kaydet",
@@ -411,7 +489,9 @@
       "description": "Bir koleksiyonu sıraya yükle",
       "nameOption": "Yüklenecek koleksiyonun adı",
       "empty": "Bu koleksiyon boş.",
-      "success": "📂 **{name}** koleksiyonundan **{count}** şarkı yüklendi!"
+      "success": "📂 **{name}** koleksiyonundan **{count}** şarkı yüklendi!",
+      "queuedNext": "Mevcut şarkıdan hemen sonra çalacaklar.",
+      "skipped": "{count} atlandı (sunucunun izin verdiğinden uzun, kuyruk sınırının üstünde veya bulunamadı)."
     },
     "rename": {
       "description": "Bir koleksiyonu yeniden adlandır",
@@ -435,7 +515,8 @@
       "shareCodeOption": "Kopyalanacak paylaşım kodu",
       "nameOption": "Yeni koleksiyonunun adı",
       "invalidCode": "Geçersiz veya süresi dolmuş paylaşım kodu.",
-      "success": "📋 **{count}** parça yeni **{name}** koleksiyonuna kopyalandı!"
+      "success": "📋 **{count}** parça yeni **{name}** koleksiyonuna kopyalandı!",
+      "clonedFrom": "{name} koleksiyonundan kopyalandı"
     },
     "merge": {
       "description": "Bir koleksiyonu diğeriyle birleştir",
@@ -457,6 +538,21 @@
       "positionOption": "Kaldırılacak parçanın sırası (1'den başlar)",
       "invalidPosition": "Geçersiz sıra. Koleksiyonda {max} parça var.",
       "success": "🗑️ **{track}**, **{name}** koleksiyonundan kaldırıldı."
+    },
+    "error": "Koleksiyonlarında bir sorun oluştu. Lütfen tekrar dene.",
+    "trackCount": "{count} parça",
+    "gone": "Bu koleksiyon artık mevcut değil.",
+    "notYours": "Bu menü başkasına ait. Kendi koleksiyonlarını görmek için /collections list kullan.",
+    "import": {
+      "description": "Spotify, YouTube, Deezer veya Apple Music'ten çalma listesi içe aktar",
+      "urlOption": "Çalma listesi bağlantısı (Spotify, YouTube, Deezer, Apple Music albümü)",
+      "nameOption": "Yeni koleksiyonun adı (varsayılan: çalma listesinin başlığı)",
+      "invalidUrl": "Bu bir bağlantıya benzemiyor. Spotify, YouTube, Deezer'dan bir çalma listesi veya Apple Music albüm URL'si yapıştır.",
+      "failed": "Bu çalma listesini okuyamadım. Herkese açık olduğundan ve bağlantının Spotify, YouTube, Deezer veya bir Apple Music albümünden olduğundan emin ol.",
+      "exists": "Zaten **{name}** adında bir koleksiyonun var. `name` seçeneğiyle başka bir ad seç.",
+      "success": "📥 {source} kaynağından **{count}** parça **{name}** koleksiyonuna aktarıldı.",
+      "skipped": "{count} atlandı (koleksiyon başına {max} parça sınırının üstünde veya çalınamıyor).",
+      "spotifyCap": "Spotify, bir çalma listesi bağlantısının yalnızca ilk 100 şarkısını paylaşır."
     }
   },
   "endtime": {
@@ -520,10 +616,67 @@
     "description": "Metni sese çevir ve ses kanalında çal",
     "errorNotAvailable": "❌ TTS hizmeti kullanılamıyor. Lütfen bot yöneticisiyle iletişime geç.",
     "errorGenerate": "❌ Ses oluşturulamadı. Lütfen tekrar dene.",
-    "success": "🎤 Çalınıyor: \"{text}\" ({language}, {voice})"
+    "success": "🎤 Çalınıyor: \"{text}\" ({language}, {voice})",
+    "optionText": "Sese dönüştürülecek metin",
+    "optionLanguage": "Konuşma dili (belirtilmezse kayıtlı ayar kullanılır)",
+    "optionVoice": "Kullanılacak ses (belirtilmezse kayıtlı ayar kullanılır)"
   },
   "sayconfig": {
-    "description": "TTS (Metinden Sese) ayarlarını yapılandır"
+    "description": "TTS (Metinden Sese) ayarlarını yapılandır",
+    "view": {
+      "description": "Mevcut TTS yapılandırmanı görüntüle",
+      "title": "TTS Yapılandırması",
+      "noConfig": "Özel yapılandırma yok. Varsayılanlar kullanılıyor.",
+      "mode": "Mod",
+      "language": "Dil",
+      "voice": "Ses",
+      "voiceDescription": "Ses Açıklaması",
+      "styleInstruction": "Stil Talimatı",
+      "referenceAudio": "Referans Ses",
+      "referenceAudioSet": "Ayarlandı",
+      "referenceText": "Referans Metin"
+    },
+    "mode": {
+      "description": "TTS modunu ayarla (custom_voice veya voice_clone)",
+      "option": "TTS modu",
+      "customVoice": "Özel Ses (varsayılan)",
+      "voiceClone": "Ses Klonlama",
+      "set": "TTS modu **{mode}** olarak ayarlandı"
+    },
+    "language": {
+      "description": "Varsayılan dili ayarla",
+      "option": "Konuşma dili",
+      "set": "Varsayılan dil **{language}** olarak ayarlandı"
+    },
+    "voice": {
+      "description": "Varsayılan sesi/konuşmacıyı ayarla",
+      "option": "Kullanılacak ses",
+      "set": "Varsayılan ses **{voice}** olarak ayarlandı"
+    },
+    "voiceDescription": {
+      "description": "Özel ses üretimi için ses açıklamasını ayarla",
+      "option": "Ses açıklaması (ör. 'sakin tonlu, kalın erkek sesi')",
+      "set": "Ses açıklaması ayarlandı: \"{text}\""
+    },
+    "style": {
+      "description": "Ses üretimi için stil talimatını ayarla",
+      "option": "Stil talimatı (ör. 'yavaş ve net konuş')",
+      "set": "Stil talimatı ayarlandı: \"{text}\""
+    },
+    "reference": {
+      "description": "Ses klonlama için referans ses ve metni ayarla",
+      "optionAudio": "Referans ses dosyası (MP3, WAV vb.)",
+      "optionText": "Referans sesin metin dökümü",
+      "saved": "Referans ses yüklendi ve kaydedildi!",
+      "text": "Referans metin: \"{text}\"",
+      "modeSet": "Mod otomatik olarak **{mode}** yapıldı",
+      "failed": "Referans ses yüklenemedi. Lütfen tekrar dene."
+    },
+    "reset": {
+      "description": "TTS ayarlarını varsayılana sıfırla",
+      "done": "TTS ayarları varsayılana sıfırlandı.",
+      "none": "Sıfırlanacak özel ayar bulunamadı."
+    }
   },
   "radio": {
     "notInVoice": "Bir ses kanalında olman gerekiyor.",
@@ -649,7 +802,8 @@
     "body": "Oy vermek, botu daha fazla sunucunun bulmasına yardımcı olur. top.gg'de verdiğin her oy, 12 saat boyunca **7/24 modu** ve **stüdyo kalitesini** açar.",
     "active": "Oy avantajların {time} daha aktif.",
     "inactive": "Aktif oyun yok. Aşağıdan oy ver, avantajlar bir dakika içinde başlar.",
-    "notListed": "Bot listelendiğinde oylama açılacak. Yardım etmek istediğin için teşekkürler!"
+    "notListed": "Bot listelendiğinde oylama açılacak. Yardım etmek istediğin için teşekkürler!",
+    "heading": "{bot} için oy ver"
   },
   "leaderboard": {
     "description": "Oturumun parça sıralamasını görüntüle",
@@ -742,7 +896,8 @@
     "noQueue": "Aktif bir sıra yok.",
     "invalidChannel": "Geçersiz kanal. Lütfen bir metin kanalı seç.",
     "title": "📢 Kanal Değiştirildi",
-    "success": "Duyurular artık {channel} kanalına gönderilecek."
+    "success": "Duyurular artık {channel} kanalına gönderilecek.",
+    "optionChannel": "Bağlanılacak kanal (varsayılan: mevcut kanal)"
   },
   "disabledcommands": {
     "description": "Bu sunucudaki tüm devre dışı komutları görüntüle",
@@ -939,7 +1094,28 @@
     "user_free": "**Ücretsiz** kademedesin.",
     "upgrade": "Premium'a Geç",
     "upgrade_message": "Bizi Patreon'da destekleyerek premium özellikler kazan!",
-    "description": "Premium avantajlarını görüntüle"
+    "description": "Premium avantajlarını görüntüle",
+    "view": {
+      "description": "Mevcut avantajları gör"
+    },
+    "user": {
+      "description": "Şu anki avantajlarını gör",
+      "title": "Avantajların",
+      "premium": "**{tier}** sahibisin!",
+      "premiumTier": "Premium",
+      "audio": "Ses: {bitrate}kbps",
+      "audioFilters": "Ses filtreleri",
+      "stay247": "24/7 modu",
+      "free": "**Ücretsiz** paketi kullanıyorsun. Patreon'dan premium al!"
+    },
+    "overview": {
+      "title": "Premium avantajları",
+      "intro": "Founder {spots} kişiyle sınırlı ve fiyat sabit kalır.",
+      "freeName": "Ücretsiz — {price}",
+      "freePerks": "128kbps ses\nKuyruk, çalma listeleri ve şarkı sözleri\nTüm komutlar",
+      "founderName": "Founder / Beta Test Kullanıcısı — {price}/ay",
+      "founderPerks": "320kbps ses\nSes filtreleri\n24/7 modu\nÖncelikli kuyruk\nFounder rolü ve doğrudan destek"
+    }
   },
   "boost": {
     "no_premium_title": "❌ Premium Yok",
@@ -1017,7 +1193,9 @@
     "autoplayDisabled": "Otomatik oynatma kapalı.",
     "volumeLimit": "Bu sunucu ses seviyesini en fazla %{max} ile sınırlıyor.",
     "lyricsButton": "Şarkı Sözleri",
-    "saveButton": "Kaydet"
+    "saveButton": "Kaydet",
+    "trackFailed": "**{title}** çalınamadı, atlanıyor. Başka bir link veya arama dene.",
+    "guessRunning": "Burada bir şarkı tahmin oyunu sürüyor. Oyun bitince oynatıcı geri gelecek."
   },
   "queueView": {
     "title": "Sıra",
@@ -1040,7 +1218,8 @@
     "commands": "Komutlar",
     "dashboard": "Panel",
     "support": "Destek sunucusu",
-    "vote": "Oy ver"
+    "vote": "Oy ver",
+    "voiceStatusHint": "Çalan şarkının ses kanalı adının altında görünmesini ister misin? Ses Kanalı Durumunu Ayarla iznini vermek için [beni yeniden yetkilendir]({url})."
   },
   "router": {
     "guildOnly": "Bu komut yalnızca bir sunucuda çalışır.",
@@ -1089,7 +1268,8 @@
     "optionLanguage": "Dil (otomatik, her üyenin Discord dilini izler)",
     "auto": "Otomatik (her üyenin Discord dili)",
     "set": "Dil {language} olarak ayarlandı.",
-    "needManage": "Dili değiştirmek için Sunucuyu Yönet iznine ihtiyacın var."
+    "needManage": "Dili değiştirmek için Sunucuyu Yönet iznine ihtiyacın var.",
+    "unknown": "Bilinmeyen dil."
   },
   "links": {
     "website": "Web Sitesi",
@@ -1100,45 +1280,741 @@
     "invite": "Davet Et"
   },
   "commanddisable": {
-    "description": "Bu sunucuda komutları devre dışı bırak"
+    "description": "Bu sunucuda komutları devre dışı bırak",
+    "optionCommand": "Devre dışı bırakılacak komut",
+    "protected": "Temel komut devre dışı bırakılamaz: {command}",
+    "notFound": "Komut bulunamadı: {command}",
+    "alreadyDisabled": "{command} komutu zaten devre dışı.",
+    "title": "Komut Devre Dışı",
+    "done": "{command} komutu bu sunucuda devre dışı bırakıldı.\n\nTekrar etkinleştirmek için `/commandenable` kullan."
   },
   "commanddisableall": {
-    "description": "Temel komutlar hariç tüm komutları devre dışı bırak"
+    "description": "Temel komutlar hariç tüm komutları devre dışı bırak",
+    "title": "Tüm Komutlar Devre Dışı",
+    "done": "**{count}** komut devre dışı bırakıldı.\n\nHâlâ kullanılabilen korumalı komutlar:\n{commands}\n\nTüm komutları geri getirmek için `/commandenableall` kullan."
   },
   "commandenable": {
-    "description": "Devre dışı bırakılmış bir komutu etkinleştir"
+    "description": "Devre dışı bırakılmış bir komutu etkinleştir",
+    "optionCommand": "Etkinleştirilecek komut",
+    "notDisabled": "{command} komutu devre dışı değil.",
+    "title": "Komut Etkinleştirildi",
+    "done": "{command} komutu bu sunucuda tekrar etkinleştirildi."
   },
   "commandenableall": {
-    "description": "Devre dışı bırakılmış tüm komutları etkinleştir"
+    "description": "Devre dışı bırakılmış tüm komutları etkinleştir",
+    "title": "Tüm Komutlar Etkin",
+    "done": "**{count}** komut tekrar etkinleştirildi.\n\nArtık tüm komutlar kullanılabilir.",
+    "none": "Devre dışı bırakılmış komut yoktu."
   },
   "effects": {
-    "description": "Ses efektlerini yönet"
+    "description": "Ses efektlerini yönet",
+    "optionEnabled": "Aç veya kapat",
+    "nothingPlaying": "Şu anda müzik çalmıyor.",
+    "unknown": "Bilinmeyen efekt.",
+    "enabledBy": "{effect} efekti {user} tarafından açıldı",
+    "disabledBy": "{effect} efekti {user} tarafından kapatıldı",
+    "8d": {
+      "description": "8D ses efekti uygula (sesi döndürür)",
+      "name": "8D"
+    },
+    "bassboost": {
+      "description": "Bas güçlendirme efekti uygula",
+      "optionLevel": "Bas seviyesi",
+      "level": {
+        "off": "Kapalı",
+        "low": "Düşük",
+        "medium": "Orta",
+        "high": "Yüksek"
+      },
+      "disabledBy": "Bas güçlendirme {user} tarafından kapatıldı",
+      "alreadyOff": "Bas güçlendirme zaten kapalı.",
+      "setBy": "Bas güçlendirme {user} tarafından **{level}** yapıldı"
+    },
+    "distortion": {
+      "description": "Distortion efekti uygula",
+      "name": "Distortion"
+    },
+    "haas": {
+      "description": "Haas efekti uygula (uzamsal ses)",
+      "name": "Haas"
+    },
+    "karaoke": {
+      "description": "Vokalleri azalt (karaoke modu)",
+      "name": "Karaoke"
+    },
+    "nightcore": {
+      "description": "Nightcore efekti uygula (daha tiz + hızlı)",
+      "name": "Nightcore"
+    },
+    "vaporwave": {
+      "description": "Vaporwave efekti uygula (daha pes + yavaş)",
+      "name": "Vaporwave"
+    },
+    "pulsator": {
+      "description": "Pulsator efekti uygula",
+      "name": "Pulsator"
+    },
+    "reverse": {
+      "description": "Sesi tersten çal",
+      "name": "Ters Çevir"
+    },
+    "tremolo": {
+      "description": "Tremolo efekti uygula",
+      "name": "Tremolo"
+    },
+    "vibrato": {
+      "description": "Vibrato efekti uygula",
+      "name": "Vibrato"
+    },
+    "lofi": {
+      "description": "Lofi efekti uygula",
+      "name": "Lofi"
+    },
+    "surrounding": {
+      "description": "Çevresel ses efekti uygula",
+      "name": "Çevresel Ses"
+    },
+    "list": {
+      "description": "Aktif efektleri göster",
+      "title": "Aktif Efektler",
+      "empty": "Aktif efekt yok"
+    },
+    "clear": {
+      "description": "Tüm efektleri temizle",
+      "done": "Tüm efektler temizlendi."
+    }
   },
   "info": {
-    "description": "Bot bilgisi ve yardım"
+    "description": "Bot bilgisi ve yardım",
+    "about": {
+      "description": "Bu bot hakkında",
+      "statistics": "İstatistikler",
+      "servers": "Sunucular",
+      "commands": "Komutlar",
+      "uptime": "Çalışma Süresi",
+      "system": "Sistem",
+      "memory": "Bellek"
+    },
+    "faq": {
+      "description": "Sıkça sorulan sorular"
+    },
+    "support": {
+      "description": "Destek sunucusu bağlantısını al",
+      "title": "Destek",
+      "body": "Yardıma mı ihtiyacın var? Destek sunucumuza katıl:",
+      "join": "Katılmak için Tıkla",
+      "reportIssues": "Sorun Bildir",
+      "reportIssuesValue": "Önce `/info faq` komutunu kullan, sonra destekte sor",
+      "suggestions": "Öneriler",
+      "suggestionsValue": "Fikirlerini öneri kanalımızda paylaş"
+    },
+    "queue": {
+      "description": "Ayrıntılı sıra bilgisi",
+      "noQueue": "Aktif sıra yok.",
+      "title": "Sıra Bilgisi",
+      "contributors": "Katkıda Bulunanlar"
+    },
+    "song": {
+      "description": "Çalan şarkının detayları",
+      "noTrack": "Çalan parça yok.",
+      "title": "Şimdi Çalıyor"
+    },
+    "nextup": {
+      "description": "Sıradaki parçayı göster",
+      "empty": "Sırada parça yok.",
+      "title": "Sıradaki",
+      "footer": "Sırada {count} parça var"
+    },
+    "changelogs": {
+      "description": "Son güncellemeler ve değişiklikler",
+      "title": "Son Güncellemeler",
+      "intro": "En son değişiklikler ve iyileştirmeler:",
+      "newFeatures": "Yeni Özellikler",
+      "newFeaturesList": "• Daha iyi düzen için birleştirilmiş komutlar\n• Geliştirilmiş ses efektleri sistemi\n• Gelişmiş sıra yönetimi",
+      "improvements": "İyileştirmeler",
+      "improvementsList": "• Daha hızlı komut yanıt süreleri\n• Daha iyi hata yönetimi\n• Azaltılmış bellek kullanımı",
+      "bugFixes": "Hata Düzeltmeleri",
+      "bugFixesList": "• Oynatma sorunları düzeltildi\n• Sıra senkronizasyon sorunları giderildi"
+    }
   },
   "patreon": {
-    "description": "Patreon durumunu kontrol et ve avantajlarını senkronize et"
+    "description": "Patreon durumunu kontrol et ve avantajlarını senkronize et",
+    "notConfigured": "Bu bot için Patreon entegrasyonu yapılandırılmamış.",
+    "howToLink": "Nasıl Bağlanır",
+    "premiumActive": "Premium Aktif",
+    "patronStatus": {
+      "active": "Aktif Destekçi",
+      "declined": "Ödeme Reddedildi",
+      "former": "Eski Destekçi",
+      "none": "Destekçi Değil"
+    },
+    "status": {
+      "description": "Mevcut Patreon durumunu ve avantajlarını kontrol et",
+      "title": "Patreon Durumu",
+      "yourTitle": "Patreon Durumun",
+      "notLinked": "Şu anda bir Patreon hesabına bağlı değilsin.",
+      "howToLinkSteps": "1. [Patreon]({patreon}) sayfasına git\n2. Ayarlar → Bağlantılar kısmından Discord hesabını bağla\n3. Patreon sayfamıza abone ol\n4. Avantajlarını güncellemek için `/patreon sync` komutunu kullan",
+      "pledgeAmount": "Destek Miktarı",
+      "perMonth": "{amount}/ay",
+      "lifetimeSupport": "Toplam Destek",
+      "lastCharge": "Son Ödeme",
+      "thanks": "Desteğin için teşekkürler! Premium özelliklere erişimin var.",
+      "declined": "Son ödemen reddedildi. Avantajlarını geri almak için lütfen Patreon'da ödeme yöntemini güncelle.",
+      "former": "Desteğin sona erdi. Avantajlarını geri almak için Patreon'da yenile!",
+      "error": "Patreon durumun kontrol edilirken bir hata oluştu. Lütfen daha sonra tekrar dene."
+    },
+    "sync": {
+      "description": "Avantajlarını güncellemek için Patreon verilerini senkronize et",
+      "completeTitle": "Patreon Senkronizasyonu Tamamlandı",
+      "success": "Patreon verilerin başarıyla senkronize edildi!",
+      "title": "Patreon Senkronizasyonu",
+      "notFound": "Discord hesabına bağlı bir Patreon hesabı bulunamadı.",
+      "howToLinkSteps": "1. [Patreon Ayarları]({settings}) sayfasına git\n2. **Bağlantılar**'a tıkla\n3. **Discord** hesabını bağla\n4. Kampanyamızı desteklediğinden emin ol\n5. `/patreon sync` komutunu tekrar çalıştır",
+      "error": "Patreon verilerin senkronize edilirken bir hata oluştu. Lütfen daha sonra tekrar dene."
+    },
+    "info": {
+      "description": "Patreon avantajlarını ve hesabını nasıl bağlayacağını öğren",
+      "title": "Patreon Avantajları",
+      "intro": "Özel avantajların kilidini açmak için bizi Patreon'da destekle!",
+      "benefits": "Premium Avantajlar",
+      "benefitsList": "• Daha yüksek ses kalitesi\n• Daha uzun çalma listeleri\n• Öncelikli sıra\n• Özel komutlar\n• Yeni özelliklere erken erişim",
+      "howToGet": "Premium Nasıl Alınır",
+      "howToGetSteps": "1. [Patreon sayfamızı]({patreon}) ziyaret et\n2. Sana uygun bir kademe seç\n3. Patreon Ayarları → Bağlantılar kısmından Discord'unu bağla\n4. Avantajları etkinleştirmek için `/patreon sync` komutunu kullan",
+      "troubleshooting": "Sorun Giderme",
+      "troubleshootingList": "• Patreon ayarlarında Discord'un bağlı olduğundan emin ol\n• Ödemen başarılı olmalı (reddedilmemiş)\n• Bağladıktan sonra `/patreon sync` komutunu dene\n• Avantajlar her 30 dakikada bir otomatik güncellenir"
+    }
   },
   "play_file": {
-    "description": "Ekteki bir ses dosyasını çal"
+    "description": "Ekteki bir ses dosyasını çal",
+    "optionFile": "Çalınacak ses dosyası (MP3, WAV, FLAC, M4A, OGG vb.)",
+    "optionTitle": "Parça için isteğe bağlı özel başlık",
+    "cantPlay": "Dosya çalınamadı: {name}",
+    "nowPlayingTitle": "Şimdi Çalan Dosya",
+    "addedTitle": "Dosya Sıraya Eklendi",
+    "format": "Biçim",
+    "size": "Boyut",
+    "error": {
+      "load": "Dosya yüklenemedi: {name}\n\nOlası nedenler:\n• Dosya biçimi desteklenmiyor\n• Dosya bozuk\n• Dosya URL'sinin süresi dolmuş",
+      "timeout": "Dosya indirme zaman aşımına uğradı. Dosya çok büyük olabilir ya da bağlantı yavaş.",
+      "forbidden": "Dosyaya erişim reddedildi. Lütfen yeniden yükleyip tekrar dene.",
+      "notFound": "Dosya bulunamadı. Ek URL'sinin süresi dolmuş olabilir.",
+      "generic": "Dosya oynatılırken bir hata oluştu."
+    }
   },
   "play_spotify": {
-    "description": "Spotify'da bir şarkı ara ve çal"
+    "description": "Spotify'da bir şarkı ara ve çal",
+    "optionQuery": "Aranacak şarkı adı, sanatçı veya Spotify URL'si",
+    "cantPlayLink": "Spotify bağlantısı oynatılamadı: {query}",
+    "playlistFallback": "Spotify Çalma Listesi",
+    "playlistAdded": "Spotify Çalma Listesi Eklendi",
+    "songs": "{count} şarkı",
+    "nowPlaying": "Şimdi Çalıyor",
+    "trackBy": "{author} - {title}",
+    "nowPlayingTitle": "Spotify'dan Şimdi Çalıyor",
+    "addedTitle": "Spotify'dan Sıraya Eklendi",
+    "noResults": "Spotify'da sonuç bulunamadı: {query}\n\nŞunları dene:\n• Farklı anahtar kelimeler\n• Sanatçı adını eklemek\n• Doğrudan Spotify bağlantısı kullanmak",
+    "notOnYoutube": "YouTube'da bulunamadı: {artist} - {title}",
+    "error": {
+      "auth": "Bu Spotify parçası kimlik doğrulama gerektiriyor. Başka bir parça dene.",
+      "premium": "Bu parça Spotify Premium gerektiriyor.",
+      "private": "Bu Spotify parçası gizli ve oynatılamıyor.",
+      "region": "Bu parça bölgende kullanılamıyor.",
+      "generic": "Spotify parçası oynatılırken bir hata oluştu."
+    }
   },
   "premium": {
-    "description": "Premium özellikleri ve sunucu bağlantılarını yönet"
+    "description": "Premium özellikleri ve sunucu bağlantılarını yönet",
+    "audioQuality": "Ses Kalitesi",
+    "botIdentity": "Bot Kimliği",
+    "serverSlots": "Sunucu Slotları",
+    "patreonTier": "Patreon Seviyesi",
+    "supporter": "Destekçi",
+    "dbUnavailable": "**Veritabanı Geçici Olarak Kullanılamıyor**\n\nBot veritabanına bağlanmakta sorun yaşıyor. Lütfen birkaç dakika sonra tekrar dene.\n\nSorun devam ederse bot yöneticisi bilgilendirildi.",
+    "error": "Bir hata oluştu: {error}",
+    "link": {
+      "description": "Bu sunucuyu Patreon hesabına bağla",
+      "successTitle": "Sunucu Bağlandı",
+      "failTitle": "Bağlama Başarısız"
+    },
+    "unlink": {
+      "description": "Bu sunucunun Patreon hesabınla bağlantısını kaldır",
+      "successTitle": "Sunucu Bağlantısı Kaldırıldı",
+      "failTitle": "Bağlantı Kaldırma Başarısız"
+    },
+    "list": {
+      "description": "Patreon hesabına bağlı tüm sunucuları listele",
+      "title": "Bağlı Sunucuların",
+      "empty": "Henüz hiç sunucu bağlamadın.\n\nBu sunucuyu bağlamak için `/premium link` kullan!",
+      "linkedAt": "Bağlandı: {time}",
+      "slotsUsed": "{used}/{max} kullanıldı",
+      "noMembership": "Aktif bir Patreon üyeliğin yok.\n\nPremium özelliklerin kilidini açmak için bizi Patreon'da destekle!"
+    },
+    "status": {
+      "description": "Bu sunucunun premium durumunu göster",
+      "premiumTitle": "Premium Sunucu",
+      "freeTitle": "Ücretsiz Sunucu",
+      "premiumBody": "Bu sunucuda premium özellikler etkin!",
+      "freeBody": "Bu sunucu ücretsiz seviyeyi kullanıyor.\n\nPremium özellikleri etkinleştirmek için `/premium link` kullan.",
+      "linked": "Bağlandı",
+      "lastUsed": "Son Kullanım",
+      "ownFooter": "Bu premium bağlantı sana ait",
+      "otherFooter": "Premium başka bir kullanıcı tarafından sağlanıyor",
+      "freeQuality": "128kbps (Ücretsiz)"
+    },
+    "config": {
+      "description": "Bu sunucunun premium ayarlarını yapılandır",
+      "optionBitrate": "kbps cinsinden ses bit hızı",
+      "optionIdentity": "Bu sunucu için özel bot kimliği",
+      "nothing": "Lütfen yapılandırmak için en az bir ayar belirt.\n\nÖrnek: `/premium config bitrate:320 identity:indie`",
+      "successTitle": "Ayarlar Güncellendi",
+      "failTitle": "Güncelleme Başarısız"
+    },
+    "service": {
+      "needMembership": "Sunucu bağlamak için aktif bir Patreon üyeliğine ihtiyacın var.\n\nPremium özelliklerin kilidini açmak için bizi Patreon'da destekle!",
+      "limitReached": "Sunucu sınırına ulaştın ({max} sunucu).\n\nMevcut seviye: **{tier}**\nBağlı sunucular: **{current}/{max}**\n\nDaha fazla sunucu bağlamak için seviyeni yükselt!",
+      "patron": "Patron",
+      "alreadyLinkedYou": "Bu sunucu zaten hesabına bağlı.",
+      "alreadyLinkedOther": "Bu sunucu zaten başka bir Patreon hesabına bağlı.\n\nHer sunucuda yalnızca bir Patreon hesabı premium özellikleri etkinleştirebilir.",
+      "linked": "Sunucu başarıyla bağlandı!",
+      "servers": "Sunucular",
+      "linkedActive": "Premium özellikler artık bu sunucuda aktif!",
+      "linkError": "Sunucu bağlanırken hata: {error}",
+      "notLinked": "Bu sunucu hesabına bağlı değil.",
+      "unlinked": "Sunucu bağlantısı başarıyla kaldırıldı!",
+      "unlinkedBody": "Bu sunucu için premium özellikler devre dışı bırakıldı.\nBoş slotlarınla başka bir sunucu bağlayabilirsin.",
+      "unlinkError": "Sunucu bağlantısı kaldırılırken hata: {error}",
+      "invalidBitrate": "Geçersiz bit hızı. Seç: 128, 192, 256 veya 320 kbps",
+      "updated": "Sunucu ayarları başarıyla güncellendi!",
+      "updateError": "Ayarlar güncellenirken hata: {error}"
+    },
+    "feature": {
+      "audio_filters": "Ses Filtreleri",
+      "stay_24_7": "7/24 Modu",
+      "max_quality": "Maksimum Kalite",
+      "priority_queue": "Öncelikli Sıra",
+      "unlimited_playlists": "Sınırsız Çalma Listesi",
+      "longer_songs": "Süre Sınırı Yok",
+      "vote_features": "Özelliklere Oy Ver",
+      "founder_role": "Founder Rolü",
+      "direct_support": "Doğrudan Destek"
+    }
   },
   "queuemanage": {
-    "description": "Gelişmiş sıra yönetimi"
+    "description": "Gelişmiş sıra yönetimi",
+    "empty": "Sıra boş.",
+    "invalidPosition": "Geçersiz konum. Sırada {count} parça var.",
+    "removedupes": {
+      "description": "Sıradaki yinelenen parçaları kaldır",
+      "none": "Yinelenen parça bulunamadı!",
+      "title": "Yinelenenler Kaldırıldı",
+      "result": "**{count}** yinelenen parça kaldırıldı"
+    },
+    "sort": {
+      "description": "Sırayı sırala",
+      "optionBy": "Sıralama ölçütü",
+      "choice": {
+        "title_asc": "Başlık (A-Z)",
+        "title_desc": "Başlık (Z-A)",
+        "duration_asc": "Süre (Kısa)",
+        "duration_desc": "Süre (Uzun)"
+      },
+      "label": {
+        "title_asc": "Başlık (A-Z)",
+        "title_desc": "Başlık (Z-A)",
+        "duration_asc": "Süre (En kısa)",
+        "duration_desc": "Süre (En uzun)"
+      },
+      "result": "Sıra **{label}** ölçütüne göre sıralandı"
+    },
+    "swap": {
+      "description": "Sıradaki iki parçanın yerini değiştir",
+      "optionPosition1": "Birinci konum",
+      "optionPosition2": "İkinci konum",
+      "samePosition": "Konumlar farklı olmalı.",
+      "result": "**{pos1}** ve **{pos2}** konumlarındaki parçaların yeri değiştirildi"
+    },
+    "removeuser": {
+      "description": "Bir kullanıcının tüm parçalarını kaldır",
+      "optionUser": "Parçaları kaldırılacak kullanıcı",
+      "none": "{user} kullanıcısına ait parça bulunamadı.",
+      "result": "{user} kullanıcısının **{count}** parçası kaldırıldı"
+    },
+    "removeabsent": {
+      "description": "Ses kanalında olmayan kullanıcıların parçalarını kaldır",
+      "notInVoice": "Bir ses kanalında olman gerekiyor.",
+      "none": "Parça isteyen herkes ses kanalında.",
+      "result": "Kanalda olmayan kullanıcıların **{count}** parçası kaldırıldı"
+    },
+    "removelast": {
+      "description": "Son N parçayı kaldır",
+      "optionCount": "Kaldırılacak sayı",
+      "result": "Son **{count}** parça kaldırıldı"
+    },
+    "removerange": {
+      "description": "Bir aralıktaki parçaları kaldır",
+      "optionStart": "Başlangıç konumu",
+      "optionEnd": "Bitiş konumu",
+      "startAfterEnd": "Başlangıç, bitişten küçük veya ona eşit olmalı.",
+      "startTooHigh": "Başlangıç konumu sıra uzunluğunu ({count}) aşıyor.",
+      "result": "**{count}** parça kaldırıldı (konumlar {start}-{end})"
+    },
+    "reverse": {
+      "description": "Sıranın düzenini ters çevir",
+      "result": "Sıra ters çevrildi"
+    }
   },
   "settings": {
-    "description": "Bu sunucu için bot ayarlarını yapılandır (Yalnızca yöneticiler)"
+    "description": "Bu sunucu için bot ayarlarını yapılandır (Yalnızca yöneticiler)",
+    "noPermission": "Bot ayarlarını yönetme iznin yok.",
+    "unknownSubcommand": "Bilinmeyen alt komut.",
+    "current": "**Mevcut:** {value}",
+    "allChannels": "Tüm kanallara izin var",
+    "allAllowed": "Hepsine izin var",
+    "on": "Açık",
+    "off": "Kapalı",
+    "yes": "Evet",
+    "no": "Hayır",
+    "enabled": "Etkin",
+    "disabled": "Devre dışı",
+    "view": {
+      "description": "Mevcut ayarları görüntüle",
+      "title": "Bot Ayarları",
+      "roles": "Roller",
+      "djRole": "DJ Rolü",
+      "djNotSet": "Ayarlanmadı (herkes DJ olabilir)",
+      "adminRole": "Yönetici Rolü",
+      "adminNotSet": "Yalnızca sunucu yöneticileri",
+      "volume": "Ses Seviyesi",
+      "default": "Varsayılan",
+      "maximum": "Maksimum",
+      "queue": "Sıra",
+      "maxSize": "Maks. Boyut",
+      "songs": "{count} şarkı",
+      "preventDuplicates": "Tekrarları Engelle",
+      "behavior": "Davranış",
+      "announcements": "Duyurular",
+      "autoLeave": "Otomatik Ayrılma",
+      "leaveTimeout": "Ayrılma Süresi",
+      "channels": "Kanallar",
+      "voiceChannels": "Ses Kanalları",
+      "textChannels": "Metin Kanalları",
+      "logChannel": "Kayıt Kanalı",
+      "logDefault": "Varsayılan (#bot-commands)",
+      "blacklist": "Kara Liste",
+      "noBlacklist": "Kara listede kullanıcı yok",
+      "premium": "Premium",
+      "tier": "Seviye",
+      "expires": "Bitiş",
+      "never": "Asla",
+      "notActive": "Aktif değil",
+      "customization": "Özelleştirme",
+      "language": "Dil",
+      "embedColor": "Embed Rengi",
+      "footer": "Ayarları değiştirmek için /settings <seçenek> kullan"
+    },
+    "djrole": {
+      "description": "Müzik kontrolü için DJ rolünü ayarla",
+      "prompt": "DJ rolünü seç. Bu role sahip kullanıcılar müzik çalmayı kontrol edebilir.",
+      "placeholder": "DJ rolünü seç",
+      "clear": "DJ Rolünü Temizle (Herkes DJ olabilir)",
+      "set": "DJ rolü {role} olarak ayarlandı",
+      "cleared": "DJ rolü temizlendi.",
+      "clearedEveryone": "DJ rolü temizlendi. Artık herkes DJ komutlarını kullanabilir."
+    },
+    "adminrole": {
+      "description": "Ayar yönetimi için yönetici rolünü ayarla",
+      "prompt": "Yönetici rolünü seç. Bu role sahip kullanıcılar bot ayarlarını değiştirebilir.",
+      "placeholder": "Yönetici rolünü seç",
+      "clear": "Yönetici Rolünü Temizle (Yalnızca sunucu yöneticileri)",
+      "set": "Yönetici rolü {role} olarak ayarlandı",
+      "cleared": "Yönetici rolü temizlendi.",
+      "clearedAdmins": "Yönetici rolü temizlendi. Artık ayarları yalnızca sunucu yöneticileri değiştirebilir."
+    },
+    "volume": {
+      "description": "Varsayılan ve maksimum ses seviyesini ayarla",
+      "optionDefault": "Varsayılan ses seviyesi (0-100)",
+      "optionMax": "İzin verilen maksimum ses seviyesi (0-100)",
+      "currentTitle": "Mevcut Ses Ayarları",
+      "defaultSet": "Varsayılan ses seviyesi %{value} olarak ayarlandı",
+      "maxSet": "Maksimum ses seviyesi %{value} olarak ayarlandı",
+      "logDefault": "Varsayılan Ses",
+      "logMax": "Maksimum Ses"
+    },
+    "queue": {
+      "description": "Sıra ayarlarını yapılandır",
+      "optionMaxSize": "Maksimum sıra boyutu (1-1000)",
+      "optionPreventDuplicates": "Sırada aynı şarkıların tekrar etmesini engelle",
+      "currentTitle": "Mevcut Sıra Ayarları",
+      "maxSet": "Maksimum sıra boyutu {value} şarkı olarak ayarlandı",
+      "duplicatesSet": "Tekrarları engelle: {value}"
+    },
+    "behavior": {
+      "description": "Bot davranışını yapılandır",
+      "optionAnnouncements": "Çalan şarkıyı metin kanalında duyur",
+      "optionAutoLeave": "Ses kanalı boşalınca ayrıl",
+      "optionLeaveTimeout": "Boş kanaldan ayrılmadan önceki süre (saniye, 30-3600)",
+      "currentTitle": "Mevcut Davranış Ayarları",
+      "announcementsSet": "Şimdi çalıyor duyuruları: {value}",
+      "autoLeaveSet": "Boşken otomatik ayrıl: {value}",
+      "timeoutSet": "Ayrılma süresi {value} saniye olarak ayarlandı"
+    },
+    "voicechannels": {
+      "description": "İzin verilen ses kanallarını ayarla",
+      "prompt": "Botun katılabileceği ses kanallarını seç.",
+      "placeholder": "İzin verilen ses kanallarını seç",
+      "allowAll": "Tüm Kanallara İzin Ver",
+      "set": "İzin verilen ses kanalları: {channels}",
+      "cleared": "Artık tüm ses kanallarına izin veriliyor."
+    },
+    "textchannels": {
+      "description": "Komutlar için izin verilen metin kanallarını ayarla",
+      "prompt": "Bot komutlarının kullanılabileceği metin kanallarını seç.",
+      "placeholder": "İzin verilen metin kanallarını seç",
+      "allowAll": "Tüm Kanallara İzin Ver",
+      "set": "İzin verilen metin kanalları: {channels}",
+      "cleared": "Artık tüm metin kanallarına izin veriliyor."
+    },
+    "logchannel": {
+      "description": "Bot kayıtları için kanalı ayarla (şimdi çalıyor vb.)",
+      "prompt": "Bot kayıt mesajları için bir kanal seç (şimdi çalıyor, sıra bitti vb.).",
+      "note": "**Not:** Kayıt kanalı ayarlanmazsa bot #bot-commands adlı bir kanal arar. Bu kanal yoksa hiçbir kayıt mesajı gönderilmez.",
+      "placeholder": "Bot mesajları için kayıt kanalı seç",
+      "useDefault": "Varsayılanı Kullan (bot-commands)",
+      "disable": "Kayıt Mesajlarını Kapat",
+      "statusDefault": "Varsayılan davranış kullanılıyor (#bot-commands aranır)",
+      "statusDisabled": "Kayıt mesajları kapalı",
+      "set": "Kayıt kanalı {channel} olarak ayarlandı",
+      "reset": "Kayıt kanalı varsayılana sıfırlandı (varsa #bot-commands kullanılacak).",
+      "disabled": "Kayıt mesajları kapatıldı."
+    },
+    "blacklist": {
+      "description": "Kullanıcı kara listesini yönet",
+      "optionAdd": "Kullanıcıyı kara listeye ekle",
+      "optionRemove": "Kullanıcıyı kara listeden çıkar",
+      "title": "Kara Listedeki Kullanıcılar",
+      "none": "Kara listede kullanıcı yok.",
+      "already": "{user} zaten kara listede.",
+      "added": "{user} kara listeye alındı ve artık botu kullanamaz.",
+      "notListed": "{user} kara listede değil.",
+      "removed": "{user} kara listeden çıkarıldı."
+    },
+    "language": {
+      "description": "Bu sunucu için bot dilini ayarla",
+      "prompt": "Bu sunucu için bot dilini seç.",
+      "placeholder": "Bir dil seç",
+      "more": "Botun desteklediği tüm dillere {command} ile ulaşabilirsin."
+    },
+    "embedcolor": {
+      "description": "Özel embed rengini ayarla",
+      "optionColor": "Hex renk kodu (örn. #FF5500)",
+      "invalid": "Geçersiz hex rengi. Lütfen şu biçimi kullan: #RRGGBB (örn. #FF5500)",
+      "set": "Embed rengi ayarlandı: {color}"
+    },
+    "reset": {
+      "description": "Tüm ayarları varsayılana sıfırla",
+      "prompt": "TÜM ayarları varsayılana sıfırlamak istediğinden emin misin? Bu işlem geri alınamaz.",
+      "confirm": "Evet, Tüm Ayarları Sıfırla",
+      "cancel": "İptal",
+      "done": "Tüm ayarlar varsayılana sıfırlandı.",
+      "cancelled": "Sıfırlama iptal edildi."
+    },
+    "stats": {
+      "description": "Sunucu müzik istatistiklerini görüntüle",
+      "title": "Müzik İstatistikleri",
+      "songsPlayed": "Toplam Çalınan Şarkı",
+      "playtime": "Toplam Çalma Süresi",
+      "playtimeValue": "{hours}sa {minutes}dk"
+    }
   },
   "stats": {
-    "description": "Bot ve oturum istatistiklerini görüntüle"
+    "description": "Bot ve oturum istatistiklerini görüntüle",
+    "bot": {
+      "description": "Bot istatistiklerini göster",
+      "title": "Bot İstatistikleri",
+      "servers": "Sunucular",
+      "users": "Kullanıcılar",
+      "channels": "Kanallar",
+      "activeQueues": "Aktif Sıralar",
+      "tracksPlaying": "Çalan Parçalar",
+      "uptime": "Çalışma Süresi",
+      "memory": "Bellek",
+      "platform": "Platform"
+    },
+    "uptime": {
+      "description": "Botun çalışma süresini göster"
+    },
+    "leaderboard": {
+      "description": "Sıra liderlik tablosunu göster",
+      "line": "{user} - {count} parça"
+    },
+    "history": {
+      "description": "Son çalınan şarkıları göster"
+    },
+    "session": {
+      "description": "Mevcut oturum bilgilerini göster",
+      "noSession": "Bu sunucuda aktif oturum yok.",
+      "title": "Oturum Bilgisi",
+      "nowPlaying": "Şimdi Çalıyor",
+      "nothing": "Hiçbir şey",
+      "tracksInQueue": "Sıradaki Şarkılar",
+      "totalDuration": "Toplam Süre"
+    }
   },
   "user": {
-    "description": "Kullanıcı profili ve tercihleri"
+    "description": "Kullanıcı profili ve tercihleri",
+    "profile": {
+      "description": "Kullanıcı profilini görüntüle",
+      "optionTarget": "Görüntülenecek kullanıcı",
+      "free": "Ücretsiz"
+    }
+  },
+  "actionLog": {
+    "action": {
+      "play": "Çalmaya başladı",
+      "pause": "Oynatmayı duraklattı",
+      "resume": "Oynatmayı sürdürdü",
+      "stop": "Oynatmayı durdurdu",
+      "skip": "Şarkıyı atladı",
+      "seek": "Konuma atladı",
+      "seek_forward": "İleri sardı",
+      "seek_backward": "Geri sardı",
+      "forward": "Hızlı ileri sardı",
+      "rewind": "Geri sardı",
+      "backward": "Geri sardı",
+      "replay": "Şarkıyı yeniden başlattı",
+      "restart": "Sırayı yeniden başlattı",
+      "volume_change": "Ses seviyesini değiştirdi",
+      "shuffle": "Sırayı karıştırdı",
+      "loop": "Döngü modunu değiştirdi",
+      "loopqueue": "Sıra döngü modunu değiştirdi",
+      "setting_change": "Ayarları güncelledi",
+      "queue_clear": "Sırayı temizledi",
+      "clear": "Sırayı temizledi",
+      "join": "Kanala katıldı",
+      "leave": "Kanaldan ayrıldı",
+      "autoplay": "Otomatik oynatmayı değiştirdi",
+      "previous": "Önceki şarkıyı çaldı",
+      "jump": "Şarkıya atladı",
+      "swap": "Şarkıların yerini değiştirdi",
+      "reverse": "Sırayı ters çevirdi",
+      "sort": "Sırayı sıraladı",
+      "removerange": "Aralığı kaldırdı",
+      "removeduplicates": "Tekrarları kaldırdı",
+      "removelast": "Son şarkıyı kaldırdı",
+      "voteskip": "Oylamayla atladı",
+      "grab": "Şarkıyı kaydetti",
+      "insert": "Şarkı ekledi",
+      "removecurrent": "Çalan şarkıyı kaldırdı"
+    },
+    "detail": {
+      "on": "Açık",
+      "off": "Kapalı",
+      "tracks": "{count} şarkı",
+      "effectsCleared": "Efektler temizlendi",
+      "bassBoost": "Bas güçlendirme {level}",
+      "effectOn": "{effect} açıldı",
+      "effectOff": "{effect} kapatıldı",
+      "previousTrack": "önceki şarkı",
+      "currentTrack": "çalan şarkı",
+      "queue": "Sıra"
+    },
+    "settings": {
+      "title": "Ayarlar Güncellendi",
+      "changed": "{user}, {setting} ayarını değiştirdi",
+      "before": "Önce",
+      "after": "Sonra",
+      "notSet": "Ayarlanmadı",
+      "userId": "Kullanıcı ID: {id}"
+    }
+  },
+  "upsell": {
+    "title": "{feature} bir Founder ayrıcalığıdır",
+    "description": "Founder aylık {price}, {spots} kişiyle sınırlı ve 320kbps ses, 24/7 modu, şarkı uzunluğu sınırının kalkmasını ve Founder rolünü açar.",
+    "afterJoin": "Katıldıktan sonra",
+    "afterJoinSteps": "1. Patreon ayarlarından Discord hesabını bağla\n2. bu sunucuda `/premium link` komutunu çalıştır",
+    "becomeFounder": "Founder ol",
+    "voteTitle": "Ya da ücretsiz oy ver",
+    "voteBody": "top.gg'de vereceğin bir oy bunu 12 saatliğine açar. `/vote` komutunu kullan.",
+    "voteButton": "top.gg'de oy ver"
+  },
+  "dashboardPlay": {
+    "noQuery": "Önce bir şarkı adı veya bağlantı gir.",
+    "notMember": "Bu sunucuda müzik çalmak için sunucunun üyesi olmalısın.",
+    "noVoiceChannel": "Discord'da bir ses kanalına katıl ya da buradan birini seç, sonra tekrar dene.",
+    "channelGone": "Bu ses kanalı artık yok. Başka birini seç.",
+    "memberCantJoin": "{channel} kanalına erişimin yok. Katılabileceğin bir ses kanalı seç.",
+    "nowPlaying": "Şimdi çalıyor: {title}",
+    "added": "Sıraya eklendi (#{position}): {title}",
+    "playlist": "{title} içinden {count} şarkı eklendi"
+  },
+  "voiceStatus": {
+    "title": "Ses kanalı durumu",
+    "missing": "Çalan şarkıyı ses kanalı adının altında gösteremiyorum çünkü **Ses Kanalı Durumunu Ayarla** iznim yok. Eklemek için beni yeniden yetkilendir; ayarların olduğu gibi kalır.",
+    "reauthorize": "Yeniden yetkilendir"
+  },
+  "guess": {
+    "description": "30 saniyelik önizlemelerden şarkıyı tahmin et, sesli kanalda arkadaşlarınla",
+    "startDescription": "Sesli kanalında bir şarkı tahmin oyunu başlat",
+    "stopDescription": "Şarkı tahmin oyununu durdur",
+    "optionRounds": "Kaç şarkı tahmin edilecek (3-15, varsayılan 5)",
+    "optionGenre": "Hangi müzik çalınsın (varsayılan: popüler hitler)",
+    "genre": {
+      "top": "Popüler hitler",
+      "pop": "Pop",
+      "rock": "Rock",
+      "hiphop": "Hip-hop",
+      "latin": "Latin",
+      "electronic": "Elektronik",
+      "80s": "80'ler",
+      "90s": "90'lar",
+      "2000s": "2000'ler"
+    },
+    "title": "Şarkıyı Tahmin Et",
+    "trackTitle": "Şarkıyı tahmin et · {round}. tur",
+    "notInVoice": "Önce bir sesli kanala katıl, sonra oyunu başlat.",
+    "alreadyRunning": "Bu sunucuda zaten bir şarkı tahmin oyunu sürüyor.",
+    "musicPlaying": "Burada müzik çalıyor. Önce durdur (/stop), sonra oyunu başlat.",
+    "otherChannel": "{channel} kanalında kalıyorum (24/7). Oyunu oradan başlat.",
+    "noVoicePermission": "Sesli kanalına katılamıyorum veya konuşamıyorum.",
+    "noChannelAccess": "Bu kanala mesaj gönderemiyorum. Oyunu mesaj gönderebildiğim bir yerde başlat.",
+    "noTracks": "Şu anda bu türden şarkılar yüklenemedi. Başka bir tür dene ya da bir dakika sonra tekrar dene.",
+    "connectFailed": "Sesli kanalına katılamadım. Lütfen tekrar dene.",
+    "introMeta": "{rounds} tur · {genre}",
+    "introBody": "{channel} kanalında dinle ve çalan şarkıyı seç. İlk doğru cevap puan alır, ne kadar hızlı cevaplarsan o kadar çok puan. Yanlış seçim seni o turdan çıkarır.",
+    "introStarting": "İlk şarkı birkaç saniye içinde…",
+    "introOver": "Bu oyun bitti.",
+    "stopButton": "Oyunu durdur",
+    "roundTitle": "Tur {round}/{total}",
+    "roundPrompt": "Hangi şarkı çalıyor?",
+    "roundCloses": "Cevaplar {time} kapanıyor",
+    "roundRules": "ilk doğru cevap puan alır",
+    "correctBy": "{user} {seconds} sn'de bildi (+{points})",
+    "timeUp": "Süre doldu! Kimse bilemedi.",
+    "roundStopped": "Oyun durduruldu.",
+    "answerWas": "Şarkı **{artist}** - **{title}** idi",
+    "scores": "Puanlar",
+    "scoreLine": "{user} · {points} puan ({correct} doğru)",
+    "noScores": "Henüz puan yok.",
+    "nextSoon": "Sonraki şarkı birkaç saniye içinde…",
+    "finalSoon": "Final puanları geliyor…",
+    "finalTitle": "Final puanları",
+    "winner": "{user} {points} puanla kazandı!",
+    "noWinner": "Bu sefer kimse puan alamadı.",
+    "playAgain": "{command} ile tekrar oyna",
+    "stoppedBy": "Oyun {user} tarafından durduruldu.",
+    "stoppedPlain": "Oyun durduruldu.",
+    "endedEmpty": "Herkes sesli kanaldan ayrıldı, bu yüzden oyun bitti.",
+    "endedDisconnected": "Sesli kanaldan bağlantım koptu, bu yüzden oyun bitti.",
+    "endedMusic": "Müzik çalmaya başladı, bu yüzden oyun bitti.",
+    "endedError": "Şarkı önizlemeleri çalınamadı, bu yüzden oyun bitti.",
+    "wrong": "Yanlış! Bu turda elendin.",
+    "alreadyAnswered": "Bu turda zaten cevap verdin.",
+    "roundOver": "Bu tur bitti.",
+    "gameOver": "Bu oyun bitti.",
+    "joinToPlay": "Oynamak için {channel} kanalına katıl.",
+    "stopNotAllowed": "Oyunu yalnızca başlatan kişi veya Sunucuyu Yönet yetkisi olan biri durdurabilir.",
+    "noGame": "Burada süren bir şarkı tahmin oyunu yok.",
+    "stopped": "Oyun durduruldu.",
+    "blockedDuringGame": "Bu sunucuda bir şarkı tahmin oyunu sürüyor. Bitmesini bekle ya da {stop} ile sonlandır."
   }
 }
