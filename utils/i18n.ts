@@ -246,3 +246,56 @@ export function descriptionLocalizations(key: string): Record<string, string> | 
   }
   return Object.keys(result).length ? result : undefined;
 }
+
+let englishIndex: Map<string, string[]> | null = null;
+
+/** English text → every key whose en.json value is exactly that text. */
+function keysForEnglish(text: string): string[] {
+  if (!englishIndex) {
+    englishIndex = new Map();
+    const walk = (node: Record<string, any>, prefix: string) => {
+      for (const [k, v] of Object.entries(node)) {
+        const key = prefix ? `${prefix}.${k}` : k;
+        if (typeof v === "string") {
+          const list = englishIndex!.get(v);
+          if (list) list.push(key);
+          else englishIndex!.set(v, [key]);
+        } else if (v && typeof v === "object") walk(v, key);
+      }
+    };
+    walk(base.getCatalog("en") as Record<string, any>, "");
+  }
+  return englishIndex.get(text) ?? [];
+}
+
+/** Localizations for a builder string that was written with i18n.__ at load time. */
+function localizationsForText(text: string | undefined, command: string): Record<string, string> | undefined {
+  if (!text) return undefined;
+  const keys = keysForEnglish(text);
+  if (!keys.length) return undefined;
+  const key = keys.find((k) => k.startsWith(`${command}.`)) ?? keys[0];
+  return descriptionLocalizations(key);
+}
+
+/**
+ * Fill `description_localizations` on a slash command's subcommands and
+ * options, and `name_localizations` on choices, from the locale catalogs.
+ * Builders call `i18n.__("x.y")` at module load (English), so each English
+ * text is mapped back to its key and that key's translations are attached.
+ * Strings without a key stay English-only.
+ */
+export function localizeCommandJson(json: any): any {
+  const command = json.name as string;
+  json.description_localizations ??= descriptionLocalizations(`${command}.description`) ?? localizationsForText(json.description, command);
+  const walk = (options: any[] | undefined) => {
+    for (const option of options ?? []) {
+      option.description_localizations ??= localizationsForText(option.description, command);
+      for (const choice of option.choices ?? []) {
+        choice.name_localizations ??= localizationsForText(choice.name, command);
+      }
+      walk(option.options);
+    }
+  };
+  walk(json.options);
+  return json;
+}

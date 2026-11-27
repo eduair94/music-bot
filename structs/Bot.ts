@@ -42,7 +42,7 @@ import {
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { localeForInteraction } from "../utils/guildLocale";
-import { descriptionLocalizations, i18n, runWithLocale } from "../utils/i18n";
+import { i18n, localizeCommandJson, runWithLocale } from "../utils/i18n";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
 import { commands as commandRegistry, contextMenus, setCommandId } from "./commandRegistry";
 import { getComponentHandler } from "./componentRouter";
@@ -392,8 +392,7 @@ export class Bot {
     const slash = [...commandRegistry.values()].filter((command) => command.isAvailable?.() ?? true).map((command) => {
       const json = command.data.toJSON() as any;
       Object.assign(json, command.userInstallable ? everywhere : guildOnly);
-      json.description_localizations ??= descriptionLocalizations(`${json.name}.description`);
-      return json;
+      return localizeCommandJson(json);
     });
     const menus = [...contextMenus.values()].map((menu) => {
       const json = menu.data.toJSON() as any;
