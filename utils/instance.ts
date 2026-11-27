@@ -1,4 +1,5 @@
 import { fleetKeys, instanceName, parseInstance } from "../shared/fleet";
+import type { IGuildSettings, IStay247Settings } from "../shared/types";
 
 /**
  * Which fleet instance this process is (env BOT_INSTANCE, default 1).
@@ -32,7 +33,17 @@ export const instanceKeys = {
   events: fleetKeys.events
 } as const;
 
-/** Log prefix that tells instances apart in shared logs. */
-export function instanceTag(): string {
-  return isPrimary ? "" : `[#${INSTANCE}] `;
+/**
+ * This instance's 24/7 state: instance 1 keeps the top-level `stay247`,
+ * instances 2+ live under `fleet.stay247.<n>` so they never take over the
+ * primary's channel.
+ */
+export function stay247Of(settings: Pick<IGuildSettings, "stay247" | "fleet"> | null | undefined, instance = INSTANCE): IStay247Settings | undefined {
+  if (!settings) return undefined;
+  return instance === 1 ? settings.stay247 : settings.fleet?.stay247?.[String(instance)];
+}
+
+/** Settings update that writes this instance's 24/7 state. */
+export function stay247Update(value: IStay247Settings, instance = INSTANCE): Partial<IGuildSettings> {
+  return instance === 1 ? { stay247: value } : ({ [`fleet.stay247.${instance}`]: value } as Partial<IGuildSettings>);
 }

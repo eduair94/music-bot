@@ -1,8 +1,9 @@
 import { execFile } from "child_process";
 import { Client, version as discordJsVersion } from "discord.js";
 import { BotEvent as BotEventModel } from "../models/BotEvent";
-import { GuildData, isRedisAvailable, setBotStatus, syncBotGuildsWithData } from "../shared/services/redis";
+import { GuildData, isRedisAvailable, setBotStatus, syncBotGuildsWithData, syncInstanceGuilds } from "../shared/services/redis";
 import type { BotEvent, ErrorScope, IBotHeartbeat } from "../shared/types";
+import { INSTANCE, isPrimary } from "../utils/instance";
 import { DatabaseService } from "./database";
 import { DiscordPlayerService } from "./discordPlayer";
 import { PatreonService } from "./patreon";
@@ -10,6 +11,18 @@ import { errorMessage } from "./telemetry/events";
 import { buildHeartbeat, cpuPercent } from "./telemetry/heartbeat";
 
 const HEARTBEAT_MS = 20_000;
+
+/**
+ * Publish which servers this instance is in: every instance keeps its own
+ * `bot:guilds:<n>` set; only the primary writes the legacy `bot:guilds` set
+ * and the per-guild metadata (`bot:guild:<id>`).
+ */
+export async function syncGuildPresence(client: Client): Promise<number> {
+  const guilds = collectGuildData(client);
+  if (isPrimary) await syncBotGuildsWithData(guilds);
+  await syncInstanceGuilds(INSTANCE, guilds.map((g) => g.id));
+  return guilds.length;
+}
 
 /** Snapshot of guild data the dashboard reads from Redis (`bot:guild:<id>`). */
 export function collectGuildData(client: Client): GuildData[] {
@@ -77,7 +90,7 @@ export class TelemetryService {
   /** Publish an explicit offline status (gateway closed / session invalidated). Never throws. */
   public async markOffline(reason: string): Promise<void> {
     try {
-      await setBotStatus({ online: false, reason, ts: new Date().toISOString() });
+      await setBotStatus({ online: false, reason, ts: new Date().toISOString() }, INSTANCE);
     } catch (error) {
       console.error("[Telemetry] markOffline failed:", errorMessage(error));
     }
@@ -124,10 +137,9 @@ export class TelemetryService {
   /** Re-publish guild data and a heartbeat (used by the dashboard `admin_resync` action). */
   public async resyncNow(): Promise<{ guilds: number }> {
     if (!this.client) throw new Error("Telemetry not started");
-    const guilds = collectGuildData(this.client);
-    await syncBotGuildsWithData(guilds);
+    const guilds = await syncGuildPresence(this.client);
     await this.tick();
-    return { guilds: guilds.length };
+    return { guilds };
   }
 
   public async tick(): Promise<void> {
@@ -173,7 +185,7 @@ export class TelemetryService {
         },
         lastError: this.lastError
       });
-      await setBotStatus(hb);
+      await setBotStatus(hb, INSTANCE);
     } catch (error) {
       console.error("[Telemetry] Heartbeat failed:", errorMessage(error));
     }

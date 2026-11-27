@@ -11,15 +11,10 @@ import {
 } from "discord.js";
 import { Types } from "mongoose";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
-import { ITrack, PlaybackState } from "../models/PlaybackState";
-import {
-    clearPlaybackState as clearRedisPlaybackState,
-    isRedisAvailable,
-    setPlaybackState as setRedisPlaybackState
-} from "../shared/services/redis";
 import { truncate } from "../utils/format";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
+import { stay247Of } from "../utils/instance";
 import {
     ChannelLabel,
     enqueue,
@@ -30,6 +25,7 @@ import {
     playRejectionMessage
 } from "../utils/playFlow";
 import { DiscordPlayerService, isGuessGameQueue, PlayError, QueueMetadata } from "./discordPlayer";
+import { clearPlayback, ensurePlaybackIndexes, publishPlayback, startPlaybackRefresher } from "./fleet/playbackState";
 import { GuildSettingsService } from "./guildSettings";
 
 /** Outcome of a dashboard play request, already in the server's language. */
@@ -50,8 +46,9 @@ const channelName: ChannelLabel = (_id, name) => `#${name}`;
  * DashboardSyncService - Syncs bot state with the dashboard via MongoDB
  * 
  * This service handles:
- * 1. Writing playback state to MongoDB when player events occur
- * 2. Polling for commands from the dashboard and executing them
+ * 1. Publishing this instance's playback state (Redis + live stream on every
+ *    player event and every 5 s while connected; Mongo mirror on events)
+ * 2. Polling for commands addressed to this instance and executing them
  */
 export class DashboardSyncService {
   private static instance: DashboardSyncService;
@@ -59,6 +56,7 @@ export class DashboardSyncService {
   private player: Player | null = null;
   private playerService: DiscordPlayerService | null = null;
   private pollInterval: NodeJS.Timeout | null = null;
+  private refreshTimer: NodeJS.Timeout | null = null;
   private initialized = false;
 
   private constructor() {}
@@ -91,6 +89,8 @@ export class DashboardSyncService {
 
     // Set up player event listeners for state sync
     this.setupPlayerEventListeners();
+    this.refreshTimer = startPlaybackRefresher(() => this.playerService?.getPlayer() ?? null);
+    void this.migratePlaybackIndexes();
 
     // Start polling for dashboard commands
     this.startCommandPolling();
@@ -174,129 +174,21 @@ export class DashboardSyncService {
     checkAndSetup();
   }
 
-  /**
-   * Update playback state in MongoDB
-   */
+  /** Key `playbackstates` by (guildId, instance); retried until the database is up. */
+  private async migratePlaybackIndexes(attempt = 0): Promise<void> {
+    if (await ensurePlaybackIndexes()) return;
+    if (attempt >= 20) return;
+    setTimeout(() => void this.migratePlaybackIndexes(attempt + 1), 30_000).unref();
+  }
+
+  /** Publish this instance's state for the queue (Redis, live stream, Mongo mirror). */
   private async updatePlaybackState(queue: GuildQueue): Promise<void> {
-    if (!queue.guild) return;
-
-    try {
-      const guildId = queue.guild.id;
-      const metadata = (queue.metadata || {}) as QueueMetadata;
-      const voiceChannel = queue.channel as VoiceChannel | null;
-      
-      // Get current track from metadata workaround or queue.currentTrack
-      const currentTrack = metadata.currentTrack || queue.currentTrack;
-
-      // Build the playback state
-      const state = {
-        guildId,
-        isConnected: !!voiceChannel,
-        voiceChannelId: voiceChannel?.id || null,
-        voiceChannelName: voiceChannel?.name || null,
-        textChannelId: metadata.channel?.id || null,
-        isPlaying: queue.node.isPlaying(),
-        isPaused: queue.node.isPaused(),
-        volume: queue.node.volume,
-        currentTrack: currentTrack ? this.formatTrack(currentTrack) : null,
-        currentPosition: queue.node.streamTime || 0,
-        queue: queue.tracks.toArray().slice(0, 50).map(t => this.formatTrack(t)),
-        queueSize: queue.tracks.size,
-        loopMode: this.getLoopMode(queue),
-        audioBitrate: metadata.audioBitrate || 96,
-        playbackStartedAt: currentTrack ? new Date() : null,
-        lastUpdated: new Date(),
-      };
-
-      // Write to Redis first (faster, real-time)
-      try {
-        if (await isRedisAvailable()) {
-          await setRedisPlaybackState(guildId, state);
-        }
-      } catch (redisError) {
-        console.warn("[DashboardSync] Redis write failed, falling back to MongoDB only:", redisError);
-      }
-
-      // Upsert the state to MongoDB (backup/persistence)
-      // Two events in the same tick (trackAdd + playerStart) can both try to
-      // insert; the loser hits E11000 and just updates the winner's document.
-      try {
-        await PlaybackState.findOneAndUpdate({ guildId }, state, { upsert: true, new: true });
-      } catch (error: any) {
-        if (error?.code !== 11000) throw error;
-        await PlaybackState.findOneAndUpdate({ guildId }, state, { new: true });
-      }
-
-      console.log(`[DashboardSync] 📤 Updated playback state for guild ${guildId}`);
-    } catch (error) {
-      console.error("[DashboardSync] ❌ Failed to update playback state:", error);
-    }
+    await publishPlayback(queue, true);
   }
 
-  /**
-   * Clear playback state from MongoDB and Redis
-   */
+  /** This instance left the server's voice channel: drop its state. */
   private async clearPlaybackState(guildId?: string): Promise<void> {
-    if (!guildId) return;
-
-    try {
-      // Clear from Redis first
-      try {
-        if (await isRedisAvailable()) {
-          await clearRedisPlaybackState(guildId);
-        }
-      } catch (redisError) {
-        console.warn("[DashboardSync] Redis clear failed:", redisError);
-      }
-
-      // Clear from MongoDB
-      await PlaybackState.deleteOne({ guildId });
-      console.log(`[DashboardSync] 🗑️ Cleared playback state for guild ${guildId}`);
-    } catch (error) {
-      console.error("[DashboardSync] ❌ Failed to clear playback state:", error);
-    }
-  }
-
-  /**
-   * Format a track for the playback state
-   */
-  private formatTrack(track: Track): ITrack {
-    return {
-      title: track.title,
-      author: track.author,
-      url: track.url,
-      thumbnail: track.thumbnail || "",
-      duration: track.durationMS,
-      requestedBy: {
-        id: track.requestedBy?.id || "unknown",
-        username: track.requestedBy?.username || "Unknown",
-        avatar: track.requestedBy?.avatar || null,
-      },
-      source: this.getTrackSource(track.source),
-    };
-  }
-
-  /**
-   * Get the loop mode string
-   */
-  private getLoopMode(queue: GuildQueue): "off" | "track" | "queue" {
-    switch (queue.repeatMode) {
-      case 1: return "track";
-      case 2: return "queue";
-      default: return "off";
-    }
-  }
-
-  /**
-   * Get the track source
-   */
-  private getTrackSource(source: string): "youtube" | "spotify" | "soundcloud" | "file" | "unknown" {
-    const s = source.toLowerCase();
-    if (s.includes("youtube")) return "youtube";
-    if (s.includes("spotify")) return "spotify";
-    if (s.includes("soundcloud")) return "soundcloud";
-    if (s.includes("attachment") || s.includes("file")) return "file";
-    return "unknown";
+    await clearPlayback(guildId);
   }
 
   /**
@@ -758,7 +650,7 @@ export class DashboardSyncService {
     };
 
     const settings = await GuildSettingsService.getInstance().getSettings(guild.id).catch(() => null);
-    for (const id of [settings?.stay247?.textChannelId, ...(settings?.allowedTextChannels ?? [])]) {
+    for (const id of [stay247Of(settings)?.textChannelId, ...(settings?.allowedTextChannels ?? [])]) {
       const channel = usable(id);
       if (channel) return channel;
     }
@@ -783,6 +675,10 @@ export class DashboardSyncService {
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
       this.pollInterval = null;
+    }
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer);
+      this.refreshTimer = null;
     }
     console.log("[DashboardSync] 🛑 Dashboard sync service stopped");
   }
