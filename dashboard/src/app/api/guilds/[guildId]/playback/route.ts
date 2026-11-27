@@ -1,69 +1,29 @@
-import { auth } from "@/auth";
-import { fetchUserGuilds, hasManagePermission } from "@/lib/discord";
-import { IPlaybackState, PlaybackState } from "@/lib/models/PlaybackState";
-import { connectToDatabase } from "@/lib/mongodb";
-import { getPlaybackState as getRedisPlaybackState } from "@/lib/redis";
+import { idlePlaybackState, readPlayback, requireGuildMember } from "@/lib/fleet";
 import { NextResponse } from "next/server";
+import { parseInstance } from "../../../../../../../shared/fleet";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface RouteContext {
   params: Promise<{ guildId: string }>;
 }
 
-// GET playback state for a guild
+/**
+ * GET /api/guilds/[guildId]/playback?instance=n — one instance's playback
+ * state (default instance 1); an idle state when it isn't connected.
+ * Positions are measured at `positionAt`; clients interpolate.
+ */
 export async function GET(request: Request, { params }: RouteContext) {
-  const session = await auth();
-  
-  if (!session?.accessToken) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { guildId } = await params;
+  const raw = new URL(request.url).searchParams.get("instance");
+  const instance = raw === null ? 1 : parseInstance(raw);
+  if (!instance) return NextResponse.json({ error: "instance must be 1-8" }, { status: 400 });
 
-  // Verify user has permission
-  const guilds = await fetchUserGuilds(session.accessToken);
-  const guild = guilds.find((g) => g.id === guildId);
-
-  if (!guild || !hasManagePermission(guild.permissions)) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  const access = await requireGuildMember(guildId);
+  if (!access.ok) return access.response;
 
   try {
-    // Try Redis first (faster, more real-time)
-    const redisState = await getRedisPlaybackState(guildId);
-    if (redisState) {
-      return NextResponse.json(redisState);
-    }
-
-    // Fall back to MongoDB
-    await connectToDatabase();
-    const state = await PlaybackState.findOne({ guildId }).lean();
-    
-    if (!state) {
-      // Return default empty state
-      const defaultState: Partial<IPlaybackState> = {
-        guildId,
-        isConnected: false,
-        voiceChannelId: null,
-        voiceChannelName: null,
-        textChannelId: null,
-        isPlaying: false,
-        isPaused: false,
-        volume: 80,
-        currentTrack: null,
-        currentPosition: 0,
-        queue: [],
-        queueSize: 0,
-        loopMode: "off",
-        audioBitrate: 128,
-        lastUpdated: new Date(),
-        playbackStartedAt: null,
-      };
-      return NextResponse.json(defaultState);
-    }
-
-    return NextResponse.json(state);
+    return NextResponse.json((await readPlayback(guildId, instance)) ?? idlePlaybackState(guildId, instance));
   } catch (error) {
     console.error("Error fetching playback state:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
