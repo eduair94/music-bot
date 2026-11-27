@@ -122,6 +122,14 @@ export interface IStay247Settings {
   enabledAt: Date | null;
 }
 
+/** Per-server fleet settings, keyed by instance number ("2", "3", …). */
+export interface IFleetSettings {
+  /** Voice channel an instance is pinned to ("Bypass 2 serves #Gaming"). */
+  bindings?: Record<string, string | null>;
+  /** 24/7 state of instances 2+ (instance 1 keeps the top-level `stay247`). */
+  stay247?: Record<string, IStay247Settings>;
+}
+
 export interface IGuildSettings {
   /** Discord guild ID */
   guildId: string;
@@ -165,6 +173,8 @@ export interface IGuildSettings {
   autoplay?: boolean;
   /** 24/7: stay connected and rejoin after restarts */
   stay247?: IStay247Settings;
+  /** Multi-bot fleet (see shared/fleet.ts) */
+  fleet?: IFleetSettings;
 
   // Premium Features
   /** Premium configuration */
@@ -282,6 +292,16 @@ export interface IPlaybackState {
   lastUpdated: Date;
   /** When playback started */
   playbackStartedAt: Date | null;
+  /** Fleet instance that owns this state (missing on pre-fleet documents = 1) */
+  instance?: number;
+  /** Epoch ms when currentPosition was measured */
+  positionAt?: number;
+  /** Autoplay on for this session */
+  autoplay?: boolean;
+  /** Active audio effects */
+  filters?: string[];
+  /** People (not bots) in the voice channel */
+  listeners?: number;
 }
 
 // ============================================================================
@@ -340,6 +360,8 @@ export type PlayerCommandType =
   | "transfer"
   // Repeat
   | "repeat"
+  // Audio effects
+  | "filter"
   // Search
   | "search";
 
@@ -384,6 +406,26 @@ export interface BotCommandParams {
   seconds?: number;
   /** Voice channel to join */
   voiceChannelId?: string;
+  /** Text channel for the player card (fleet dispatch) */
+  textChannelId?: string;
+  /** Toggle target for autoplay/filter (missing = toggle) */
+  enabled?: boolean;
+  /** Effect name for filter ("nightcore", "8d", "bassboost", "clear", …) */
+  name?: string;
+  /** Bass boost level for filter name "bassboost" */
+  level?: "off" | "low" | "medium" | "high";
+  /** Queue positions (0-based) for a multi-remove */
+  positions?: number[];
+  /** play: insert at the front of the queue */
+  next?: boolean;
+  /** play: skip the current song once queued next (/playnow) */
+  now?: boolean;
+  /** play: turn autoplay on afterwards (/radio) */
+  autoplay?: boolean;
+  /** play: search source ("youtube" | "soundcloud") */
+  source?: string;
+  /** Language for the result message (Discord locale of the requester) */
+  locale?: string;
 }
 
 /**
@@ -392,6 +434,8 @@ export interface BotCommandParams {
 export interface IBotCommand {
   /** Guild ID (for player commands) */
   guildId?: string;
+  /** Fleet instance that must run it (missing = 1) */
+  instance?: number;
   /** User who sent command */
   userId?: string;
   /** Bot ID (for linked bot commands) */
@@ -406,6 +450,8 @@ export interface IBotCommand {
   status: CommandStatus;
   /** Result message */
   result?: string;
+  /** Structured result (e.g. search: { results }) */
+  data?: unknown;
   /** Error message */
   error?: string;
   /** When command was created */
