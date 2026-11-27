@@ -245,11 +245,24 @@ export function normalizeConfig(input: unknown): PermissionConfig {
   return config;
 }
 
+/** Whether the server saved its own rules (otherwise they are derived from the legacy DJ role). */
+export function hasSavedConfig(settings: LegacySettingsLike | null | undefined): boolean {
+  const saved = settings?.permissionConfig;
+  return Boolean(saved && typeof saved === "object" && Object.keys(saved as object).length > 0);
+}
+
 /** The configuration in force for a server: the saved one, or the legacy equivalent. */
 export function resolveConfig(settings: LegacySettingsLike | null | undefined): PermissionConfig {
-  const saved = settings?.permissionConfig;
-  if (saved && typeof saved === "object" && Object.keys(saved as object).length > 0) return normalizeConfig(saved);
-  return migrateFromLegacy(settings);
+  return hasSavedConfig(settings) ? normalizeConfig(settings!.permissionConfig) : migrateFromLegacy(settings);
+}
+
+/**
+ * Follow a change of the legacy single DJ role (/settings djrole, the old
+ * settings form) in a saved configuration: the old role out, the new one in.
+ */
+export function replaceDjRole(config: PermissionConfig, oldRoleId: string | null | undefined, newRoleId: string | null): PermissionConfig {
+  const kept = config.djRoles.filter((id) => id !== oldRoleId);
+  return { ...config, djRoles: newRoleId && !kept.includes(newRoleId) ? [...kept, newRoleId] : kept };
 }
 
 // ----------------------------------------------------------- validation

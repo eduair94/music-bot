@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import type { IGuildSettings } from "../../models/GuildSettings";
 import { GuildSettingsService } from "../../services/guildSettings";
-import { normalizeConfig } from "../../shared/permissions";
+import { hasSavedConfig, normalizeConfig, replaceDjRole } from "../../shared/permissions";
 import { i18n } from "../../utils/i18n";
 import { SettingsHandlerContext } from "./types";
 
@@ -42,12 +42,8 @@ export async function handleDJRole({ interaction }: SettingsHandlerContext) {
 async function djRoleUpdate(guildId: string, roleId: string | null): Promise<Partial<IGuildSettings>> {
   const settings = await GuildSettingsService.getInstance().getSettings(guildId);
   const updates: Partial<IGuildSettings> = { djRoleId: roleId };
-  const saved = settings.permissionConfig;
-  if (saved && Object.keys(saved).length > 0) {
-    const config = normalizeConfig(saved);
-    const kept = config.djRoles.filter((id) => id !== settings.djRoleId);
-    config.djRoles = roleId && !kept.includes(roleId) ? [...kept, roleId] : kept;
-    updates.permissionConfig = config;
+  if (hasSavedConfig(settings)) {
+    updates.permissionConfig = replaceDjRole(normalizeConfig(settings.permissionConfig), settings.djRoleId, roleId);
   }
   return updates;
 }

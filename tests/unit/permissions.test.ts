@@ -11,10 +11,12 @@ import {
   createDefaultConfig,
   describeDenial,
   evaluate,
+  hasSavedConfig,
   isChannelAllowedForInstance,
   migrateFromLegacy,
   normalizeConfig,
   parsePermissionConfig,
+  replaceDjRole,
   resolveConfig
 } from "../../shared/permissions";
 
@@ -276,5 +278,23 @@ describe("locale strings", () => {
     expect(typeof en.permissions.voteSkipOff).toBe("string");
     // MessageFormat treats apostrophes as escapes; keep them out of these strings.
     expect(JSON.stringify(en.permissions.deny)).not.toContain("'");
+  });
+});
+
+describe("replaceDjRole / hasSavedConfig", () => {
+  it("swaps the legacy DJ role inside a saved list", () => {
+    const config = createDefaultConfig();
+    config.djRoles = [DJ, MOD];
+    expect(replaceDjRole(config, DJ, MUTED).djRoles).toEqual([MOD, MUTED]);
+    expect(replaceDjRole(config, DJ, null).djRoles).toEqual([MOD]);
+    expect(replaceDjRole(config, null, MOD).djRoles).toEqual([DJ, MOD]);
+    expect(config.djRoles).toEqual([DJ, MOD]);
+  });
+
+  it("treats null and empty configs as not saved", () => {
+    expect(hasSavedConfig({ permissionConfig: null })).toBe(false);
+    expect(hasSavedConfig({ permissionConfig: {} })).toBe(false);
+    expect(hasSavedConfig({ permissionConfig: createDefaultConfig() })).toBe(true);
+    expect(hasSavedConfig(null)).toBe(false);
   });
 });
