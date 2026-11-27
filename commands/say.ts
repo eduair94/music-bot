@@ -1,8 +1,10 @@
 import { ChatInputCommandInteraction, GuildMember, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { servedByOtherInstance } from "../services/fleet/dispatcher";
 import { GuildSettingsService } from "../services/guildSettings";
 import { TTS_LANGUAGES, TTS_SPEAKERS, TTSLanguage, ttsService, TTSSpeaker } from "../services/tts";
 import { i18n } from "../utils/i18n";
+import { listenersElsewhere } from "../utils/playFlow";
 
 /**
  * /say command - Text-to-Speech using Replicate's Qwen3-TTS
@@ -76,6 +78,18 @@ export default {
         ephemeral: true,
       }).catch(console.error);
     }
+
+    // Speaking would queue into the music of people listening in another channel.
+    const busyIn = interaction.guild ? listenersElsewhere(interaction.guild, voiceChannel.id) : null;
+    if (busyIn) {
+      return interaction.reply({
+        content: `🎧 ${i18n.__mf("play.botNotInChannel", { channel: `<#${busyIn.id}>` })}`,
+        ephemeral: true,
+      }).catch(console.error);
+    }
+    // Another Bypass instance plays in this channel: don't join on top of it.
+    const servedBy = await servedByOtherInstance(interaction);
+    if (servedBy) return interaction.reply({ content: servedBy, ephemeral: true }).catch(console.error);
 
     await interaction.deferReply();
     const textChannel = interaction.channel as TextChannel;

@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} har inte behörighet i den här kanalen",
       "invite": "Lägg till en till Bypass för att spela i fler kanaler samtidigt:",
       "add": "Lägg till {bot}",
-      "premium": "Bypass 5 till 8 ingår i Premium."
+      "premium": "Bypass 5 till 8 ingår i Premium.",
+      "servedHere": "{bot} spelar redan i {channel}. Använd /play och kontrollerna där, eller gå med i en annan röstkanal.",
+      "stay247On": "24/7 på för {bot}: den stannar i {channel} och ansluter igen efter omstarter.",
+      "stay247Off": "24/7 av för {bot}."
     },
     "info": {
       "header": "{bot} i {channel}",

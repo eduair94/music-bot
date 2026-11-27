@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} bu kanala giremiyor",
       "invite": "Aynı anda daha fazla kanalda çalmak için başka bir Bypass ekle:",
       "add": "{bot} ekle",
-      "premium": "Bypass 5 ile 8 arası Premium ile gelir."
+      "premium": "Bypass 5 ile 8 arası Premium ile gelir.",
+      "servedHere": "{bot} zaten {channel} kanalında çalıyor. Oradaki /play komutunu ve kontrolleri kullan ya da başka bir ses kanalına katıl.",
+      "stay247On": "{bot} için 24/7 açık: {channel} kanalında kalır ve yeniden başlatmalardan sonra tekrar katılır.",
+      "stay247Off": "{bot} için 24/7 kapalı."
     },
     "info": {
       "header": "{bot} - {channel}",

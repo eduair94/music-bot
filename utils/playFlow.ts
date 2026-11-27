@@ -34,6 +34,8 @@ export interface PlayRequest {
   now?: boolean;
   /** /radio: autoplay on afterwards (applied by a fleet instance it is handed to). */
   radio?: boolean;
+  /** Play here, skipping fleet routing: the caller already routed the request. */
+  local?: boolean;
 }
 
 /**
@@ -193,6 +195,17 @@ export function buildPlayReply(result: PlayResult, query: string, qualityBadge: 
   return container;
 }
 
+/**
+ * The channel where this bot plays for people, when it is not `voiceChannelId`.
+ * Moving the bot from there would hijack their music.
+ */
+export function listenersElsewhere(guild: Guild, voiceChannelId: string): VoiceBasedChannel | null {
+  const queue = DiscordPlayerService.getInstance().getQueue(guild.id);
+  const botChannel = guild.members.me?.voice.channel ?? null;
+  if (!botChannel || botChannel.id === voiceChannelId || !queue || queue.deleted || !queue.currentTrack) return null;
+  return botChannel.members.some((m) => !m.user.bot) ? botChannel : null;
+}
+
 export interface EnqueueRequest {
   guild: Guild;
   /** Who asked: their quality setting and premium perks apply, and they show as the requester. */
@@ -323,7 +336,7 @@ export async function runPlay(request: PlayRequest): Promise<PlayResult | null> 
 
   // Fleet: another Bypass instance may serve the requester's channel; then
   // the request is handed over (or refused) and answered there.
-  if (await dispatchPlay(request)) return null;
+  if (!request.local && (await dispatchPlay(request))) return null;
 
   try {
     const result = await enqueue(

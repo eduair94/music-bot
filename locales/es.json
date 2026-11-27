@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} no tiene permiso en este canal",
       "invite": "Añade otro Bypass para reproducir en más canales a la vez:",
       "add": "Añadir {bot}",
-      "premium": "Bypass 5 a 8 vienen con Premium."
+      "premium": "Bypass 5 a 8 vienen con Premium.",
+      "servedHere": "{bot} ya está reproduciendo en {channel}. Usa /play y los controles de ahí, o únete a otro canal de voz.",
+      "stay247On": "24/7 activado para {bot}: se queda en {channel} y vuelve a entrar tras los reinicios.",
+      "stay247Off": "24/7 desactivado para {bot}."
     },
     "info": {
       "header": "{bot} en {channel}",

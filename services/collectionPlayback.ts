@@ -1,4 +1,4 @@
-import { QueryType, Track } from "discord-player";
+import { GuildQueue, QueryType, Track } from "discord-player";
 import {
   ContainerBuilder,
   GuildMember,
@@ -7,10 +7,12 @@ import {
   RepliableInteraction,
   User
 } from "discord.js";
-import type { ICollection, ICollectionTrack } from "../models/Collection";
+import type { ICollection } from "../models/Collection";
+import type { BusCollectionTrack } from "../shared/types";
 import { formatDuration, safeText } from "../utils/format";
 import { i18n } from "../utils/i18n";
 import { PlayRejection, playRejectionMessage, runPlay } from "../utils/playFlow";
+import { dispatchPlay } from "./fleet/dispatcher";
 import { hasPremiumFeature } from "../utils/premiumCheck";
 import { DiscordPlayerService, isGuessGameQueue } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
@@ -27,9 +29,6 @@ import { GuildSettingsService } from "./guildSettings";
  * collection doesn't need 300 searches up front.
  */
 export type LoadMode = "next" | "end";
-
-/** How many songs to try before giving up when the first ones won't play. */
-const FIRST_TRACK_ATTEMPTS = 3;
 
 const ACCENT = 0xf8aa2a;
 
@@ -51,7 +50,7 @@ function isDirectlyStreamable(url: string): boolean {
   return /(^|\.)youtube\.com$/.test(host) || host === "youtu.be" || /(^|\.)soundcloud\.com$/.test(host);
 }
 
-function searchText(track: ICollectionTrack): string {
+function searchText(track: BusCollectionTrack): string {
   const artist = track.author && track.author !== "Unknown" && track.author !== "Unknown Artist" ? track.author : "";
   return artist ? `${artist} - ${track.title}` : track.title;
 }
@@ -61,21 +60,21 @@ function searchText(track: ICollectionTrack): string {
  * they are, "ytsearch1:" queries as they are, and anything else (Spotify
  * links, old dead links) as a YouTube search for "Artist - Title".
  */
-export function streamUrlFor(track: ICollectionTrack): string {
+export function streamUrlFor(track: BusCollectionTrack): string {
   const url = (track.url || "").trim();
   if (isSearchUrl(url) || isDirectlyStreamable(url)) return url;
   return `ytsearch1:${searchText(track)} audio`;
 }
 
 /** The query handed to /play's pipeline for a stored track. */
-export function playQueryFor(track: ICollectionTrack): string {
+export function playQueryFor(track: BusCollectionTrack): string {
   const url = streamUrlFor(track);
   if (!isSearchUrl(url)) return url;
   return url.replace(/^ytsearch\d*:/i, "").replace(/\s+audio$/i, "").trim() || track.title;
 }
 
 /** A queue track for a stored one, resolved by yt-dlp when it plays. */
-function toQueueTrack(track: ICollectionTrack, requestedBy: User): Track | null {
+function toQueueTrack(track: BusCollectionTrack, requestedBy: User): Track | null {
   const playerService = DiscordPlayerService.getInstance();
   const player = playerService.getPlayer();
   const extractor = playerService.getYouTubeExtractor();
@@ -98,6 +97,33 @@ function toQueueTrack(track: ICollectionTrack, requestedBy: User): Track | null 
   queued.extractor = extractor;
   return queued;
 }
+
+/**
+ * Queue the songs after a collection's first one (already queued by the play
+ * pipeline): right behind it when it was queued next into a running session,
+ * else at the end. At most `room` songs. Returns how many were queued. Used
+ * by the primary and by a fleet instance the collection was handed to.
+ */
+export function queueCollectionRest(
+  queue: GuildQueue,
+  tracks: BusCollectionTrack[],
+  requestedBy: User,
+  behindFirst: boolean,
+  room: number
+): number {
+  const rest = tracks
+    .slice(0, Math.max(0, room))
+    .map((t) => toQueueTrack(t, requestedBy))
+    .filter((t): t is Track => t !== null);
+  if (rest.length === 0) return 0;
+  // The play pipeline put the first song at the front; the rest follow it in order.
+  if (behindFirst) rest.forEach((track, i) => queue.insertTrack(track, i + 1));
+  else queue.addTrack(rest);
+  return rest.length;
+}
+
+/** Songs to try before giving up on a collection whose first songs won't play. */
+export const COLLECTION_FIRST_ATTEMPTS = 3;
 
 async function respond(interaction: RepliableInteraction, content: string): Promise<void> {
   try {
@@ -161,13 +187,6 @@ export async function loadCollection(
 ): Promise<void> {
   if (collection.tracks.length === 0) return respond(interaction, `📭 ${i18n.__("collections.load.empty")}`);
 
-  const blocked = await blockedReason(interaction);
-  if (blocked) return respond(interaction, blocked);
-
-  if (!interaction.deferred && !interaction.replied) {
-    await interaction.deferReply(ephemeral ? { flags: MessageFlags.Ephemeral } : {});
-  }
-
   const guildId = interaction.guildId;
   const settings = await GuildSettingsService.getInstance().getSettings(guildId);
   const longer = await hasPremiumFeature(interaction.user.id, "longer_songs").catch(() => false);
@@ -177,6 +196,25 @@ export async function loadCollection(
     return respond(interaction, `⏱️ ${i18n.__mf("play.tooLong", { max: formatDuration(maxSeconds * 1000) })}`);
   }
 
+  // Fleet: when another Bypass instance serves (or should serve) the member's
+  // voice channel, the whole collection goes there in one hand-off, before the
+  // checks below that only describe this instance.
+  const handedOff = await dispatchPlay({
+    interaction,
+    query: playQueryFor(playable[0]),
+    next: mode === "next",
+    ephemeral,
+    collection: { name: collection.name, tracks: playable.slice(1) }
+  });
+  if (handedOff) return;
+
+  const blocked = await blockedReason(interaction);
+  if (blocked) return respond(interaction, blocked);
+
+  if (!interaction.deferred && !interaction.replied) {
+    await interaction.deferReply(ephemeral ? { flags: MessageFlags.Ephemeral } : {});
+  }
+
   const playerService = DiscordPlayerService.getInstance();
   const before = playerService.getQueue(guildId);
   const wasActive = Boolean(before && !before.deleted && (before.currentTrack || before.node.isPlaying()));
@@ -184,8 +222,9 @@ export async function loadCollection(
   // First song through /play's pipeline; skip ones that can't be found.
   let result: Awaited<ReturnType<typeof runPlay>> = null;
   let index = 0;
-  for (; index < Math.min(playable.length, FIRST_TRACK_ATTEMPTS); index++) {
-    result = await runPlay({ interaction, query: playQueryFor(playable[index]), next: mode === "next", ephemeral });
+  for (; index < Math.min(playable.length, COLLECTION_FIRST_ATTEMPTS); index++) {
+    // Already routed above: play here.
+    result = await runPlay({ interaction, query: playQueryFor(playable[index]), next: mode === "next", ephemeral, local: true });
     if (result) break;
     // runPlay already told the user why; only a song-specific failure is worth another try.
     if (await blockedReason(interaction)) return;
@@ -194,21 +233,7 @@ export async function loadCollection(
 
   const queue = result.queue;
   const room = Math.max(0, settings.maxQueueSize - queue.tracks.size);
-  const rest = playable
-    .slice(index + 1, index + 1 + room)
-    .map((t) => toQueueTrack(t, interaction.user))
-    .filter((t): t is Track => t !== null);
-
-  if (rest.length > 0) {
-    if (mode === "next" && wasActive) {
-      // runPlay put the first song at the front; the rest follow it in order.
-      rest.forEach((track, i) => queue.insertTrack(track, i + 1));
-    } else {
-      queue.addTrack(rest);
-    }
-  }
-
-  const added = 1 + rest.length;
+  const added = 1 + queueCollectionRest(queue, playable.slice(index + 1), interaction.user, mode === "next" && wasActive, room);
   const skipped = collection.tracks.length - added;
   const lines = [i18n.__mf("collections.load.success", { name: safeText(collection.name, 80), count: added })];
   if (mode === "next" && wasActive) lines.push(`-# ${i18n.__("collections.load.queuedNext")}`);

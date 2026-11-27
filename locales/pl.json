@@ -2090,7 +2090,10 @@
       "notAllowed": "{bot} nie ma dostępu do tego kanału",
       "invite": "Dodaj kolejnego Bypass, aby grać na wielu kanałach jednocześnie:",
       "add": "Dodaj {bot}",
-      "premium": "Bypass 5 do 8 są dostępne w Premium."
+      "premium": "Bypass 5 do 8 są dostępne w Premium.",
+      "servedHere": "{bot} już gra na kanale {channel}. Użyj tam /play i przycisków sterowania albo dołącz do innego kanału głosowego.",
+      "stay247On": "Tryb 24/7 włączony dla {bot}: zostaje na kanale {channel} i wraca na niego po restartach.",
+      "stay247Off": "Tryb 24/7 wyłączony dla {bot}."
     },
     "info": {
       "header": "{bot} na {channel}",

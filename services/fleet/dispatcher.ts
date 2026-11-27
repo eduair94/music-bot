@@ -3,6 +3,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ChannelType,
   ChatInputCommandInteraction,
   CommandInteraction,
   Guild,
@@ -28,8 +29,9 @@ import {
   isInstanceInGuild,
   isRedisAvailable
 } from "../../shared/services/redis";
-import type { BotCommandParams, BusCommand } from "../../shared/types";
+import type { BotCommandParams, BusCollectionTrack, BusCommand } from "../../shared/types";
 import { ActionType, logAction } from "../../utils/actionLog";
+import { forwardedCommandGate } from "../../utils/permissions";
 import { formatDuration, isHttpUrl, linkLabel, safeText } from "../../utils/format";
 import { currentLocale, i18n } from "../../utils/i18n";
 import { isPrimary } from "../../utils/instance";
@@ -197,6 +199,45 @@ export async function instanceInChannel(guild: Guild, voiceChannelId: string): P
   return null;
 }
 
+/** One lookup per interaction: the router, the permission gate and forwardSlash all ask. */
+const servingMemo = new WeakMap<object, Promise<number | null>>();
+
+/**
+ * The other instance (2+) playing in the member's voice channel, or null: no
+ * fleet, not in voice, or in the primary's own channel.
+ */
+export function servingInstance(interaction: CommandInteraction | RepliableInteraction): Promise<number | null> {
+  if (!fleetActive() || !interaction.inCachedGuild()) return Promise.resolve(null);
+  const memo = servingMemo.get(interaction);
+  if (memo) return memo;
+  const guild = interaction.guild;
+  const voiceId = (interaction.member as GuildMember).voice?.channelId;
+  const lookup =
+    !voiceId || voiceId === guild.members.me?.voice.channelId ? Promise.resolve(null) : instanceInChannel(guild, voiceId).catch(() => null);
+  servingMemo.set(interaction, lookup);
+  return lookup;
+}
+
+/**
+ * For commands only the primary runs in voice (/join, /say, /guess): the
+ * refusal to send when another instance already plays in the member's
+ * channel, so the primary never joins it on top of that instance.
+ */
+export async function servedByOtherInstance(interaction: CommandInteraction | RepliableInteraction): Promise<string | null> {
+  const instance = await servingInstance(interaction);
+  if (!instance || !interaction.inCachedGuild()) return null;
+  const channelId = (interaction.member as GuildMember).voice.channelId;
+  return `🎧 ${i18n.__mf("fleet.dispatch.servedHere", { bot: `**${instanceName(instance)}**`, channel: `<#${channelId}>` })}`;
+}
+
+/** The instance a slash control or info command will be forwarded to (see forwardSlash), or null. */
+export async function forwardTarget(interaction: CommandInteraction): Promise<number | null> {
+  if (!interaction.isChatInputCommand()) return null;
+  const command = interaction.commandName;
+  if (!FORWARDED.has(command) && !INFO.has(command)) return null;
+  return servingInstance(interaction);
+}
+
 async function premiumActive(guildId: string): Promise<boolean> {
   return PremiumGuildService.getInstance().isPremiumGuild(guildId).catch(() => false);
 }
@@ -260,6 +301,13 @@ export interface DispatchRequest {
   now?: boolean;
   /** /radio: turn autoplay on afterwards. */
   radio?: boolean;
+  /** Several songs (a saved collection, history picks): `query` is the first, these follow it on the same instance. */
+  collection?: { name: string; tracks: BusCollectionTrack[] };
+  /**
+   * The interaction's message isn't ours to edit (a menu on another message):
+   * answer only with a private follow-up once the instance has answered.
+   */
+  followUp?: boolean;
 }
 
 /**
@@ -293,10 +341,13 @@ async function handOff(request: DispatchRequest, instance: number, voice: VoiceB
   const { interaction } = request;
   const name = instanceName(instance);
   const ephemeral = Boolean(request.ephemeral);
-  if (!interaction.deferred && !interaction.replied) {
-    await interaction.deferReply(ephemeral ? { flags: EPHEMERAL } : {}).catch(console.error);
+  const followUp = Boolean(request.followUp);
+  if (!followUp) {
+    if (!interaction.deferred && !interaction.replied) {
+      await interaction.deferReply(ephemeral ? { flags: EPHEMERAL } : {}).catch(console.error);
+    }
+    await reply(interaction, { content: `🔊 ${i18n.__mf("fleet.dispatch.joining", { bot: `**${name}**`, channel: `<#${voice.id}>` })}` }, ephemeral);
   }
-  await reply(interaction, { content: `🔊 ${i18n.__mf("fleet.dispatch.joining", { bot: `**${name}**`, channel: `<#${voice.id}>` })}` }, ephemeral);
 
   const result = await safeSend({
     guildId: interaction.guildId,
@@ -310,6 +361,12 @@ async function handOff(request: DispatchRequest, instance: number, voice: VoiceB
       now: request.now || undefined,
       autoplay: request.radio || undefined,
       source: request.searchEngine === QueryType.SOUNDCLOUD_SEARCH ? "soundcloud" : undefined,
+      savedCollection: request.collection
+        ? {
+            name: request.collection.name,
+            tracks: request.collection.tracks.map(({ title, author, url, thumbnail, duration }) => ({ title, author, url, thumbnail, duration }))
+          }
+        : undefined,
       locale: currentLocale()
     },
     user: { id: interaction.user.id, username: interaction.user.username },
@@ -319,7 +376,34 @@ async function handOff(request: DispatchRequest, instance: number, voice: VoiceB
 
   let content = resultLine(name, result, "🎶");
   if (result.status === "completed" && request.radio) content += `\n-# 📻 ${i18n.__("player.autoplayEnabled")}`;
-  await reply(interaction, { content }, ephemeral);
+  if (followUp) await privately(interaction, content);
+  else await reply(interaction, { content }, ephemeral);
+}
+
+/**
+ * /247 for the channel another instance serves: that instance turns its own
+ * 24/7 on or off (the caller already checked the Premium entitlement).
+ */
+export async function handStay247(
+  interaction: ChatInputCommandInteraction<"cached">,
+  instance: number,
+  enabled: boolean
+): Promise<void> {
+  const channel = interaction.channel;
+  await interaction.deferReply().catch(console.error);
+  const result = await safeSend({
+    guildId: interaction.guildId,
+    instance,
+    command: "stay247",
+    params: {
+      enabled,
+      voiceChannelId: (interaction.member as GuildMember).voice.channelId ?? undefined,
+      textChannelId: channel && channel.type === ChannelType.GuildText ? channel.id : undefined,
+      locale: currentLocale()
+    },
+    user: { id: interaction.user.id, username: interaction.user.username }
+  });
+  await reply(interaction, { content: resultLine(instanceName(instance), result, "🌙") }, false);
 }
 
 /** No instance can take the channel: say who is busy where, offer the missing bots. */
@@ -358,9 +442,12 @@ async function refuse(interaction: RepliableInteraction<"cached">, voice: VoiceB
  * A guess-the-song round blocks music commands in the primary, but a member
  * in another voice channel is routed to another instance: let those through.
  */
-export function routesAwayFromPrimary(interaction: CommandInteraction, commandName: string): boolean {
+export async function routesAwayFromPrimary(interaction: CommandInteraction, commandName: string): Promise<boolean> {
   if (!fleetActive() || !interaction.inCachedGuild()) return false;
-  if (!interaction.isContextMenuCommand() && !PLAY.has(commandName) && !FORWARDED.has(commandName) && !INFO.has(commandName)) return false;
+  // Controls only leave the primary when an instance plays in the member's channel.
+  if (FORWARDED.has(commandName) || INFO.has(commandName)) return Boolean(await forwardTarget(interaction));
+  if (!interaction.isContextMenuCommand() && !PLAY.has(commandName)) return false;
+  // Play requests from another channel are routed (dispatchPlay) to a free instance.
   const voiceId = (interaction.member as GuildMember).voice?.channelId;
   return Boolean(voiceId && voiceId !== interaction.guild.members.me?.voice.channelId);
 }
@@ -418,7 +505,9 @@ async function toBusRequest(interaction: ChatInputCommandInteraction<"cached">, 
       const from = options.getInteger("movefrom");
       const to = options.getInteger("moveto");
       if (!from || !to || from < 1 || to < 1) return { error: i18n.__mf("move.usagesReply", { prefix: "/" }) };
-      return { command: "move", params: { from: from - 1, to: to - 1 } };
+      // A target past the end means "last", as /move does on the primary.
+      const last = state?.queueSize ? state.queueSize : to;
+      return { command: "move", params: { from: from - 1, to: Math.min(to, last) - 1 } };
     }
 
     case "jump": {
@@ -510,21 +599,36 @@ export async function forwardSlash(interaction: ChatInputCommandInteraction<"cac
   if (!FORWARDED.has(command) && !INFO.has(command)) return false;
 
   const guild = interaction.guild;
-  const voiceId = (interaction.member as GuildMember).voice?.channelId;
-  if (!voiceId || voiceId === guild.members.me?.voice.channelId) return false;
-  const instance = await instanceInChannel(guild, voiceId);
+  const instance = await forwardTarget(interaction);
   if (!instance) return false;
 
   const name = instanceName(instance);
   const state = await getInstancePlaybackState(guild.id, instance).catch(() => null);
 
+  // The server's rule for the command, judged against that instance's session
+  // (Bot.guildGate leaves forwarded commands to this check): alone with that
+  // bot, requester of its current song, owner of the songs /remove targets.
+  const member = interaction.member as GuildMember;
+  const userId = interaction.user.id;
+  const ownsAt = (position: number) => state?.queue[position - 1]?.requestedBy?.id === userId;
+  let isRequester: boolean | undefined;
+  if (command === "skip") isRequester = state?.currentTrack?.requestedBy?.id === userId;
+  if (command === "remove") {
+    const slots = (interaction.options.getString("slot") ?? "").split(",").map((part) => Number(part.trim()));
+    isRequester = slots.length > 0 && slots.every((n) => Number.isInteger(n) && n >= 1 && ownsAt(n));
+  }
+  const channel = member.voice.channel;
+  const aloneWithBot = Boolean(channel && channel.members.filter((m) => !m.user.bot).size === 1);
+  const refusal = await forwardedCommandGate(interaction, { aloneWithBot, isRequester });
+  if (refusal) {
+    await reply(interaction, { content: refusal }, true);
+    return true;
+  }
+
   if (INFO.has(command)) {
     await reply(interaction, { content: describe(interaction, name, state) }, false);
     return true;
   }
-
-  // The permission rule for this command already ran in Bot.guildGate
-  // (commandGate) before the command was forwarded.
 
   const request = await toBusRequest(interaction, state);
   if ("error" in request) {

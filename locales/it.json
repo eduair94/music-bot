@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} non ha accesso a questo canale",
       "invite": "Aggiungi un altro Bypass per suonare in più canali contemporaneamente:",
       "add": "Aggiungi {bot}",
-      "premium": "Bypass da 5 a 8 sono inclusi con Premium."
+      "premium": "Bypass da 5 a 8 sono inclusi con Premium.",
+      "servedHere": "{bot} sta già suonando in {channel}. Usa /play e i controlli lì, oppure entra in un altro canale vocale.",
+      "stay247On": "24/7 attivo per {bot}: resta in {channel} e ci rientra dopo i riavvii.",
+      "stay247Off": "24/7 disattivato per {bot}."
     },
     "info": {
       "header": "{bot} in {channel}",

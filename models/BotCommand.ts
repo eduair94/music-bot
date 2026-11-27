@@ -87,6 +87,22 @@ const botCommandSchema = new Schema<IBotCommand>(
       autoplay: { type: Boolean },
       source: { type: String },
       locale: { type: String },
+      // play: a saved collection handed to a fleet instance (first song = query).
+      savedCollection: {
+        type: new Schema(
+          {
+            name: { type: String },
+            tracks: [
+              new Schema(
+                { title: String, author: String, url: String, thumbnail: String, duration: Number },
+                { _id: false }
+              ),
+            ],
+          },
+          { _id: false }
+        ),
+        default: undefined,
+      },
     },
     status: {
       type: String,

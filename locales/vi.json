@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} không được phép vào kênh này",
       "invite": "Thêm một Bypass khác để phát ở nhiều kênh cùng lúc:",
       "add": "Thêm {bot}",
-      "premium": "Bypass 5 đến 8 đi kèm với Premium."
+      "premium": "Bypass 5 đến 8 đi kèm với Premium.",
+      "servedHere": "{bot} đang phát nhạc trong {channel} rồi. Hãy dùng /play và các nút điều khiển ở đó, hoặc vào một kênh thoại khác nhé.",
+      "stay247On": "Đã bật 24/7 cho {bot}: bot sẽ ở lại {channel} và tự vào lại sau khi khởi động lại.",
+      "stay247Off": "Đã tắt 24/7 cho {bot}."
     },
     "info": {
       "header": "{bot} trong {channel}",

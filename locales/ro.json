@@ -2084,7 +2084,10 @@
       "notAllowed": "{bot} nu are acces în acest canal",
       "invite": "Adaugă încă un Bypass ca să redai în mai multe canale deodată:",
       "add": "Adaugă {bot}",
-      "premium": "Bypass 5 până la 8 vin cu Premium."
+      "premium": "Bypass 5 până la 8 vin cu Premium.",
+      "servedHere": "{bot} cântă deja în {channel}. Folosește /play și controalele de acolo sau intră pe alt canal vocal.",
+      "stay247On": "24/7 activat pentru {bot}: rămâne în {channel} și revine acolo după reporniri.",
+      "stay247Off": "24/7 dezactivat pentru {bot}."
     },
     "info": {
       "header": "{bot} în {channel}",

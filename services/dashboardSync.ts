@@ -9,13 +9,13 @@ import {
     VoiceBasedChannel
 } from "discord.js";
 import { Types } from "mongoose";
-import { BotCommand, IBotCommand } from "../models/BotCommand";
+import { BotCommand, BotCommandParams, IBotCommand } from "../models/BotCommand";
 import type { LiveTrack } from "../shared/fleet";
 import { canUse, denialMessage } from "../utils/permissions";
 import { formatDuration, truncate } from "../utils/format";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale, toBotLocale } from "../utils/i18n";
-import { INSTANCE, isPrimary, stay247Of } from "../utils/instance";
+import { INSTANCE, INSTANCE_NAME, isPrimary, stay247Of } from "../utils/instance";
 import {
     ChannelLabel,
     enqueue,
@@ -26,6 +26,7 @@ import {
     playRejectionMessage
 } from "../utils/playFlow";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
+import { COLLECTION_FIRST_ATTEMPTS, playQueryFor, queueCollectionRest } from "./collectionPlayback";
 import { DiscordPlayerService, isGuessGameQueue, PlayError, QueueMetadata } from "./discordPlayer";
 import { clearEffects, resolveEffect, setBassBoost, setEffect } from "./effects";
 import { clearPlayback, ensurePlaybackIndexes, publishPlayback, startPlaybackRefresher, toLiveTrack } from "./fleet/playbackState";
@@ -428,6 +429,7 @@ export class DashboardSyncService {
     // Commands that don't need a running queue.
     if (cmd === "play") return this.busPlay(command, guild);
     if (cmd === "search") return this.busSearch(params.query);
+    if (cmd === "stay247") return this.busStay247(command, guild);
 
     const player = this.playerService?.getPlayer();
     if (!player) return fail(i18n.__("play.initializing"));
@@ -634,6 +636,35 @@ export class DashboardSyncService {
     return { ok: true, message: i18n.__mf("fleet.bus.joined", { channel: channelName(target.id, target.name) }), queue };
   }
 
+  /**
+   * /247 typed in the primary for a channel this instance serves (the primary
+   * already checked the Premium entitlement). Writes this instance's own 24/7
+   * state (fleet.stay247.<n>), so restarts and the entitlement sweep follow it.
+   */
+  private async busStay247(command: IBotCommand, guild: Guild): Promise<BusOutcome> {
+    const params = command.params ?? {};
+    const member = await this.memberOf(command, guild);
+    if (!member) return { ok: false, message: i18n.__("dashboardPlay.notMember") };
+    const { Stay247Service } = await import("./stay247");
+    const service = Stay247Service.getInstance();
+
+    if (params.enabled === false) {
+      await service.disable(guild);
+      const queue = this.playerService?.getQueue(guild.id);
+      if (queue && !queue.deleted) PlayerPanelService.getInstance().refresh(queue, true);
+      return { ok: true, message: i18n.__mf("fleet.dispatch.stay247Off", { bot: INSTANCE_NAME }) };
+    }
+
+    const voice = params.voiceChannelId ? guild.channels.cache.get(params.voiceChannelId) : null;
+    if (!voice || !voice.isVoiceBased()) return { ok: false, message: i18n.__("dashboardPlay.channelGone") };
+    const textRaw = params.textChannelId ? guild.channels.cache.get(params.textChannelId) : null;
+    const text = textRaw && textRaw.type === ChannelType.GuildText ? (textRaw as TextChannel) : null;
+    await service.enable(guild, voice, text, member.id);
+    const queue = this.playerService?.getQueue(guild.id);
+    if (queue && !queue.deleted) PlayerPanelService.getInstance().refresh(queue, true);
+    return { ok: true, message: i18n.__mf("fleet.dispatch.stay247On", { bot: INSTANCE_NAME, channel: channelName(voice.id, voice.name) }) };
+  }
+
   /** The member behind a command (dashboard user or forwarded requester), if still in the server. */
   private async memberOf(command: IBotCommand, guild: Guild): Promise<GuildMember | null> {
     const userId = command.userId ?? command.requestedBy?.id ?? "";
@@ -658,7 +689,12 @@ export class DashboardSyncService {
       const gate = await playGate(guild.id, member);
       if (gate) return fail(playRejectionMessage(gate, query, channelName));
 
-      const target = await this.dashboardVoiceChannel(guild, member, params.voiceChannelId);
+      // A play is for this bot's stage: the channel the request names (the
+      // primary's hand-off, or the channel picked for an idle stage in the
+      // dashboard), else the channel it already plays in, else the requester's.
+      // Never the requester's channel over its own session: that would put two
+      // bots in one channel, or refuse adding songs from another channel.
+      const target = await this.dashboardVoiceChannel(guild, member, params.voiceChannelId, false);
       if (typeof target === "string") return fail(target);
 
       // /playnow: replacing what plays is a DJ action.
@@ -669,15 +705,23 @@ export class DashboardSyncService {
         if (!verdict.ok) return fail(denialMessage(verdict));
       }
 
-      const result = await enqueue({
-        guild,
-        member,
-        voiceChannel: target,
-        textChannel: await this.panelChannel(guild, params.textChannelId),
-        query,
-        next: Boolean(params.next || params.now),
-        searchEngine: params.source ? SEARCH_SOURCES[params.source] : undefined
-      });
+      const collection = params.savedCollection;
+      const wasActive = Boolean(before && !before.deleted && (before.currentTrack || before.node.isPlaying()));
+      const textChannel = await this.panelChannel(guild, params.textChannelId);
+      const play = (q: string) =>
+        enqueue({
+          guild,
+          member,
+          voiceChannel: target,
+          textChannel,
+          query: q,
+          next: Boolean(params.next || params.now),
+          searchEngine: params.source ? SEARCH_SOURCES[params.source] : undefined
+        });
+
+      if (collection) return await this.busPlayCollection(play, query, collection, member, Boolean(params.next) && wasActive);
+
+      const result = await play(query);
 
       if (replacing && result.position === 1) result.queue.node.skip();
       if (params.autoplay) {
@@ -696,10 +740,51 @@ export class DashboardSyncService {
   }
 
   /**
-   * Where a dashboard play goes: the requester's own voice channel, else the
-   * channel picked in the dashboard, else the channel the bot is already
-   * playing in. Never some other channel. Returns the channel or a message.
-   * `preferRequested` (join) puts the picked channel first.
+   * A saved collection the primary handed over: the first song that plays
+   * goes through the play pipeline (a song that can't be found is replaced by
+   * the next one, up to three tries, as on the primary); the rest are queued
+   * behind it without searching up front.
+   */
+  private async busPlayCollection(
+    play: (query: string) => Promise<EnqueueResult>,
+    firstQuery: string,
+    collection: NonNullable<BotCommandParams["savedCollection"]>,
+    member: GuildMember,
+    behindFirst: boolean
+  ): Promise<BusOutcome> {
+    const tracks = collection.tracks ?? [];
+    const candidates = [firstQuery, ...tracks.map(playQueryFor)];
+    let result: EnqueueResult | null = null;
+    let index = 0;
+    let lastError: unknown = null;
+    for (; index < Math.min(candidates.length, COLLECTION_FIRST_ATTEMPTS); index++) {
+      try {
+        result = await play(candidates[index]);
+        break;
+      } catch (error) {
+        lastError = error;
+        // Only a song-specific failure is worth another try.
+        const songSpecific = error instanceof PlayError || (error instanceof PlayRejection && error.code === "noResults");
+        if (!songSpecific) throw error;
+      }
+    }
+    if (!result) throw lastError ?? new PlayRejection("noResults");
+
+    const settings = await GuildSettingsService.getInstance().getSettings(member.guild.id);
+    const room = Math.max(0, settings.maxQueueSize - result.queue.tracks.size);
+    // candidates[i] is tracks[i - 1]; the songs after the one that played follow it.
+    const added = 1 + queueCollectionRest(result.queue, tracks.slice(index), member.user, behindFirst, room);
+    PlayerPanelService.getInstance().refresh(result.queue);
+
+    const message = i18n.__mf("dashboardPlay.playlist", { count: added, title: truncate(collection.name || "Collection", 80) });
+    return { ok: true, message, queue: result.queue, data: { position: result.position, added } };
+  }
+
+  /**
+   * Where a dashboard or bus command goes. With `preferMember` (join without
+   * a picked channel): the requester's own voice channel first. Otherwise the
+   * channel the request names, else the channel the bot is already in, else
+   * the requester's. Never some other channel. Returns the channel or a message.
    */
   private async dashboardVoiceChannel(
     guild: Guild,
@@ -712,7 +797,7 @@ export class DashboardSyncService {
     const queue = this.playerService?.getQueue(guild.id);
     const sessionId = (queue && !queue.deleted ? queue.channel?.id : null) ?? guild.members.me?.voice.channelId ?? null;
     const channelId = requestedId || sessionId;
-    if (!channelId) return i18n.__("dashboardPlay.noVoiceChannel");
+    if (!channelId) return member?.voice.channel ?? i18n.__("dashboardPlay.noVoiceChannel");
 
     const channel = guild.channels.cache.get(channelId) ?? (await guild.channels.fetch(channelId).catch(() => null));
     if (!channel || !channel.isVoiceBased()) return i18n.__("dashboardPlay.channelGone");

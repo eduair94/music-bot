@@ -2083,7 +2083,10 @@
       "notAllowed": "Kāore {bot} e whakaaetia i tēnei hongere",
       "invite": "Tāpiria tētahi atu Bypass hei pūrei i ētahi atu hongere i te wā kotahi:",
       "add": "Tāpiri {bot}",
-      "premium": "Ka haere mai a Bypass 5 ki 8 me Premium."
+      "premium": "Ka haere mai a Bypass 5 ki 8 me Premium.",
+      "servedHere": "Kei te pūrei kē a {bot} i {channel}. Whakamahia te /play me ngā mana whakahaere i reira, kia uru rānei koe ki tētahi atu hongere reo.",
+      "stay247On": "Kua whakakāngia te 24/7 mō {bot}: ka noho tonu ia i {channel}, ā, ka hoki anō ia ki reira i muri i ngā tīmata anō.",
+      "stay247Off": "Kua whakawetongia te 24/7 mō {bot}."
     },
     "info": {
       "header": "{bot} i {channel}",

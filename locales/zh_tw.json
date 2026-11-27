@@ -2083,7 +2083,10 @@
       "notAllowed": "{bot} 沒有權限進入這個頻道",
       "invite": "新增另一個 Bypass，就能同時在更多頻道播放：",
       "add": "新增 {bot}",
-      "premium": "Bypass 5 到 8 需要 Premium。"
+      "premium": "Bypass 5 到 8 需要 Premium。",
+      "servedHere": "{bot} 已經在 {channel} 播放中。請在那裡使用 /play 和控制按鈕，或加入其他語音頻道。",
+      "stay247On": "已為 {bot} 開啟 24/7：它會留在 {channel}，並在重新啟動後自動重新加入。",
+      "stay247Off": "已為 {bot} 關閉 24/7。"
     },
     "info": {
       "header": "{bot} 在 {channel}",
