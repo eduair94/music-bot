@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import { useQueue } from "discord-player";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
@@ -71,10 +70,6 @@ export default {
       return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
-    const hasDJ = await hasDJPermission(member);
-    if (!hasDJ) {
-      return interaction.editReply({ content: `❌ ${i18n.__("common.djRequired")}` }).catch(console.error);
-    }
 
     const queue = useQueue(interaction.guildId!);
 

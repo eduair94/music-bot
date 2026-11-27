@@ -26,25 +26,31 @@ import { DashboardSyncService } from "../services/dashboardSync";
 import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { forwardSlash, routesAwayFromPrimary } from "../services/fleet/dispatcher";
 import { GuildSettingsService } from "../services/guildSettings";
 import { isGuessGameRunning } from "../services/guessGame";
 import { logBuffer } from "../services/logBuffer";
 import { PatreonService } from "../services/patreon";
-import { collectGuildData, TelemetryService } from "../services/telemetry";
+import { syncGuildPresence, TelemetryService } from "../services/telemetry";
 import { commandEvent, errorEvent, guildEvent } from "../services/telemetry/events";
 import { ttsService } from "../services/tts";
+import { fleetMember } from "../shared/fleet";
 import { botInviteUrl } from "../shared/links";
 import {
+  addInstanceGuild,
   isRedisAvailable,
+  publishGuildEvent,
   removeBotFromGuild,
-  setBotInGuild,
-  syncBotGuildsWithData
+  removeInstanceGuild,
+  setBotInGuild
 } from "../shared/services/redis";
 import { checkPermissions, PermissionResult } from "../utils/checkPermissions";
 import { config } from "../utils/config";
 import { localeForInteraction } from "../utils/guildLocale";
 import { i18n, localizeCommandJson, runWithLocale } from "../utils/i18n";
+import { INSTANCE, INSTANCE_NAME, isPrimary } from "../utils/instance";
 import { MissingPermissionsException } from "../utils/MissingPermissionsException";
+import { commandGate } from "../utils/permissions";
 import { commands as commandRegistry, contextMenus, mention, setCommandId } from "./commandRegistry";
 import { getComponentHandler } from "./componentRouter";
 
@@ -137,15 +143,22 @@ export class Bot {
     this.client.on(Events.GuildCreate, async (guild) => {
       console.log(`[Bot] Joined guild: ${guild.name} (${guild.id})`);
       try {
-        await setBotInGuild(guild.id, {
-          name: guild.name,
-          icon: guild.icon,
-          memberCount: guild.memberCount,
-          joined: Date.now(),
-        });
+        // Guild metadata is the primary's; every instance tracks its own presence.
+        if (isPrimary) {
+          await setBotInGuild(guild.id, {
+            name: guild.name,
+            icon: guild.icon,
+            memberCount: guild.memberCount,
+            joined: Date.now(),
+          });
+        }
+        await addInstanceGuild(INSTANCE, guild.id);
+        await publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online: true, inGuild: true });
       } catch (error) {
         console.error("[Redis] Failed to add guild:", error);
       }
+      // Secondaries: no welcome card, join telemetry or listing update.
+      if (!isPrimary) return;
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "join", name: guild.name, memberCount: guild.memberCount })
       );
@@ -157,10 +170,13 @@ export class Bot {
     this.client.on(Events.GuildDelete, async (guild) => {
       console.log(`[Bot] Left guild: ${guild.name} (${guild.id})`);
       try {
-        await removeBotFromGuild(guild.id);
+        if (isPrimary) await removeBotFromGuild(guild.id);
+        await removeInstanceGuild(INSTANCE, guild.id);
+        await publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online: true, inGuild: false });
       } catch (error) {
         console.error("[Redis] Failed to remove guild:", error);
       }
+      if (!isPrimary) return;
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "leave", name: guild.name, memberCount: guild.memberCount })
       );
@@ -173,21 +189,28 @@ export class Bot {
   // ------------------------------------------------------------------ startup
 
   private async onReady(): Promise<void> {
-    console.log(`${this.client.user!.username} ready!`);
+    console.log(`${this.client.user!.username} ready!${isPrimary ? "" : ` (fleet instance ${INSTANCE}: ${INSTANCE_NAME})`}`);
+    if (!isPrimary) this.checkInstanceToken();
     this.setPresence();
     setInterval(() => this.setPresence(), 30 * 60 * 1000).unref();
 
     // Initialize Redis and sync guilds with detailed data
     try {
       if (await isRedisAvailable()) {
-        await syncBotGuildsWithData(collectGuildData(this.client));
+        await syncGuildPresence(this.client);
         console.log("✅ Redis sync completed");
+        void this.publishFleetPresence();
+
+        // Dashboard edits apply at once: drop a server's cached settings when they change.
+        await GuildSettingsService.getInstance()
+          .listenForChanges()
+          .catch((error) => console.error("[Redis] Settings listener failed:", error));
 
         // Periodic guild refresh (every 3 minutes to prevent key expiration).
         // The online status itself is the TelemetryService heartbeat.
         setInterval(async () => {
           try {
-            await syncBotGuildsWithData(collectGuildData(this.client));
+            await syncGuildPresence(this.client);
           } catch (error) {
             console.error("[Redis] Periodic guild sync failed:", error);
           }
@@ -205,7 +228,7 @@ export class Bot {
       await dbService.connect(config.MONGODB_URI || "");
       if (dbService.isReady()) {
         console.log("✅ Database service initialized");
-        const migrated = await GuildSettingsService.getInstance().migrateUnusedLanguage();
+        const migrated = isPrimary ? await GuildSettingsService.getInstance().migrateUnusedLanguage() : 0;
         if (migrated) console.log(`✅ ${migrated} servers now follow each member's Discord language`);
       } else {
         console.log("⚠️ Database service initialized but not ready - commands may fail initially");
@@ -246,6 +269,19 @@ export class Bot {
       console.log("✅ Dashboard Sync service initialized");
     } catch (error) {
       console.error("⚠️ Dashboard Sync initialization skipped:", error);
+    }
+
+    if (!isPrimary) {
+      // Secondaries play music and run their own player cards; slash commands,
+      // linked bots, Patreon, metrics, listings and the support server are the
+      // primary's.
+      try {
+        DebugPanel.getInstance().start(this.client);
+      } catch (error) {
+        console.error("⚠️ Debug panel failed to start:", error);
+      }
+      console.log(`[Bot] ✅ ${INSTANCE_NAME} ready as fleet instance ${INSTANCE} (no slash commands)`);
+      return;
     }
 
     // Initialize Bot Manager service (for linked user bots)
@@ -330,6 +366,30 @@ export class Bot {
     this.registerSlashCommands().catch((error) => {
       console.error("[Bot] ❌ Failed to register slash commands:", error);
     });
+  }
+
+  /**
+   * A secondary started with the primary's token would answer every slash
+   * command twice; refuse to run. A token for a different application than
+   * FLEET_APPLICATION_IDS lists only warns (invite links would be wrong).
+   */
+  private checkInstanceToken(): void {
+    const me = this.client.user!.id;
+    if (me === fleetMember(1)?.applicationId) {
+      console.error(`[Bot] ❌ BOT_INSTANCE=${INSTANCE} is running with the primary's token; set TOKEN_${INSTANCE} to the ${INSTANCE_NAME} token`);
+      process.exit(1);
+    }
+    const expected = fleetMember(INSTANCE)?.applicationId;
+    if (expected && expected !== me) {
+      console.warn(`[Bot] ⚠️ FLEET_APPLICATION_IDS lists ${expected} for instance ${INSTANCE}, but this token is application ${me}`);
+    }
+  }
+
+  /** Tell live dashboards this instance is up in each of its servers. */
+  private async publishFleetPresence(online = true): Promise<void> {
+    for (const guild of this.client.guilds.cache.values()) {
+      await publishGuildEvent(guild.id, { type: "fleet", instance: INSTANCE, online, inGuild: true }).catch(() => undefined);
+    }
   }
 
   private setPresence(): void {
@@ -487,11 +547,18 @@ export class Bot {
     }
 
     // A guess-the-song round owns the player: skipping, seeking or queueing
-    // music mid-round would break it (or reveal the answer).
-    if ((interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) && isGuessGameRunning(interaction.guildId)) {
+    // music mid-round would break it (or reveal the answer). Members in
+    // another voice channel are served by another fleet instance.
+    if (
+      (interaction.isContextMenuCommand() || GAME_BLOCKED_COMMANDS.has(name)) &&
+      isGuessGameRunning(interaction.guildId) &&
+      !routesAwayFromPrimary(interaction, name)
+    ) {
       return `🎯 ${i18n.__mf("guess.blockedDuringGame", { stop: mention("guess", "stop") })}`;
     }
-    return null;
+
+    // The server's rule for the command's action group (DJ, admins, allow/deny lists).
+    return commandGate(interaction);
   }
 
   private checkCooldown(name: string, userId: string, seconds: number): number {
@@ -537,12 +604,16 @@ export class Bot {
     const guildIdForEvent = interaction.guildId ?? "dm";
 
     try {
-      if (interaction.inCachedGuild()) {
-        const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
-        if (!permissionsCheck.result) throw new MissingPermissionsException(permissionsCheck.missing);
-      }
+      // Fleet: controls for a channel another Bypass instance serves run there.
+      const forwarded = interaction.inCachedGuild() && (await forwardSlash(interaction));
+      if (!forwarded) {
+        if (interaction.inCachedGuild()) {
+          const permissionsCheck: PermissionResult = await checkPermissions(command, interaction);
+          if (!permissionsCheck.result) throw new MissingPermissionsException(permissionsCheck.missing);
+        }
 
-      await command.execute(interaction);
+        await command.execute(interaction);
+      }
 
       telemetry.record(
         commandEvent({

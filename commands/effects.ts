@@ -1,12 +1,9 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder, SlashCommandSubcommandBuilder, EmbedBuilder } from "discord.js";
-import { QueueFilters } from "discord-player";
 import { DiscordPlayerService } from "../services/discordPlayer";
+import { BASS_PRESETS, BassLevel, clearEffects, EFFECT_FILTERS, enabledFilters, setBassBoost, setEffect } from "../services/effects";
 import { logAction } from "../utils/actionLog";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
-
-type FilterName = keyof QueueFilters;
 
 // Valid filter names from discord-player QueueFilters interface
 // Available: bassboost_low, bassboost, bassboost_high, 8D, vaporwave, nightcore,
@@ -72,6 +69,21 @@ function effectName(subcommand: string): string {
   return i18n.__(`effects.${subcommand}.name`);
 }
 
+const EMOJI: Record<string, string> = {
+  "8d": "🎧",
+  haas: "🔊",
+  karaoke: "🎤",
+  nightcore: "🎵",
+  vaporwave: "🌴",
+  pulsator: "💫",
+  reverse: "⏪",
+  tremolo: "🎵",
+  vibrato: "🎶",
+  lofi: "📻",
+  surrounding: "🔉",
+  distortion: "💥"
+};
+
 export default {
   data: builder,
 
@@ -85,10 +97,6 @@ export default {
       return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
-    const hasDJ = await hasDJPermission(guildMember as GuildMember);
-    if (!hasDJ) {
-      return interaction.editReply({ content: `❌ ${i18n.__("common.djRequired")}` }).catch(console.error);
-    }
 
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
@@ -97,11 +105,11 @@ export default {
       return interaction.editReply({ content: `❌ ${i18n.__("effects.nothingPlaying")}` }).catch(console.error);
     }
 
-    const currentFilters = queue.filters.ffmpeg.getFiltersEnabled();
     const user = `<@${interaction.user.id}>`;
 
     // Handle list subcommand
     if (subcommand === "list") {
+      const currentFilters = enabledFilters(queue);
       const embed = new EmbedBuilder()
         .setTitle(`🎛️ ${i18n.__("effects.list.title")}`)
         .setColor(0x3498db)
@@ -113,131 +121,41 @@ export default {
 
     // Handle clear subcommand
     if (subcommand === "clear") {
-      if (currentFilters.length > 0) {
-        await queue.filters.ffmpeg.toggle(currentFilters as FilterName[]);
-      }
+      await clearEffects(queue);
       await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__("actionLog.detail.effectsCleared"));
       return interaction.editReply({ content: `✅ ${i18n.__("effects.clear.done")}` }).catch(console.error);
     }
 
-    // Map subcommand names to actual filter names
-    const effectMap: Record<string, FilterName> = {
-      "8d": "8D",
-      "bassboost": "bassboost",
-      "distortion": "earrape", // Using earrape as distortion-like effect
-      "haas": "haas",
-      "karaoke": "karaoke",
-      "nightcore": "nightcore",
-      "vaporwave": "vaporwave",
-      "pulsator": "pulsator",
-      "reverse": "reverse",
-      "tremolo": "tremolo",
-      "vibrato": "vibrato",
-      "lofi": "lofi",
-      "surrounding": "surrounding"
-    };
-
-    const filterName = effectMap[subcommand];
-    if (!filterName) {
+    if (!EFFECT_FILTERS[subcommand]) {
       return interaction.editReply({ content: `❌ ${i18n.__("effects.unknown")}` }).catch(console.error);
     }
 
     // Bass boost levels map to discord-player presets; only one is active at a time.
     if (subcommand === "bassboost") {
-      const level = interaction.options.getString("level") || "medium";
-      const presets: Record<string, FilterName> = { low: "bassboost_low" as FilterName, medium: "bassboost" as FilterName, high: "bassboost_high" as FilterName };
-      const active = (["bassboost_low", "bassboost", "bassboost_high"] as FilterName[]).filter((f) => currentFilters.includes(f));
-      const target = presets[level];
-      const levelLabel = () => i18n.__(`effects.bassboost.level.${target ? level : "off"}`);
-
-      if (active.length) await queue.filters.ffmpeg.toggle(active);
-      if (level === "off" || !target) {
-        await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__mf("actionLog.detail.bassBoost", { level: levelLabel() }));
+      const raw = interaction.options.getString("level") || "medium";
+      const level: BassLevel = raw in BASS_PRESETS ? (raw as BassLevel) : "off";
+      const levelLabel = () => i18n.__(`effects.bassboost.level.${level}`);
+      const { wasActive } = await setBassBoost(queue, level);
+      await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__mf("actionLog.detail.bassBoost", { level: levelLabel() }));
+      if (level === "off") {
         return interaction.editReply({
-          content: `🔊 ${active.length ? i18n.__mf("effects.bassboost.disabledBy", { user }) : i18n.__("effects.bassboost.alreadyOff")}`
+          content: `🔊 ${wasActive ? i18n.__mf("effects.bassboost.disabledBy", { user }) : i18n.__("effects.bassboost.alreadyOff")}`
         }).catch(console.error);
       }
-      await queue.filters.ffmpeg.toggle([target]);
-      await logAction(interaction.guild!, interaction.user, "setting_change", () => i18n.__mf("actionLog.detail.bassBoost", { level: levelLabel() }));
       return interaction.editReply({ content: `🔊 ${i18n.__mf("effects.bassboost.setBy", { level: levelLabel(), user })}` }).catch(console.error);
     }
 
-    // Handle nightcore (mutually exclusive with vaporwave)
-    if (subcommand === "nightcore") {
-      const enabled = interaction.options.getBoolean("enabled");
-      const isEnabled = currentFilters.includes("nightcore");
-      const shouldEnable = enabled !== null ? enabled : !isEnabled;
-
-      // If enabling nightcore, disable vaporwave first
-      if (shouldEnable && currentFilters.includes("vaporwave")) {
-        await queue.filters.ffmpeg.toggle(["vaporwave"]);
-      }
-
-      if (shouldEnable !== isEnabled) {
-        await queue.filters.ffmpeg.toggle(["nightcore"]);
-      }
-
-      await logAction(interaction.guild!, interaction.user, "setting_change", () =>
-        i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
-      );
-      const emoji = shouldEnable ? "🎵" : "❌";
-      const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
-      return interaction.editReply({ content: `${emoji} ${i18n.__mf(key, { effect: effectName(subcommand), user })}` }).catch(console.error);
-    }
-
-    // Handle vaporwave (mutually exclusive with nightcore)
-    if (subcommand === "vaporwave") {
-      const enabled = interaction.options.getBoolean("enabled");
-      const isEnabled = currentFilters.includes("vaporwave");
-      const shouldEnable = enabled !== null ? enabled : !isEnabled;
-
-      // If enabling vaporwave, disable nightcore first
-      if (shouldEnable && currentFilters.includes("nightcore")) {
-        await queue.filters.ffmpeg.toggle(["nightcore"]);
-      }
-
-      if (shouldEnable !== isEnabled) {
-        await queue.filters.ffmpeg.toggle(["vaporwave"]);
-      }
-
-      await logAction(interaction.guild!, interaction.user, "setting_change", () =>
-        i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
-      );
-      const emoji = shouldEnable ? "🌴" : "❌";
-      const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
-      return interaction.editReply({ content: `${emoji} ${i18n.__mf(key, { effect: effectName(subcommand), user })}` }).catch(console.error);
-    }
-
-    // Generic toggle for other effects
-    const enabled = interaction.options.getBoolean("enabled");
-    const isEnabled = currentFilters.includes(filterName);
-    const shouldEnable = enabled !== null ? enabled : !isEnabled;
-
-    if (shouldEnable !== isEnabled) {
-      await queue.filters.ffmpeg.toggle([filterName]);
-    }
+    // Toggle (nightcore and vaporwave stay mutually exclusive)
+    const shouldEnable = await setEffect(queue, subcommand, interaction.options.getBoolean("enabled"));
 
     await logAction(interaction.guild!, interaction.user, "setting_change", () =>
       i18n.__mf(shouldEnable ? "actionLog.detail.effectOn" : "actionLog.detail.effectOff", { effect: effectName(subcommand) })
     );
 
-    const emojiMap: Record<string, string> = {
-      "8D": "🎧",
-      "haas": "🔊",
-      "karaoke": "🎤",
-      "pulsator": "💫",
-      "reverse": "⏪",
-      "tremolo": "🎵",
-      "vibrato": "🎶",
-      "lofi": "📻",
-      "surrounding": "🔉",
-      "earrape": "💥"
-    };
-
-    const emoji = shouldEnable ? (emojiMap[filterName] || "✅") : "❌";
+    const emoji = shouldEnable ? (EMOJI[subcommand] || "✅") : "❌";
     const key = shouldEnable ? "effects.enabledBy" : "effects.disabledBy";
-    return interaction.editReply({
-      content: `${emoji} ${i18n.__mf(key, { effect: `**${effectName(subcommand)}**`, user })}`
-    }).catch(console.error);
+    // Nightcore and vaporwave were announced without bold before; keep that.
+    const label = subcommand === "nightcore" || subcommand === "vaporwave" ? effectName(subcommand) : `**${effectName(subcommand)}**`;
+    return interaction.editReply({ content: `${emoji} ${i18n.__mf(key, { effect: label, user })}` }).catch(console.error);
   }
 };

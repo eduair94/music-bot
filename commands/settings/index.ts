@@ -7,6 +7,6 @@ export { handleVoiceChannels, handleTextChannels, handleLogChannel } from "./cha
 export { handleBlacklist } from "./usersHandler";
 export { handleLanguage, handleEmbedColor } from "./customizationHandler";
 export { handleReset, handleStats } from "./systemHandler";
-export { canManageSettings } from "./permissions";
+export { canManageSettings, settingsVerdict } from "./permissions";
 // Registers the persistent `settings:` component handlers.
 import "./components";

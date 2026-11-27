@@ -1,12 +1,13 @@
 import { 
   ChatInputCommandInteraction, 
   EmbedBuilder, 
-  GuildMember, 
-  SlashCommandBuilder 
+  GuildMember,
+  MessageFlags,
+  SlashCommandBuilder
 } from "discord.js";
 import { useQueue } from "discord-player";
-import { GuildSettingsService } from "../services/guildSettings";
 import { i18n } from "../utils/i18n";
+import { canUse, denialMessage, permissionConfigFor } from "../utils/permissions";
 
 // Track voteskip votes per guild
 const voteSkips = new Map<string, Set<string>>();
@@ -41,9 +42,20 @@ export default {
     if (!voiceChannel || member.voice.channelId !== voiceChannel.id) {
       return interaction.reply({ content: i18n.__("player.notInVoice"), ephemeral: true });
     }
+    // Vote-skip is the server's escape hatch for members who may not skip
+    // (permission rules, options.voteSkip); members denied "skip" by name or
+    // role cannot vote either.
+    const { voteSkip } = (await permissionConfigFor(interaction.guildId!)).options;
+    if (!voteSkip.enabled) {
+      return interaction.reply({ content: `🔒 ${i18n.__("permissions.voteSkipOff")}`, flags: MessageFlags.Ephemeral });
+    }
+    const verdict = await canUse(member, "skip");
+    if (!verdict.ok && (verdict.reason === "denied_user" || verdict.reason === "denied_role")) {
+      return interaction.reply({ content: denialMessage(verdict), flags: MessageFlags.Ephemeral });
+    }
+
     const listeners = voiceChannel.members.filter(m => !m.user.bot).size;
-    const settings = await GuildSettingsService.getInstance().getSettings(interaction.guildId!);
-    const share = Math.min(100, Math.max(1, settings.voteSkipPercentage ?? 50)) / 100;
+    const share = Math.min(100, Math.max(1, voteSkip.percentage)) / 100;
     const requiredVotes = Math.max(1, Math.ceil(listeners * share));
 
     // Get or create vote set for this guild

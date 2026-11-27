@@ -12,10 +12,11 @@ import {
   TextBasedChannel
 } from "discord.js";
 import { registerComponentHandler } from "../structs/componentRouter";
-import { hasDJPermission } from "../utils/djPermission";
+import { commandGroup } from "../shared/permissions";
 import { formatDuration, isHttpUrl, linkLabel, progressBar, safeText, truncate } from "../utils/format";
 import { localeForGuild, localeForInteraction } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
+import { canUse, denialMessage, isRequesterOf } from "../utils/permissions";
 import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
 import { DiscordPlayerService, isGuessGameQueue, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
@@ -381,21 +382,28 @@ export class PlayerPanelService {
       return interaction.reply({ content: `🎮 ${i18n.__("player.guessRunning")}`, flags: ephemeral });
     }
 
-    // Read-only actions: anyone can use them.
+    const member = interaction.member as GuildMember;
+
+    // Read-only actions: anyone can use them (lyrics follow the "lyrics_view" rule).
     if (action === "queue") {
       return interaction.reply({ ...(await buildQueueView(queue, 0)), flags: ephemeral | V2, allowedMentions: NO_MENTIONS });
     }
-    if (action === "lyrics") return this.replyLyrics(interaction, queue, track);
+    if (action === "lyrics") {
+      const verdict = await canUse(member, "lyrics_view");
+      if (!verdict.ok) return interaction.reply({ content: denialMessage(verdict), flags: ephemeral });
+      return this.replyLyrics(interaction, queue, track);
+    }
     if (action === "save") return this.saveToDm(interaction, track);
 
-    // Controls: same voice channel + DJ.
-    const member = interaction.member as GuildMember;
+    // Controls: same voice channel + the server's rule for the button's group.
     const botChannelId = interaction.guild.members.me?.voice.channelId;
     if (!botChannelId || member.voice.channelId !== botChannelId) {
       return interaction.reply({ content: `🔇 ${i18n.__("player.notInVoice")}`, flags: ephemeral });
     }
-    if (!(await hasDJPermission(member))) {
-      return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: ephemeral });
+    const group = commandGroup(action);
+    if (group) {
+      const verdict = await canUse(member, group, { isRequester: action === "skip" && isRequesterOf(track, member.id) });
+      if (!verdict.ok) return interaction.reply({ content: denialMessage(verdict), flags: ephemeral });
     }
 
     const metadata = (queue.metadata || {}) as QueueMetadata;

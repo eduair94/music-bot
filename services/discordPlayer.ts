@@ -9,6 +9,7 @@ import fs from "fs";
 import { PassThrough, Readable } from "stream";
 import { localeForGuild } from "../utils/guildLocale";
 import { i18n, runWithLocale } from "../utils/i18n";
+import { stay247Of } from "../utils/instance";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { GuildSettingsService } from "./guildSettings";
 import { TelemetryService } from "./telemetry";
@@ -755,7 +756,7 @@ export class DiscordPlayerService {
    * leave timers and 24/7. Only applied when a new queue is created.
    */
   private async buildNodeOptions(settings: IGuildSettings | null, metadata: QueueMetadata) {
-    const stay247 = Boolean(settings?.stay247?.enabled);
+    const stay247 = Boolean(stay247Of(settings)?.enabled);
     const leaveCooldownMs = Math.max(30, settings?.autoLeaveTimeout ?? 300) * 1000;
     metadata.stay247 = stay247;
     metadata.autoplay = metadata.autoplay ?? Boolean(settings?.autoplay);

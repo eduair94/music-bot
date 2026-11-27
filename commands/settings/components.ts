@@ -3,7 +3,8 @@ import { registerComponentHandler } from "../../structs/componentRouter";
 import { i18n } from "../../utils/i18n";
 import { onLogChannelComponent, onTextChannelsComponent, onVoiceChannelsComponent } from "./channelsHandler";
 import { onLanguageComponent } from "./customizationHandler";
-import { canManageSettings } from "./permissions";
+import { denialMessage } from "../../utils/permissions";
+import { settingsVerdict } from "./permissions";
 import { onAdminRoleComponent, onDJRoleComponent } from "./rolesHandler";
 import { onResetComponent } from "./systemHandler";
 
@@ -34,8 +35,7 @@ registerComponentHandler("settings", async (interaction, args) => {
   const handler = MENUS[menu];
   if (!handler) return interaction.reply({ content: i18n.__("router.expired"), flags: MessageFlags.Ephemeral });
 
-  if (!(await canManageSettings(interaction))) {
-    return interaction.reply({ content: `🔒 ${i18n.__("settings.noPermission")}`, flags: MessageFlags.Ephemeral });
-  }
+  const verdict = await settingsVerdict(interaction);
+  if (!verdict.ok) return interaction.reply({ content: denialMessage(verdict), flags: MessageFlags.Ephemeral });
   return handler(interaction, action);
 });

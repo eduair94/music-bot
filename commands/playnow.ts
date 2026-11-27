@@ -1,11 +1,11 @@
-import { ChatInputCommandInteraction, GuildMember, MessageFlags, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
-import { hasDJPermission } from "../utils/djPermission";
 import { descriptionLocalizations, i18n } from "../utils/i18n";
+import { gate, isRequesterOf } from "../utils/permissions";
 import { runPlay } from "../utils/playFlow";
 import play from "./play";
 
-/** /playnow — play a song immediately, skipping the current one (DJ only). */
+/** /playnow — play a song immediately, skipping the current one (needs the "skip" permission). */
 export default {
   data: new SlashCommandBuilder()
     .setName("playnow")
@@ -27,11 +27,12 @@ export default {
     const queue = DiscordPlayerService.getInstance().getQueue(interaction.guildId);
     const replacing = Boolean(queue && !queue.deleted && queue.currentTrack);
 
-    if (replacing && !(await hasDJPermission(interaction.member as GuildMember))) {
-      return interaction.reply({ content: `🎧 ${i18n.__("player.needDj")}`, flags: MessageFlags.Ephemeral });
+    // Cutting off the current song is a skip ("play" itself is checked by the router).
+    if (replacing && !(await gate(interaction, "skip", { isRequester: isRequesterOf(queue!.currentTrack, interaction.user.id) }))) {
+      return;
     }
 
-    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true });
+    const result = await runPlay({ interaction, query: interaction.options.getString("song", true), next: true, now: true });
     if (result && replacing && result.position === 1) {
       result.queue.node.skip();
     }

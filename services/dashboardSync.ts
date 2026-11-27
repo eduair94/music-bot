@@ -1,4 +1,4 @@
-import { GuildQueue, Player, Track } from "discord-player";
+import { GuildQueue, Player, QueryType, QueueRepeatMode, SearchQueryType, Track } from "discord-player";
 import {
     ChannelType,
     Client,
@@ -6,20 +6,16 @@ import {
     GuildMember,
     PermissionFlagsBits,
     TextChannel,
-    VoiceBasedChannel,
-    VoiceChannel
+    VoiceBasedChannel
 } from "discord.js";
 import { Types } from "mongoose";
 import { BotCommand, IBotCommand } from "../models/BotCommand";
-import { ITrack, PlaybackState } from "../models/PlaybackState";
-import {
-    clearPlaybackState as clearRedisPlaybackState,
-    isRedisAvailable,
-    setPlaybackState as setRedisPlaybackState
-} from "../shared/services/redis";
-import { truncate } from "../utils/format";
+import type { LiveTrack } from "../shared/fleet";
+import { canUse, denialMessage } from "../utils/permissions";
+import { formatDuration, truncate } from "../utils/format";
 import { localeForGuild } from "../utils/guildLocale";
-import { i18n, runWithLocale } from "../utils/i18n";
+import { i18n, runWithLocale, toBotLocale } from "../utils/i18n";
+import { INSTANCE, isPrimary, stay247Of } from "../utils/instance";
 import {
     ChannelLabel,
     enqueue,
@@ -29,11 +25,29 @@ import {
     PlayRejection,
     playRejectionMessage
 } from "../utils/playFlow";
+import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
 import { DiscordPlayerService, isGuessGameQueue, PlayError, QueueMetadata } from "./discordPlayer";
+import { clearEffects, resolveEffect, setBassBoost, setEffect } from "./effects";
+import { clearPlayback, ensurePlaybackIndexes, publishPlayback, startPlaybackRefresher, toLiveTrack } from "./fleet/playbackState";
 import { GuildSettingsService } from "./guildSettings";
+import { PlayerPanelService } from "./playerPanel";
+import { searchYouTube } from "./youtubeSearch";
 
-/** Outcome of a dashboard play request, already in the server's language. */
-type DashboardPlayOutcome = { ok: true; message: string; queue: GuildQueue } | { ok: false; message: string };
+/** Outcome of a bus command, already in the requester's (or server's) language. */
+interface BusOutcome {
+  ok: boolean;
+  message: string;
+  /** Structured result written to the command's `data` (search results, play position). */
+  data?: unknown;
+  /** Queue to republish afterwards. */
+  queue?: GuildQueue | null;
+}
+
+/** `play {source}` → search engine for plain-text queries. */
+const SEARCH_SOURCES: Record<string, SearchQueryType> = {
+  youtube: QueryType.YOUTUBE_SEARCH,
+  soundcloud: QueryType.SOUNDCLOUD_SEARCH
+};
 
 /** The dashboard shows plain text: drop Discord markdown from bot messages. */
 function plainText(text: string): string {
@@ -50,8 +64,9 @@ const channelName: ChannelLabel = (_id, name) => `#${name}`;
  * DashboardSyncService - Syncs bot state with the dashboard via MongoDB
  * 
  * This service handles:
- * 1. Writing playback state to MongoDB when player events occur
- * 2. Polling for commands from the dashboard and executing them
+ * 1. Publishing this instance's playback state (Redis + live stream on every
+ *    player event and every 5 s while connected; Mongo mirror on events)
+ * 2. Polling for commands addressed to this instance and executing them
  */
 export class DashboardSyncService {
   private static instance: DashboardSyncService;
@@ -59,6 +74,7 @@ export class DashboardSyncService {
   private player: Player | null = null;
   private playerService: DiscordPlayerService | null = null;
   private pollInterval: NodeJS.Timeout | null = null;
+  private refreshTimer: NodeJS.Timeout | null = null;
   private initialized = false;
 
   private constructor() {}
@@ -91,6 +107,8 @@ export class DashboardSyncService {
 
     // Set up player event listeners for state sync
     this.setupPlayerEventListeners();
+    this.refreshTimer = startPlaybackRefresher(() => this.playerService?.getPlayer() ?? null);
+    void this.migratePlaybackIndexes();
 
     // Start polling for dashboard commands
     this.startCommandPolling();
@@ -174,129 +192,21 @@ export class DashboardSyncService {
     checkAndSetup();
   }
 
-  /**
-   * Update playback state in MongoDB
-   */
+  /** Key `playbackstates` by (guildId, instance); retried until the database is up. */
+  private async migratePlaybackIndexes(attempt = 0): Promise<void> {
+    if (await ensurePlaybackIndexes()) return;
+    if (attempt >= 20) return;
+    setTimeout(() => void this.migratePlaybackIndexes(attempt + 1), 30_000).unref();
+  }
+
+  /** Publish this instance's state for the queue (Redis, live stream, Mongo mirror). */
   private async updatePlaybackState(queue: GuildQueue): Promise<void> {
-    if (!queue.guild) return;
-
-    try {
-      const guildId = queue.guild.id;
-      const metadata = (queue.metadata || {}) as QueueMetadata;
-      const voiceChannel = queue.channel as VoiceChannel | null;
-      
-      // Get current track from metadata workaround or queue.currentTrack
-      const currentTrack = metadata.currentTrack || queue.currentTrack;
-
-      // Build the playback state
-      const state = {
-        guildId,
-        isConnected: !!voiceChannel,
-        voiceChannelId: voiceChannel?.id || null,
-        voiceChannelName: voiceChannel?.name || null,
-        textChannelId: metadata.channel?.id || null,
-        isPlaying: queue.node.isPlaying(),
-        isPaused: queue.node.isPaused(),
-        volume: queue.node.volume,
-        currentTrack: currentTrack ? this.formatTrack(currentTrack) : null,
-        currentPosition: queue.node.streamTime || 0,
-        queue: queue.tracks.toArray().slice(0, 50).map(t => this.formatTrack(t)),
-        queueSize: queue.tracks.size,
-        loopMode: this.getLoopMode(queue),
-        audioBitrate: metadata.audioBitrate || 96,
-        playbackStartedAt: currentTrack ? new Date() : null,
-        lastUpdated: new Date(),
-      };
-
-      // Write to Redis first (faster, real-time)
-      try {
-        if (await isRedisAvailable()) {
-          await setRedisPlaybackState(guildId, state);
-        }
-      } catch (redisError) {
-        console.warn("[DashboardSync] Redis write failed, falling back to MongoDB only:", redisError);
-      }
-
-      // Upsert the state to MongoDB (backup/persistence)
-      // Two events in the same tick (trackAdd + playerStart) can both try to
-      // insert; the loser hits E11000 and just updates the winner's document.
-      try {
-        await PlaybackState.findOneAndUpdate({ guildId }, state, { upsert: true, new: true });
-      } catch (error: any) {
-        if (error?.code !== 11000) throw error;
-        await PlaybackState.findOneAndUpdate({ guildId }, state, { new: true });
-      }
-
-      console.log(`[DashboardSync] 📤 Updated playback state for guild ${guildId}`);
-    } catch (error) {
-      console.error("[DashboardSync] ❌ Failed to update playback state:", error);
-    }
+    await publishPlayback(queue, true);
   }
 
-  /**
-   * Clear playback state from MongoDB and Redis
-   */
+  /** This instance left the server's voice channel: drop its state. */
   private async clearPlaybackState(guildId?: string): Promise<void> {
-    if (!guildId) return;
-
-    try {
-      // Clear from Redis first
-      try {
-        if (await isRedisAvailable()) {
-          await clearRedisPlaybackState(guildId);
-        }
-      } catch (redisError) {
-        console.warn("[DashboardSync] Redis clear failed:", redisError);
-      }
-
-      // Clear from MongoDB
-      await PlaybackState.deleteOne({ guildId });
-      console.log(`[DashboardSync] 🗑️ Cleared playback state for guild ${guildId}`);
-    } catch (error) {
-      console.error("[DashboardSync] ❌ Failed to clear playback state:", error);
-    }
-  }
-
-  /**
-   * Format a track for the playback state
-   */
-  private formatTrack(track: Track): ITrack {
-    return {
-      title: track.title,
-      author: track.author,
-      url: track.url,
-      thumbnail: track.thumbnail || "",
-      duration: track.durationMS,
-      requestedBy: {
-        id: track.requestedBy?.id || "unknown",
-        username: track.requestedBy?.username || "Unknown",
-        avatar: track.requestedBy?.avatar || null,
-      },
-      source: this.getTrackSource(track.source),
-    };
-  }
-
-  /**
-   * Get the loop mode string
-   */
-  private getLoopMode(queue: GuildQueue): "off" | "track" | "queue" {
-    switch (queue.repeatMode) {
-      case 1: return "track";
-      case 2: return "queue";
-      default: return "off";
-    }
-  }
-
-  /**
-   * Get the track source
-   */
-  private getTrackSource(source: string): "youtube" | "spotify" | "soundcloud" | "file" | "unknown" {
-    const s = source.toLowerCase();
-    if (s.includes("youtube")) return "youtube";
-    if (s.includes("spotify")) return "spotify";
-    if (s.includes("soundcloud")) return "soundcloud";
-    if (s.includes("attachment") || s.includes("file")) return "file";
-    return "unknown";
+    await clearPlayback(guildId);
   }
 
   /**
@@ -310,15 +220,24 @@ export class DashboardSyncService {
     console.log("[DashboardSync] ✅ Started command polling");
   }
 
+  /** Commands addressed to this instance (pre-fleet documents have no instance = 1). */
+  private instanceFilter(): Record<string, unknown> {
+    return INSTANCE === 1
+      ? { $or: [{ instance: 1 }, { instance: { $exists: false } }, { instance: null }] }
+      : { instance: INSTANCE };
+  }
+
   /**
-   * Process pending commands from the dashboard
+   * Process pending commands from the dashboard (and, on secondaries, the jobs
+   * the primary hands over)
    */
   private async processCommands(): Promise<void> {
     try {
       // Process regular player commands
-      const commands = await BotCommand.find({ 
+      const commands = await BotCommand.find({
         status: "pending",
-        guildId: { $exists: true }  // Regular commands have guildId
+        guildId: { $exists: true }, // Regular commands have guildId
+        ...this.instanceFilter()
       })
         .sort({ createdAt: 1 })
         .limit(10);
@@ -327,8 +246,11 @@ export class DashboardSyncService {
         await this.executeCommand(command as IBotCommand);
       }
 
+      // Linked bots and owner actions belong to the primary.
+      if (!isPrimary) return;
+
       // Process linked bot commands
-      const linkedBotCommands = await BotCommand.find({ 
+      const linkedBotCommands = await BotCommand.find({
         status: "pending",
         type: { $in: ["linked_bot_start", "linked_bot_stop", "linked_bot_restart", "admin_resync"] }
       })
@@ -457,254 +379,315 @@ export class DashboardSyncService {
   }
 
   /**
-   * Execute a single command from the dashboard
+   * Execute a single player command (from the dashboard or forwarded by the
+   * primary). The result is written back in plain text, in the requester's
+   * language when the command carries one, else the server's.
    */
   private async executeCommand(command: IBotCommand): Promise<void> {
-    const { guildId, command: cmd, params, userId, _id } = command;
+    const { guildId, command: cmd, _id } = command;
 
     if (!_id || !guildId || !cmd) return;
+    if (!(await this.claim(_id))) return;
 
+    console.log(`[DashboardSync] 🎵 Executing command: ${cmd} for guild ${guildId}`);
+
+    const guild = this.client?.guilds.cache.get(guildId) ?? null;
+    const locale = toBotLocale(command.params?.locale) ?? (await localeForGuild(guild));
+    let outcome: BusOutcome;
     try {
-      // Mark as processing
-      if (!(await this.claim(_id))) return;
-
-      console.log(`[DashboardSync] 🎵 Executing command: ${cmd} for guild ${guildId}`);
-
-      const guild = this.client?.guilds.cache.get(guildId);
-      if (!guild) {
-        throw new Error("Guild not found");
-      }
-
-      // Same pipeline, limits and requester as /play.
-      if (cmd === "play") {
-        await this.executePlay(command, guild);
-        return;
-      }
-
-      const player = this.playerService?.getPlayer();
-      if (!player) {
-        throw new Error("Player not initialized");
-      }
-
-      // A guess-the-song round owns the player: skip/pause/seek/previous from
-      // the web would silence or end it. /guess stop ends the game.
-      if (isGuessGameQueue(player.nodes.get(guildId))) {
-        const locale = await localeForGuild(guild);
-        throw new Error(runWithLocale(locale, () => i18n.__mf("guess.blockedDuringGame", { stop: "/guess stop" })));
-      }
-
-      let result: string = "Command executed";
-
-      switch (cmd) {
-        case "pause": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.node.pause();
-            result = "Paused";
-          }
-          break;
-        }
-
-        case "resume": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.node.resume();
-            result = "Resumed";
-          }
-          break;
-        }
-
-        case "skip": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.node.skip();
-            result = "Skipped";
-          }
-          break;
-        }
-
-        case "stop": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.delete();
-            result = "Stopped";
-          }
-          break;
-        }
-
-        case "volume": {
-          const queue = player.nodes.get(guildId);
-          if (queue && typeof params?.volume === "number") {
-            queue.node.setVolume(Math.min(100, Math.max(0, params.volume)));
-            result = `Volume set to ${params.volume}%`;
-          }
-          break;
-        }
-
-        case "shuffle": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.tracks.shuffle();
-            result = "Queue shuffled";
-          }
-          break;
-        }
-
-        case "loop": {
-          const queue = player.nodes.get(guildId);
-          if (queue && params?.loopMode) {
-            const mode = params.loopMode === "track" ? 1 : params.loopMode === "queue" ? 2 : 0;
-            queue.setRepeatMode(mode);
-            result = `Loop mode: ${params.loopMode}`;
-          }
-          break;
-        }
-
-        case "remove": {
-          const queue = player.nodes.get(guildId);
-          if (queue && typeof params?.position === "number") {
-            const tracks = queue.tracks.toArray();
-            if (params.position >= 0 && params.position < tracks.length) {
-              const track = tracks[params.position];
-              queue.tracks.removeOne(t => t.url === track.url);
-              result = `Removed: ${track.title}`;
-            } else {
-              result = "Track not found";
-            }
-          }
-          break;
-        }
-
-        case "skipto": {
-          const queue = player.nodes.get(guildId);
-          if (queue && typeof params?.position === "number") {
-            queue.node.skipTo(params.position);
-            result = `Skipped to position ${params.position}`;
-          }
-          break;
-        }
-
-        case "move": {
-          const queue = player.nodes.get(guildId);
-          if (queue && typeof params?.from === "number" && typeof params?.to === "number") {
-            const tracks = queue.tracks.toArray();
-            if (params.from >= 0 && params.from < tracks.length) {
-              const [track] = tracks.splice(params.from, 1);
-              tracks.splice(params.to, 0, track);
-              queue.tracks.clear();
-              tracks.forEach(t => queue.tracks.add(t));
-              result = `Moved track from ${params.from} to ${params.to}`;
-            }
-          }
-          break;
-        }
-
-        case "clear": {
-          const queue = player.nodes.get(guildId);
-          if (queue) {
-            queue.tracks.clear();
-            result = "Queue cleared";
-          }
-          break;
-        }
-
-        case "seek": {
-          const queue = player.nodes.get(guildId);
-          if (queue && typeof params?.seconds === "number") {
-            await queue.node.seek(params.seconds * 1000);
-            result = `Seeked to ${params.seconds}s`;
-          }
-          break;
-        }
-
-        case "previous": {
-          const queue = player.nodes.get(guildId);
-          if (queue && !queue.history.isEmpty()) {
-            await queue.history.previous();
-            result = "Playing previous track";
-          } else {
-            result = "No previous track in history";
-          }
-          break;
-        }
-
-        default:
-          throw new Error(`Unknown command: ${cmd}`);
-      }
-
-      // Mark as completed
-      await BotCommand.updateOne(
-        { _id },
-        { status: "completed", result, processedAt: new Date() }
-      );
-
-      // Update playback state after command
-      const queue = player.nodes.get(guildId);
-      if (queue) {
-        await this.updatePlaybackState(queue);
-      }
-
-      console.log(`[DashboardSync] ✅ Command completed: ${cmd} - ${result}`);
+      outcome = guild
+        ? await runWithLocale(locale, () => this.runCommand(command, guild))
+        : { ok: false, message: runWithLocale(locale, () => i18n.__("fleet.bus.notInGuild")) };
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error";
-      console.error(`[DashboardSync] ❌ Command failed: ${cmd} - ${errorMessage}`);
-
-      await BotCommand.updateOne(
-        { _id },
-        { status: "failed", error: errorMessage, processedAt: new Date() }
-      );
+      if (!(error instanceof PlayError)) console.error(`[DashboardSync] ❌ Command ${cmd} crashed:`, error);
+      outcome = { ok: false, message: error instanceof Error ? error.message : "Unknown error" };
     }
+
+    const message = plainText(outcome.message);
+    await BotCommand.updateOne(
+      { _id },
+      outcome.ok
+        ? { status: "completed", result: message, data: outcome.data, processedAt: new Date() }
+        : { status: "failed", error: message, processedAt: new Date() }
+    );
+
+    if (outcome.ok) console.log(`[DashboardSync] ✅ Command completed: ${cmd} - ${message}`);
+    else console.log(`[DashboardSync] ⛔ Command ${cmd} refused in guild ${guildId}: ${message}`);
+
+    const queue = outcome.queue ?? this.playerService?.getQueue(guildId);
+    if (queue && !queue.deleted) await this.updatePlaybackState(queue);
+  }
+
+  /** One bus command against this instance's queue in `guild`. */
+  private async runCommand(command: IBotCommand, guild: Guild): Promise<BusOutcome> {
+    const cmd = command.command;
+    const params = command.params ?? {};
+    const ok = (message: string, queue?: GuildQueue | null, data?: unknown): BusOutcome => ({ ok: true, message, queue, data });
+    const fail = (message: string): BusOutcome => ({ ok: false, message });
+
+    // Commands that don't need a running queue.
+    if (cmd === "play") return this.busPlay(command, guild);
+    if (cmd === "search") return this.busSearch(params.query);
+
+    const player = this.playerService?.getPlayer();
+    if (!player) return fail(i18n.__("play.initializing"));
+    const queue = player.nodes.get(guild.id);
+
+    // A guess-the-song round owns the player: skip/pause/seek/previous from
+    // the web would silence or end it. /guess stop ends the game.
+    if (isGuessGameQueue(queue)) return fail(i18n.__mf("guess.blockedDuringGame", { stop: "/guess stop" }));
+
+    if (cmd === "join") return this.busJoin(command, guild);
+    if (cmd === "leave") {
+      if (!queue || queue.deleted || !queue.connection) return fail(i18n.__("leave.errorNotInChannel"));
+      const name = queue.channel?.name ?? i18n.__("common.voiceChannel");
+      queue.delete();
+      return ok(i18n.__mf("fleet.bus.left", { channel: `#${name}` }));
+    }
+
+    if (!queue || queue.deleted) return fail(i18n.__("fleet.bus.nothingPlaying"));
+    const panel = PlayerPanelService.getInstance();
+    const size = queue.tracks.size;
+    const badPosition = () => fail(i18n.__mf("fleet.bus.badPosition", { max: Math.max(1, size) }));
+    const inRange = (n: unknown): n is number => typeof n === "number" && Number.isInteger(n) && n >= 0 && n < size;
+
+    switch (cmd) {
+      case "pause":
+        queue.node.pause();
+        return ok(i18n.__("fleet.bus.paused"), queue);
+
+      case "resume":
+        queue.node.resume();
+        return ok(i18n.__("fleet.bus.resumed"), queue);
+
+      case "skip": {
+        const current = queue.currentTrack;
+        if (!current && size === 0) return fail(i18n.__("fleet.bus.nothingPlaying"));
+        queue.node.skip();
+        return ok(i18n.__mf("fleet.bus.skipped", { title: truncate(current?.title ?? "", 100) }), queue);
+      }
+
+      case "previous":
+        if (queue.history.isEmpty()) return fail(i18n.__("fleet.bus.noPrevious"));
+        await queue.history.previous();
+        return ok(i18n.__("fleet.bus.previous"), queue);
+
+      case "stop":
+        queue.delete();
+        return ok(i18n.__("fleet.bus.stopped"));
+
+      case "volume": {
+        if (typeof params.volume !== "number" || !Number.isFinite(params.volume)) return fail(i18n.__mf("fleet.bus.badVolume", { max: 100 }));
+        // The dashboard obeys the server's maximum like /volume does.
+        const settings = await GuildSettingsService.getInstance().getSettings(guild.id);
+        const max = Math.min(100, settings.maxVolume ?? 100);
+        const volume = Math.round(Math.min(max, Math.max(0, params.volume)));
+        queue.node.setVolume(volume);
+        panel.refresh(queue);
+        return ok(i18n.__mf(volume < params.volume ? "fleet.bus.volumeCapped" : "fleet.bus.volume", { volume }), queue);
+      }
+
+      case "shuffle":
+        queue.tracks.shuffle();
+        panel.refresh(queue);
+        return ok(i18n.__("fleet.bus.shuffled"), queue);
+
+      case "loop": {
+        const modes: Record<string, QueueRepeatMode> = { off: QueueRepeatMode.OFF, track: QueueRepeatMode.TRACK, queue: QueueRepeatMode.QUEUE };
+        const mode = params.loopMode ? modes[params.loopMode] : undefined;
+        if (mode === undefined) return fail(i18n.__("fleet.bus.badLoop"));
+        queue.setRepeatMode(mode);
+        panel.refresh(queue, true);
+        const label = mode === QueueRepeatMode.TRACK ? "player.loopTrack" : mode === QueueRepeatMode.QUEUE ? "player.loopQueue" : "player.loopOff";
+        return ok(i18n.__(label), queue);
+      }
+
+      case "autoplay": {
+        const metadata = (queue.metadata || {}) as QueueMetadata;
+        const enabled = typeof params.enabled === "boolean" ? params.enabled : !metadata.autoplay;
+        metadata.autoplay = enabled;
+        queue.metadata = metadata;
+        if (enabled) {
+          void ensureAutoplayNext(queue).then((added) => added && panel.refresh(queue));
+        } else {
+          for (const t of queue.tracks.toArray().filter(isAutoplayTrack)) queue.removeTrack(t);
+        }
+        panel.refresh(queue, true);
+        return ok(i18n.__(enabled ? "player.autoplayEnabled" : "player.autoplayDisabled"), queue);
+      }
+
+      case "filter": {
+        if (!queue.currentTrack) return fail(i18n.__("effects.nothingPlaying"));
+        if ((params.name ?? "").toLowerCase() === "clear") {
+          await clearEffects(queue);
+          return ok(i18n.__("effects.clear.done"), queue);
+        }
+        const effect = resolveEffect(params.name);
+        if (!effect) return fail(i18n.__("effects.unknown"));
+        if (effect === "bassboost" && params.level) {
+          await setBassBoost(queue, params.level);
+          return ok(i18n.__mf("fleet.bus.bassBoost", { level: i18n.__(`effects.bassboost.level.${params.level}`) }), queue);
+        }
+        const on = await setEffect(queue, effect, typeof params.enabled === "boolean" ? params.enabled : null);
+        const name = effect === "bassboost" ? i18n.__("fleet.bus.bassBoostName") : i18n.__(`effects.${effect}.name`);
+        return ok(i18n.__mf(on ? "fleet.bus.effectOn" : "fleet.bus.effectOff", { effect: name }), queue);
+      }
+
+      case "remove": {
+        const positions = [...new Set(params.positions?.length ? params.positions : [params.position])];
+        if (!positions.every(inRange)) return badPosition();
+        const tracks = queue.tracks.toArray();
+        const removed = (positions as number[]).sort((a, b) => b - a).map((index) => {
+          queue.removeTrack(index);
+          return tracks[index].title;
+        });
+        return ok(i18n.__mf("fleet.bus.removed", { title: truncate(removed.reverse().join(", "), 200) }), queue);
+      }
+
+      case "move": {
+        if (!inRange(params.from) || !inRange(params.to)) return badPosition();
+        const track = queue.tracks.at(params.from)!;
+        queue.moveTrack(params.from, params.to);
+        return ok(i18n.__mf("fleet.bus.moved", { title: truncate(track.title, 100), position: params.to + 1 }), queue);
+      }
+
+      case "skipto": {
+        if (!inRange(params.position)) return badPosition();
+        const track = queue.tracks.at(params.position)!;
+        queue.node.skipTo(params.position);
+        return ok(i18n.__mf("fleet.bus.skippedTo", { title: truncate(track.title, 100) }), queue);
+      }
+
+      case "clear":
+        queue.tracks.clear();
+        return ok(i18n.__("fleet.bus.cleared"), queue);
+
+      case "seek": {
+        const track = queue.currentTrack;
+        if (!track) return fail(i18n.__("fleet.bus.nothingPlaying"));
+        // Contract: position in ms; older dashboards send seconds.
+        const ms = typeof params.position === "number" ? params.position : typeof params.seconds === "number" ? params.seconds * 1000 : NaN;
+        if (!Number.isFinite(ms) || ms < 0 || (track.durationMS > 0 && ms >= track.durationMS)) {
+          return fail(i18n.__mf("fleet.bus.badSeek", { duration: formatDuration(track.durationMS) }));
+        }
+        await queue.node.seek(Math.round(ms));
+        panel.refresh(queue, true);
+        return ok(i18n.__mf("fleet.bus.seeked", { time: formatDuration(ms) }), queue);
+      }
+
+      default:
+        return fail(i18n.__mf("fleet.bus.unknownCommand", { command: String(cmd) }));
+    }
+  }
+
+  /** "search": YouTube results as contract tracks, no queue change. */
+  private async busSearch(rawQuery: string | undefined): Promise<BusOutcome> {
+    const query = rawQuery?.trim() ?? "";
+    if (!query) return { ok: false, message: i18n.__("dashboardPlay.noQuery") };
+
+    let results: LiveTrack[] = [];
+    if (/^https?:\/\//i.test(query)) {
+      const found = await this.playerService?.search(query);
+      results = (found?.tracks ?? []).slice(0, 10).map(toLiveTrack);
+    } else {
+      const videos = await searchYouTube(query, 10).catch(() => null);
+      if (!videos) return { ok: false, message: i18n.__("fleet.bus.searchFailed") };
+      results = videos.map((v) => ({
+        title: v.title,
+        author: v.author,
+        url: v.url,
+        thumbnail: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`,
+        duration: v.isLive ? "" : (v.durationText ?? ""),
+        durationMs: v.durationSec ? v.durationSec * 1000 : 0,
+        source: "youtube"
+      }));
+    }
+    return { ok: true, message: i18n.__mf("fleet.bus.searchResults", { count: results.length }), data: { results } };
+  }
+
+  /** "join": connect to a voice channel without playing (like /join). */
+  private async busJoin(command: IBotCommand, guild: Guild): Promise<BusOutcome> {
+    const fail = (message: string): BusOutcome => ({ ok: false, message });
+    const member = await this.memberOf(command, guild);
+    const target = await this.dashboardVoiceChannel(guild, member, command.params?.voiceChannelId, !command.params?.voiceChannelId);
+    if (typeof target === "string") return fail(target);
+
+    const me = guild.members.me;
+    if (!me || !target.permissionsFor(me).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect, PermissionFlagsBits.Speak])) {
+      return fail(i18n.__mf("play.cantJoin", { channel: channelName(target.id, target.name) }));
+    }
+
+    const playerService = this.playerService!;
+    const existing = playerService.getQueue(guild.id);
+    const live = existing && !existing.deleted ? existing : null;
+    if (live?.channel && live.channel.id !== target.id) {
+      const listeners = live.channel.members.filter((m) => !m.user.bot).size;
+      if (live.currentTrack && listeners > 0) {
+        return fail(i18n.__mf("play.botNotInChannel", { channel: channelName(live.channel.id, live.channel.name) }));
+      }
+      await live.connect(target);
+      return { ok: true, message: i18n.__mf("fleet.bus.joined", { channel: channelName(target.id, target.name) }), queue: live };
+    }
+
+    const queue = await playerService.createQueue(guild, await this.panelChannel(guild, command.params?.textChannelId));
+    if (!queue.connection) await queue.connect(target, { deaf: true });
+    return { ok: true, message: i18n.__mf("fleet.bus.joined", { channel: channelName(target.id, target.name) }), queue };
+  }
+
+  /** The member behind a command (dashboard user or forwarded requester), if still in the server. */
+  private async memberOf(command: IBotCommand, guild: Guild): Promise<GuildMember | null> {
+    const userId = command.userId ?? command.requestedBy?.id ?? "";
+    return /^\d{15,25}$/.test(userId) ? await guild.members.fetch(userId).catch(() => null) : null;
   }
 
   /**
-   * "play" from the dashboard: the same pipeline as /play (limits, quality,
-   * requester), with the outcome written back in the server's language.
+   * "play" from the dashboard or the primary's dispatcher: the same pipeline
+   * as /play (limits, quality, requester), with the outcome in plain text.
    */
-  private async executePlay(command: IBotCommand, guild: Guild): Promise<void> {
-    const locale = await localeForGuild(guild);
-    const outcome = await runWithLocale(locale, () => this.dashboardPlay(command, guild));
-
-    if (outcome.ok) {
-      await BotCommand.updateOne(
-        { _id: command._id },
-        { status: "completed", result: outcome.message, processedAt: new Date() }
-      );
-      await this.updatePlaybackState(outcome.queue);
-      console.log(`[DashboardSync] ✅ Command completed: play - ${outcome.message}`);
-    } else {
-      await BotCommand.updateOne(
-        { _id: command._id },
-        { status: "failed", error: outcome.message, processedAt: new Date() }
-      );
-      console.log(`[DashboardSync] ⛔ play refused in guild ${guild.id}: ${outcome.message}`);
-    }
-  }
-
-  private async dashboardPlay(command: IBotCommand, guild: Guild): Promise<DashboardPlayOutcome> {
-    const query = command.params?.query?.trim() ?? "";
-    const fail = (message: string): DashboardPlayOutcome => ({ ok: false, message: plainText(message) });
+  private async busPlay(command: IBotCommand, guild: Guild): Promise<BusOutcome> {
+    const params = command.params ?? {};
+    const query = params.query?.trim() ?? "";
+    const fail = (message: string): BusOutcome => ({ ok: false, message });
 
     try {
       if (!query) return fail(i18n.__("dashboardPlay.noQuery"));
 
-      const userId = command.userId ?? "";
-      const member = /^\d{15,25}$/.test(userId) ? await guild.members.fetch(userId).catch(() => null) : null;
+      const member = await this.memberOf(command, guild);
       if (!member) return fail(i18n.__("dashboardPlay.notMember"));
 
       const gate = await playGate(guild.id, member);
       if (gate) return fail(playRejectionMessage(gate, query, channelName));
 
-      const target = await this.dashboardVoiceChannel(guild, member, command.params?.voiceChannelId);
+      const target = await this.dashboardVoiceChannel(guild, member, params.voiceChannelId);
       if (typeof target === "string") return fail(target);
+
+      // /playnow: replacing what plays is a DJ action.
+      const before = this.playerService?.getQueue(guild.id);
+      const replacing = Boolean(params.now && before && !before.deleted && before.currentTrack);
+      if (replacing) {
+        const verdict = await canUse(member, "skip");
+        if (!verdict.ok) return fail(denialMessage(verdict));
+      }
 
       const result = await enqueue({
         guild,
         member,
         voiceChannel: target,
-        textChannel: await this.panelChannel(guild),
-        query
+        textChannel: await this.panelChannel(guild, params.textChannelId),
+        query,
+        next: Boolean(params.next || params.now),
+        searchEngine: params.source ? SEARCH_SOURCES[params.source] : undefined
       });
-      return { ok: true, message: this.describePlay(result), queue: result.queue };
+
+      if (replacing && result.position === 1) result.queue.node.skip();
+      if (params.autoplay) {
+        // /radio: keep going with related songs.
+        const metadata = (result.queue.metadata || {}) as QueueMetadata;
+        metadata.autoplay = true;
+        result.queue.metadata = metadata;
+        void ensureAutoplayNext(result.queue).then((added) => added && PlayerPanelService.getInstance().refresh(result.queue));
+      }
+      return { ok: true, message: this.describePlay(result), queue: result.queue, data: { position: result.position, added: result.added } };
     } catch (error) {
       if (error instanceof PlayRejection) return fail(playRejectionMessage(error, query, channelName));
       if (!(error instanceof PlayError)) console.error("[DashboardSync] ❌ Dashboard play failed:", error);
@@ -716,13 +699,15 @@ export class DashboardSyncService {
    * Where a dashboard play goes: the requester's own voice channel, else the
    * channel picked in the dashboard, else the channel the bot is already
    * playing in. Never some other channel. Returns the channel or a message.
+   * `preferRequested` (join) puts the picked channel first.
    */
   private async dashboardVoiceChannel(
     guild: Guild,
-    member: GuildMember,
-    requestedId: string | undefined
+    member: GuildMember | null,
+    requestedId: string | undefined,
+    preferMember = true
   ): Promise<VoiceBasedChannel | string> {
-    if (member.voice.channel) return member.voice.channel;
+    if (preferMember && member?.voice.channel) return member.voice.channel;
 
     const queue = this.playerService?.getQueue(guild.id);
     const sessionId = (queue && !queue.deleted ? queue.channel?.id : null) ?? guild.members.me?.voice.channelId ?? null;
@@ -733,7 +718,7 @@ export class DashboardSyncService {
     if (!channel || !channel.isVoiceBased()) return i18n.__("dashboardPlay.channelGone");
 
     // A dashboard manager can only send music where they could listen to it.
-    if (!channel.permissionsFor(member).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
+    if (member && !channel.permissionsFor(member).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
       return i18n.__mf("dashboardPlay.memberCantJoin", { channel: channelName(channel.id, channel.name) });
     }
     return channel;
@@ -741,10 +726,11 @@ export class DashboardSyncService {
 
   /**
    * Text channel for the player panel when this starts a session: the
-   * running session's channel, else the 24/7 or first allowed text channel
-   * from the server settings, else the system channel.
+   * running session's channel, else the channel the request came from (fleet
+   * dispatch), else the 24/7 or first allowed text channel from the server
+   * settings, else the system channel.
    */
-  private async panelChannel(guild: Guild): Promise<TextChannel | null> {
+  private async panelChannel(guild: Guild, preferredId?: string): Promise<TextChannel | null> {
     const queue = this.playerService?.getQueue(guild.id);
     const current = queue && !queue.deleted ? ((queue.metadata || {}) as QueueMetadata).channel : undefined;
     if (current) return current;
@@ -758,7 +744,7 @@ export class DashboardSyncService {
     };
 
     const settings = await GuildSettingsService.getInstance().getSettings(guild.id).catch(() => null);
-    for (const id of [settings?.stay247?.textChannelId, ...(settings?.allowedTextChannels ?? [])]) {
+    for (const id of [preferredId, stay247Of(settings)?.textChannelId, ...(settings?.allowedTextChannels ?? [])]) {
       const channel = usable(id);
       if (channel) return channel;
     }
@@ -783,6 +769,10 @@ export class DashboardSyncService {
     if (this.pollInterval) {
       clearInterval(this.pollInterval);
       this.pollInterval = null;
+    }
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer);
+      this.refreshTimer = null;
     }
     console.log("[DashboardSync] 🛑 Dashboard sync service stopped");
   }

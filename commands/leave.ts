@@ -1,7 +1,6 @@
 import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { logAction } from "../utils/actionLog";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 
 export default {
@@ -13,12 +12,6 @@ export default {
     
     const guildMember = interaction.member as GuildMember;
 
-    const hasDJ = await hasDJPermission(guildMember);
-    if (!hasDJ) {
-      return interaction.editReply({ 
-        content: `❌ ${i18n.__("common.djRequired")}`
-      }).catch(console.error);
-    }
 
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);

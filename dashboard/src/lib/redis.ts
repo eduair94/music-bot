@@ -1,5 +1,6 @@
 import Redis from "ioredis";
 import "server-only";
+import { FleetEvent, fleetKeys } from "../../../shared/fleet";
 
 // Redis key prefixes - must match the bot's shared/services/redis.ts
 export const REDIS_KEYS = {
@@ -17,7 +18,7 @@ const globalForRedis = globalThis as unknown as {
   redisClient: Redis | undefined;
 };
 
-function getRedis(): Redis | null {
+export function getRedis(): Redis | null {
   const redisUrl = process.env.REDIS_URL || process.env.REDIS_URI;
   
   if (!redisUrl) {
@@ -199,6 +200,67 @@ export async function pingRedis(): Promise<{ ok: boolean; ms: number | null }> {
   } catch {
     return { ok: false, ms: null };
   }
+}
+
+// ============ Fleet (multi-bot) ============
+
+/** Parse a JSON value from Redis; null when missing, unreadable or Redis is down. */
+async function readJson<T>(key: string): Promise<T | null> {
+  try {
+    const redis = getRedis();
+    if (!redis) return null;
+    const data = await redis.get(key);
+    return data ? (JSON.parse(data) as T) : null;
+  } catch (error) {
+    console.error(`[Redis] Error reading ${key}:`, error);
+    return null;
+  }
+}
+
+/** Raw playback state of one fleet instance (`playback:<guildId>:<n>`). */
+export function getInstancePlaybackRaw(guildId: string, instance: number): Promise<Record<string, unknown> | null> {
+  return readJson(fleetKeys.playback(guildId, instance));
+}
+
+/** Heartbeat of one fleet instance (`bot:status:<n>`, instance 1 falls back to `bot:status`). */
+export async function getInstanceStatus(instance: number): Promise<Record<string, unknown> | null> {
+  const status = await readJson<Record<string, unknown>>(fleetKeys.status(instance));
+  if (status || instance !== 1) return status;
+  return readJson(fleetKeys.legacyStatus);
+}
+
+/** Whether an instance is in a guild (`bot:guilds:<n>`); null when Redis is not available. */
+export async function isInstanceInGuild(instance: number, guildId: string): Promise<boolean | null> {
+  try {
+    const redis = getRedis();
+    if (!redis) return null;
+    if ((await redis.sismember(fleetKeys.guilds(instance), guildId)) === 1) return true;
+    // Instance 1 before the fleet deploy only wrote the legacy keys.
+    if (instance === 1) return (await redis.exists(REDIS_KEYS.BOT_GUILD(guildId))) === 1;
+    return false;
+  } catch (error) {
+    console.error("[Redis] Error checking fleet presence:", error);
+    return null;
+  }
+}
+
+/** Publish an event to a guild's live stream (`bypass:events:<guildId>`). */
+export async function publishGuildEvent(guildId: string, event: FleetEvent): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+  await redis.publish(fleetKeys.events(guildId), JSON.stringify(event));
+}
+
+/**
+ * A dedicated connection for SUBSCRIBE (a subscribed connection can't run
+ * other commands). The caller must quit it. Null when Redis is not configured.
+ */
+export function createRedisSubscriber(): Redis | null {
+  const redisUrl = process.env.REDIS_URL || process.env.REDIS_URI;
+  if (!redisUrl) return null;
+  const subscriber = new Redis(redisUrl, { maxRetriesPerRequest: null, lazyConnect: true });
+  subscriber.on("error", (err) => console.error("[Redis] Subscriber error:", err.message));
+  return subscriber;
 }
 
 /** Remove a guild from the bot presence keys (after an owner-initiated leave). */

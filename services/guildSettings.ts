@@ -1,5 +1,6 @@
 import { GuildSettings, IGuildSettings } from "../models/GuildSettings";
 import { DatabaseService } from "./database";
+import { publishSettingsChanged, startSettingsInvalidation } from "./settingsBus";
 
 /**
  * GuildSettingsService - Manages guild settings with caching
@@ -57,6 +58,7 @@ export class GuildSettingsService {
       },
       blacklistedUsers: [],
       blacklistedSongs: [],
+      permissionConfig: null,
       language: "auto",
       embedColor: "#F8AA2A",
       totalSongsPlayed: 0,
@@ -137,6 +139,7 @@ export class GuildSettingsService {
         if (settings) {
           // Update cache
           this.cache.set(guildId, settings as IGuildSettings);
+          publishSettingsChanged(guildId, Object.keys(updates));
         }
 
         return settings as IGuildSettings;
@@ -190,41 +193,8 @@ export class GuildSettingsService {
     return settings.blacklistedUsers.includes(userId);
   }
 
-  /**
-   * Check if user has DJ role or is admin
-   */
-  public async hasDJPermission(
-    guildId: string, 
-    userRoles: string[], 
-    isAdmin: boolean
-  ): Promise<boolean> {
-    if (isAdmin) return true;
-    
-    const settings = await this.getSettings(guildId);
-    
-    // No DJ role set = everyone can use DJ commands
-    if (!settings.djRoleId) return true;
-    
-    return userRoles.includes(settings.djRoleId);
-  }
-
-  /**
-   * Check if user can change settings (admin role or server admin)
-   */
-  public async canManageSettings(
-    guildId: string, 
-    userRoles: string[], 
-    isServerAdmin: boolean
-  ): Promise<boolean> {
-    if (isServerAdmin) return true;
-    
-    const settings = await this.getSettings(guildId);
-    
-    // No admin role set = only server admins can manage
-    if (!settings.adminRoleId) return false;
-    
-    return userRoles.includes(settings.adminRoleId);
-  }
+  // DJ and settings checks live in utils/permissions.ts (canUse), which
+  // evaluates the server's rules from shared/permissions.ts.
 
   /**
    * Check if guild has premium feature
@@ -315,6 +285,7 @@ export class GuildSettingsService {
         
         // Update cache
         this.cache.set(guildId, settings);
+        publishSettingsChanged(guildId, ["*"]);
         return settings;
       } catch (error) {
         console.error(`[GuildSettings] Error resetting settings for ${guildId}:`, error);
@@ -324,6 +295,14 @@ export class GuildSettingsService {
     // Reset in-memory cache
     this.cache.set(guildId, defaults);
     return defaults;
+  }
+
+  /**
+   * Drop a server's cached settings whenever another process (the dashboard,
+   * another bot instance) changes them. Call once Redis is reachable.
+   */
+  public async listenForChanges(): Promise<void> {
+    await startSettingsInvalidation((guildId) => this.clearCache(guildId));
   }
 
   /**

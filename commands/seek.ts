@@ -1,11 +1,11 @@
-import { ChatInputCommandInteraction, GuildMember, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { logAction } from "../utils/actionLog";
-import { hasDJPermission } from "../utils/djPermission";
 import { i18n } from "../utils/i18n";
 import { canModifyQueue } from "../utils/queue";
 
-function parseTimeToMs(timeStr: string): number | null {
+/** "1:30", "90", "1m30s", "1m", "90s" → ms (also used when /seek is forwarded to a fleet instance). */
+export function parseTimeToMs(timeStr: string): number | null {
   // Parse formats like "1:30", "90", "1m30s", "1m", "90s"
   const colonMatch = timeStr.match(/^(\d+):(\d+)$/);
   if (colonMatch) {
@@ -58,12 +58,6 @@ export default {
       return interaction.editReply({ content: i18n.__("common.errorNotChannel") }).catch(console.error);
     }
 
-    const hasDJ = await hasDJPermission(guildMember as GuildMember);
-    if (!hasDJ) {
-      return interaction.editReply({ 
-        content: `❌ ${i18n.__("common.djRequired")}`
-      }).catch(console.error);
-    }
 
     const playerService = DiscordPlayerService.getInstance();
     const queue = playerService.getQueue(interaction.guild!.id);
