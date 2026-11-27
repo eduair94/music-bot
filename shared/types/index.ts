@@ -185,6 +185,9 @@ export interface IGuildSettings {
   /** Command permissions for roles */
   permissions?: Record<string, { allowed: string[]; denied: string[] }>;
 
+  /** Permission rules per action group (shared/permissions.ts). Absent = derived from djRoleId. */
+  permissionConfig?: import("../permissions").PermissionConfig | null;
+
   /** Custom command prefixes */
   prefixes?: string[];
   

@@ -1027,7 +1027,27 @@
     "reset_title": "🔄 Permissions Reset",
     "reset_success": "All custom permissions have been reset to default.",
     "allowall_success": "All permissions are now allowed for {role}",
-    "denyall_success": "All permissions are now denied for {role}"
+    "denyall_success": "All permissions are now denied for {role}",
+    "groups": {
+      "play": "Add songs",
+      "playback": "Pause, resume, seek and previous",
+      "skip": "Skip",
+      "queue": "Edit the queue",
+      "volume": "Volume",
+      "effects": "Audio effects",
+      "loop_autoplay": "Loop and autoplay",
+      "stop_leave": "Stop, leave and join",
+      "lyrics_view": "Lyrics",
+      "settings": "Server settings"
+    },
+    "deny": {
+      "denied_user": "You are on the deny list for **{group}**.",
+      "denied_role": "One of your roles is on the deny list for **{group}**.",
+      "needs_dj": "**{group}** is limited to DJs on this server.",
+      "needs_admin": "**{group}** is limited to server admins.",
+      "hint": "Server admins can change this on the dashboard."
+    },
+    "voteSkipOff": "Vote-skip is turned off on this server. Server admins can change this on the dashboard."
   },
   "setsettings": {
     "updated": "✅ Settings Updated",

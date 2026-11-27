@@ -162,6 +162,11 @@ const guildSettingsSchema = new Schema<IGuildSettings>(
       type: Object,
       default: {}
     },
+    // Rule per action group (shared/permissions.ts); null = derived from djRoleId.
+    permissionConfig: {
+      type: Schema.Types.Mixed,
+      default: null
+    },
     prefixes: {
       type: [String],
       default: ["!"]
