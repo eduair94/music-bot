@@ -15,6 +15,10 @@ export interface AdminFeedbackItem {
   score?: number;
   contact?: string;
   quoteOk?: boolean;
+  /** Shown on the landing page (owner-controlled). */
+  featured?: boolean;
+  featuredAt?: string;
+  quoteAttribution?: string;
   userId?: string;
   userName?: string;
   guildId?: string;
@@ -38,6 +42,8 @@ export interface AdminFeedbackResponse {
   items: AdminFeedbackItem[];
   countsByKind: Record<FeedbackKind, number>;
   countsByStatus: Record<FeedbackStatus, number>;
+  /** Items on the landing page right now (featured and quotable). */
+  featuredCount: number;
   nps: AdminNps;
   windowDays: number;
   generatedAt: string;

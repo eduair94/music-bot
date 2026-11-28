@@ -37,7 +37,7 @@ const COPY = {
   } satisfies Record<DialogKind, string>,
   contactLabel: "Reply to (optional)",
   contactHint: "Discord username or email, if you want a reply",
-  quoteLabel: "You can quote this on the site",
+  quoteLabel: "You can quote this on the Bypass website, without my username",
   submit: "Send feedback",
   sending: "Sending…",
   cancel: "Cancel",

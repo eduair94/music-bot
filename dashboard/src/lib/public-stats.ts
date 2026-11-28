@@ -5,6 +5,7 @@ import { connectToDatabase } from "./mongodb";
 import { type PublicStats, summarizeFleet } from "./public-stats-shape";
 import { getRedis, REDIS_KEYS } from "./redis";
 import { GITHUB_URL } from "./site";
+import { withTimeout } from "./with-timeout";
 
 /*
  * Live public numbers for the landing pages. Every read is bounded by a short
@@ -12,18 +13,7 @@ import { GITHUB_URL } from "./site";
  * up or break a marketing page: the page simply renders without the numbers.
  */
 
-const TIMEOUT_MS = 1500;
 const MEMO_MS = 30_000;
-
-function withTimeout<T>(promise: Promise<T>, ms = TIMEOUT_MS): Promise<T | null> {
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  return Promise.race([
-    promise.catch(() => null),
-    new Promise<null>((resolve) => {
-      timer = setTimeout(() => resolve(null), ms);
-    }),
-  ]).finally(() => clearTimeout(timer));
-}
 
 function parse(value: unknown): Record<string, unknown> | null {
   if (typeof value !== "string") return null;

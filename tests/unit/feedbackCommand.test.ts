@@ -13,12 +13,12 @@ describe("/feedback", () => {
     expect(feedback.userInstallable).toBe(true);
   });
 
-  it("builds a valid modal: optional kind select + required message", () => {
+  it("builds a valid modal: optional kind select + required message + opt-in quote checkbox", () => {
     const modal = buildFeedbackModal().toJSON() as any;
     expect(modal.custom_id).toBe("feedback:submit");
     expect(modal.title.length).toBeLessThanOrEqual(45);
-    expect(modal.components).toHaveLength(2);
-    const [kindLabel, messageLabel] = modal.components;
+    expect(modal.components).toHaveLength(3);
+    const [kindLabel, messageLabel, quoteLabel] = modal.components;
     expect(kindLabel.type).toBe(ComponentType.Label);
     expect(kindLabel.label.length).toBeLessThanOrEqual(45);
     expect(kindLabel.component).toMatchObject({ type: ComponentType.StringSelect, custom_id: "kind", required: false });
@@ -26,6 +26,14 @@ describe("/feedback", () => {
     expect(messageLabel.label.length).toBeLessThanOrEqual(45);
     expect(messageLabel.description.length).toBeLessThanOrEqual(100);
     expect(messageLabel.component).toMatchObject({ type: ComponentType.TextInput, custom_id: "message", required: true, max_length: 2000 });
+    expect(quoteLabel.type).toBe(ComponentType.Label);
+    expect(quoteLabel.label).toBe(en.feedback.quoteLabel);
+    expect(quoteLabel.label.length).toBeLessThanOrEqual(45);
+    expect(quoteLabel.description).toBe(en.feedback.quoteDescription);
+    expect(quoteLabel.description.length).toBeLessThanOrEqual(100);
+    // Consent is opt-in: never pre-ticked.
+    expect(quoteLabel.component).toMatchObject({ type: ComponentType.Checkbox, custom_id: "quote" });
+    expect(quoteLabel.component.default ?? false).toBe(false);
   });
 
   it("answers its modal through the persistent component router", () => {
