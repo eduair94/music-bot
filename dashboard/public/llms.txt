@@ -1,0 +1,39 @@
+# Bypass
+
+> Bypass (Bypass Hi-Fi Music Bot) is a free Discord music bot. Members join a voice channel, type /play, and control playback from a button player card in Discord or from the web dashboard. Premium is optional.
+
+- Slash commands only (no message prefix). `/help` lists every command.
+- Built with discord.js (TypeScript). Source code is public on GitHub.
+- Asks for 10 permissions, none of them Administrator or moderation. Each one is explained on the install guide.
+
+## What it does
+
+- Plays YouTube and YouTube Music (songs, live streams, whole playlists), Spotify tracks, albums and playlists, and SoundCloud, Apple Music and Deezer links. Audio files play through right-click → Apps → Play in voice channel.
+- Search results appear while you type in `/play`, so you pick the exact song before it plays.
+- Every song gets a player card with buttons (previous, pause, skip, stop, loop, shuffle, volume, autoplay, queue, lyrics, save to DMs) that keep working for the whole session. The voice channel status shows what is playing.
+- Autoplay queues related songs when the queue ends; `/radio <song>` starts an endless station from one song; 24/7 mode keeps the bot in the channel.
+- Queue tools: `/queue`, `/move`, `/remove`, `/shuffle`, `/jump`, `/clear`, `/playnext`, `/playnow`, vote-skip.
+- Effects: bass boost (3 levels), nightcore, vaporwave, 8D, karaoke and more.
+- Synced lyrics for the current song or any song, `/history`, saved playlists with `/collections`, and a guess-the-song game.
+- Server settings: DJ role, allowed channels, volume limits, max queue size, max song length, duplicate blocking, auto-leave timer.
+- 28 languages: each member sees the bot in their Discord language, or a server sets one with `/language`.
+- Web dashboard (sign in with Discord): live player and queue, who may control the music, and every server setting without typing commands.
+
+## Free and Premium
+
+- Everything above is free.
+- Audio is sent at 128 kbps, and up to 256 kbps with Premium, a vote, or a boost of the support server.
+- Voting on a bot list unlocks 24/7 mode and the higher audio quality for 12 hours.
+- Founder on Patreon (USD 3/month, limited to 50 spots) keeps 24/7 mode and the higher audio quality permanently.
+
+## Links
+
+- [Add Bypass to a Discord server](https://music-bot.checkleaked.com/invite?ref=llms): opens Discord's authorization screen
+- [Website](https://music-bot.checkleaked.com)
+- [Commands](https://music-bot.checkleaked.com/commands): every slash command with usage
+- [Install guide](https://music-bot.checkleaked.com/install): the three steps and what each permission is for
+- [Status](https://music-bot.checkleaked.com/status): live bot status
+- [Support server](https://discord.gg/KwKwtasGZE)
+- [Privacy policy](https://music-bot.checkleaked.com/privacy)
+- [Terms of service](https://music-bot.checkleaked.com/terms)
+- [Source code](https://github.com/eduair94/music-bot)
