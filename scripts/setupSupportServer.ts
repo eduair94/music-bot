@@ -85,7 +85,9 @@ const ID = {
   catBotLogs: "1458199270556434598",
   guildJoin: "1458199270556434599",
   guildLeave: "1458199270556434600",
-  botErrors: "1458199270556434601"
+  botErrors: "1458199270556434601",
+  feedback: "1576098378226335754",
+  growth: "1576098393439342772"
 };
 
 const V = PermissionFlagsBits;
@@ -364,6 +366,9 @@ async function main() {
   await editChannel(ID.guildJoin, { name: "📥・guild-join", parent_id: ID.catBotLogs, permission_overwrites: botLogs, topic: "Servers that add Bypass, posted by the bot." }, "#guild-join");
   await editChannel(ID.guildLeave, { name: "📤・guild-leave", parent_id: ID.catBotLogs, permission_overwrites: botLogs, topic: "Servers that remove Bypass, posted by the bot." }, "#guild-leave");
   await editChannel(ID.botErrors, { name: "📛・bot-errors", parent_id: ID.catBotLogs, permission_overwrites: botLogs, topic: "Bot errors, at most 5 per 10 minutes, duplicates merged." }, "#bot-errors");
+  // Webhooks in these two feed FEEDBACK_WEBHOOK_URL and GROWTH_DIGEST_WEBHOOK_URL (docs/growth/README.md).
+  await editChannel(ID.feedback, { name: "📮・feedback", parent_id: ID.catBotLogs, permission_overwrites: botLogs, topic: "Feedback from the website, the dashboard and /feedback in Discord. Quotable messages can be featured on the site from /admin → Feedback." }, "#feedback");
+  await editChannel(ID.growth, { name: "📈・growth", parent_id: ID.catBotLogs, permission_overwrites: botLogs, topic: "Weekly growth digest (Mondays): new servers by source, first songs, removals, NPS and feedback. Details in /admin → Growth." }, "#growth");
 
   // =========================================================== ordering
   const order = [
@@ -372,7 +377,7 @@ async function main() {
     ID.catCommunity, ID.general, ID.suggestions,
     ID.catTry, ID.botCommands, ID.musicLounge, ID.hangout, ID.afk,
     ID.catStaff, ID.staffNews, ID.staffChat, ID.staffCommands, ID.discordUpdates, ID.modLogs, ID.messageLogs, ID.memberLogs, ID.serverLogs, ID.staffVoice,
-    ID.catBotLogs, ID.guildJoin, ID.guildLeave, ID.botErrors
+    ID.catBotLogs, ID.guildJoin, ID.guildLeave, ID.botErrors, ID.feedback, ID.growth
   ].filter((id) => channels.some((c) => c.id === id));
   log(`reorder ${order.length} channels`);
   // Parents are set by the edits above; the bulk route accepts one parent change per call.
