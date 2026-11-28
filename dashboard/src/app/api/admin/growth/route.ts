@@ -16,6 +16,11 @@ async function readDailyClicks(dates: string[]): Promise<DailyClicks[] | null> {
     const pipeline = redis.pipeline();
     for (const date of dates) pipeline.hgetall(inviteDailyKey(date));
     const results = (await pipeline.exec()) ?? [];
+    // ioredis reports a dead connection as one error per command, not a rejection.
+    if (dates.length > 0 && results.length > 0 && results.every(([error]) => error)) {
+      console.error("[admin/growth] Redis unavailable:", results[0][0]?.message);
+      return null;
+    }
     return dates.map((date, i) => {
       const [error, value] = results[i] ?? [null, null];
       const counts: Record<string, number> = {};
