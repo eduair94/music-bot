@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import NpsSurvey from "@/components/feedback/NpsSurvey";
 import { ToastProvider } from "@/components/fest/Toast";
 import { TopBar, type SwitcherGuild } from "@/components/fest/TopBar";
 import { fetchUserGuilds } from "@/lib/discord";
@@ -59,6 +60,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <main id="main" className="min-w-0">
           {children}
         </main>
+        <NpsSurvey isOwner={isOwner} />
       </ToastProvider>
     </div>
   );
