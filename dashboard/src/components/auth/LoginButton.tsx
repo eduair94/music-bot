@@ -19,6 +19,7 @@ export function LoginButton({ callbackUrl = "/servers" }: { callbackUrl?: string
       type="button"
       disabled={busy}
       aria-busy={busy || undefined}
+      data-track="login_start"
       onClick={() => {
         setBusy(true);
         void signIn("discord", { callbackUrl }).catch(() => setBusy(false));

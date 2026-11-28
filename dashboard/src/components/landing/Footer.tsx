@@ -1,4 +1,6 @@
+import CookieSettingsButton from "@/components/analytics/CookieSettingsButton";
 import BrandMark from "@/components/common/BrandMark";
+import { ANALYTICS_ENABLED } from "@/lib/analytics/config";
 import { GITHUB_ISSUES_URL, GITHUB_URL, PATREON_URL, SPOTIFY_PROVIDER_HOST, SPOTIFY_PROVIDER_URL } from "@/lib/site";
 import { Github } from "lucide-react";
 import Link from "next/link";
@@ -77,7 +79,7 @@ export default function Footer() {
               <li><Link href="/commands" className={linkClass}>Commands</Link></li>
               <li><Link href="/install" className={linkClass}>Installation guide</Link></li>
               <li><Link href="/#pricing" className={linkClass}>Premium</Link></li>
-              <li><Link href="/invite" prefetch={false} className={linkClass}>Add to Discord</Link></li>
+              <li><Link href="/invite?ref=site-footer" prefetch={false} data-track-location="footer" className={linkClass}>Add to Discord</Link></li>
             </ul>
           </nav>
 
@@ -110,9 +112,10 @@ export default function Footer() {
             © {currentYear} Bypass · Made for the Discord community
           </p>
           <nav aria-label="Legal">
-            <ul className="flex gap-6 text-sm">
+            <ul className="flex flex-wrap gap-x-6 text-sm">
               <li><Link href="/privacy" className={linkClass}>Privacy Policy</Link></li>
               <li><Link href="/terms" className={linkClass}>Terms of Service</Link></li>
+              {ANALYTICS_ENABLED ? <li><CookieSettingsButton className={linkClass} /></li> : null}
             </ul>
           </nav>
         </div>
