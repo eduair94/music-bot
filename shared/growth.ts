@@ -160,6 +160,78 @@ export function parseGaSessionId(cookie: string | undefined | null): string | un
   return undefined;
 }
 
+// ── First touch ─────────────────────────────────────────────────────────────
+
+/**
+ * First-party cookie written by the site on a visitor's first landing (only
+ * when analytics is allowed): where they originally came from. `/invite`
+ * falls back to it when the click itself carries no ref, so a visitor who
+ * arrived from top.gg and clicked "Add" three pages later still counts as top.gg.
+ */
+export const FIRST_TOUCH_COOKIE = "bp_ft";
+export const FIRST_TOUCH_MAX_AGE_S = 90 * 86400;
+
+export interface FirstTouch {
+  /** utm_source, else `ref`, else referrer host (e.g. "top-gg"), else "direct". Normalized. */
+  s: string;
+  /** utm_medium (normalized) or "referral"/"none". */
+  m?: string;
+  /** utm_campaign (normalized). */
+  c?: string;
+  /** Landing path, max 80 chars. */
+  l?: string;
+  /** ms epoch of the first visit. */
+  t: number;
+}
+
+export function serializeFirstTouch(ft: FirstTouch): string {
+  return encodeURIComponent(JSON.stringify(ft));
+}
+
+export function parseFirstTouch(raw: string | undefined | null): FirstTouch | null {
+  if (!raw) return null;
+  try {
+    let text = raw;
+    // Cookie values can arrive encoded once (document.cookie) or twice (some proxies).
+    for (let i = 0; i < 3 && text.startsWith("%"); i++) text = decodeURIComponent(text);
+    const v = JSON.parse(text) as Partial<FirstTouch>;
+    const s = normalizeRef(v.s);
+    if (!s || typeof v.t !== "number") return null;
+    return {
+      s,
+      m: normalizeRef(v.m) ?? undefined,
+      c: normalizeRef(v.c) ?? undefined,
+      l: typeof v.l === "string" ? v.l.slice(0, 80) : undefined,
+      t: v.t
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * The visit's source from its URL and referrer, normalized like refs:
+ * ?ref= wins, then utm_source, then the referrer's host (www. dropped, dots to
+ * hyphens: "top.gg" → "top-gg"), then "direct". Same-site referrers are ignored.
+ */
+export function sourceFromVisit(search: URLSearchParams, referrer: string, ownHost: string): Omit<FirstTouch, "t" | "l"> {
+  const ref = normalizeRef(search.get("ref"));
+  const utmSource = normalizeRef(search.get("utm_source"));
+  const medium = normalizeRef(search.get("utm_medium")) ?? undefined;
+  const campaign = normalizeRef(search.get("utm_campaign")) ?? undefined;
+  if (ref) return { s: ref, m: medium ?? "ref", c: campaign };
+  if (utmSource) return { s: utmSource, m: medium, c: campaign };
+  try {
+    const host = new URL(referrer).hostname.replace(/^www\./, "");
+    if (host && host !== ownHost && !host.endsWith(`.${ownHost}`)) {
+      return { s: normalizeRef(host) ?? "referral", m: "referral" };
+    }
+  } catch {
+    /* no or invalid referrer */
+  }
+  return { s: DIRECT_REF, m: "none" };
+}
+
 /** Bucket for member counts, so GA never sees exact server sizes. */
 export function memberBucket(count: number | undefined): string {
   const n = Number(count) || 0;

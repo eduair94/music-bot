@@ -7,8 +7,11 @@ import {
   netPromoterScore,
   normalizeRef,
   parseGaClientId,
+  parseFirstTouch,
   parseGaSessionId,
   pickAttribution,
+  serializeFirstTouch,
+  sourceFromVisit,
   refLabel,
   trackedInviteUrl,
   type InviteClick
@@ -84,6 +87,24 @@ describe("links", () => {
     expect(refLabel("topgg")).toBe("top.gg");
     expect(refLabel("u-1066182746399055993")).toContain("Referral");
     expect(refLabel("newsletter-x")).toBe("newsletter-x");
+  });
+});
+
+describe("first touch", () => {
+  it("round-trips and survives double encoding", () => {
+    const ft = { s: "topgg", m: "referral", l: "/", t: 1 };
+    expect(parseFirstTouch(serializeFirstTouch(ft))).toEqual({ ...ft, c: undefined });
+    expect(parseFirstTouch(encodeURIComponent(serializeFirstTouch(ft)))?.s).toBe("topgg");
+    expect(parseFirstTouch("not json")).toBeNull();
+    expect(parseFirstTouch(serializeFirstTouch({ s: "!!", t: 1 }))).toBeNull();
+  });
+  it("derives the visit source", () => {
+    const q = (s: string) => new URLSearchParams(s);
+    expect(sourceFromVisit(q("ref=TopGG"), "", "bp.test").s).toBe("topgg");
+    expect(sourceFromVisit(q("utm_source=reddit&utm_medium=social"), "", "bp.test")).toEqual({ s: "reddit", m: "social", c: undefined });
+    expect(sourceFromVisit(q(""), "https://www.top.gg/bot/1", "bp.test")).toEqual({ s: "top-gg", m: "referral" });
+    expect(sourceFromVisit(q(""), "https://bp.test/commands", "bp.test").s).toBe("direct");
+    expect(sourceFromVisit(q(""), "", "bp.test").s).toBe("direct");
   });
 });
 
