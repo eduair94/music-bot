@@ -2281,7 +2281,9 @@
     "thanksTitle": "고마워요, 잘 받았어요",
     "thanksBody": "Bypass를 만드는 사람들이 모든 메시지를 읽어요. 답변이나 바로 도움이 필요하다면 지원 서버에서 물어보세요.",
     "supportButton": "지원 서버",
-    "helpHint": "아이디어, 버그, 따뜻한 한마디가 있나요? {command}로 보내 주세요."
+    "helpHint": "아이디어, 버그, 따뜻한 한마디가 있나요? {command}로 보내 주세요.",
+    "quoteLabel": "이 내용을 Bypass 웹사이트에 인용해도 될까요?",
+    "quoteDescription": "메시지 내용만 표시되며, 사용자 이름이나 서버 이름은 절대 공개되지 않아요."
   },
   "growth": {
     "nudge": {

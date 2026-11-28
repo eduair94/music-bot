@@ -2288,7 +2288,9 @@
     "thanksTitle": "Dzięki, mamy to",
     "thanksBody": "Twórcy Bypass czytają każdą wiadomość. Chcesz odpowiedzi lub pomocy od razu? Zapytaj na serwerze wsparcia.",
     "supportButton": "Serwer wsparcia",
-    "helpHint": "Pomysły, błędy lub miłe słowa? Wyślij je przez {command}."
+    "helpHint": "Pomysły, błędy lub miłe słowa? Wyślij je przez {command}.",
+    "quoteLabel": "Czy możemy zacytować to na stronie Bypass?",
+    "quoteDescription": "Pokażemy tylko samą wiadomość, nigdy Twoją nazwę użytkownika ani nazwę serwera."
   },
   "growth": {
     "nudge": {

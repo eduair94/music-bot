@@ -2281,7 +2281,9 @@
     "thanksTitle": "Grazie, ricevuto",
     "thanksBody": "Le persone che sviluppano Bypass leggono ogni messaggio. Vuoi una risposta o aiuto subito? Chiedi nel server di supporto.",
     "supportButton": "Server di supporto",
-    "helpHint": "Idee, bug o parole gentili? Inviale con {command}."
+    "helpHint": "Idee, bug o parole gentili? Inviale con {command}.",
+    "quoteLabel": "Possiamo citare questo messaggio sul sito di Bypass?",
+    "quoteDescription": "Mostreremo solo il messaggio, mai il tuo nome utente o il nome del server."
   },
   "growth": {
     "nudge": {

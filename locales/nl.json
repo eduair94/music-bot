@@ -2281,7 +2281,9 @@
     "thanksTitle": "Bedankt, we hebben het ontvangen",
     "thanksBody": "De mensen die Bypass bouwen lezen elk bericht. Wil je een reactie of nu meteen hulp? Vraag het in de supportserver.",
     "supportButton": "Supportserver",
-    "helpHint": "Ideeën, bugs of iets liefs? Stuur ze met {command}."
+    "helpHint": "Ideeën, bugs of iets liefs? Stuur ze met {command}.",
+    "quoteLabel": "Mogen we dit citeren op de Bypass-website?",
+    "quoteDescription": "We tonen alleen het bericht, nooit je gebruikersnaam of servernaam."
   },
   "growth": {
     "nudge": {

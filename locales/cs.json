@@ -2281,7 +2281,9 @@
     "thanksTitle": "Díky, máme to",
     "thanksBody": "Lidé, kteří Bypass vyvíjejí, čtou každou zprávu. Chceš odpověď nebo pomoc hned teď? Zeptej se na support serveru.",
     "supportButton": "Support server",
-    "helpHint": "Nápady, chyby nebo milá slova? Pošli je pomocí {command}."
+    "helpHint": "Nápady, chyby nebo milá slova? Pošli je pomocí {command}.",
+    "quoteLabel": "Můžeme tohle citovat na webu Bypass?",
+    "quoteDescription": "Zobrazili bychom jen samotnou zprávu, nikdy tvoje uživatelské jméno ani název serveru."
   },
   "growth": {
     "nudge": {

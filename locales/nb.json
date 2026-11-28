@@ -2281,7 +2281,9 @@
     "thanksTitle": "Takk, vi har mottatt den",
     "thanksBody": "De som lager Bypass leser hver eneste melding. Vil du ha svar eller hjelp med en gang? Spør på supportserveren.",
     "supportButton": "Supportserver",
-    "helpHint": "Ideer, feil eller hyggelige ord? Send dem med {command}."
+    "helpHint": "Ideer, feil eller hyggelige ord? Send dem med {command}.",
+    "quoteLabel": "Kan vi sitere dette på nettsiden til Bypass?",
+    "quoteDescription": "Vi viser bare meldingen, aldri brukernavnet ditt eller navnet på serveren."
   },
   "growth": {
     "nudge": {

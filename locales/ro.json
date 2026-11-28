@@ -2282,7 +2282,9 @@
     "thanksTitle": "Mulțumim, l-am primit",
     "thanksBody": "Oamenii care construiesc Bypass citesc fiecare mesaj. Vrei un răspuns sau ajutor chiar acum? Întreabă pe serverul de suport.",
     "supportButton": "Server de suport",
-    "helpHint": "Idei, bug-uri sau vorbe bune? Trimite-le cu {command}."
+    "helpHint": "Idei, bug-uri sau vorbe bune? Trimite-le cu {command}.",
+    "quoteLabel": "Putem cita asta pe site-ul Bypass?",
+    "quoteDescription": "Am afișa doar mesajul, niciodată numele tău de utilizator sau numele serverului."
   },
   "growth": {
     "nudge": {

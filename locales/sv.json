@@ -2281,7 +2281,9 @@
     "thanksTitle": "Tack, vi har tagit emot det",
     "thanksBody": "De som bygger Bypass läser varje meddelande. Vill du ha svar eller hjälp direkt? Fråga på supportservern.",
     "supportButton": "Supportserver",
-    "helpHint": "Idéer, buggar eller snälla ord? Skicka dem med {command}."
+    "helpHint": "Idéer, buggar eller snälla ord? Skicka dem med {command}.",
+    "quoteLabel": "Får vi citera detta på Bypass-webbplatsen?",
+    "quoteDescription": "Vi visar bara meddelandet, aldrig ditt användarnamn eller servernamn."
   },
   "growth": {
     "nudge": {

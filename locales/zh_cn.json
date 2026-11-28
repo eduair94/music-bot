@@ -2281,7 +2281,9 @@
     "thanksTitle": "谢谢，我们收到了",
     "thanksBody": "开发 Bypass 的团队会阅读每一条消息。想要回复或立即获得帮助？请到支持服务器提问。",
     "supportButton": "支持服务器",
-    "helpHint": "有想法、发现错误或想说点好话？用 {command} 发给我们。"
+    "helpHint": "有想法、发现错误或想说点好话？用 {command} 发给我们。",
+    "quoteLabel": "我们可以在 Bypass 网站上引用这条反馈吗？",
+    "quoteDescription": "我们只会展示反馈内容，绝不会显示你的用户名或服务器名称。"
   },
   "growth": {
     "nudge": {

@@ -2281,7 +2281,9 @@
     "thanksTitle": "Makasih, sudah kami terima",
     "thanksBody": "Orang-orang yang membuat Bypass membaca setiap pesan. Mau dibalas atau butuh bantuan sekarang? Tanya di server support.",
     "supportButton": "Server support",
-    "helpHint": "Punya ide, bug, atau kata-kata baik? Kirim lewat {command}."
+    "helpHint": "Punya ide, bug, atau kata-kata baik? Kirim lewat {command}.",
+    "quoteLabel": "Boleh kami kutip ini di situs web Bypass?",
+    "quoteDescription": "Kami hanya akan menampilkan pesannya, tidak pernah nama pengguna atau nama servermu."
   },
   "growth": {
     "nudge": {

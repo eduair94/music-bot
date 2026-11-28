@@ -2281,7 +2281,9 @@
     "thanksTitle": "ありがとう、受け取ったよ",
     "thanksBody": "Bypassの開発メンバーがすべてのメッセージを読んでいます。返信や今すぐのサポートが必要なら、サポートサーバーで聞いてね。",
     "supportButton": "サポートサーバー",
-    "helpHint": "アイデア、バグ、応援の言葉は {command} で送ってね。"
+    "helpHint": "アイデア、バグ、応援の言葉は {command} で送ってね。",
+    "quoteLabel": "このメッセージをBypassのウェブサイトで紹介してもいい？",
+    "quoteDescription": "表示するのはメッセージだけで、ユーザー名やサーバー名は絶対に表示しないよ。"
   },
   "growth": {
     "nudge": {

@@ -2281,7 +2281,9 @@
     "thanksTitle": "Teşekkürler, aldık",
     "thanksBody": "Bypass'i geliştirenler her mesajı okuyor. Yanıt ya da hemen yardım mı istiyorsun? Destek sunucusunda sor.",
     "supportButton": "Destek sunucusu",
-    "helpHint": "Fikir, hata ya da güzel sözler mi? {command} ile gönder."
+    "helpHint": "Fikir, hata ya da güzel sözler mi? {command} ile gönder.",
+    "quoteLabel": "Bunu Bypass web sitesinde alıntılayabilir miyiz?",
+    "quoteDescription": "Sadece mesajı gösteririz, kullanıcı adını veya sunucu adını asla göstermeyiz."
   },
   "growth": {
     "nudge": {

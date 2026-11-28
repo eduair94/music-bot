@@ -2281,7 +2281,9 @@
     "thanksTitle": "Kia ora, kua tae mai",
     "thanksBody": "Ka pānuitia e ngā kaihanga o Bypass ia karere. E hiahia ana koe ki tētahi whakautu, āwhina rānei ināianei? Pātai mai i te tūmau tautoko.",
     "supportButton": "Tūmau tautoko",
-    "helpHint": "He whakaaro, he hapa, he kupu atawhai rānei? Tukuna mā {command}."
+    "helpHint": "He whakaaro, he hapa, he kupu atawhai rānei? Tukuna mā {command}.",
+    "quoteLabel": "Ka āhei rānei mātou ki te whakahua i tēnei ki te paetukutuku o Bypass?",
+    "quoteDescription": "Ko te karere anake ka whakaaturia e mātou, kāore rawa tō ingoa kaiwhakamahi, tō ingoa tūmau rānei."
   },
   "growth": {
     "nudge": {

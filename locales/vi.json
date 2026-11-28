@@ -2281,7 +2281,9 @@
     "thanksTitle": "Cảm ơn, bọn mình đã nhận được",
     "thanksBody": "Những người xây dựng Bypass đọc mọi tin nhắn. Muốn được trả lời hoặc hỗ trợ ngay? Hãy hỏi trong server hỗ trợ.",
     "supportButton": "Server hỗ trợ",
-    "helpHint": "Có ý tưởng, lỗi hay lời động viên? Gửi bằng {command}."
+    "helpHint": "Có ý tưởng, lỗi hay lời động viên? Gửi bằng {command}.",
+    "quoteLabel": "Bọn mình có thể trích dẫn ý kiến này trên trang web Bypass không?",
+    "quoteDescription": "Bọn mình chỉ hiển thị nội dung tin nhắn, không bao giờ hiển thị tên người dùng hay tên server của bạn."
   },
   "growth": {
     "nudge": {
