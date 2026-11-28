@@ -1,54 +1,22 @@
 import SectionHeader from "@/components/landing/SectionHeader";
+import { bots, checkedOnShort, homeColumns } from "@/data/comparison";
+import Link from "next/link";
 
-interface BotRow {
-  name: string;
-  audio: string;
-  dashboard: string;
-  pricing: string;
-  highlight?: boolean;
+/*
+ * Short version of /compare: the home columns of src/data/comparison.ts. Every
+ * competitor value there carries its source; this table links to the list.
+ */
+
+// Bot name, then the home columns; sized so the longer Bypass values wrap to two lines at most.
+const COLUMN_WIDTHS = ["w-[13%]", "w-[18%]", "w-[18%]", "w-[27%]", "w-[24%]"];
+
+const linkClass =
+  "text-dune underline decoration-line-strong underline-offset-4 transition-colors hover:text-cream hover:decoration-amber";
+
+function CellValue({ value, own }: { value: string | null; own: boolean }) {
+  if (value === null) return <span className="text-dust">Not stated</span>;
+  return <span className={own ? "text-cream" : "text-dune"}>{value}</span>;
 }
-
-const bots: BotRow[] = [
-  {
-    name: "Jockie Music",
-    audio: "Standard quality",
-    dashboard: "None — command-only, steep learning curve",
-    pricing: "Tiered premium, per-bot pricing",
-  },
-  {
-    name: "FredBoat",
-    audio: "128kbps standard",
-    dashboard: "None",
-    pricing: "Free / donations",
-  },
-  {
-    name: "Uzox",
-    audio: "Standard quality",
-    dashboard: "None — frequent outages on YouTube changes",
-    pricing: "Premium for filters & playlists",
-  },
-  {
-    name: "Hydra",
-    audio: "Standard quality",
-    dashboard: "Web-first — Discord commands limited",
-    pricing: "Expensive monthly subscription",
-  },
-  {
-    name: "Bypass",
-    audio: "Up to 256kbps from Tier 1",
-    dashboard: "Full web dashboard + complete Discord commands",
-    pricing: "Founder tier — lowest price, locked forever",
-    highlight: true,
-  },
-];
-
-// Sized to the longest entry in each column, so every row stays on one line from 1280px up.
-const COLUMNS = [
-  { label: "Bot", width: "w-[13.5%]" },
-  { label: "Audio", width: "w-[20%]" },
-  { label: "Control surface", width: "w-[35.5%]" },
-  { label: "Pricing", width: "w-[31%]" },
-];
 
 export default function Comparison() {
   return (
@@ -60,25 +28,28 @@ export default function Comparison() {
       <div className="shell">
         <SectionHeader
           id="comparison-title"
-          title="Hear the difference."
-          lede="How Bypass stacks up against the music bots your server has probably already tried."
+          title="How Bypass compares."
+          lede="Three music bots that play today, next to Bypass, from what each one publishes about itself."
         />
 
         {/* Desktop table */}
         <div className="hidden lg:block overflow-hidden rounded-2xl border border-line bg-panel">
           <table className="w-full table-fixed text-left">
             <caption className="sr-only">
-              Comparison of Discord music bots by audio quality, control surface, and pricing
+              Discord music bots compared by free bots per server, paid plans, web features and stated audio quality
             </caption>
             <colgroup>
-              {COLUMNS.map((column) => (
-                <col key={column.label} className={column.width} />
+              {COLUMN_WIDTHS.map((width, i) => (
+                <col key={i} className={width} />
               ))}
             </colgroup>
             <thead>
               <tr className="border-b border-line">
-                {COLUMNS.map((column) => (
-                  <th key={column.label} scope="col" className="px-6 py-4 console-label font-normal">
+                <th scope="col" className="px-6 py-4 console-label font-normal">
+                  Bot
+                </th>
+                {homeColumns.map((column) => (
+                  <th key={column.key} scope="col" className="px-6 py-4 console-label font-normal">
                     {column.label}
                   </th>
                 ))}
@@ -87,18 +58,18 @@ export default function Comparison() {
             <tbody>
               {bots.map((bot) => (
                 <tr
-                  key={bot.name}
-                  className={`border-b border-line last:border-0 ${bot.highlight ? "bg-amber/[0.07]" : ""}`}
+                  key={bot.id}
+                  className={`border-b border-line last:border-0 ${bot.isBypass ? "bg-panel-raised" : ""}`}
                 >
                   <th
                     scope="row"
-                    className={`px-6 py-5 align-baseline whitespace-nowrap font-display text-lg font-semibold ${bot.highlight ? "text-amber" : "text-cream"}`}
+                    className="px-6 py-5 align-baseline whitespace-nowrap font-display text-lg font-semibold text-cream"
                   >
                     {bot.name}
                   </th>
-                  {[bot.audio, bot.dashboard, bot.pricing].map((cell, i) => (
-                    <td key={i} className={`px-6 py-5 align-baseline ${bot.highlight ? "text-cream font-medium" : "text-dune"}`}>
-                      {cell}
+                  {homeColumns.map((column) => (
+                    <td key={column.key} className="px-6 py-5 align-baseline text-pretty">
+                      <CellValue value={bot.cells[column.key].value} own={bot.isBypass} />
                     </td>
                   ))}
                 </tr>
@@ -111,27 +82,34 @@ export default function Comparison() {
         <ul className="lg:hidden" role="list">
           {bots.map((bot) => (
             <li
-              key={bot.name}
-              className={`border-t border-line last:border-b py-6 ${bot.highlight ? "-mx-[var(--gutter)] px-[var(--gutter)] bg-amber/[0.07]" : ""}`}
+              key={bot.id}
+              className={`border-t border-line last:border-b py-6 ${bot.isBypass ? "-mx-[var(--gutter)] px-[var(--gutter)] bg-panel-raised" : ""}`}
             >
-              <h3 className={`font-display text-xl font-semibold ${bot.highlight ? "text-amber" : "text-cream"}`}>
-                {bot.name}
-              </h3>
-              <dl className="mt-4 grid gap-3 sm:grid-cols-3 sm:gap-6">
-                {[
-                  ["Audio", bot.audio],
-                  ["Control surface", bot.dashboard],
-                  ["Pricing", bot.pricing],
-                ].map(([label, value]) => (
-                  <div key={label}>
-                    <dt className="console-label">{label}</dt>
-                    <dd className={`mt-1 ${bot.highlight ? "text-cream" : "text-dune"}`}>{value}</dd>
+              <h3 className="font-display text-xl font-semibold text-cream">{bot.name}</h3>
+              <dl className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-4">
+                {homeColumns.map((column) => (
+                  <div key={column.key}>
+                    <dt className="console-label">{column.label}</dt>
+                    <dd className="mt-1">
+                      <CellValue value={bot.cells[column.key].value} own={bot.isBypass} />
+                    </dd>
                   </div>
                 ))}
               </dl>
             </li>
           ))}
         </ul>
+
+        <p className="mt-6 text-sm text-dust">
+          Checked {checkedOnShort} ·{" "}
+          <Link href="/compare#sources" className={linkClass}>
+            sources
+          </Link>{" "}
+          ·{" "}
+          <Link href="/compare" className={linkClass}>
+            full comparison
+          </Link>
+        </p>
       </div>
     </section>
   );

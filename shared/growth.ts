@@ -49,6 +49,7 @@ export const REF_LABELS: Record<string, string> = {
   "site-cta": "Website final CTA",
   "site-status": "Status page",
   "site-command": "Website: command page",
+  "site-compare": "Website: compare page",
   "site-dashboard": "Dashboard",
   "bot-invite": "Bot /invite command",
   "bot-help": "Bot /help menu",
