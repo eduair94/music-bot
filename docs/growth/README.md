@@ -16,16 +16,23 @@ What was built on 2026-11-28 to measure and grow Bypass, what the owner has to s
 | Feedback | footer + dashboard button, `/feedback` in Discord | Messages land in Mongo `feedbacks` and in a private staff channel. Optional "you can quote this" for testimonials. |
 | NPS | dashboard, after 3 days of use | Score + reason; promoters are asked for a top.gg review. |
 | Admin | `/admin` → Growth, Feedback | Clicks → joins → activated → retained per source; NPS; feedback inbox. |
-| SEO extras | root metadata, `public/llms.txt` | Search Console / Bing verification tags; a factual summary for AI assistants. |
+| Testimonials | `/admin` → Feedback → *Feature on site* | Quotable feedback (the author ticked the box) appears in the home page's Trust section, message only, never the username. Nothing shows until you feature one. |
+| Weekly digest | bot `services/growth/digest.ts` → `#📈・growth` | Every Monday 13:00 UTC: joins by source, first songs, removals, NPS, feedback, and what to look at. Manual run: `npx ts-node --transpile-only scripts/growthDigest.ts --dry-run`. |
+| Command guides | `/commands/<name>` (16 pages, `data/commandDocs.ts`) | Search entry points for "discord bot play/lyrics/24/7 command"; CTA `ref=site-command`. |
+| Comparison | `/compare` + home table (`data/comparison.ts`) | Bypass vs Jockie Music, Uzox, Green-bot; every claim sourced, checked 2026-11-28. Re-check every few months. CTA `ref=site-compare`. |
+| SEO extras | root metadata, `public/llms.txt` | Search Console / Bing verification tags; a factual summary for AI assistants, now linking the command guides and `/compare`. |
+| Outreach drafts | [OUTREACH.md](OUTREACH.md) | Reddit post, partner-server DM, review ask, each with its own `ref`. |
 
 **Known cost:** gtag.js itself costs about 7 Lighthouse mobile performance points on `/` (blocking time +330 ms under Lighthouse's CPU throttle; CLS stays 0). The alternative is loading GA on the visitor's first interaction, which stops counting visitors who leave without clicking. Kept accurate counting for now.
 
-## Switch it on (owner, ~15 minutes)
+## Switch it on (owner, ~10 minutes)
+
+Already done on 2026-11-28: staff channels `#📮・feedback` and `#📈・growth` (support server → BOT LOGS, admins and developers only) with webhooks, `FEEDBACK_WEBHOOK_URL` and `GROWTH_DIGEST_WEBHOOK_URL` in box83's `.env`, `FEEDBACK_WEBHOOK_URL` and a generated `ANALYTICS_SALT` in `dashboard/.env` (backups `*.bak-growth-20261128T045219`). Steps 3 and the salt below are therefore done; what's left needs your Google/Microsoft logins.
 
 1. **GA4 property.** analytics.google.com → Admin → account *EduAir* → Create property *Bypass Music Bot* (time zone Montevideo, USD) → Web stream `https://music-bot.checkleaked.com`. Copy the **Measurement ID** (`G-…`). In the stream: *Measurement Protocol API secrets* → Create → copy the **secret**.
    (The Composio Google Analytics connection is read-only, so this couldn't be done for you. Reconnect it with edit access and an agent can create the property, stream, secret, key events and custom dimensions in one go.)
 2. **Clarity project.** clarity.microsoft.com → New project *Bypass*, site `music-bot.checkleaked.com` → copy the **project ID** from Settings → Setup. Then Settings → Setup → *Google Analytics integration* → connect the new property.
-3. **Feedback channel.** In the support server create a staff-only `#feedback` channel → Integrations → Webhooks → New → copy URL.
+3. ~~**Feedback channel.**~~ Done (see above). The channels are managed by `scripts/setupSupportServer.ts` (`ID.feedback`, `ID.growth`).
 4. **Search engines (optional).** Search Console → add `https://music-bot.checkleaked.com` → HTML tag method → copy the `content` value. Same for Bing Webmaster Tools (`msvalidate.01`).
 5. **Env on box83** (never commit these):
    - `/root/music-bot/.env` (read by the bots *and* by compose as dashboard build args):
@@ -76,7 +83,7 @@ Real starting point (Nov 2026): 25 servers, ~13 active users a month. At this si
 **Ongoing: feed the loops that already exist.**
 - **Bot lists are the main channel for Discord bots**, and top.gg ranks by votes. Votes come from the share nudge, the upsell, vote perks and now referral perks. Watch `vote_click` and top.gg vote counts.
 - **Reviews:** NPS promoters get a top.gg review prompt. Reviews are what a bot-list visitor reads before clicking Add.
-- **Testimonials:** feedback marked "you can quote this" is the first real social proof the site can show (the landing has none, by rule). Add them to the Trust section with the person's consent.
+- **Testimonials:** feedback marked "you can quote this" is the first real social proof the site can show (the landing has none, by rule). Feature it from `/admin` → Feedback; it appears in the Trust section within about 1.5 minutes. Add an attribution ("runs a 300-member gaming server") only after asking the person.
 - **Referrals:** `/admin` → Growth → top referrers. If someone brings several servers, thank them in the support server.
 
 **Milestones to plan for.**
@@ -86,4 +93,4 @@ Real starting point (Nov 2026): 25 servers, ~13 active users a month. At this si
 **Channels worth testing (one at a time, each with its own `ref`/UTM so the Growth panel can judge it):**
 - Reddit (r/discordapp, r/Discord_Bots, music-community subs): one honest "I built a hi-fi bot with a live web dashboard" post, not ads. `utm_source=reddit&utm_medium=social`.
 - Partner servers: offer Premium to mid-size music/gaming communities in exchange for using Bypass as their music bot (`ref=partner-<name>`).
-- Search: once the i18n branch is merged, per-command pages (`/commands/<name>`) and an honest comparison page. Competitor claims must be sourced (PRODUCT.md "True claims only").
+- Search: the 16 command guides and `/compare` are live. When the i18n branch merges, move them under `app/[locale]/`. Watch Search Console → Pages for indexing and → Performance for which guides get impressions; write more guides for commands that people search for (`/ai`, `/guess`, `/history` have none yet).
