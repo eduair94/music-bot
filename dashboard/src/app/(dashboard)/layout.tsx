@@ -1,7 +1,10 @@
 import { auth } from "@/auth";
+import AnalyticsIdentity from "@/components/analytics/AnalyticsIdentity";
 import NpsSurvey from "@/components/feedback/NpsSurvey";
 import { ToastProvider } from "@/components/fest/Toast";
 import { TopBar, type SwitcherGuild } from "@/components/fest/TopBar";
+import { ANALYTICS_ENABLED } from "@/lib/analytics/config";
+import { analyticsUserHash } from "@/lib/analytics/identity";
 import { fetchUserGuilds } from "@/lib/discord";
 import { enhanceGuildsWithBotInfo } from "@/lib/discord-server";
 import type { Metadata } from "next";
@@ -62,6 +65,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </main>
         <NpsSurvey isOwner={isOwner} />
       </ToastProvider>
+      {ANALYTICS_ENABLED ? (
+        <AnalyticsIdentity userHash={analyticsUserHash(session?.user?.discordId)} isOwner={isOwner} />
+      ) : null}
     </div>
   );
 }

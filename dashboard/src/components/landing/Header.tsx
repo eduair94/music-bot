@@ -110,8 +110,9 @@ export default function Header() {
                 <span className="hidden xl:inline">Patreon</span>
               </a>
               <Link
-                href="/invite"
+                href="/invite?ref=site-header"
                 prefetch={false}
+                data-track-location="header"
                 className="hidden sm:inline-flex h-10 items-center gap-2 px-5 text-sm bg-amber hover:bg-amber-hot text-coal rounded-lg transition-colors font-semibold"
               >
                 <FaDiscord className="w-4 h-4" aria-hidden="true" />
@@ -210,8 +211,9 @@ export default function Header() {
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
             <Link
-              href="/invite"
+              href="/invite?ref=site-header"
               prefetch={false}
+              data-track-location="header-menu"
               onClick={closeMenu}
               className="flex items-center justify-center gap-2 min-h-11 px-4 py-3 bg-amber hover:bg-amber-hot text-coal rounded-lg font-semibold transition-colors"
             >

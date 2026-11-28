@@ -75,6 +75,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dashboard
+      # NEXT_PUBLIC_* are inlined at build time: set them in the repo-root .env
+      # (compose interpolation), not in dashboard/.env. Empty = analytics off.
+      args:
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+        NEXT_PUBLIC_CLARITY_ID: ${NEXT_PUBLIC_CLARITY_ID:-}
+        NEXT_PUBLIC_GSC_VERIFICATION: ${NEXT_PUBLIC_GSC_VERIFICATION:-}
+        NEXT_PUBLIC_BING_VERIFICATION: ${NEXT_PUBLIC_BING_VERIFICATION:-}
     container_name: music-bot-dashboard
     restart: unless-stopped
     env_file: ./dashboard/.env

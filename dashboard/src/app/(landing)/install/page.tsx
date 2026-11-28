@@ -91,8 +91,9 @@ export default function InstallationPage() {
           />
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/invite"
+              href="/invite?ref=site-install"
               prefetch={false}
+              data-track-location="install"
               className="inline-flex h-13 items-center justify-center gap-3 rounded-lg bg-amber px-7 font-semibold text-coal transition-colors hover:bg-amber-hot"
             >
               <FaDiscord className="h-5 w-5" aria-hidden="true" />

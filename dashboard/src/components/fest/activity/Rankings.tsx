@@ -96,7 +96,7 @@ export function TopRequesters({ items }: { items: Activity["topRequesters"] }) {
   if (!items.length) return <p className="py-6 text-[14px] text-ink-2">Nobody requested a song in this period.</p>;
   const max = Math.max(...items.map((r) => r.plays));
   return (
-    <ol className="divide-y divide-rule">
+    <ol data-clarity-mask="True" className="divide-y divide-rule">
       {items.map((r, i) => {
         const src = avatarUrl(r.id, r.avatar);
         return (

@@ -195,6 +195,7 @@ export function TopBar({
                 onClick={toggle}
                 aria-expanded={open}
                 aria-controls={id}
+                data-clarity-mask="True"
                 className="flex h-10 items-center gap-2 rounded-[4px] border border-ink px-1.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-stock sm:pr-3"
               >
                 {user.image ? (

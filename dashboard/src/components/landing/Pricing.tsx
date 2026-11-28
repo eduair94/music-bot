@@ -27,7 +27,7 @@ const tiers: PricingTier[] = [
       `${LANGUAGE_COUNT} languages`,
     ],
     cta: "Add to Discord",
-    ctaLink: "/invite",
+    ctaLink: "/invite?ref=site-pricing",
   },
   {
     name: "Founder",
@@ -132,7 +132,7 @@ export default function Pricing() {
                       <span className="sr-only"> (opens Patreon in a new tab)</span>
                     </a>
                   ) : (
-                    <Link href={tier.ctaLink} prefetch={false} className={ctaClass}>
+                    <Link href={tier.ctaLink} prefetch={false} data-track-location="pricing" className={ctaClass}>
                       {tier.cta}
                     </Link>
                   )}
