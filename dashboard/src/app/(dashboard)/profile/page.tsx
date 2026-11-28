@@ -98,7 +98,7 @@ export default async function ProfilePage({ searchParams }: { searchParams: Sear
     <>
       <PageHead title="Profile" status={session ? "Signed in with Discord" : "Demo account · sign in to see yours"} />
 
-      <div className="grid gap-x-10 gap-y-12 px-4 pb-24 pt-8 sm:px-6 lg:grid-cols-12">
+      <div data-clarity-mask="True" className="grid gap-x-10 gap-y-12 px-4 pb-24 pt-8 sm:px-6 lg:grid-cols-12">
         {/* Who you are */}
         <section aria-label="Account" className="lg:col-span-4 xl:col-span-3">
           {user.image ? (
