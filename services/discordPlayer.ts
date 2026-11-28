@@ -13,6 +13,8 @@ import { linkedStats, stay247Of } from "../utils/instance";
 import { normalizeYouTubeQuery } from "../utils/youtubeUrl";
 import { applyAudioProfile } from "./audioEncoder";
 import { GuildSettingsService } from "./guildSettings";
+import { onFirstPlay } from "./growth/acquisition";
+import { countSessionTrack, endSession } from "./growth/nudge";
 import { TelemetryService } from "./telemetry";
 import { errorEvent, trackEvent } from "./telemetry/events";
 
@@ -399,6 +401,11 @@ export class DiscordPlayerService {
       this.recordTrack(queue, track, "start");
       if (queue.guild?.id) void GuildSettingsService.getInstance().incrementSongPlayed(queue.guild.id);
       linkedStats.songsPlayed++;
+      // Growth: a server's first song marks it activated (GA, referral reward); songs per session feed the share nudge.
+      if (queue.guild) {
+        void onFirstPlay(queue.guild);
+        countSessionTrack(queue.guild.id);
+      }
 
       console.log(`[DiscordPlayer] ▶️ Now playing: ${track.title} (${track.source}, ${track.duration})`);
       debug("url:", track.url);
@@ -480,11 +487,13 @@ export class DiscordPlayerService {
 
     this.player.events.on("disconnect", (queue: GuildQueue) => {
       console.log("[DiscordPlayer] 🔇 Disconnected from voice channel");
+      if (queue.guild) endSession(queue.guild.id);
     });
 
     // Queue deleted event
     this.player.events.on("queueDelete", (queue: GuildQueue) => {
       console.log(`[DiscordPlayer] 🗑️ Queue deleted for guild: ${queue.guild?.id}`);
+      if (queue.guild) endSession(queue.guild.id);
     });
 
     // Debug event - very noisy, enable only with PLAYER_DEBUG=1

@@ -27,6 +27,7 @@ import { DatabaseService } from "../services/database";
 import { DebugPanel } from "../services/debugPanel";
 import { DiscordPlayerService } from "../services/discordPlayer";
 import { setBoosterClient } from "../services/boosters";
+import { backfillAcquisitions, onGuildJoin, onGuildLeave } from "../services/growth/acquisition";
 import { forwardSlash, forwardTarget, routesAwayFromPrimary } from "../services/fleet/dispatcher";
 import { GuildSettingsService } from "../services/guildSettings";
 import { isGuessGameRunning } from "../services/guessGame";
@@ -183,6 +184,8 @@ export class Bot {
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "join", name: guild.name, memberCount: guild.memberCount })
       );
+      // Install attribution: which /invite click (if any) brought this server.
+      void onGuildJoin(guild);
       const { sendWelcome } = await import("../services/welcome");
       await sendWelcome(guild);
       await this.notifyListsSoon();
@@ -202,6 +205,7 @@ export class Bot {
       TelemetryService.getInstance().record(
         guildEvent({ guildId: guild.id, event: "leave", name: guild.name, memberCount: guild.memberCount })
       );
+      void onGuildLeave(guild);
       await this.notifyListsSoon();
     });
 
@@ -373,6 +377,9 @@ export class Bot {
     } catch (error) {
       console.error("⚠️ TTS service initialization failed:", error);
     }
+
+    // Install attribution rows for every current server (once per boot; never throws)
+    void backfillAcquisitions(this.client);
 
     // Start daily metrics snapshots (powers the dashboard growth analytics)
     try {

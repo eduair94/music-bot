@@ -22,6 +22,7 @@ import { ensureAutoplayNext, isAutoplayTrack } from "./autoplay";
 import { isStationId, RADIO_STATIONS, RadioSession } from "./radio";
 import { DiscordPlayerService, isGuessGameQueue, QueueMetadata } from "./discordPlayer";
 import { GuildSettingsService } from "./guildSettings";
+import { maybeShareNudge } from "./growth/nudge";
 import { canGoLive, openLiveLyrics } from "./liveLyrics";
 import { findLyrics } from "./lyrics";
 import { buildQueueView } from "./queueView";
@@ -364,11 +365,15 @@ export class PlayerPanelService {
       if (metadata.autoplay) {
         // The prefetch missed (lookup failed or the song was skipped early): try once more.
         void ensureAutoplayNext(queue).then((added) => {
-          if (!added) void this.end(queue, "ended");
+          if (added) return;
+          void this.end(queue, "ended");
+          void maybeShareNudge(queue);
         });
         return;
       }
       void this.end(queue, "ended");
+      // A good session ran its course: thanks + vote / add-to-server card (rate limited inside).
+      void maybeShareNudge(queue);
     });
     player.events.on("queueDelete", (queue) => void this.end(queue, "stopped"));
     player.events.on("disconnect", (queue) => void this.end(queue, "disconnected"));

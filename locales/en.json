@@ -2257,5 +2257,18 @@
     "empty": "That playlist has no playable songs.",
     "imported": "Imported **{count}** songs into your collection **{name}**.",
     "howTo": "Connect accounts on the dashboard, then use /library play to play your own playlists and liked songs."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Thanks for listening, that was {count} songs!",
+      "body": "If Bypass made this session better, a vote or adding it to another server you are in helps it grow.",
+      "feedback": "Missing something or found a bug? Tell us with {command}.",
+      "vote": "Vote",
+      "invite": "Add to another server"
+    },
+    "invite": {
+      "personal": "This Invite link is yours: every new server that joins with it and plays music gives you {hours} h of 24/7 and studio quality.",
+      "referrals": "Servers you brought to Bypass with your link: **{count}**. Each new one that plays music gives you {hours} h of 24/7 and studio quality."
+    }
   }
 }
