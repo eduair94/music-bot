@@ -110,6 +110,27 @@ describe("buildGrowthReport", () => {
     expect(report.recent).toHaveLength(6);
   });
 
+  it("counts website buttons apart from sources", () => {
+    const report = buildGrowthReport({
+      days: 7,
+      now: NOW,
+      dailyClicks: [{ date: "2026-11-26", counts: { topgg: 3, "@site-hero": 2, "@site-pricing": 1 } }],
+      acquisitions: [
+        row({ ref: "topgg", placement: "site-hero", firstPlayAt: "2026-11-26T11:00:00Z" }),
+        row({ ref: "topgg" }),
+      ],
+      config: CONFIG,
+      sources: SOURCES,
+    });
+    // "@" fields never become sources or inflate click totals.
+    expect(report.funnel.map((f) => f.ref)).toEqual(["topgg"]);
+    expect(report.totals.clicks).toBe(3);
+    expect(report.placements).toEqual([
+      { placement: "site-hero", label: "Website hero", clicks: 2, joins: 1, activated: 1, joinRate: 50 },
+      { placement: "site-pricing", label: "Website pricing", clicks: 1, joins: 0, activated: 0, joinRate: 0 },
+    ]);
+  });
+
   it("passes config and source health through", () => {
     expect(report.config).toEqual(CONFIG);
     expect(report.sources).toEqual(SOURCES);

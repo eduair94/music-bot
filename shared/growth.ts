@@ -62,7 +62,19 @@ export const REF_LABELS: Record<string, string> = {
   discordplace: "discord.place",
   radarcord: "radarcord.net",
   "app-directory": "Discord App Directory",
-  github: "GitHub README",
+  github: "GitHub",
+  discord: "Discord (links shared in chat)",
+  google: "Google search",
+  bing: "Bing search",
+  duckduckgo: "DuckDuckGo",
+  reddit: "Reddit",
+  youtube: "YouTube",
+  chatgpt: "ChatGPT",
+  perplexity: "Perplexity",
+  claude: "Claude",
+  gemini: "Gemini",
+  copilot: "Copilot",
+  llms: "llms.txt (AI assistants)",
   support: "Support server",
   patreon: "Patreon page"
 };
@@ -91,13 +103,27 @@ export function refLabel(ref: string): string {
   return ref;
 }
 
+/**
+ * Website button codes (`site-hero`, `site-pricing`…) say WHERE on our site
+ * the click happened, not where the visitor came from. They are stored as
+ * `placement`, and the channel (`ref`) comes from utm/first touch instead.
+ */
+export function isPlacementRef(ref: string | null | undefined): boolean {
+  return typeof ref === "string" && ref.startsWith("site-");
+}
+
 export interface InviteClick {
   /** Random id, used for the claim marker. */
   id: string;
   /** ms epoch of the click. */
   ts: number;
-  /** Normalized ref code (`?ref=`, else `utm_source`, else first-touch source, else "site"). */
+  /**
+   * Channel: external `?ref=` (bot list, bot surface, referral), else
+   * `utm_source`, else first-touch source, else the placement, else "site".
+   */
   ref: string;
+  /** Which website button was clicked (`site-hero`…), when the click came from our site. */
+  placement?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -209,10 +235,43 @@ export function parseFirstTouch(raw: string | undefined | null): FirstTouch | nu
   }
 }
 
+/** Referrer hosts that have a ref code, so "came from top.gg" and "?ref=topgg" count as one source. */
+const HOST_REFS: [RegExp, string][] = [
+  // AI assistants first: gemini.google.com must not fall into "google".
+  [/(^|\.)(chatgpt\.com|chat\.openai\.com)$/, "chatgpt"],
+  [/(^|\.)perplexity\.ai$/, "perplexity"],
+  [/(^|\.)claude\.ai$/, "claude"],
+  [/(^|\.)gemini\.google\.com$/, "gemini"],
+  [/(^|\.)copilot\.microsoft\.com$/, "copilot"],
+  [/(^|\.)top\.gg$/, "topgg"],
+  [/(^|\.)discordbotlist\.com$/, "discordbotlist"],
+  [/(^|\.)discord\.bots\.gg$/, "discordbotsgg"],
+  [/(^|\.)botlist\.me$/, "botlistme"],
+  [/(^|\.)voidbots\.net$/, "voidbots"],
+  [/(^|\.)discordlist\.gg$/, "discordlistgg"],
+  [/(^|\.)discord\.place$/, "discordplace"],
+  [/(^|\.)radarcord\.net$/, "radarcord"],
+  [/(^|\.)github\.com$/, "github"],
+  [/(^|\.)patreon\.com$/, "patreon"],
+  [/(^|\.)(discord\.com|discord\.gg|discordapp\.com)$/, "discord"],
+  [/(^|\.)(google\.[a-z.]+)$/, "google"],
+  [/(^|\.)bing\.com$/, "bing"],
+  [/(^|\.)duckduckgo\.com$/, "duckduckgo"],
+  [/(^|\.)(reddit\.com|redd\.it)$/, "reddit"],
+  [/(^|\.)(youtube\.com|youtu\.be)$/, "youtube"]
+];
+
+export function refForHost(host: string): string {
+  const h = host.toLowerCase().replace(/^www\./, "");
+  for (const [re, code] of HOST_REFS) if (re.test(h)) return code;
+  return normalizeRef(h) ?? "referral";
+}
+
 /**
  * The visit's source from its URL and referrer, normalized like refs:
- * ?ref= wins, then utm_source, then the referrer's host (www. dropped, dots to
- * hyphens: "top.gg" → "top-gg"), then "direct". Same-site referrers are ignored.
+ * ?ref= wins, then utm_source, then the referrer's host (known hosts map to
+ * their code, "top.gg" → "topgg"; others become "example-com"), then "direct".
+ * Same-site referrers are ignored.
  */
 export function sourceFromVisit(search: URLSearchParams, referrer: string, ownHost: string): Omit<FirstTouch, "t" | "l"> {
   const ref = normalizeRef(search.get("ref"));
@@ -224,7 +283,7 @@ export function sourceFromVisit(search: URLSearchParams, referrer: string, ownHo
   try {
     const host = new URL(referrer).hostname.replace(/^www\./, "");
     if (host && host !== ownHost && !host.endsWith(`.${ownHost}`)) {
-      return { s: normalizeRef(host) ?? "referral", m: "referral" };
+      return { s: refForHost(host), m: "referral" };
     }
   } catch {
     /* no or invalid referrer */

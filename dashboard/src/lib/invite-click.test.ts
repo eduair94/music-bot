@@ -9,9 +9,20 @@ function req(over: Partial<Parameters<typeof buildInviteClick>[0]> = {}) {
 }
 
 describe("buildInviteClick", () => {
-  it("prefers ?ref, normalized", () => {
-    const c = buildInviteClick(req({ searchParams: { ref: "Site_Hero", utm_source: "topgg" } }), "id1", NOW);
-    expect(c).toMatchObject({ id: "id1", ts: NOW, ref: "site-hero", utmSource: "topgg", instance: 1 });
+  it("prefers an external ?ref, normalized", () => {
+    const c = buildInviteClick(req({ searchParams: { ref: "TopGG", utm_source: "reddit" } }), "id1", NOW);
+    expect(c).toMatchObject({ id: "id1", ts: NOW, ref: "topgg", utmSource: "reddit", instance: 1 });
+    expect(c.placement).toBeUndefined();
+  });
+
+  it("treats website button refs as placement, keeping the channel", () => {
+    const ft = encodeURIComponent(JSON.stringify({ s: "topgg", m: "referral", t: NOW - 1000 }));
+    const fromList = buildInviteClick(req({ searchParams: { ref: "Site_Hero" }, cookies: { bp_ft: ft } }), "p1", NOW);
+    expect(fromList).toMatchObject({ ref: "topgg", placement: "site-hero" });
+    const viaUtm = buildInviteClick(req({ searchParams: { ref: "site-pricing", utm_source: "reddit" } }), "p2", NOW);
+    expect(viaUtm).toMatchObject({ ref: "reddit", placement: "site-pricing" });
+    const plain = buildInviteClick(req({ searchParams: { ref: "site-hero" } }), "p3", NOW);
+    expect(plain).toMatchObject({ ref: "site-hero", placement: "site-hero" });
   });
 
   it("falls back to utm_source, then first touch, then site", () => {

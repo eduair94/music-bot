@@ -35,7 +35,7 @@ async function readAcquisitions(): Promise<AcquisitionRow[] | null> {
   try {
     await connectToDatabase();
     return await GuildAcquisition.find({})
-      .select("guildId name memberCount ref lastRef joinedAt firstPlayAt leftAt rejoins backfilled referralRewardedAt country -_id")
+      .select("guildId name memberCount ref lastRef placement joinedAt firstPlayAt leftAt rejoins backfilled referralRewardedAt country -_id")
       .sort({ joinedAt: -1 })
       .limit(5000)
       .lean<AcquisitionRow[]>();

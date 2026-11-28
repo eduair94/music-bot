@@ -8,6 +8,7 @@ import {
   DIRECT_REF,
   FIRST_TOUCH_COOKIE,
   type InviteClick,
+  isPlacementRef,
   normalizeRef,
   parseFirstTouch,
   parseGaClientId,
@@ -71,9 +72,12 @@ export function countryFrom(value: string | null | undefined): string | undefine
 }
 
 /**
- * ref = `?ref=` → `utm_source` → first-touch source → "site".
+ * ref (channel) = external `?ref=` → `utm_source` → first-touch source →
+ * website placement → "site". A website button's `?ref=site-hero` is the
+ * placement, not the channel: a visitor who came from top.gg and clicked the
+ * hero is `ref=topgg, placement=site-hero`.
  * A first touch of "direct" (typed URL) says nothing about this click, so it
- * falls through to "site" too: "direct" stays reserved for joins with no click.
+ * falls through too: "direct" stays reserved for joins with no click.
  */
 export function buildInviteClick(req: InviteRequest, id: string, now: number, instance = 1): InviteClick {
   const sp = req.searchParams;
@@ -83,14 +87,17 @@ export function buildInviteClick(req: InviteRequest, id: string, now: number, in
   const firstTouch = parseFirstTouch(req.cookies[FIRST_TOUCH_COOKIE]);
   const touchRef = firstTouch && firstTouch.s !== DIRECT_REF ? firstTouch.s : null;
 
-  const explicit = normalizeRef(first(sp.ref)) ?? utmSource ?? null;
-  const ref = explicit ?? touchRef ?? "site";
+  const rawRef = normalizeRef(first(sp.ref));
+  const placement = isPlacementRef(rawRef) ? rawRef! : undefined;
+  const explicit = (placement ? null : rawRef) ?? utmSource ?? null;
+  const ref = explicit ?? touchRef ?? placement ?? "site";
   const fromTouch = !explicit && Boolean(touchRef);
 
   const click: InviteClick = {
     id,
     ts: now,
     ref,
+    placement,
     utmSource,
     utmMedium: utmMedium ?? (fromTouch ? firstTouch?.m : undefined),
     utmCampaign: utmCampaign ?? (fromTouch ? firstTouch?.c : undefined),

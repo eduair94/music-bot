@@ -191,6 +191,29 @@ export function GrowthPanel() {
         )}
       </Panel>
 
+      {data.placements.length > 0 && (
+        <Panel className="p-0 overflow-hidden">
+          <div className="p-4 border-b border-line flex justify-between">
+            <Label>Website buttons · {data.days}d</Label>
+            <Label>which button turns visits into servers</Label>
+          </div>
+          <Table headers={["Button", "Clicks", "Joins", "Join rate", "Played"]} minWidth={520}>
+            {data.placements.map((p) => (
+              <tr key={p.placement}>
+                <td className={cell}>
+                  <div className="text-cream">{p.label}</div>
+                  <div className="font-mono text-[11px] text-dust">{p.placement}</div>
+                </td>
+                <td className={num}>{p.clicks}</td>
+                <td className={`${num} text-cream`}>{p.joins}</td>
+                <td className={num}>{pct(p.joinRate)}</td>
+                <td className={num}>{p.activated}</td>
+              </tr>
+            ))}
+          </Table>
+        </Panel>
+      )}
+
       <div className="grid lg:grid-cols-5 gap-4">
         <Panel className="p-0 overflow-hidden lg:col-span-3">
           <div className="p-4 border-b border-line">

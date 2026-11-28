@@ -13,6 +13,8 @@ export interface IGuildAcquisition {
   ownerId?: string;
   ref: string;
   lastRef?: string;
+  /** Website button that was clicked (`site-hero`…), when the click came from our site. */
+  placement?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
@@ -34,6 +36,7 @@ const guildAcquisitionSchema = new Schema<IGuildAcquisition>(
     ownerId: String,
     ref: { type: String, required: true },
     lastRef: String,
+    placement: String,
     utmSource: String,
     utmMedium: String,
     utmCampaign: String,

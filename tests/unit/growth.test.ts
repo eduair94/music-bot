@@ -3,6 +3,7 @@ import { pseudoClientId } from "../../shared/gaMeasurement";
 import {
   ATTRIBUTION_WINDOW_MS,
   botSiteLink,
+  isPlacementRef,
   memberBucket,
   netPromoterScore,
   normalizeRef,
@@ -83,6 +84,11 @@ describe("links", () => {
   it("builds tracked invites", () => {
     expect(trackedInviteUrl("https://x.test/", "Bot Help")).toBe("https://x.test/invite?ref=bot-help");
   });
+  it("splits website placements from channels", () => {
+    expect(isPlacementRef("site-hero")).toBe(true);
+    expect(isPlacementRef("site")).toBe(false);
+    expect(isPlacementRef("topgg")).toBe(false);
+  });
   it("labels refs", () => {
     expect(refLabel("topgg")).toBe("top.gg");
     expect(refLabel("u-1066182746399055993")).toContain("Referral");
@@ -102,7 +108,10 @@ describe("first touch", () => {
     const q = (s: string) => new URLSearchParams(s);
     expect(sourceFromVisit(q("ref=TopGG"), "", "bp.test").s).toBe("topgg");
     expect(sourceFromVisit(q("utm_source=reddit&utm_medium=social"), "", "bp.test")).toEqual({ s: "reddit", m: "social", c: undefined });
-    expect(sourceFromVisit(q(""), "https://www.top.gg/bot/1", "bp.test")).toEqual({ s: "top-gg", m: "referral" });
+    expect(sourceFromVisit(q(""), "https://www.top.gg/bot/1", "bp.test")).toEqual({ s: "topgg", m: "referral" });
+    expect(sourceFromVisit(q(""), "https://gemini.google.com/app", "bp.test").s).toBe("gemini");
+    expect(sourceFromVisit(q(""), "https://www.google.com.uy/", "bp.test").s).toBe("google");
+    expect(sourceFromVisit(q(""), "https://some-blog.example.org/post", "bp.test").s).toBe("some-blog-example-org");
     expect(sourceFromVisit(q(""), "https://bp.test/commands", "bp.test").s).toBe("direct");
     expect(sourceFromVisit(q(""), "", "bp.test").s).toBe("direct");
   });

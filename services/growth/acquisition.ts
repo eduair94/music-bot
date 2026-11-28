@@ -74,6 +74,7 @@ export async function onGuildJoin(guild: Guild): Promise<void> {
         memberCount: guild.memberCount,
         ownerId: guild.ownerId,
         ref,
+        placement: click?.placement,
         utmSource: click?.utmSource,
         utmMedium: click?.utmMedium,
         utmCampaign: click?.utmCampaign,
@@ -114,6 +115,7 @@ export async function onGuildJoin(guild: Guild): Promise<void> {
             source: ref,
             campaign: click?.utmCampaign,
             medium: click?.utmMedium,
+            placement: click?.placement,
             member_bucket: memberBucket(guild.memberCount),
             rejoin: rejoin || undefined
           }

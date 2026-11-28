@@ -21,6 +21,8 @@ export interface AcquisitionRow {
   memberCount?: number;
   ref: string;
   lastRef?: string;
+  /** Website button of the matched click (`site-hero`…). */
+  placement?: string;
   joinedAt: Date | string;
   firstPlayAt?: Date | string | null;
   leftAt?: Date | string | null;
@@ -55,6 +57,20 @@ export interface FunnelRow {
   activationRate: number | null;
   medianHoursToFirstPlay: number | null;
 }
+
+/** Website button performance: which placement turns visitors into servers. */
+export interface PlacementRow {
+  placement: string;
+  label: string;
+  clicks: number;
+  joins: number;
+  activated: number;
+  /** joins / clicks in %, null without clicks. */
+  joinRate: number | null;
+}
+
+/** Daily-hash fields that start with this are website placements, not sources. */
+export const PLACEMENT_FIELD_PREFIX = "@";
 
 export interface ReferrerRow {
   userId: string;
@@ -91,6 +107,7 @@ export interface GrowthReport {
   joinsByDay: DayPoint[];
   funnel: FunnelRow[];
   totals: FunnelRow;
+  placements: PlacementRow[];
   topReferrers: ReferrerRow[];
   recent: RecentJoin[];
   /** Servers that were already there when tracking started (and never rejoined). */
@@ -202,12 +219,23 @@ export function buildGrowthReport(input: {
     return b;
   };
 
+  const placements = new Map<string, PlacementRow>();
+  const placement = (p: string) => {
+    let row = placements.get(p);
+    if (!row) placements.set(p, (row = { placement: p, label: refLabel(p), clicks: 0, joins: 0, activated: 0, joinRate: null }));
+    return row;
+  };
+
   for (const day of input.dailyClicks) {
     const point = clicksByDay.get(day.date);
     if (!point) continue;
     for (const [ref, raw] of Object.entries(day.counts ?? {})) {
       const n = Math.max(0, Math.floor(Number(raw) || 0));
       if (!n) continue;
+      if (ref.startsWith(PLACEMENT_FIELD_PREFIX)) {
+        placement(ref.slice(PLACEMENT_FIELD_PREFIX.length)).clicks += n;
+        continue;
+      }
       point.byRef[ref] = (point.byRef[ref] ?? 0) + n;
       point.total += n;
       bucket(ref).clicks += n;
@@ -234,6 +262,11 @@ export function buildGrowthReport(input: {
 
     const firstPlay = ms(row.firstPlayAt);
     const left = ms(row.leftAt);
+    if (row.placement) {
+      const p = placement(row.placement);
+      p.joins += 1;
+      if (firstPlay !== null) p.activated += 1;
+    }
     for (const b of [bucket(ref), total]) {
       b.joins += 1;
       if (firstPlay !== null) b.activated += 1;
@@ -282,6 +315,9 @@ export function buildGrowthReport(input: {
     joinsByDay: dates.map((d) => joinsByDay.get(d)!),
     funnel,
     totals: toRow("*", total),
+    placements: [...placements.values()]
+      .map((p) => ({ ...p, joinRate: p.clicks ? Math.round((p.joins / p.clicks) * 1000) / 10 : null }))
+      .sort((a, b) => b.joins - a.joins || b.clicks - a.clicks || a.placement.localeCompare(b.placement)),
     topReferrers: [...referrers.values()].sort((a, b) => b.installed - a.installed || b.servers - a.servers).slice(0, 10),
     recent: recent.sort((a, b) => b.joinedAt.localeCompare(a.joinedAt)).slice(0, 15),
     preTracking,
