@@ -25,6 +25,7 @@ import {
   providerLabel
 } from "../services/linkedAccounts";
 import { CONNECTIONS_PAGE_PATH, LinkProvider } from "../shared/linkedAccounts";
+import { botSiteLink } from "../shared/growth";
 import { SITE_URL } from "../shared/links";
 import { safeText, truncate } from "../utils/format";
 import { descriptionLocalizations, i18n } from "../utils/i18n";
@@ -38,7 +39,8 @@ import { descriptionLocalizations, i18n } from "../utils/i18n";
 const EPHEMERAL = MessageFlags.Ephemeral;
 const V2 = MessageFlags.IsComponentsV2;
 const NO_PINGS = { parse: [] as [] };
-const CONNECT_URL = `${SITE_URL}${CONNECTIONS_PAGE_PATH}`;
+// UTM params go before the #connections fragment (URL keeps the hash last).
+const CONNECT_URL = botSiteLink(SITE_URL, CONNECTIONS_PAGE_PATH, "library");
 
 /** Playlist lists per user, kept briefly so autocomplete doesn't hit the APIs on every keystroke. */
 const listCache = new Map<string, { at: number; items: LibraryPlaylist[] }>();
