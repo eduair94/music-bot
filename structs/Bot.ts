@@ -381,6 +381,12 @@ export class Bot {
     // Install attribution rows for every current server (once per boot; never throws)
     void backfillAcquisitions(this.client);
 
+    // Weekly growth digest in the staff channel: hourly check, posts Mondays from
+    // 13:00 UTC, once per ISO week through a Redis lock (primary only; never throws)
+    void import("../services/growth/digest")
+      .then(({ startGrowthDigest }) => startGrowthDigest())
+      .catch((error) => console.error("⚠️ Growth digest failed to start:", error));
+
     // Start daily metrics snapshots (powers the dashboard growth analytics)
     try {
       const { MetricsSnapshotService } = await import("../services/metricsSnapshot");

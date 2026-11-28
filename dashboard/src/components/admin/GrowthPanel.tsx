@@ -3,7 +3,7 @@
 import { AreaChart, type AreaPoint } from "@/components/insights/AreaChart";
 import { BarRow } from "@/components/insights/BarRow";
 import { pct, relTime } from "@/lib/admin/format";
-import type { GrowthReport } from "@/lib/admin/growth";
+import type { GrowthReport } from "../../../../shared/growthReport";
 import { type ReactNode, useMemo, useState } from "react";
 import { Chip, Label, Loader, Panel, Unavailable } from "./ui";
 import { usePolling } from "./usePolling";

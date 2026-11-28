@@ -78,7 +78,7 @@ async function recordClick(click: InviteClick): Promise<void> {
     .ltrim(INVITE_CLICKS_KEY, 0, INVITE_CLICKS_MAX - 1)
     .expire(INVITE_CLICKS_KEY, CLICKS_TTL_S)
     .hincrby(daily, click.ref, 1);
-  // Website button counts share the hash under "@<placement>" (see lib/admin/growth.ts).
+  // Website button counts share the hash under "@<placement>" (see shared/growthReport.ts).
   if (click.placement) tx.hincrby(daily, `@${click.placement}`, 1);
   const write = tx
     .expire(daily, INVITE_DAILY_TTL_S)

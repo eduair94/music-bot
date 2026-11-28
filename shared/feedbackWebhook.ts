@@ -6,6 +6,8 @@
  * fetch-based, 4 s timeout, never throws: feedback is stored in Mongo first,
  * the channel post is a convenience. `allowed_mentions: { parse: [] }` keeps
  * the post from pinging anyone, whatever the message contains.
+ * `postWebhook` is the generic sender, also used by the bot's weekly growth
+ * digest (services/growth/digest.ts).
  */
 import { FEEDBACK_CONTACT_MAX, type FeedbackKind, type FeedbackRecord } from "./growth";
 
@@ -89,14 +91,59 @@ export function buildFeedbackWebhookPayload(fb: FeedbackWebhookInput) {
   };
 }
 
-/** Only real https URLs are posted to. */
-function usableUrl(url: string | undefined): string | null {
+/** Only real https URLs are posted to; null otherwise. */
+export function usableWebhookUrl(url: string | undefined): string | null {
   if (!url) return null;
   try {
     const parsed = new URL(url.trim());
     return parsed.protocol === "https:" ? parsed.toString() : null;
   } catch {
     return null;
+  }
+}
+
+export interface WebhookPostOptions {
+  timeoutMs?: number;
+  fetchImpl?: typeof fetch;
+  /** Log prefix, e.g. "feedback" → `[feedback] webhook failed: …`. */
+  label?: string;
+}
+
+/**
+ * POSTs a JSON body to a Discord webhook. Resolves true when Discord accepted
+ * it, false when the URL is missing/not https, it timed out, or failed. Never throws.
+ */
+export async function postWebhook(
+  url: string | undefined,
+  body: unknown,
+  options: WebhookPostOptions = {}
+): Promise<boolean> {
+  const target = usableWebhookUrl(url);
+  if (!target) return false;
+  const doFetch = options.fetchImpl ?? (typeof fetch === "function" ? fetch : null);
+  if (!doFetch) return false;
+  const label = options.label ?? "webhook";
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? FEEDBACK_WEBHOOK_TIMEOUT_MS);
+  (timer as { unref?: () => void }).unref?.();
+  try {
+    const res = await doFetch(target, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    if (!res.ok) console.warn(`[${label}] webhook answered HTTP ${res.status}`);
+    return res.ok;
+  } catch (error) {
+    console.warn(
+      `[${label}] webhook failed:`,
+      (error as Error)?.name === "AbortError" ? "timed out" : (error as Error)?.message ?? error
+    );
+    return false;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -108,27 +155,8 @@ export async function forwardFeedback(
   fb: FeedbackWebhookInput,
   options: { url?: string; timeoutMs?: number; fetchImpl?: typeof fetch } = {}
 ): Promise<boolean> {
-  const url = usableUrl(options.url ?? process.env.FEEDBACK_WEBHOOK_URL);
-  if (!url) return false;
-  const doFetch = options.fetchImpl ?? (typeof fetch === "function" ? fetch : null);
-  if (!doFetch) return false;
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? FEEDBACK_WEBHOOK_TIMEOUT_MS);
-  (timer as { unref?: () => void }).unref?.();
-  try {
-    const res = await doFetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildFeedbackWebhookPayload(fb)),
-      signal: controller.signal
-    });
-    if (!res.ok) console.warn(`[feedback] webhook answered HTTP ${res.status}`);
-    return res.ok;
-  } catch (error) {
-    console.warn("[feedback] webhook failed:", (error as Error)?.name === "AbortError" ? "timed out" : (error as Error)?.message ?? error);
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
+  return postWebhook(options.url ?? process.env.FEEDBACK_WEBHOOK_URL, buildFeedbackWebhookPayload(fb), {
+    ...options,
+    label: "feedback"
+  });
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type AcquisitionRow, buildGrowthReport, clampDays, isTrackedJoin, joinRef, median, windowDays } from "./growth";
+import { type AcquisitionRow, buildGrowthReport, clampDays, isTrackedJoin, joinRef, median, windowDays } from "../../shared/growthReport";
 
 const NOW = new Date("2026-11-27T15:00:00Z");
 const CONFIG = { gaServer: true, gaClient: true, clarity: false };

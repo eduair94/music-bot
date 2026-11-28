@@ -1,5 +1,9 @@
 /**
- * Admin Growth panel aggregation (pure, unit tested in growth.test.ts).
+ * Install funnel aggregation shared by the dashboard's admin Growth panel
+ * (GET /api/admin/growth) and the bot's weekly staff digest
+ * (services/growth/digest.ts), so both use the same definitions of join
+ * rate, activation, time to first song and placements. Pure, unit tested in
+ * tests/unit/growthReport.test.ts.
  *
  * Inputs: per-day invite click hashes from Redis (`growth:invite_daily:<day>`,
  * field = ref) and the bot's `guildacquisitions` rows from Mongo. Output: the
@@ -10,7 +14,7 @@
  * join (`lastRef`); servers that were already there when tracking started
  * (`backfilled`, never rejoined) are left out of joins and only counted.
  */
-import { refLabel } from "../../../../shared/growth";
+import { refLabel } from "./growth";
 
 export const GROWTH_DAYS_DEFAULT = 30;
 export const GROWTH_DAYS_MAX = 120;
