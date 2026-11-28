@@ -11,7 +11,7 @@ Everything needed to list **Bypass Hi-Fi Music Bot** on bot directories. Every c
 | Prefix | `/` (slash commands only; no message prefix) |
 | Help command | `/help` |
 | Library | discord.js (TypeScript) |
-| Invite URL | https://music-bot.checkleaked.com/invite |
+| Invite URL | `https://music-bot.checkleaked.com/invite?ref=<site code>` — one code per site so joins are attributed (top.gg `topgg`, discordbotlist.com `discordbotlist`, discord.bots.gg `discordbotsgg`, botlist.me `botlistme`, voidbots.net `voidbots`, discordlist.gg `discordlistgg`, discord.place `discordplace`, radarcord.net `radarcord`). See docs/growth/README.md. |
 | Website | https://music-bot.checkleaked.com |
 | Support server | https://discord.gg/KwKwtasGZE (permanent invite) |
 | Privacy policy | https://music-bot.checkleaked.com/privacy |
