@@ -509,6 +509,7 @@ export const COMMAND_GROUPS: Readonly<Record<string, Group | null>> = Object.fre
   help: null,
   info: null,
   invite: null,
+  feedback: null,
   dashboard: null,
   patreon: null,
   perks: null,

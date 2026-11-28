@@ -1,4 +1,5 @@
 import BrandMark from "@/components/common/BrandMark";
+import FeedbackTrigger from "@/components/feedback/FeedbackTrigger";
 import { GITHUB_ISSUES_URL, GITHUB_URL, PATREON_URL, SPOTIFY_PROVIDER_HOST, SPOTIFY_PROVIDER_URL } from "@/lib/site";
 import { Github } from "lucide-react";
 import Link from "next/link";
@@ -86,6 +87,7 @@ export default function Footer() {
             <ul className="space-y-1.5 text-sm">
               <li><Link href="/support" prefetch={false} className={linkClass}>Discord server</Link></li>
               <li><Link href="/status" prefetch={false} className={linkClass}>Status</Link></li>
+              <li><FeedbackTrigger skin="studio" className={linkClass}>Send feedback</FeedbackTrigger></li>
               <li>
                 <a href={GITHUB_ISSUES_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   Report a bug<span className="sr-only"> (opens in a new tab)</span>

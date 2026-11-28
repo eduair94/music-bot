@@ -82,6 +82,7 @@ const CATEGORY_BY_NAME: Record<string, CommandCategory> = {
   vote: "premium",
   help: "other",
   invite: "other",
+  feedback: "other",
   dashboard: "other"
 };
 

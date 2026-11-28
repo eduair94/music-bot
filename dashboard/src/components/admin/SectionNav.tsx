@@ -5,6 +5,7 @@ export const SECTIONS = [
   { id: "growth", label: "Growth" },
   { id: "servers", label: "Servers" },
   { id: "activity", label: "Activity" },
+  { id: "feedback", label: "Feedback" },
   { id: "premium", label: "Premium & Bots" },
   { id: "logs", label: "Logs" },
   { id: "audit", label: "Audit" }

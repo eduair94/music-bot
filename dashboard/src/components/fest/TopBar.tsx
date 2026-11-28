@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { ChevronDown, LogOut, Search, User, Crown, LifeBuoy, ListMusic, Bot, Shield, Plus } from "lucide-react";
+import { ChevronDown, LogOut, Search, User, Crown, LifeBuoy, ListMusic, Bot, Shield, Plus, MessageSquare } from "lucide-react";
+import FeedbackTrigger from "@/components/feedback/FeedbackTrigger";
 import { cx, Menu, MenuItem } from "./ui";
 
 export interface SwitcherGuild {
@@ -175,6 +176,15 @@ export function TopBar({
               <Search size={18} />
             </button>
           ) : null}
+
+          <FeedbackTrigger
+            skin="fest"
+            label="Send feedback"
+            className="flex h-10 items-center gap-2 rounded-[4px] border border-ink px-2.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-stock"
+          >
+            <MessageSquare size={16} aria-hidden />
+            <span className="hidden xl:inline">Feedback</span>
+          </FeedbackTrigger>
 
           <Menu
             label="Account"

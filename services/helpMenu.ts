@@ -70,6 +70,9 @@ export function buildHelp(botName: string, category?: CommandCategory): { compon
       .map((c) => `${ICON[c]} **${i18n.__(`helpMenu.category.${c}`)}** — ${i18n.__(`helpMenu.categoryDesc.${c}`)}`)
       .join("\n");
     container.addTextDisplayComponents((t) => t.setContent(overview));
+    if (commands.has("feedback")) {
+      container.addTextDisplayComponents((t) => t.setContent(`-# ${i18n.__mf("feedback.helpHint", { command: mention("feedback") })}`));
+    }
   } else {
     const lines = linesFor(category);
     container.addTextDisplayComponents((t) => t.setContent(`### ${ICON[category]} ${i18n.__(`helpMenu.category.${category}`)}`));

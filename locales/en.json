@@ -27,6 +27,31 @@
     "description": "Send bot invite link",
     "fleet": "Extra players: Bypass 2, 3 and 4 play in other voice channels at the same time, with the same /play."
   },
+  "feedback": {
+    "description": "Send the team an idea, a bug report or kind words",
+    "modalTitle": "Send feedback",
+    "kindLabel": "What kind of feedback?",
+    "kindPlaceholder": "Pick one (optional)",
+    "kinds": {
+      "idea": "Idea",
+      "bug": "Bug",
+      "praise": "Praise",
+      "other": "Other"
+    },
+    "kindDescriptions": {
+      "idea": "Something you would like Bypass to do",
+      "bug": "Something broke or acts strangely",
+      "praise": "Something you like",
+      "other": "Anything else"
+    },
+    "messageLabel": "What should we know?",
+    "messageDescription": "For bugs: what you did, what happened, and the song or link if it helps.",
+    "messagePlaceholder": "Write as much as you like.",
+    "thanksTitle": "Thanks, we got it",
+    "thanksBody": "The people who build Bypass read every message. Want a reply or help right now? Ask in the support server.",
+    "supportButton": "Support server",
+    "helpHint": "Ideas, bugs or kind words? Send them with {command}."
+  },
   "loop": {
     "description": "Toggle music loop",
     "errorNotQueue": "There is nothing playing.",
