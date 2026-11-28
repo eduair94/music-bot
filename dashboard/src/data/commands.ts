@@ -35,6 +35,10 @@ export const commands: Command[] = [
   { name: "/playnext", description: "Play a track next, or start playback if nothing is on", usage: "/playnext <song or URL>", category: "Music" },
   { name: "/playnow", description: "Play a track right away, skipping the current one", usage: "/playnow <song or URL>", category: "Music" },
   { name: "/radio", description: "Start an endless station from one song", usage: "/radio <song>", category: "Music", isNew: true },
+  { name: "/ai playlist", description: "AI DJ: describe a mood or occasion and get a playlist that starts playing", usage: "/ai playlist <prompt> [count] [play] [next]", category: "Music", isNew: true },
+  { name: "/ai radio", description: "AI DJ: endless radio that keeps to your description", usage: "/ai radio <prompt>", category: "Music", isNew: true },
+  { name: "/guess start", description: "Guess-the-song game in your voice channel, from 30-second previews", usage: "/guess start [rounds] [genre]", category: "Music", isNew: true },
+  { name: "/guess stop", description: "Stop the guess-the-song game", usage: "/guess stop", category: "Music" },
 
   // Queue
   { name: "/queue", description: "View the current queue with pagination", usage: "/queue", category: "Queue" },
@@ -93,6 +97,7 @@ export const commands: Command[] = [
   { name: "/info song", description: "Details for the playing track: artist, length, requester, and source", usage: "/info song", category: "Info" },
   { name: "/lyrics", description: "Lyrics for what's playing or any song, also in DMs", usage: "/lyrics [song]", category: "Info" },
   { name: "/stats history", description: "Recently played tracks", usage: "/stats history", category: "Info" },
+  { name: "/history", description: "Songs played in this server lately, optionally only one member's requests", usage: "/history [user]", category: "Info", isNew: true },
   { name: "/grab", description: "Send the current track info to your DMs", usage: "/grab", category: "Info" },
   { name: "/vote", description: "Vote for the bot and unlock 24/7 and studio quality for 12 hours", usage: "/vote", category: "Premium", isNew: true },
   { name: "/stats bot", description: "Bot statistics and performance", usage: "/stats bot", category: "Info" },

@@ -124,9 +124,9 @@ export default function Hero({ stats }: { stats?: PublicStats | null }) {
         <figure className="rise rise-5 lg:col-span-6">
           <NowPlayingMock />
           <figcaption className="mt-4 max-w-[32rem] text-sm text-dust leading-relaxed text-pretty">
-            <span className="text-cream">Buttons, not commands.</span> Each{" "}
-            <code className="font-mono text-dune">/nowplaying</code> reply carries seek,
-            pause, skip and stop buttons that anyone in the voice channel can use.
+            <span className="text-cream">Buttons, not commands.</span> Every song gets a player
+            panel with pause, skip, loop, shuffle, volume and lyrics buttons;{" "}
+            <code className="font-mono text-dune">/nowplaying</code> brings it back to the bottom of the chat.
           </figcaption>
         </figure>
       </div>

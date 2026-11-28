@@ -1,29 +1,38 @@
 /**
- * The reply Bypass posts for /nowplaying (see commands/nowplaying.ts), drawn in
- * Discord's dark theme: the bot's title, fields, text progress bar (string-
- * progressbar's splitBar at 2:31 of 3:47), footer and both rows of button
- * labels. The thumbnail is neutral art standing in for the track's own.
- * Static markup — an illustration, not live controls.
+ * The player panel Bypass posts for every song, here as the reply to
+ * /nowplaying (commands/nowplaying.ts → PlayerPanelService.repost), drawn in
+ * Discord's dark theme. Mirrors services/playerPanel.ts buildContainer: a
+ * Components V2 container with the default amber accent, "-# ▶ Now playing",
+ * the title as a heading link, artist · length · requester, the text progress
+ * bar (utils/format.ts progressBar, 18 wide, at 2:31 of 3:47), the state line,
+ * "Up next", the provider credit, a divider and the three button rows. The
+ * thumbnail is neutral art standing in for the track's own.
+ * Static markup — an illustration, not live controls. If the panel changes,
+ * update this.
  */
 
 import BrandMark from "@/components/common/BrandMark";
 
 type ButtonStyle = "secondary" | "primary" | "danger";
 
-const BUTTON_ROWS: { label: string; style?: ButtonStyle }[][] = [
+const BUTTON_ROWS: { label: string; name: string; style?: ButtonStyle }[][] = [
   [
-    { label: "⏪ 1m" },
-    { label: "⏪ 30s" },
-    { label: "⏪ 10s" },
-    { label: "⏸️ Pause", style: "primary" },
-    { label: "⏹️ Stop", style: "danger" },
+    { label: "⏮️", name: "previous" },
+    { label: "⏸️", name: "pause", style: "primary" },
+    { label: "⏭️", name: "skip" },
+    { label: "⏹️", name: "stop", style: "danger" },
+    { label: "📜", name: "queue" },
   ],
   [
-    { label: "10s ⏩" },
-    { label: "30s ⏩" },
-    { label: "1m ⏩" },
-    { label: "⏭️ Skip", style: "primary" },
-    { label: "🔄" },
+    { label: "🔁", name: "loop" },
+    { label: "🔀", name: "shuffle" },
+    { label: "🔉", name: "volume down" },
+    { label: "🔊", name: "volume up" },
+    { label: "♾️", name: "autoplay" },
+  ],
+  [
+    { label: "🎤 Lyrics", name: "lyrics" },
+    { label: "💾 Save", name: "save" },
   ],
 ];
 
@@ -33,14 +42,11 @@ const BUTTON_STYLES: Record<ButtonStyle, string> = {
   danger: "bg-[#da373c]",
 };
 
-const FIELDS = [
-  { name: "🎤 Artist", value: "M83" },
-  { name: "🎵 Source", value: "youtube" },
-  { name: "🔊 Quality", value: "🔊 Opus 256 kbps" },
-];
+// progressBar(151_000, 227_000, 18): 11 filled, the knob, 6 empty.
+const PROGRESS = `${"━".repeat(11)}●${"─".repeat(6)}`;
 
 const DESCRIPTION =
-  "A Bypass now-playing message in Discord: Midnight City by M83 from YouTube at 256 kbps, two and a half minutes in, with buttons to seek, pause, stop, skip and refresh.";
+  "A Bypass player panel in Discord: Midnight City by M83, two and a half minutes in, sent as Opus at 256 kbps, with buttons for previous, pause, skip, stop, queue, loop, shuffle, volume, autoplay, lyrics and save.";
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
@@ -50,7 +56,7 @@ function Code({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Night skyline in 16:9, letterboxed into the embed's 80px thumbnail box like a video still. */
+/** Night skyline in 16:9, letterboxed into the 80px thumbnail box like a video still. */
 function Thumbnail() {
   return (
     <svg viewBox="0 0 80 45" className="h-[45px] w-20 rounded-[4px]" aria-hidden="true">
@@ -119,51 +125,47 @@ export default function NowPlayingMock() {
               <span className="ml-1 text-xs text-[#949ba4]">Today at 21:14</span>
             </div>
 
-            {/* Embed: #00FF00 while playing, as the bot sets it; thumbnail at top right */}
-            <div className="mt-1.5 grid max-w-[32rem] grid-cols-[minmax(0,1fr)_auto] gap-x-4 rounded-[4px] border-l-4 border-[#00ff00] bg-[#2b2d31] py-3 pl-3 pr-4">
-              <div className="min-w-0">
-                <div className="font-semibold text-[#f2f3f5]">▶️ Now playing</div>
-                <div className="mt-1.5 font-semibold text-[#00a8fc]">Midnight City</div>
-
-                <dl className="mt-3 grid grid-cols-3 gap-x-3 gap-y-2">
-                  {FIELDS.map((field) => (
-                    <div key={field.name} className="min-w-0">
-                      <dt className="text-[0.8125rem] font-semibold text-[#f2f3f5]">{field.name}</dt>
-                      <dd className="mt-0.5 text-[0.8125rem]">{field.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-
-              <div className="hidden pt-0.5 @min-[30rem]:block">
-                <Thumbnail />
-              </div>
-
-              <dl className="col-span-2 mt-3">
-                <dt className="text-[0.8125rem] font-semibold text-[#f2f3f5]">⏱️ Progress</dt>
-                <dd className="mt-1 text-[0.8125rem] leading-relaxed [overflow-wrap:anywhere]">
-                  <Code>00:02:31</Code> [▬▬▬▬▬▬▬▬▬▬▬▬🔘▬▬▬▬▬▬▬] <Code>00:03:47</Code>
-                </dd>
-              </dl>
-
-              <p className="col-span-2 mt-3 text-xs text-[#949ba4] text-pretty">
-                ⏳ Time Remaining: 00:01:16 • Queue: 14 tracks
-              </p>
-            </div>
-
-            <div className="mt-2 space-y-2">
-              {BUTTON_ROWS.map((row, i) => (
-                <div key={i} className="flex flex-wrap gap-2 @max-[30rem]:gap-1.5">
-                  {row.map(({ label, style = "secondary" }) => (
-                    <span
-                      key={label}
-                      className={`inline-flex h-8 min-w-[3.25rem] items-center justify-center whitespace-nowrap rounded-lg px-3 text-sm font-medium text-white @max-[30rem]:px-2.5 ${BUTTON_STYLES[style]}`}
-                    >
-                      {label}
-                    </span>
-                  ))}
+            {/* Components V2 container: amber accent (DEFAULT_ACCENT), thumbnail as the section accessory */}
+            <div className="mt-1.5 max-w-[32rem] rounded-lg border-l-4 border-[#f8aa2a] bg-[#2b2d31] p-4">
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4">
+                <div className="min-w-0">
+                  <div className="text-xs text-[#949ba4]">▶ Now playing</div>
+                  <div className="mt-1 text-lg font-bold leading-tight text-[#00a8fc]">Midnight City</div>
+                  <div className="mt-1 text-[0.875rem]">
+                    M83 · <Code>3:47</Code> · requested by{" "}
+                    <span className="rounded-[3px] bg-[#5865f2]/30 px-0.5 font-medium text-[#c9cdfb]">@maya</span>
+                  </div>
                 </div>
-              ))}
+                <div className="hidden pt-0.5 @min-[30rem]:block">
+                  <Thumbnail />
+                </div>
+              </div>
+
+              <p className="mt-2 text-[0.875rem] [overflow-wrap:anywhere]">
+                <Code>2:31</Code> <span className="tracking-[-0.06em]">{PROGRESS}</span> <Code>3:47</Code>
+              </p>
+              <p className="mt-0.5 text-[0.875rem]">🔊 Volume 80% · 🎚️ Opus 256 kbps</p>
+              <p className="mt-0.5 text-xs text-[#949ba4]">Up next: Wait (+13 more)</p>
+              <p className="mt-0.5 text-xs text-[#949ba4]">
+                ⚡ Powered by <span className="text-[#00a8fc]">spotify.checkleaked.cc</span>
+              </p>
+
+              <div className="my-3 h-px bg-white/10" aria-hidden="true" />
+
+              <div className="space-y-2">
+                {BUTTON_ROWS.map((row, i) => (
+                  <div key={i} className="flex flex-wrap gap-2 @max-[30rem]:gap-1.5">
+                    {row.map(({ label, name, style = "secondary" }) => (
+                      <span
+                        key={name}
+                        className={`inline-flex h-8 min-w-[2.75rem] items-center justify-center whitespace-nowrap rounded-lg px-3 text-sm font-medium text-white @max-[30rem]:min-w-[2.5rem] @max-[30rem]:px-2 ${BUTTON_STYLES[style]}`}
+                      >
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

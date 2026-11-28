@@ -290,7 +290,11 @@ export default function Commands({ headingLevel = "h2", pages = {} }: CommandsPr
                                     : ""}
                                 </p>
                                 {cmd.isPremium && (
-                                  <p className="text-amber text-sm mt-2">Requires a linked Premium server.</p>
+                                  <p className="text-amber text-sm mt-2">
+                                    {cmd.name.startsWith("/premium")
+                                      ? "Needs a Founder membership on Patreon."
+                                      : "Premium: Founder members, support-server boosters, or anyone for 12 hours after a vote."}
+                                  </p>
                                 )}
                                 {cmd.adminOnly && (
                                   <p className="text-dune text-sm mt-2">
