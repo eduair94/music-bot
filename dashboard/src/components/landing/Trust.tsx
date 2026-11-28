@@ -1,5 +1,7 @@
 import SectionHeader from "@/components/landing/SectionHeader";
+import Testimonials from "@/components/landing/Testimonials";
 import type { PublicStats } from "@/lib/public-stats-shape";
+import type { Testimonial } from "@/lib/testimonials-shape";
 import { GITHUB_URL } from "@/lib/site";
 import Link from "next/link";
 import { INVITE_PERMISSION_LIST } from "../../../../shared/invitePermissions";
@@ -23,9 +25,18 @@ interface TrustItem {
 /**
  * Things a server admin can verify before inviting Bypass: the source, the
  * live status, the permission list. Live values come from the page (they may
- * be null, in which case the line is left out rather than faked).
+ * be null, in which case the line is left out rather than faked). Quotes the
+ * owner featured follow the three checks; with none, that block is absent.
  */
-export default function Trust({ stats, pushedAt }: { stats: PublicStats | null; pushedAt: string | null }) {
+export default function Trust({
+  stats,
+  pushedAt,
+  testimonials = [],
+}: {
+  stats: PublicStats | null;
+  pushedAt: string | null;
+  testimonials?: Testimonial[];
+}) {
   const items: TrustItem[] = [
     {
       title: "Open source",
@@ -87,6 +98,8 @@ export default function Trust({ stats, pushedAt }: { stats: PublicStats | null; 
             </li>
           ))}
         </ul>
+
+        <Testimonials items={testimonials} />
       </div>
     </section>
   );

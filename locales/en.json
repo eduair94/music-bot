@@ -47,6 +47,8 @@
     "messageLabel": "What should we know?",
     "messageDescription": "For bugs: what you did, what happened, and the song or link if it helps.",
     "messagePlaceholder": "Write as much as you like.",
+    "quoteLabel": "Can we quote this on the Bypass website?",
+    "quoteDescription": "We would show only the message, never your username or server name.",
     "thanksTitle": "Thanks, we got it",
     "thanksBody": "The people who build Bypass read every message. Want a reply or help right now? Ask in the support server.",
     "supportButton": "Support server",

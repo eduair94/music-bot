@@ -188,7 +188,8 @@ export default function PrivacyPolicyPage() {
                 <code>/feedback</code> in Discord, we store the message, the contact details you choose to add (optional),
                 whether we may quote it publicly, your Discord ID and username when you are signed in or send it from Discord,
                 the page or command it was sent from, and your country. Feedback is forwarded to a private staff channel in our
-                Discord support server, kept until it is handled, and deleted on request.
+                Discord support server, kept until it is handled, and deleted on request. If you allow quoting, we may show
+                the message on the Bypass website without your username or server name; we take it down when you ask.
               </p>
             </section>
 

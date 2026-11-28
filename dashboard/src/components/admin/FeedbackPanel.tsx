@@ -1,6 +1,7 @@
 "use client";
 
 import { relTime } from "@/lib/admin/format";
+import { cleanAttribution, FEEDBACK_ATTRIBUTION_MAX } from "@/lib/feedback/admin-patch";
 import {
   FEEDBACK_STATUSES,
   type AdminFeedbackItem,
@@ -8,7 +9,8 @@ import {
   type FeedbackStatus,
 } from "@/lib/feedback/admin-shape";
 import { npsBandOf } from "@/lib/feedback/nps";
-import { useState } from "react";
+import { captionParts, cleanQuoteText, DEFAULT_ATTRIBUTION, QUOTE_MAX, TESTIMONIALS_MAX, toTestimonial } from "@/lib/testimonials-shape";
+import { useId, useState } from "react";
 import { FEEDBACK_KINDS, type FeedbackKind } from "../../../../shared/growth";
 import { Button, Chip, Label, Loader, Panel, Unavailable, type Tone } from "./ui";
 import { usePolling } from "./usePolling";
@@ -88,7 +90,74 @@ function KindCounts({ data }: { data: AdminFeedbackResponse }) {
   );
 }
 
-function Item({ item, busy, onStatus }: { item: AdminFeedbackItem; busy: boolean; onStatus: (s: FeedbackStatus) => void }) {
+type FeedbackChange = { status?: FeedbackStatus; featured?: boolean; quoteAttribution?: string };
+
+/**
+ * Landing-page controls for a quotable item: the attribution line (saved with
+ * the feature click, or on its own once featured), feature / remove, and a
+ * preview of the caption the home page will print.
+ */
+function FeatureControls({ item, busy, onChange }: { item: AdminFeedbackItem; busy: boolean; onChange: (c: FeedbackChange) => void }) {
+  const inputId = useId();
+  const hintId = `${inputId}-hint`;
+  const saved = item.quoteAttribution ?? "";
+  const [attribution, setAttribution] = useState(saved);
+  const dirty = cleanAttribution(attribution) !== saved;
+  const preview = toTestimonial({ ...item, quoteAttribution: attribution });
+  const cut = Array.from(cleanQuoteText(item.message)).length > QUOTE_MAX;
+
+  return (
+    <div className="mt-3 border-t border-line/60 pt-3">
+      <label htmlFor={inputId} className="console-label">
+        Attribution on the site
+      </label>
+      <div className="mt-1 flex flex-wrap items-center gap-2">
+        <input
+          id={inputId}
+          value={attribution}
+          onChange={(e) => setAttribution(e.target.value)}
+          maxLength={FEEDBACK_ATTRIBUTION_MAX}
+          placeholder={`e.g. runs a 300-member gaming server (empty: ${DEFAULT_ATTRIBUTION})`}
+          aria-describedby={hintId}
+          className="flex-1 min-w-[220px] rounded-md bg-panel-raised border border-line-bright px-3 py-1.5 font-mono text-xs text-cream focus-amber"
+        />
+        {item.featured ? (
+          <>
+            {dirty && (
+              <Button disabled={busy} onClick={() => onChange({ quoteAttribution: attribution })}>
+                Save attribution
+              </Button>
+            )}
+            <Button disabled={busy} onClick={() => onChange({ featured: false })}>
+              Remove from site
+            </Button>
+          </>
+        ) : (
+          <Button
+            tone="amber"
+            disabled={busy || !item.quoteOk}
+            title={`The home page shows the ${TESTIMONIALS_MAX} newest featured quotes and refreshes within about two minutes`}
+            onClick={() => onChange({ featured: true, quoteAttribution: attribution })}
+          >
+            Feature on site
+          </Button>
+        )}
+      </div>
+      <div id={hintId} className="mt-1.5 space-y-0.5 font-mono text-[11px] text-dust">
+        <p>Describe, don&apos;t name: no usernames or server names, as the consent text promises.</p>
+        {preview && (
+          <p>
+            Caption: <span className="text-dune">{captionParts(preview).join(" · ")}</span>
+            {cut ? ` · quote cut to ${QUOTE_MAX} characters` : ""}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Item({ item, busy, onChange }: { item: AdminFeedbackItem; busy: boolean; onChange: (c: FeedbackChange) => void }) {
+  const onStatus = (status: FeedbackStatus) => onChange({ status });
   const kind = KIND_CHIP[item.kind] ?? KIND_CHIP.other;
   const meta = [
     item.context ? `${item.source} ${item.context}` : item.source,
@@ -107,6 +176,14 @@ function Item({ item, busy, onStatus }: { item: AdminFeedbackItem; busy: boolean
         )}
         <Chip tone={STATUS_TONE[item.status]}>{item.status}</Chip>
         {item.quoteOk && <Chip tone="signal" title="The author allowed quoting this on the site">quotable</Chip>}
+        {item.featured &&
+          (item.quoteOk ? (
+            <Chip tone="amber" title="Shown on the home page">on site</Chip>
+          ) : (
+            <Chip tone="clip" title="Featured, but the author did not allow quoting: the site does not show it">
+              featured, not quotable
+            </Chip>
+          ))}
         <span className="flex-1" />
         <time dateTime={item.createdAt} title={new Date(item.createdAt).toLocaleString()} className="font-mono text-xs text-dune">
           {relTime(item.createdAt)}
@@ -144,6 +221,8 @@ function Item({ item, busy, onStatus }: { item: AdminFeedbackItem; busy: boolean
           </Button>
         )}
       </div>
+
+      {(item.quoteOk || item.featured) && <FeatureControls item={item} busy={busy} onChange={onChange} />}
     </li>
   );
 }
@@ -151,15 +230,17 @@ function Item({ item, busy, onStatus }: { item: AdminFeedbackItem; busy: boolean
 export function FeedbackPanel() {
   const [kind, setKind] = useState<FeedbackKind | "">("");
   const [status, setStatus] = useState<FeedbackStatus | "">("");
+  const [featuredOnly, setFeaturedOnly] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
   const query = new URLSearchParams({ limit: "50" });
   if (kind) query.set("kind", kind);
   if (status) query.set("status", status);
+  if (featuredOnly) query.set("featured", "1");
   const { data, error, loading, refresh } = usePolling<AdminFeedbackResponse>(`/api/admin/feedback?${query}`, 60_000);
 
-  const updateStatus = async (id: string, next: FeedbackStatus) => {
+  const updateItem = async (id: string, change: FeedbackChange) => {
     setBusyId(id);
     setActionError(null);
     try {
@@ -167,7 +248,7 @@ export function FeedbackPanel() {
         method: "PATCH",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status: next }),
+        body: JSON.stringify({ id, ...change }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok || body.ok === false) setActionError(body.error || `HTTP ${res.status}`);
@@ -207,6 +288,10 @@ export function FeedbackPanel() {
             {`${s} (${data.countsByStatus[s]})`}
           </FilterChip>
         ))}
+        <span className="mx-2 h-4 w-px bg-line" aria-hidden="true" />
+        <FilterChip active={featuredOnly} onClick={() => setFeaturedOnly((v) => !v)}>
+          {`on site (${data.featuredCount ?? 0})`}
+        </FilterChip>
       </div>
 
       {(actionError || error) && (
@@ -221,7 +306,7 @@ export function FeedbackPanel() {
         ) : (
           <ul>
             {data.items.map((item) => (
-              <Item key={item.id} item={item} busy={busyId === item.id} onStatus={(s) => updateStatus(item.id, s)} />
+              <Item key={item.id} item={item} busy={busyId === item.id} onChange={(c) => updateItem(item.id, c)} />
             ))}
           </ul>
         )}

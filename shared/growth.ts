@@ -338,6 +338,15 @@ export interface FeedbackRecord {
   contact?: string;
   /** The person allowed us to quote the message publicly (testimonials). */
   quoteOk?: boolean;
+  /**
+   * Owner-controlled: shown on the landing page. Only ever set on items with
+   * quoteOk (the admin API refuses otherwise, and the public read checks both).
+   */
+  featured?: boolean;
+  /** When the owner last featured it. */
+  featuredAt?: Date;
+  /** Short line the owner writes under the quote ("runs a 300-member gaming server"). */
+  quoteAttribution?: string;
   /** Discord ids when known (logged-in dashboard user or bot interaction). */
   userId?: string;
   userName?: string;
@@ -352,6 +361,7 @@ export interface FeedbackRecord {
 
 export const FEEDBACK_MESSAGE_MAX = 2000;
 export const FEEDBACK_CONTACT_MAX = 120;
+export const FEEDBACK_ATTRIBUTION_MAX = 80;
 
 /** Net Promoter Score from 0-10 scores: % promoters (9-10) minus % detractors (0-6). */
 export function netPromoterScore(scores: number[]): number | null {

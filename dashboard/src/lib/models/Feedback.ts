@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import {
+  FEEDBACK_ATTRIBUTION_MAX,
   FEEDBACK_CONTACT_MAX,
   FEEDBACK_KINDS,
   FEEDBACK_MESSAGE_MAX,
@@ -22,6 +23,9 @@ const feedbackSchema = new Schema<FeedbackRecord>(
     score: { type: Number, min: 0, max: 10 },
     contact: { type: String, maxlength: FEEDBACK_CONTACT_MAX },
     quoteOk: Boolean,
+    featured: Boolean,
+    featuredAt: Date,
+    quoteAttribution: { type: String, maxlength: FEEDBACK_ATTRIBUTION_MAX },
     userId: String,
     userName: String,
     guildId: String,
@@ -37,6 +41,8 @@ const feedbackSchema = new Schema<FeedbackRecord>(
 feedbackSchema.index({ createdAt: -1 });
 feedbackSchema.index({ kind: 1, createdAt: -1 });
 feedbackSchema.index({ status: 1 });
+// Landing testimonials: featured items newest first. Partial, so it only holds the few featured docs.
+feedbackSchema.index({ featured: 1, createdAt: -1 }, { partialFilterExpression: { featured: true } });
 
 export const Feedback =
   (mongoose.models.Feedback as mongoose.Model<FeedbackRecord> | undefined) ??

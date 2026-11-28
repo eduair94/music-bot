@@ -2,6 +2,7 @@ import {
   ButtonBuilder,
   ButtonStyle,
   ChatInputCommandInteraction,
+  CheckboxBuilder,
   ContainerBuilder,
   LabelBuilder,
   MessageFlags,
@@ -21,9 +22,10 @@ import { registerComponentHandler } from "../structs/componentRouter";
 import { i18n } from "../utils/i18n";
 
 /**
- * /feedback — a modal (kind select + message) that lands in Mongo `feedbacks`
- * and in the staff channel webhook (FEEDBACK_WEBHOOK_URL), next to the
- * site's and dashboard's feedback. Works anywhere, also user-installed.
+ * /feedback — a modal (kind select, message, opt-in "can we quote this on the
+ * website?" checkbox) that lands in Mongo `feedbacks` and in the staff channel
+ * webhook (FEEDBACK_WEBHOOK_URL), next to the site's and dashboard's
+ * feedback. Works anywhere, also user-installed.
  * The modal submit is answered by the persistent "feedback" component
  * handler below, so it survives restarts like every other component.
  */
@@ -53,6 +55,9 @@ export function buildFeedbackModal(): ModalBuilder {
     .setMaxLength(FEEDBACK_MESSAGE_MAX)
     .setPlaceholder(i18n.__("feedback.messagePlaceholder"));
 
+  // Opt-in consent for the website's testimonials: unticked by default.
+  const quote = new CheckboxBuilder().setCustomId("quote").setDefault(false);
+
   return new ModalBuilder()
     .setCustomId(MODAL_ID)
     .setTitle(i18n.__("feedback.modalTitle"))
@@ -61,8 +66,21 @@ export function buildFeedbackModal(): ModalBuilder {
       new LabelBuilder()
         .setLabel(i18n.__("feedback.messageLabel"))
         .setDescription(i18n.__("feedback.messageDescription"))
-        .setTextInputComponent(message)
+        .setTextInputComponent(message),
+      new LabelBuilder()
+        .setLabel(i18n.__("feedback.quoteLabel"))
+        .setDescription(i18n.__("feedback.quoteDescription"))
+        .setCheckboxComponent(quote)
     );
+}
+
+/** The person ticked "can we quote this?"; false when the box is missing (older clients). */
+function quoteAllowed(interaction: ModalSubmitInteraction): boolean {
+  try {
+    return interaction.fields.getCheckbox("quote") === true;
+  } catch {
+    return false;
+  }
 }
 
 function selectedKind(interaction: ModalSubmitInteraction): FeedbackKind {
@@ -91,6 +109,7 @@ async function handleSubmit(interaction: ModalSubmitInteraction): Promise<void> 
     kind: selectedKind(interaction),
     source: "bot",
     message,
+    ...(quoteAllowed(interaction) ? { quoteOk: true } : {}),
     userId: interaction.user.id,
     userName: interaction.user.username,
     guildId: interaction.guildId ?? undefined,

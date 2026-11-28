@@ -13,6 +13,7 @@ import Pricing from "@/components/landing/Pricing";
 import Trust from "@/components/landing/Trust";
 import { faqs } from "@/data/faq";
 import { getPublicStats, getRepoPushedAt } from "@/lib/public-stats";
+import { getTestimonials } from "@/lib/testimonials";
 import {
   FOUNDER_PRICE_USD,
   SITE_DESCRIPTION,
@@ -29,7 +30,11 @@ import {
  */
 export const revalidate = 60;
 
-/** Structured data: site identity, the bot as a software product, and the FAQ. */
+/**
+ * Structured data: site identity, the bot as a software product, and the FAQ.
+ * The featured feedback quotes are deliberately NOT marked up as Review or
+ * AggregateRating: Google's policy excludes self-serving reviews.
+ */
 const structuredData = [
   {
     "@context": "https://schema.org",
@@ -88,7 +93,7 @@ const structuredData = [
 ];
 
 export default async function LandingPage() {
-  const [stats, pushedAt] = await Promise.all([getPublicStats(), getRepoPushedAt()]);
+  const [stats, pushedAt, testimonials] = await Promise.all([getPublicStats(), getRepoPushedAt(), getTestimonials()]);
   return (
     <>
       <script
@@ -101,7 +106,7 @@ export default async function LandingPage() {
       <Hero stats={stats} />
       <Features />
       <Comparison />
-      <Trust stats={stats} pushedAt={pushedAt} />
+      <Trust stats={stats} pushedAt={pushedAt} testimonials={testimonials} />
       <Pricing />
       <CommandIndex />
       <FAQ />
