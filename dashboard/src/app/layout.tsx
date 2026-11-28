@@ -1,3 +1,5 @@
+import Analytics from "@/components/analytics/Analytics";
+import { ANALYTICS_ENABLED } from "@/lib/analytics/config";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Instrument_Sans, JetBrains_Mono } from "next/font/google";
@@ -26,6 +28,17 @@ const jetbrains = JetBrains_Mono({
 });
 
 const TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
+
+// Search Console / Bing Webmaster ownership tags, inlined at build time; omitted when unset.
+const GSC_VERIFICATION = process.env.NEXT_PUBLIC_GSC_VERIFICATION || "";
+const BING_VERIFICATION = process.env.NEXT_PUBLIC_BING_VERIFICATION || "";
+const verification: Metadata["verification"] =
+  GSC_VERIFICATION || BING_VERIFICATION
+    ? {
+        ...(GSC_VERIFICATION ? { google: GSC_VERIFICATION } : {}),
+        ...(BING_VERIFICATION ? { other: { "msvalidate.01": BING_VERIFICATION } } : {}),
+      }
+    : undefined;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -67,6 +80,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   category: "technology",
+  ...(verification ? { verification } : {}),
 };
 
 export const viewport: Viewport = {
@@ -83,7 +97,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${bricolage.variable} ${instrument.variable} ${jetbrains.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* GA4 + Clarity + consent; absent from the page when neither id is configured. */}
+        {ANALYTICS_ENABLED ? <Analytics /> : null}
+      </body>
     </html>
   );
 }
