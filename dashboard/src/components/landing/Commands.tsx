@@ -7,6 +7,7 @@ import {
   commands,
   type CommandCategory,
 } from "@/data/commands";
+import Link from "next/link";
 import { useId, useMemo, useState } from "react";
 
 const iconProps = {
@@ -78,9 +79,15 @@ function toSlug(name: string) {
 
 interface CommandsProps {
   headingLevel?: "h1" | "h2";
+  /**
+   * Command → slug of its manual page (/commands/<slug>), from data/commandDocs.ts.
+   * Passed in by the server page so the manual text never ships in this bundle.
+   * Subcommand rows ("/effects nightcore") link to their command's page.
+   */
+  pages?: Record<string, string>;
 }
 
-export default function Commands({ headingLevel = "h2" }: CommandsProps) {
+export default function Commands({ headingLevel = "h2", pages = {} }: CommandsProps) {
   // Keep the outline sequential whether the section title is h1 (/commands) or h2 (home).
   const SubHeading = headingLevel === "h1" ? "h2" : "h3";
   const MinorHeading = headingLevel === "h1" ? "h3" : "h4";
@@ -204,6 +211,7 @@ export default function Commands({ headingLevel = "h2" }: CommandsProps) {
                   {filteredCommands.map((cmd) => {
                     const isExpanded = expandedCommand === cmd.name;
                     const panelId = `cmd-${toSlug(cmd.name)}`;
+                    const pageSlug = pages[cmd.name] ?? pages[cmd.name.split(" ")[0]];
 
                     return (
                       <li
@@ -212,17 +220,22 @@ export default function Commands({ headingLevel = "h2" }: CommandsProps) {
                           isExpanded ? "border-amber/50" : "hover:border-line-strong"
                         }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() => setExpandedCommand(isExpanded ? null : cmd.name)}
-                          aria-expanded={isExpanded}
-                          aria-controls={panelId}
-                          className="w-full text-left p-4 rounded-xl"
-                        >
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                        {/* The toggle covers the row; the name link sits above it, since a link can't live inside a button. */}
+                        <div className="relative">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-4">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-3 mb-1 flex-wrap">
-                                <code className="text-amber font-mono font-bold">{cmd.name}</code>
+                                {pageSlug ? (
+                                  <Link
+                                    href={`/commands/${pageSlug}`}
+                                    prefetch={false}
+                                    className="relative z-10 text-amber font-mono font-bold underline decoration-amber/30 underline-offset-4 transition-colors hover:decoration-amber"
+                                  >
+                                    {cmd.name}
+                                  </Link>
+                                ) : (
+                                  <code className="text-amber font-mono font-bold">{cmd.name}</code>
+                                )}
                                 <span className="px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase rounded bg-panel-raised text-dune border border-line">
                                   {cmd.category}
                                 </span>
@@ -249,7 +262,16 @@ export default function Commands({ headingLevel = "h2" }: CommandsProps) {
                               <code className="kbd inline-block max-w-full max-sm:whitespace-normal!">{cmd.usage}</code>
                             </div>
                           </div>
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => setExpandedCommand(isExpanded ? null : cmd.name)}
+                            aria-expanded={isExpanded}
+                            aria-controls={panelId}
+                            className="absolute inset-0 w-full rounded-xl"
+                          >
+                            <span className="sr-only">How to use {cmd.name}</span>
+                          </button>
+                        </div>
 
                         {/* Rendered only when open: keeps 80+ rows of boilerplate out of the HTML and RSC payload. */}
                         {isExpanded && (
@@ -273,6 +295,17 @@ export default function Commands({ headingLevel = "h2" }: CommandsProps) {
                                 {cmd.adminOnly && (
                                   <p className="text-dune text-sm mt-2">
                                     Needs Manage Server permission or the configured admin role.
+                                  </p>
+                                )}
+                                {pageSlug && (
+                                  <p className="text-sm mt-2">
+                                    <Link
+                                      href={`/commands/${pageSlug}`}
+                                      prefetch={false}
+                                      className="text-dune underline decoration-line-strong underline-offset-4 transition-colors hover:text-cream hover:decoration-amber"
+                                    >
+                                      Full guide to {cmd.name.split(" ")[0]}
+                                    </Link>
                                   </p>
                                 )}
                               </div>

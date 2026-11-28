@@ -5,6 +5,7 @@
  */
 
 import Commands from "@/components/landing/Commands";
+import { commandPageSlugs } from "@/data/commandDocs";
 import { COMMAND_COUNT } from "@/data/commands";
 import { Metadata } from "next";
 
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 export default function CommandsPage() {
   return (
     <div className="pt-18">
-      <Commands headingLevel="h1" />
+      <Commands headingLevel="h1" pages={commandPageSlugs} />
     </div>
   );
 }
