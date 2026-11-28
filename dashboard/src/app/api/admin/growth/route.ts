@@ -1,5 +1,5 @@
 import { adminJson, requireOwner } from "@/lib/admin-auth";
-import { type AcquisitionRow, buildGrowthReport, clampDays, type DailyClicks, windowDays } from "@/lib/admin/growth";
+import { type AcquisitionRow, buildGrowthReport, clampDays, type DailyClicks, windowDays } from "../../../../../../shared/growthReport";
 import { GuildAcquisition } from "@/lib/models/GuildAcquisition";
 import { connectToDatabase } from "@/lib/mongodb";
 import { getRedis } from "@/lib/redis";
