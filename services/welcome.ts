@@ -10,6 +10,7 @@ import {
   SeparatorSpacingSize
 } from "discord.js";
 import { configuredInstances, inviteUrl } from "../shared/fleet";
+import { botSiteLink } from "../shared/growth";
 import { botInviteUrl, SITE_URL, SUPPORT_INVITE_URL } from "../shared/links";
 import { mention } from "../structs/commandRegistry";
 import { localeForGuild } from "../utils/guildLocale";
@@ -87,7 +88,7 @@ export function buildWelcome(botName: string, options: WelcomeOptions = {}): Con
     .addActionRowComponents((row) =>
       row.setComponents(
         new ButtonBuilder().setCustomId("help:open").setEmoji("📖").setLabel(i18n.__("welcome.commands")).setStyle(ButtonStyle.Primary),
-        new ButtonBuilder().setURL(SITE_URL).setEmoji("🎛️").setLabel(i18n.__("welcome.dashboard")).setStyle(ButtonStyle.Link),
+        new ButtonBuilder().setURL(botSiteLink(SITE_URL, "/", "welcome")).setEmoji("🎛️").setLabel(i18n.__("welcome.dashboard")).setStyle(ButtonStyle.Link),
         new ButtonBuilder().setURL(SUPPORT_INVITE_URL).setEmoji("💬").setLabel(i18n.__("welcome.support")).setStyle(ButtonStyle.Link)
       )
     );

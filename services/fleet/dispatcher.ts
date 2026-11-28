@@ -24,6 +24,7 @@ import {
   missingInstances,
   RouteCandidate
 } from "../../shared/fleet";
+import { botSiteLink } from "../../shared/growth";
 import { SITE_URL } from "../../shared/links";
 import {
   getInstancePlaybackState,
@@ -471,7 +472,11 @@ function inviteRow(missing: InstanceSnapshot[], guildId: string): ActionRowBuild
   );
   if (missing.length > 1) {
     buttons.push(
-      new ButtonBuilder().setStyle(ButtonStyle.Link).setURL(`${SITE_URL}/servers/${guildId}`).setEmoji("🎛️").setLabel(i18n.__("fleet.dispatch.addAll"))
+      new ButtonBuilder()
+        .setStyle(ButtonStyle.Link)
+        .setURL(botSiteLink(SITE_URL, `/servers/${guildId}`, "fleet"))
+        .setEmoji("🎛️")
+        .setLabel(i18n.__("fleet.dispatch.addAll"))
     );
   }
   return new ActionRowBuilder<ButtonBuilder>().addComponents(buttons);

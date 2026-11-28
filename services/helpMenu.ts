@@ -8,11 +8,13 @@ import {
   StringSelectMenuBuilder
 } from "discord.js";
 import { CommandCategory } from "../interfaces/Command";
+import { botSiteLink, trackedInviteUrl } from "../shared/growth";
 import { PATREON_URL, SITE_URL, SUPPORT_INVITE_URL, TOPGG_VOTE_URL } from "../shared/links";
 import { categoryOf, commandId, commands, mention } from "../structs/commandRegistry";
 import { registerComponentHandler } from "../structs/componentRouter";
 import { truncate } from "../utils/format";
 import { currentLocale, i18n, ownTranslation } from "../utils/i18n";
+import { isPrimary } from "../utils/instance";
 
 const ORDER: CommandCategory[] = ["music", "queue", "effects", "playlists", "info", "settings", "premium", "other"];
 const ICON: Record<CommandCategory, string> = {
@@ -98,13 +100,17 @@ export function buildHelp(botName: string, category?: CommandCategory): { compon
     );
   container.addActionRowComponents((row) => row.setComponents(select));
   const links = [
-    new ButtonBuilder().setURL(SITE_URL).setLabel(i18n.__("links.website")).setStyle(ButtonStyle.Link),
+    new ButtonBuilder().setURL(botSiteLink(SITE_URL, "/", "help")).setLabel(i18n.__("links.website")).setStyle(ButtonStyle.Link),
     new ButtonBuilder().setURL(SUPPORT_INVITE_URL).setLabel(i18n.__("links.support")).setStyle(ButtonStyle.Link),
     new ButtonBuilder().setURL(PATREON_URL).setLabel(i18n.__("links.premium")).setStyle(ButtonStyle.Link)
   ];
   // The top.gg page 404s until the listing is approved (TOPGG_TOKEN is issued then).
   if (process.env.TOPGG_TOKEN) {
     links.splice(2, 0, new ButtonBuilder().setURL(TOPGG_VOTE_URL).setLabel(i18n.__("links.vote")).setStyle(ButtonStyle.Link));
+  }
+  // Add Bypass elsewhere, through the site so the join is attributed (private bots don't advertise Bypass).
+  if (isPrimary) {
+    links.unshift(new ButtonBuilder().setURL(trackedInviteUrl(SITE_URL, "bot-help")).setLabel(i18n.__("links.invite")).setStyle(ButtonStyle.Link));
   }
   container.addActionRowComponents((row) => row.setComponents(...links));
 

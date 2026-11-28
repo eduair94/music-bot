@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ActivityCharts } from "./ActivityCharts";
 import { AuditPanel } from "./AuditPanel";
 import { ErrorsList } from "./ErrorsList";
+import { GrowthPanel } from "./GrowthPanel";
 import { GuildDrawer } from "./GuildDrawer";
 import { KpiGrid } from "./KpiGrid";
 import { LogsPanel } from "./LogsPanel";
@@ -72,6 +73,11 @@ export default function AdminConsole() {
             <ErrorsList errors={overview.data.recentErrors} />
           </>
         )}
+      </section>
+
+      <section id="growth" className="scroll-mt-28 mb-12">
+        <SectionHead kicker="Acquisition" title="Growth" note="where servers come from" />
+        <GrowthPanel />
       </section>
 
       <section id="servers" className="scroll-mt-28 mb-12">

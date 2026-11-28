@@ -1,15 +1,31 @@
 /**
  * Bot Invite Page
  *
- * Redirects to the Discord OAuth2 authorization URL.
+ * Logs the click (source attribution, see shared/growth.ts) and redirects to
+ * the Discord OAuth2 authorization URL.
  *
  * Rendered per request on purpose: the client id comes from the container's
  * runtime env (docker `env_file`), which is NOT present during `docker build`.
  * A static prerender would bake `client_id=undefined` into the redirect.
+ *
+ * Query: `ref` (source code, e.g. `site-hero`, `topgg`, `u-<discord id>`),
+ * `utm_source` / `utm_medium` / `utm_campaign`, `bot=2..4` (a fleet instance).
  */
 
+import { randomUUID } from "crypto";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { inviteUrl } from "../../../../../shared/fleet";
+import {
+  INVITE_CLICKS_KEY,
+  INVITE_CLICKS_MAX,
+  INVITE_DAILY_TTL_S,
+  inviteDailyKey,
+  type InviteClick,
+} from "../../../../../shared/growth";
 import { INVITE_PERMISSIONS } from "../../../../../shared/links";
+import { buildInviteClick, isNonHumanRequest, requestedInstance, utcDayKey } from "@/lib/invite-click";
+import { getRedis } from "@/lib/redis";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +34,74 @@ export const dynamic = "force-dynamic";
 const PERMISSIONS = INVITE_PERMISSIONS;
 const SCOPES = "bot applications.commands";
 
-export default function InvitePage() {
+/** Clicks older than this can't match a join anyway (window is 30 min); the list just ages out. */
+const CLICKS_TTL_S = 30 * 86400;
+/** The redirect never waits longer than this for Redis. */
+const REDIS_BUDGET_MS = 300;
+
+type SearchParams = Record<string, string | string[] | undefined>;
+
+/** Store the click for join attribution and the daily per-source counter. Never throws. */
+async function recordClick(click: InviteClick): Promise<void> {
+  const redis = getRedis();
+  if (!redis) return;
+  const daily = inviteDailyKey(utcDayKey(click.ts));
+  const write = redis
+    .multi()
+    .lpush(INVITE_CLICKS_KEY, JSON.stringify(click))
+    .ltrim(INVITE_CLICKS_KEY, 0, INVITE_CLICKS_MAX - 1)
+    .expire(INVITE_CLICKS_KEY, CLICKS_TTL_S)
+    .hincrby(daily, click.ref, 1)
+    .expire(daily, INVITE_DAILY_TTL_S)
+    .exec()
+    .catch((error: Error) => console.warn("[invite] click not logged:", error.message));
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const budget = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, REDIS_BUDGET_MS);
+  });
+  await Promise.race([write, budget]);
+  if (timer) clearTimeout(timer);
+}
+
+async function logInvite(searchParams: SearchParams, instance: number): Promise<void> {
+  try {
+    const headerStore = await headers();
+    const headerMap: Record<string, string | null> = {
+      "user-agent": headerStore.get("user-agent"),
+      "cf-ipcountry": headerStore.get("cf-ipcountry"),
+      "next-router-prefetch": headerStore.get("next-router-prefetch"),
+      purpose: headerStore.get("purpose"),
+      "sec-purpose": headerStore.get("sec-purpose"),
+      "x-purpose": headerStore.get("x-purpose"),
+    };
+    if (isNonHumanRequest(headerMap)) return;
+    const cookieStore = await cookies();
+    const cookieMap = Object.fromEntries(cookieStore.getAll().map((c) => [c.name, c.value]));
+    const click = buildInviteClick(
+      { searchParams, cookies: cookieMap, headers: headerMap, gaMeasurementId: process.env.NEXT_PUBLIC_GA_ID },
+      randomUUID(),
+      Date.now(),
+      instance
+    );
+    await recordClick(click);
+  } catch (error) {
+    // Logging is best effort: the visitor always gets their redirect.
+    console.warn("[invite] click logging failed:", (error as Error)?.message ?? error);
+  }
+}
+
+export default async function InvitePage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const params = await searchParams.catch(() => ({}) as SearchParams);
+
+  // `?bot=2..4`: invite that fleet instance when its application exists.
+  const wanted = requestedInstance(params);
+  const fleetTarget = wanted > 1 ? inviteUrl(wanted) : null;
+  const instance = fleetTarget ? wanted : 1;
+
+  await logInvite(params, instance);
+
+  if (fleetTarget) redirect(fleetTarget);
+
   const clientId =
     process.env.DISCORD_BOT_CLIENT_ID ||
     process.env.NEXT_PUBLIC_DISCORD_BOT_CLIENT_ID ||
@@ -31,12 +114,12 @@ export default function InvitePage() {
     redirect("/support");
   }
 
-  const params = new URLSearchParams({
+  const oauth = new URLSearchParams({
     client_id: clientId,
     permissions: PERMISSIONS,
     scope: SCOPES,
     integration_type: "0",
   });
 
-  redirect(`https://discord.com/api/oauth2/authorize?${params.toString()}`);
+  redirect(`https://discord.com/api/oauth2/authorize?${oauth.toString()}`);
 }

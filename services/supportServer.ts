@@ -209,15 +209,20 @@ export class SupportServerService {
     const votes = (await Vote.find({ votedAt: { $gt: since } }).sort({ votedAt: 1 }).limit(50).lean()) as any[];
     for (const vote of votes) {
       const until = new Date(vote.perksUntil).getTime();
+      // Referral rewards (services/growth/acquisition.ts) reuse vote perks but are not votes: no Voter role.
+      const referral = vote.site === "referral";
       if (channel) {
+        const perks = `24/7 mode and studio quality are on for them until <t:${Math.floor(until / 1000)}:t>.`;
         await channel
           .send({
-            content: `🗳️ <@${vote.userId}> voted on **${vote.site}**. Thank you! 24/7 mode and studio quality are on for them until <t:${Math.floor(until / 1000)}:t>.`,
+            content: referral
+              ? `🤝 <@${vote.userId}> brought a new server to Bypass with their invite link. Thank you! ${perks}`
+              : `🗳️ <@${vote.userId}> voted on **${vote.site}**. Thank you! ${perks}`,
             allowedMentions: { parse: [] }
           })
           .catch(() => undefined);
       }
-      if (voter) {
+      if (voter && !referral) {
         const added = await guild.members.addRole({ user: vote.userId, role: voter.id, reason: "Voted for Bypass" }).then(() => true).catch(() => false);
         if (added) this.voterExpiry.set(vote.userId, Math.max(this.voterExpiry.get(vote.userId) ?? 0, until));
       }
