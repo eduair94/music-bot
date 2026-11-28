@@ -106,6 +106,7 @@ export const commands: Command[] = [
   { name: "/stats uptime", description: "How long the bot has been online", usage: "/stats uptime", category: "Utility" },
   { name: "/invite", description: "Get the link to add Bypass to another server", usage: "/invite", category: "Utility" },
   { name: "/dashboard", description: "Get the link to the web dashboard", usage: "/dashboard", category: "Utility" },
+  { name: "/feedback", description: "Send the team an idea, a bug report or kind words", usage: "/feedback", category: "Utility", isNew: true },
   { name: "/info support", description: "Get an invite to the support server", usage: "/info support", category: "Utility" },
   { name: "/info faq", description: "Answers to common questions", usage: "/info faq", category: "Utility" },
 
