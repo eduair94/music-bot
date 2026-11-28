@@ -18,6 +18,8 @@ What was built on 2026-11-28 to measure and grow Bypass, what the owner has to s
 | Admin | `/admin` → Growth, Feedback | Clicks → joins → activated → retained per source; NPS; feedback inbox. |
 | SEO extras | root metadata, `public/llms.txt` | Search Console / Bing verification tags; a factual summary for AI assistants. |
 
+**Known cost:** gtag.js itself costs about 7 Lighthouse mobile performance points on `/` (blocking time +330 ms under Lighthouse's CPU throttle; CLS stays 0). The alternative is loading GA on the visitor's first interaction, which stops counting visitors who leave without clicking. Kept accurate counting for now.
+
 ## Switch it on (owner, ~15 minutes)
 
 1. **GA4 property.** analytics.google.com → Admin → account *EduAir* → Create property *Bypass Music Bot* (time zone Montevideo, USD) → Web stream `https://music-bot.checkleaked.com`. Copy the **Measurement ID** (`G-…`). In the stream: *Measurement Protocol API secrets* → Create → copy the **secret**.
@@ -35,7 +37,7 @@ What was built on 2026-11-28 to measure and grow Bypass, what the owner has to s
      NEXT_PUBLIC_GSC_VERIFICATION=…    # optional
      NEXT_PUBLIC_BING_VERIFICATION=…   # optional
      ```
-   - `/root/music-bot/dashboard/.env`: `FEEDBACK_WEBHOOK_URL=…`, `GA_API_SECRET=…` (only so /admin → Growth can show "server events: configured").
+   - `/root/music-bot/dashboard/.env`: `FEEDBACK_WEBHOOK_URL=…`, `ANALYTICS_SALT=<long random string>` (hashes Discord ids before GA/Clarity see them), `GA_API_SECRET=…` (only so /admin → Growth can show "server events: configured").
 6. **Deploy** (the `NEXT_PUBLIC_*` values are baked at build time, so the dashboard must be rebuilt):
    `COMPOSE_BAKE=false docker compose --profile fleet up -d --build bot bot-2 bot-3 bot-4 dashboard`
 7. **GA4 admin, once data flows** (see TRACKING_PLAN → GA4 configuration): mark key events, register custom dimensions, activate the *Internal Traffic* filter, set retention to 14 months, add the channel group, link Search Console.

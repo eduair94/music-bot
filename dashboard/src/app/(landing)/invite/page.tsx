@@ -41,6 +41,32 @@ const REDIS_BUDGET_MS = 300;
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
+/**
+ * Drop clicks older than CLICKS_TTL_S from the tail of the list (oldest end).
+ * The list's own EXPIRE renews on every push and the 500-entry trim can take
+ * months at our volume, so this is what keeps the privacy policy's "at most
+ * 30 days" true. Bounded to a few round trips; never throws.
+ */
+async function pruneOldClicks(redis: NonNullable<ReturnType<typeof getRedis>>): Promise<void> {
+  const cutoff = Date.now() - CLICKS_TTL_S * 1000;
+  try {
+    for (let i = 0; i < 25; i++) {
+      const tail = await redis.lindex(INVITE_CLICKS_KEY, -1);
+      if (!tail) return;
+      let ts = 0;
+      try {
+        ts = Number((JSON.parse(tail) as Partial<InviteClick>).ts) || 0;
+      } catch {
+        /* unparsable entry: drop it */
+      }
+      if (ts >= cutoff) return;
+      await redis.rpop(INVITE_CLICKS_KEY);
+    }
+  } catch {
+    /* best effort */
+  }
+}
+
 /** Store the click for join attribution and the daily per-source counter. Never throws. */
 async function recordClick(click: InviteClick): Promise<void> {
   const redis = getRedis();
@@ -63,6 +89,8 @@ async function recordClick(click: InviteClick): Promise<void> {
     timer = setTimeout(resolve, REDIS_BUDGET_MS);
   });
   await Promise.race([write, budget]);
+  // Retention cleanup runs after the write and never delays the redirect.
+  void write.then(() => pruneOldClicks(redis));
   if (timer) clearTimeout(timer);
 }
 
