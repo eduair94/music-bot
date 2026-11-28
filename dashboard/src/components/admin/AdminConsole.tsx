@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ActivityCharts } from "./ActivityCharts";
 import { AuditPanel } from "./AuditPanel";
 import { ErrorsList } from "./ErrorsList";
+import { FeedbackPanel } from "./FeedbackPanel";
 import { GuildDrawer } from "./GuildDrawer";
 import { KpiGrid } from "./KpiGrid";
 import { LogsPanel } from "./LogsPanel";
@@ -89,6 +90,11 @@ export default function AdminConsole() {
       <section id="activity" className="scroll-mt-28 mb-12">
         <SectionHead kicker="Usage" title="Activity" note="last 14 days" />
         {overview.data && <ActivityCharts overview={overview.data} />}
+      </section>
+
+      <section id="feedback" className="scroll-mt-28 mb-12">
+        <SectionHead kicker="Voice" title="Feedback" note="site, dashboard and /feedback" />
+        <FeedbackPanel />
       </section>
 
       <section id="premium" className="scroll-mt-28 mb-12">
