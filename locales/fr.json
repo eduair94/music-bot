@@ -2259,5 +2259,43 @@
     "empty": "Cette playlist ne contient aucun titre lisible.",
     "imported": "**{count}** titres importés dans ta collection **{name}**.",
     "howTo": "Connecte tes comptes sur le tableau de bord, puis utilise /library play pour lancer tes propres playlists et tes titres likés."
+  },
+  "feedback": {
+    "description": "Envoie à l'équipe une idée, un signalement de bug ou un petit mot sympa",
+    "modalTitle": "Envoyer un retour",
+    "kindLabel": "Quel type de retour ?",
+    "kindPlaceholder": "Choisis-en un (facultatif)",
+    "kinds": {
+      "idea": "Idée",
+      "bug": "Bug",
+      "praise": "Compliment",
+      "other": "Autre"
+    },
+    "kindDescriptions": {
+      "idea": "Quelque chose que tu aimerais que Bypass fasse",
+      "bug": "Quelque chose ne marche pas ou se comporte bizarrement",
+      "praise": "Quelque chose que tu aimes",
+      "other": "Autre chose"
+    },
+    "messageLabel": "Que devons-nous savoir ?",
+    "messageDescription": "Pour les bugs : ce que tu as fait, ce qui s'est passé, et la chanson ou le lien si ça peut aider.",
+    "messagePlaceholder": "Écris autant que tu veux.",
+    "thanksTitle": "Merci, c'est bien reçu",
+    "thanksBody": "Les personnes qui créent Bypass lisent chaque message. Tu veux une réponse ou de l'aide tout de suite ? Demande sur le serveur d'assistance.",
+    "supportButton": "Serveur d'assistance",
+    "helpHint": "Des idées, des bugs ou un petit mot sympa ? Envoie-les avec {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Merci pour l'écoute, ça fait {count} chansons !",
+      "body": "Si Bypass a rendu cette session meilleure, un vote ou un ajout sur un autre serveur dont tu fais partie l'aide à grandir.",
+      "feedback": "Il manque quelque chose ou tu as trouvé un bug ? Dis-le-nous avec {command}.",
+      "vote": "Voter",
+      "invite": "Ajouter à un autre serveur"
+    },
+    "invite": {
+      "personal": "Ce lien d'invitation est à toi : chaque nouveau serveur qui rejoint avec et joue de la musique te donne {hours} h de 24/7 et de qualité studio.",
+      "referrals": "Serveurs que tu as amenés sur Bypass avec ton lien : **{count}**. Chaque nouveau serveur qui joue de la musique te donne {hours} h de 24/7 et de qualité studio."
+    }
   }
 }

@@ -2257,5 +2257,43 @@
     "empty": "Esa playlist no tiene canciones reproducibles.",
     "imported": "Se importaron **{count}** canciones a tu colección **{name}**.",
     "howTo": "Conecta tus cuentas en el panel y luego usa /library play para reproducir tus propias playlists y canciones favoritas."
+  },
+  "feedback": {
+    "description": "Envía al equipo una idea, un reporte de error o unas palabras bonitas",
+    "modalTitle": "Enviar comentarios",
+    "kindLabel": "¿Qué tipo de comentario?",
+    "kindPlaceholder": "Elige uno (opcional)",
+    "kinds": {
+      "idea": "Idea",
+      "bug": "Error",
+      "praise": "Elogio",
+      "other": "Otro"
+    },
+    "kindDescriptions": {
+      "idea": "Algo que te gustaría que Bypass hiciera",
+      "bug": "Algo se rompió o funciona raro",
+      "praise": "Algo que te gusta",
+      "other": "Cualquier otra cosa"
+    },
+    "messageLabel": "¿Qué deberíamos saber?",
+    "messageDescription": "Para errores: qué hiciste, qué pasó y la canción o el enlace si sirve.",
+    "messagePlaceholder": "Escribe todo lo que quieras.",
+    "thanksTitle": "¡Gracias, lo recibimos!",
+    "thanksBody": "Las personas que crean Bypass leen cada mensaje. ¿Quieres una respuesta o ayuda ahora mismo? Pregunta en el servidor de soporte.",
+    "supportButton": "Servidor de soporte",
+    "helpHint": "¿Ideas, errores o palabras bonitas? Envíalas con {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "¡Gracias por escuchar, fueron {count} canciones!",
+      "body": "Si Bypass mejoró esta sesión, un voto o añadirlo a otro servidor donde estés lo ayuda a crecer.",
+      "feedback": "¿Echas algo en falta o encontraste un error? Cuéntanos con {command}.",
+      "vote": "Votar",
+      "invite": "Añadir a otro servidor"
+    },
+    "invite": {
+      "personal": "Este enlace de invitación es tuyo: cada servidor nuevo que se una con él y reproduzca música te da {hours} h de 24/7 y calidad de estudio.",
+      "referrals": "Servidores que trajiste a Bypass con tu enlace: **{count}**. Cada nuevo que reproduzca música te da {hours} h de 24/7 y calidad de estudio."
+    }
   }
 }

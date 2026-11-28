@@ -2257,5 +2257,43 @@
     "empty": "Playlist itu tidak punya lagu yang bisa diputar.",
     "imported": "Berhasil mengimpor **{count}** lagu ke koleksi **{name}** kamu.",
     "howTo": "Hubungkan akun di dashboard, lalu gunakan /library play untuk memutar playlist dan lagu yang kamu sukai."
+  },
+  "feedback": {
+    "description": "Kirim ide, laporan bug, atau kata-kata baik ke tim",
+    "modalTitle": "Kirim masukan",
+    "kindLabel": "Masukan jenis apa?",
+    "kindPlaceholder": "Pilih salah satu (opsional)",
+    "kinds": {
+      "idea": "Ide",
+      "bug": "Bug",
+      "praise": "Pujian",
+      "other": "Lainnya"
+    },
+    "kindDescriptions": {
+      "idea": "Sesuatu yang ingin kamu lihat di Bypass",
+      "bug": "Ada yang rusak atau bertingkah aneh",
+      "praise": "Sesuatu yang kamu suka",
+      "other": "Hal lainnya"
+    },
+    "messageLabel": "Apa yang perlu kami tahu?",
+    "messageDescription": "Untuk bug: apa yang kamu lakukan, apa yang terjadi, dan lagu atau link-nya kalau membantu.",
+    "messagePlaceholder": "Tulis sebanyak yang kamu mau.",
+    "thanksTitle": "Makasih, sudah kami terima",
+    "thanksBody": "Orang-orang yang membuat Bypass membaca setiap pesan. Mau dibalas atau butuh bantuan sekarang? Tanya di server support.",
+    "supportButton": "Server support",
+    "helpHint": "Punya ide, bug, atau kata-kata baik? Kirim lewat {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Makasih sudah mendengarkan, tadi ada {count} lagu!",
+      "body": "Kalau Bypass bikin sesi ini lebih seru, vote atau tambahkan ke server lain yang kamu ikuti untuk membantunya berkembang.",
+      "feedback": "Ada yang kurang atau nemu bug? Kasih tahu kami lewat {command}.",
+      "vote": "Vote",
+      "invite": "Tambahkan ke server lain"
+    },
+    "invite": {
+      "personal": "Link undangan ini milikmu: setiap server baru yang bergabung lewat link ini dan memutar musik memberimu {hours} jam 24/7 dan kualitas studio.",
+      "referrals": "Server yang kamu bawa ke Bypass lewat link-mu: **{count}**. Setiap server baru yang memutar musik memberimu {hours} jam 24/7 dan kualitas studio."
+    }
   }
 }

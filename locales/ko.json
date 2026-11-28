@@ -2257,5 +2257,43 @@
     "empty": "이 플레이리스트에는 재생 가능한 곡이 없어.",
     "imported": "**{count}**곡을 컬렉션 **{name}**에 가져왔어.",
     "howTo": "대시보드에서 계정을 연결한 다음, /library play로 내 플레이리스트와 좋아요 표시한 곡을 재생해 봐."
+  },
+  "feedback": {
+    "description": "팀에게 아이디어, 버그 제보 또는 따뜻한 한마디를 보내 주세요",
+    "modalTitle": "피드백 보내기",
+    "kindLabel": "어떤 피드백인가요?",
+    "kindPlaceholder": "하나 선택 (선택 사항)",
+    "kinds": {
+      "idea": "아이디어",
+      "bug": "버그",
+      "praise": "칭찬",
+      "other": "기타"
+    },
+    "kindDescriptions": {
+      "idea": "Bypass에 바라는 기능",
+      "bug": "뭔가 고장 났거나 이상하게 작동해요",
+      "praise": "마음에 드는 점",
+      "other": "그 밖의 모든 것"
+    },
+    "messageLabel": "어떤 내용인가요?",
+    "messageDescription": "버그라면: 무엇을 했는지, 어떤 일이 일어났는지, 도움이 된다면 곡이나 링크도 알려 주세요.",
+    "messagePlaceholder": "자유롭게 마음껏 적어 주세요.",
+    "thanksTitle": "고마워요, 잘 받았어요",
+    "thanksBody": "Bypass를 만드는 사람들이 모든 메시지를 읽어요. 답변이나 바로 도움이 필요하다면 지원 서버에서 물어보세요.",
+    "supportButton": "지원 서버",
+    "helpHint": "아이디어, 버그, 따뜻한 한마디가 있나요? {command}로 보내 주세요."
+  },
+  "growth": {
+    "nudge": {
+      "title": "들어 줘서 고마워요, 무려 {count}곡이었어요!",
+      "body": "Bypass 덕분에 즐거운 시간이었다면, 투표하거나 참여 중인 다른 서버에 추가해 주세요. 성장에 큰 도움이 돼요.",
+      "feedback": "아쉬운 점이 있거나 버그를 발견했나요? {command}로 알려 주세요.",
+      "vote": "투표하기",
+      "invite": "다른 서버에 추가"
+    },
+    "invite": {
+      "personal": "이 초대 링크는 너만의 링크예요: 이 링크로 새 서버가 참여해서 음악을 재생할 때마다 24/7 및 스튜디오 음질 {hours}시간을 받아요.",
+      "referrals": "네 링크로 Bypass에 데려온 서버: **{count}**개. 새 서버가 음악을 재생할 때마다 24/7 및 스튜디오 음질 {hours}시간을 받아요."
+    }
   }
 }

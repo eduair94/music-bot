@@ -2257,5 +2257,43 @@
     "empty": "Playlist đó không có bài hát nào phát được.",
     "imported": "Đã nhập **{count}** bài hát vào bộ sưu tập **{name}** của bạn.",
     "howTo": "Kết nối tài khoản trên dashboard, sau đó dùng /library play để phát playlist và bài hát đã thích của bạn."
+  },
+  "feedback": {
+    "description": "Gửi cho đội ngũ một ý tưởng, báo lỗi hoặc vài lời động viên",
+    "modalTitle": "Gửi phản hồi",
+    "kindLabel": "Loại phản hồi là gì?",
+    "kindPlaceholder": "Chọn một loại (không bắt buộc)",
+    "kinds": {
+      "idea": "Ý tưởng",
+      "bug": "Lỗi",
+      "praise": "Khen ngợi",
+      "other": "Khác"
+    },
+    "kindDescriptions": {
+      "idea": "Điều bạn muốn Bypass làm được",
+      "bug": "Có gì đó bị hỏng hoặc hoạt động lạ",
+      "praise": "Điều bạn thích",
+      "other": "Bất cứ điều gì khác"
+    },
+    "messageLabel": "Bọn mình nên biết điều gì?",
+    "messageDescription": "Với lỗi: bạn đã làm gì, chuyện gì đã xảy ra, và bài hát hoặc link nếu có ích.",
+    "messagePlaceholder": "Viết bao nhiêu tùy thích.",
+    "thanksTitle": "Cảm ơn, bọn mình đã nhận được",
+    "thanksBody": "Những người xây dựng Bypass đọc mọi tin nhắn. Muốn được trả lời hoặc hỗ trợ ngay? Hãy hỏi trong server hỗ trợ.",
+    "supportButton": "Server hỗ trợ",
+    "helpHint": "Có ý tưởng, lỗi hay lời động viên? Gửi bằng {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Cảm ơn bạn đã nghe, vừa rồi là {count} bài hát!",
+      "body": "Nếu Bypass làm buổi nghe nhạc này tuyệt hơn, một lượt vote hoặc thêm nó vào server khác bạn đang ở sẽ giúp nó phát triển.",
+      "feedback": "Thiếu gì đó hoặc gặp lỗi? Báo cho bọn mình bằng {command}.",
+      "vote": "Vote",
+      "invite": "Thêm vào server khác"
+    },
+    "invite": {
+      "personal": "Link mời này là của bạn: mỗi server mới tham gia qua link và phát nhạc sẽ tặng bạn {hours} giờ 24/7 và chất lượng studio.",
+      "referrals": "Số server bạn đã đưa đến Bypass bằng link của mình: **{count}**. Mỗi server mới phát nhạc sẽ tặng bạn {hours} giờ 24/7 và chất lượng studio."
+    }
   }
 }

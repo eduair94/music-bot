@@ -2264,5 +2264,43 @@
     "empty": "Ta playlista nie zawiera utworów do odtworzenia.",
     "imported": "Zaimportowano **{count}** utworów do twojej kolekcji **{name}**.",
     "howTo": "Połącz konta w panelu, a potem użyj /library play, aby odtwarzać swoje playlisty i polubione utwory."
+  },
+  "feedback": {
+    "description": "Wyślij zespołowi pomysł, zgłoszenie błędu lub miłe słowa",
+    "modalTitle": "Wyślij opinię",
+    "kindLabel": "Jaki to rodzaj opinii?",
+    "kindPlaceholder": "Wybierz jedną (opcjonalnie)",
+    "kinds": {
+      "idea": "Pomysł",
+      "bug": "Błąd",
+      "praise": "Pochwała",
+      "other": "Inne"
+    },
+    "kindDescriptions": {
+      "idea": "Coś, co Bypass mógłby robić",
+      "bug": "Coś się zepsuło lub działa dziwnie",
+      "praise": "Coś, co ci się podoba",
+      "other": "Cokolwiek innego"
+    },
+    "messageLabel": "Co powinniśmy wiedzieć?",
+    "messageDescription": "Przy błędach: co zrobiłeś, co się stało i utwór lub link, jeśli to pomoże.",
+    "messagePlaceholder": "Pisz, ile chcesz.",
+    "thanksTitle": "Dzięki, mamy to",
+    "thanksBody": "Twórcy Bypass czytają każdą wiadomość. Chcesz odpowiedzi lub pomocy od razu? Zapytaj na serwerze wsparcia.",
+    "supportButton": "Serwer wsparcia",
+    "helpHint": "Pomysły, błędy lub miłe słowa? Wyślij je przez {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Dzięki za słuchanie, to było {count} utworów!",
+      "body": "Jeśli Bypass umilił ci tę sesję, głos lub dodanie go na inny serwer, na którym jesteś, pomoże mu się rozwijać.",
+      "feedback": "Czegoś brakuje albo znalazłeś błąd? Daj nam znać przez {command}.",
+      "vote": "Zagłosuj",
+      "invite": "Dodaj na inny serwer"
+    },
+    "invite": {
+      "personal": "Ten link z zaproszeniem jest twój: każdy nowy serwer, który dołączy przez niego i odtworzy muzykę, daje ci {hours} h trybu 24/7 i jakości studyjnej.",
+      "referrals": "Serwery, które przyprowadziłeś do Bypass swoim linkiem: **{count}**. Każdy nowy, który odtworzy muzykę, daje ci {hours} h trybu 24/7 i jakości studyjnej."
+    }
   }
 }

@@ -2257,5 +2257,43 @@
     "empty": "Quella playlist non ha brani riproducibili.",
     "imported": "Importati **{count}** brani nella tua raccolta **{name}**.",
     "howTo": "Collega gli account dalla dashboard, poi usa /library play per riprodurre le tue playlist e i brani che ti piacciono."
+  },
+  "feedback": {
+    "description": "Invia al team un'idea, una segnalazione di bug o due parole gentili",
+    "modalTitle": "Invia feedback",
+    "kindLabel": "Che tipo di feedback?",
+    "kindPlaceholder": "Scegline uno (facoltativo)",
+    "kinds": {
+      "idea": "Idea",
+      "bug": "Bug",
+      "praise": "Complimenti",
+      "other": "Altro"
+    },
+    "kindDescriptions": {
+      "idea": "Qualcosa che vorresti che Bypass facesse",
+      "bug": "Qualcosa si è rotto o si comporta in modo strano",
+      "praise": "Qualcosa che ti piace",
+      "other": "Qualsiasi altra cosa"
+    },
+    "messageLabel": "Cosa dovremmo sapere?",
+    "messageDescription": "Per i bug: cosa hai fatto, cosa è successo e il brano o il link, se può aiutare.",
+    "messagePlaceholder": "Scrivi quanto vuoi.",
+    "thanksTitle": "Grazie, ricevuto",
+    "thanksBody": "Le persone che sviluppano Bypass leggono ogni messaggio. Vuoi una risposta o aiuto subito? Chiedi nel server di supporto.",
+    "supportButton": "Server di supporto",
+    "helpHint": "Idee, bug o parole gentili? Inviale con {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Grazie per l'ascolto, sono stati {count} brani!",
+      "body": "Se Bypass ha reso migliore questa sessione, un voto o aggiungerlo a un altro server in cui sei lo aiuta a crescere.",
+      "feedback": "Manca qualcosa o hai trovato un bug? Faccelo sapere con {command}.",
+      "vote": "Vota",
+      "invite": "Aggiungi a un altro server"
+    },
+    "invite": {
+      "personal": "Questo link di invito è tuo: ogni nuovo server che si unisce con esso e riproduce musica ti dà {hours} h di 24/7 e qualità studio.",
+      "referrals": "Server che hai portato su Bypass con il tuo link: **{count}**. Ogni nuovo server che riproduce musica ti dà {hours} h di 24/7 e qualità studio."
+    }
   }
 }

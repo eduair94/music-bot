@@ -2257,5 +2257,43 @@
     "empty": "Den spillelisten har ingen sanger som kan spilles av.",
     "imported": "Importerte **{count}** sanger til samlingen din **{name}**.",
     "howTo": "Koble til kontoer i dashbordet, og bruk deretter /library play for å spille av dine egne spillelister og likte sanger."
+  },
+  "feedback": {
+    "description": "Send teamet en idé, en feilrapport eller noen hyggelige ord",
+    "modalTitle": "Send tilbakemelding",
+    "kindLabel": "Hva slags tilbakemelding?",
+    "kindPlaceholder": "Velg én (valgfritt)",
+    "kinds": {
+      "idea": "Idé",
+      "bug": "Feil",
+      "praise": "Ros",
+      "other": "Annet"
+    },
+    "kindDescriptions": {
+      "idea": "Noe du skulle ønske Bypass kunne gjøre",
+      "bug": "Noe gikk i stykker eller oppfører seg rart",
+      "praise": "Noe du liker",
+      "other": "Alt annet"
+    },
+    "messageLabel": "Hva bør vi vite?",
+    "messageDescription": "For feil: hva du gjorde, hva som skjedde, og sangen eller lenken hvis det hjelper.",
+    "messagePlaceholder": "Skriv så mye du vil.",
+    "thanksTitle": "Takk, vi har mottatt den",
+    "thanksBody": "De som lager Bypass leser hver eneste melding. Vil du ha svar eller hjelp med en gang? Spør på supportserveren.",
+    "supportButton": "Supportserver",
+    "helpHint": "Ideer, feil eller hyggelige ord? Send dem med {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Takk for at du lyttet, det ble {count} sanger!",
+      "body": "Hvis Bypass gjorde denne økten bedre, hjelper det oss å vokse om du stemmer eller legger den til på en annen server du er med i.",
+      "feedback": "Savner du noe eller har du funnet en feil? Si fra med {command}.",
+      "vote": "Stem",
+      "invite": "Legg til på en annen server"
+    },
+    "invite": {
+      "personal": "Denne invitasjonslenken er din: hver nye server som blir med via den og spiller musikk, gir deg {hours} t med 24/7 og studiokvalitet.",
+      "referrals": "Servere du har hentet til Bypass med lenken din: **{count}**. Hver nye som spiller musikk, gir deg {hours} t med 24/7 og studiokvalitet."
+    }
   }
 }

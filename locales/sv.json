@@ -2257,5 +2257,43 @@
     "empty": "Den spellistan har inga spelbara låtar.",
     "imported": "Importerade **{count}** låtar till din samling **{name}**.",
     "howTo": "Koppla konton på dashboarden och använd sedan /library play för att spela dina egna spellistor och gillade låtar."
+  },
+  "feedback": {
+    "description": "Skicka en idé, en buggrapport eller några snälla ord till teamet",
+    "modalTitle": "Skicka feedback",
+    "kindLabel": "Vilken typ av feedback?",
+    "kindPlaceholder": "Välj en (valfritt)",
+    "kinds": {
+      "idea": "Idé",
+      "bug": "Bugg",
+      "praise": "Beröm",
+      "other": "Annat"
+    },
+    "kindDescriptions": {
+      "idea": "Något du vill att Bypass ska kunna göra",
+      "bug": "Något gick sönder eller beter sig konstigt",
+      "praise": "Något du gillar",
+      "other": "Något annat"
+    },
+    "messageLabel": "Vad ska vi veta?",
+    "messageDescription": "För buggar: vad du gjorde, vad som hände och låten eller länken om det hjälper.",
+    "messagePlaceholder": "Skriv så mycket du vill.",
+    "thanksTitle": "Tack, vi har tagit emot det",
+    "thanksBody": "De som bygger Bypass läser varje meddelande. Vill du ha svar eller hjälp direkt? Fråga på supportservern.",
+    "supportButton": "Supportserver",
+    "helpHint": "Idéer, buggar eller snälla ord? Skicka dem med {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Tack för att du lyssnade, det blev {count} låtar!",
+      "body": "Om Bypass gjorde sessionen bättre hjälper det oss att växa om du röstar eller lägger till den på en annan server du är med i.",
+      "feedback": "Saknar du något eller hittade en bugg? Berätta med {command}.",
+      "vote": "Rösta",
+      "invite": "Lägg till på en annan server"
+    },
+    "invite": {
+      "personal": "Den här inbjudningslänken är din: varje ny server som går med via den och spelar musik ger dig {hours} h 24/7 och studiokvalitet.",
+      "referrals": "Servrar du har tagit till Bypass med din länk: **{count}**. Varje ny som spelar musik ger dig {hours} h 24/7 och studiokvalitet."
+    }
   }
 }

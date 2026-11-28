@@ -2257,5 +2257,43 @@
     "empty": "该歌单中没有可播放的歌曲。",
     "imported": "已将 **{count}** 首歌曲导入到你的收藏 **{name}**。",
     "howTo": "先在控制面板连接账号，然后使用 /library play 播放你自己的歌单和喜欢的歌曲。"
+  },
+  "feedback": {
+    "description": "给团队发送点子、错误报告或鼓励的话",
+    "modalTitle": "发送反馈",
+    "kindLabel": "是哪种反馈？",
+    "kindPlaceholder": "选一个（可选）",
+    "kinds": {
+      "idea": "点子",
+      "bug": "错误",
+      "praise": "称赞",
+      "other": "其他"
+    },
+    "kindDescriptions": {
+      "idea": "你希望 Bypass 能做的事",
+      "bug": "有东西坏了或表现怪怪的",
+      "praise": "你喜欢的地方",
+      "other": "其他任何事"
+    },
+    "messageLabel": "有什么想告诉我们的？",
+    "messageDescription": "如果是错误：你做了什么、发生了什么，如有帮助也请附上歌曲或链接。",
+    "messagePlaceholder": "想写多少都可以。",
+    "thanksTitle": "谢谢，我们收到了",
+    "thanksBody": "开发 Bypass 的团队会阅读每一条消息。想要回复或马上获得帮助？到支持服务器问问吧。",
+    "supportButton": "支持服务器",
+    "helpHint": "有点子、发现错误或想说些好话？用 {command} 发给我们。"
+  },
+  "growth": {
+    "nudge": {
+      "title": "谢谢收听，一共播放了 {count} 首歌！",
+      "body": "如果 Bypass 让这次聆听更棒，投个票或把它加到你所在的其他服务器，就能帮助它成长。",
+      "feedback": "觉得少了什么或发现错误？用 {command} 告诉我们。",
+      "vote": "投票",
+      "invite": "添加到其他服务器"
+    },
+    "invite": {
+      "personal": "这是你专属的邀请链接：每个通过它加入并播放音乐的新服务器，都会给你 {hours} 小时的 24/7 和录音室音质。",
+      "referrals": "你通过链接带到 Bypass 的服务器：**{count}** 个。每个播放音乐的新服务器都会给你 {hours} 小时的 24/7 和录音室音质。"
+    }
   }
 }

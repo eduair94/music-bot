@@ -2257,5 +2257,43 @@
     "empty": "Essa playlist não tem músicas que possam ser tocadas.",
     "imported": "**{count}** músicas importadas para a sua coleção **{name}**.",
     "howTo": "Conecte suas contas no painel e depois use /library play para tocar suas próprias playlists e músicas curtidas."
+  },
+  "feedback": {
+    "description": "Mande pra equipe uma ideia, um relato de bug ou umas palavras gentis",
+    "modalTitle": "Enviar feedback",
+    "kindLabel": "Que tipo de feedback?",
+    "kindPlaceholder": "Escolha um (opcional)",
+    "kinds": {
+      "idea": "Ideia",
+      "bug": "Bug",
+      "praise": "Elogio",
+      "other": "Outro"
+    },
+    "kindDescriptions": {
+      "idea": "Algo que você gostaria que o Bypass fizesse",
+      "bug": "Algo quebrou ou está estranho",
+      "praise": "Algo que você curte",
+      "other": "Qualquer outra coisa"
+    },
+    "messageLabel": "O que a gente precisa saber?",
+    "messageDescription": "Pra bugs: o que você fez, o que aconteceu e a música ou link, se ajudar.",
+    "messagePlaceholder": "Escreva o quanto quiser.",
+    "thanksTitle": "Valeu, recebemos!",
+    "thanksBody": "Quem cria o Bypass lê todas as mensagens. Quer uma resposta ou ajuda agora? Pergunte no servidor de suporte.",
+    "supportButton": "Servidor de suporte",
+    "helpHint": "Ideias, bugs ou palavras gentis? Mande com {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Valeu por ouvir, foram {count} músicas!",
+      "body": "Se o Bypass deixou essa sessão melhor, um voto ou adicioná-lo em outro servidor que você participa ajuda ele a crescer.",
+      "feedback": "Sentiu falta de algo ou achou um bug? Conta pra gente com {command}.",
+      "vote": "Votar",
+      "invite": "Adicionar a outro servidor"
+    },
+    "invite": {
+      "personal": "Este link de convite é seu: cada servidor novo que entrar com ele e tocar música te dá {hours} h de 24/7 e qualidade de estúdio.",
+      "referrals": "Servidores que você trouxe pro Bypass com seu link: **{count}**. Cada novo que tocar música te dá {hours} h de 24/7 e qualidade de estúdio."
+    }
   }
 }

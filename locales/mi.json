@@ -2257,5 +2257,43 @@
     "empty": "Kāore he waiata e taea ana te whakatangi i taua rārangi waiata.",
     "imported": "Kua kawemaitia ngā waiata **{count}** ki tō kohinga **{name}**.",
     "howTo": "Hono atu i ō pūkete ki te papatohu, kātahi ka whakamahi i te /library play hei whakatangi i ō ake rārangi waiata me ō waiata e paingia ana."
+  },
+  "feedback": {
+    "description": "Tukuna he whakaaro, he pūrongo hapa, he kupu atawhai rānei ki te tīma",
+    "modalTitle": "Tukuna he urupare",
+    "kindLabel": "He aha te momo urupare?",
+    "kindPlaceholder": "Kōwhiria tētahi (kōwhiringa noa)",
+    "kinds": {
+      "idea": "Whakaaro",
+      "bug": "Hapa",
+      "praise": "Mihi",
+      "other": "Atu"
+    },
+    "kindDescriptions": {
+      "idea": "He mea e hiahia ana koe kia mahia e Bypass",
+      "bug": "I pakaru tētahi mea, he rerekē rānei te mahi",
+      "praise": "He mea e pai ana ki a koe",
+      "other": "Tētahi atu mea"
+    },
+    "messageLabel": "He aha me mōhio mātou?",
+    "messageDescription": "Mō ngā hapa: he aha tāu i mahi ai, he aha i puta, me te waiata, te hono rānei mēnā he āwhina.",
+    "messagePlaceholder": "Tuhia te nui e pai ana ki a koe.",
+    "thanksTitle": "Kia ora, kua tae mai",
+    "thanksBody": "Ka pānuitia e ngā kaihanga o Bypass ia karere. E hiahia ana koe ki tētahi whakautu, āwhina rānei ināianei? Pātai mai i te tūmau tautoko.",
+    "supportButton": "Tūmau tautoko",
+    "helpHint": "He whakaaro, he hapa, he kupu atawhai rānei? Tukuna mā {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Kia ora mō te whakarongo, {count} ngā waiata!",
+      "body": "Mēnā i pai ake tēnei wāhanga i a Bypass, ka āwhina tētahi pōti, te tāpiri rānei ki tētahi atu tūmau kei roto koe kia tipu ai.",
+      "feedback": "He mea e ngaro ana, i kitea rānei he hapa? Kōrero mai mā {command}.",
+      "vote": "Pōti",
+      "invite": "Tāpiri ki tētahi atu tūmau"
+    },
+    "invite": {
+      "personal": "Nōu tēnei hono pōwhiri: ia tūmau hou ka uru mai mā konei, ā, ka whakatangi puoro, ka whiwhi koe i te {hours} h o te 24/7 me te kounga taiwhanga.",
+      "referrals": "Ngā tūmau i kawea mai e koe ki Bypass mā tō hono: **{count}**. Ia tūmau hou ka whakatangi puoro, ka whiwhi koe i te {hours} h o te 24/7 me te kounga taiwhanga."
+    }
   }
 }

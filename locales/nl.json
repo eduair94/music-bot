@@ -2257,5 +2257,43 @@
     "empty": "Die playlist heeft geen afspeelbare nummers.",
     "imported": "**{count}** nummers geïmporteerd in je collectie **{name}**.",
     "howTo": "Koppel accounts op het dashboard en gebruik daarna /library play om je eigen playlists en gelikete nummers af te spelen."
+  },
+  "feedback": {
+    "description": "Stuur het team een idee, een bugmelding of iets liefs",
+    "modalTitle": "Feedback sturen",
+    "kindLabel": "Wat voor feedback?",
+    "kindPlaceholder": "Kies er een (optioneel)",
+    "kinds": {
+      "idea": "Idee",
+      "bug": "Bug",
+      "praise": "Compliment",
+      "other": "Anders"
+    },
+    "kindDescriptions": {
+      "idea": "Iets wat je graag zou willen dat Bypass doet",
+      "bug": "Er is iets kapot of het doet raar",
+      "praise": "Iets wat je leuk vindt",
+      "other": "Iets anders"
+    },
+    "messageLabel": "Wat moeten we weten?",
+    "messageDescription": "Bij bugs: wat je deed, wat er gebeurde, en het nummer of de link als dat helpt.",
+    "messagePlaceholder": "Schrijf zoveel als je wilt.",
+    "thanksTitle": "Bedankt, we hebben het ontvangen",
+    "thanksBody": "De mensen die Bypass bouwen lezen elk bericht. Wil je een reactie of nu meteen hulp? Vraag het in de supportserver.",
+    "supportButton": "Supportserver",
+    "helpHint": "Ideeën, bugs of iets liefs? Stuur ze met {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Bedankt voor het luisteren, dat waren {count} nummers!",
+      "body": "Heeft Bypass deze sessie beter gemaakt? Een stem of het toevoegen aan een andere server waar je in zit helpt het groeien.",
+      "feedback": "Mis je iets of heb je een bug gevonden? Laat het ons weten met {command}.",
+      "vote": "Stemmen",
+      "invite": "Toevoegen aan een andere server"
+    },
+    "invite": {
+      "personal": "Deze uitnodigingslink is van jou: elke nieuwe server die ermee joint en muziek afspeelt, geeft je {hours} u 24/7 en studiokwaliteit.",
+      "referrals": "Servers die je met je link naar Bypass hebt gebracht: **{count}**. Elke nieuwe die muziek afspeelt, geeft je {hours} u 24/7 en studiokwaliteit."
+    }
   }
 }

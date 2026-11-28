@@ -2258,5 +2258,43 @@
     "empty": "Acel playlist nu are melodii care pot fi redate.",
     "imported": "Am importat **{count}** melodii în colecția ta **{name}**.",
     "howTo": "Conectează-ți conturile în dashboard, apoi folosește /library play ca să redai playlisturile tale și melodiile apreciate."
+  },
+  "feedback": {
+    "description": "Trimite echipei o idee, un raport de bug sau câteva vorbe bune",
+    "modalTitle": "Trimite feedback",
+    "kindLabel": "Ce fel de feedback?",
+    "kindPlaceholder": "Alege unul (opțional)",
+    "kinds": {
+      "idea": "Idee",
+      "bug": "Bug",
+      "praise": "Laudă",
+      "other": "Altceva"
+    },
+    "kindDescriptions": {
+      "idea": "Ceva ce ai vrea să facă Bypass",
+      "bug": "Ceva s-a stricat sau se comportă ciudat",
+      "praise": "Ceva ce îți place",
+      "other": "Orice altceva"
+    },
+    "messageLabel": "Ce ar trebui să știm?",
+    "messageDescription": "Pentru bug-uri: ce ai făcut, ce s-a întâmplat și melodia sau linkul, dacă ajută.",
+    "messagePlaceholder": "Scrie cât de mult vrei.",
+    "thanksTitle": "Mulțumim, l-am primit",
+    "thanksBody": "Oamenii care construiesc Bypass citesc fiecare mesaj. Vrei un răspuns sau ajutor chiar acum? Întreabă pe serverul de suport.",
+    "supportButton": "Server de suport",
+    "helpHint": "Idei, bug-uri sau vorbe bune? Trimite-le cu {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Mulțumim că ai ascultat, au fost {count} melodii!",
+      "body": "Dacă Bypass ți-a făcut sesiunea mai bună, un vot sau adăugarea lui pe alt server pe care ești îl ajută să crească.",
+      "feedback": "Îți lipsește ceva sau ai găsit un bug? Spune-ne cu {command}.",
+      "vote": "Votează",
+      "invite": "Adaugă pe alt server"
+    },
+    "invite": {
+      "personal": "Acest link de invitație e al tău: fiecare server nou care intră prin el și pune muzică îți oferă {hours} h de 24/7 și calitate de studio.",
+      "referrals": "Servere aduse la Bypass cu linkul tău: **{count}**. Fiecare server nou care pune muzică îți oferă {hours} h de 24/7 și calitate de studio."
+    }
   }
 }

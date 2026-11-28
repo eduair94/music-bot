@@ -2257,5 +2257,43 @@
     "empty": "Bu çalma listesinde çalınabilir şarkı yok.",
     "imported": "**{count}** şarkı **{name}** koleksiyonuna aktarıldı.",
     "howTo": "Hesaplarını panelden bağla, ardından kendi çalma listelerini ve beğendiğin şarkıları çalmak için /library play kullan."
+  },
+  "feedback": {
+    "description": "Ekibe bir fikir, hata bildirimi ya da güzel sözler gönder",
+    "modalTitle": "Geri bildirim gönder",
+    "kindLabel": "Ne tür bir geri bildirim?",
+    "kindPlaceholder": "Birini seç (isteğe bağlı)",
+    "kinds": {
+      "idea": "Fikir",
+      "bug": "Hata",
+      "praise": "Övgü",
+      "other": "Diğer"
+    },
+    "kindDescriptions": {
+      "idea": "Bypass'in yapmasını istediğin bir şey",
+      "bug": "Bir şey bozuldu ya da tuhaf davranıyor",
+      "praise": "Sevdiğin bir şey",
+      "other": "Başka herhangi bir şey"
+    },
+    "messageLabel": "Neyi bilmemiz gerekiyor?",
+    "messageDescription": "Hatalar için: ne yaptın, ne oldu ve işe yarayacaksa şarkı ya da bağlantı.",
+    "messagePlaceholder": "İstediğin kadar yazabilirsin.",
+    "thanksTitle": "Teşekkürler, aldık",
+    "thanksBody": "Bypass'i geliştirenler her mesajı okuyor. Yanıt ya da hemen yardım mı istiyorsun? Destek sunucusunda sor.",
+    "supportButton": "Destek sunucusu",
+    "helpHint": "Fikir, hata ya da güzel sözler mi? {command} ile gönder."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Dinlediğin için teşekkürler, tam {count} şarkı oldu!",
+      "body": "Bypass bu oturumu daha iyi yaptıysa, oy vermen ya da onu bulunduğun başka bir sunucuya eklemen büyümesine yardımcı olur.",
+      "feedback": "Eksik bir şey mi var ya da hata mı buldun? {command} ile bize söyle.",
+      "vote": "Oy ver",
+      "invite": "Başka bir sunucuya ekle"
+    },
+    "invite": {
+      "personal": "Bu davet bağlantısı senin: bununla katılan ve müzik çalan her yeni sunucu sana {hours} saat 24/7 ve stüdyo kalitesi kazandırır.",
+      "referrals": "Bağlantınla Bypass'e getirdiğin sunucular: **{count}**. Müzik çalan her yeni sunucu sana {hours} saat 24/7 ve stüdyo kalitesi kazandırır."
+    }
   }
 }

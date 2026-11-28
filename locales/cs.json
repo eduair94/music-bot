@@ -2257,5 +2257,43 @@
     "empty": "Tento playlist neobsahuje žádné přehratelné skladby.",
     "imported": "Importováno **{count}** skladeb do tvé kolekce **{name}**.",
     "howTo": "Propoj účty na dashboardu a pak použij /library play k přehrání svých playlistů a oblíbených skladeb."
+  },
+  "feedback": {
+    "description": "Pošli týmu nápad, hlášení chyby nebo pár milých slov",
+    "modalTitle": "Poslat zpětnou vazbu",
+    "kindLabel": "O jakou zpětnou vazbu jde?",
+    "kindPlaceholder": "Vyber jednu možnost (nepovinné)",
+    "kinds": {
+      "idea": "Nápad",
+      "bug": "Chyba",
+      "praise": "Pochvala",
+      "other": "Jiné"
+    },
+    "kindDescriptions": {
+      "idea": "Něco, co bys chtěl, aby Bypass uměl",
+      "bug": "Něco se rozbilo nebo se chová divně",
+      "praise": "Něco, co se ti líbí",
+      "other": "Cokoli jiného"
+    },
+    "messageLabel": "Co bychom měli vědět?",
+    "messageDescription": "U chyb: co jsi udělal, co se stalo a případně skladbu nebo odkaz, pokud to pomůže.",
+    "messagePlaceholder": "Napiš, kolik chceš.",
+    "thanksTitle": "Díky, máme to",
+    "thanksBody": "Lidé, kteří Bypass vyvíjejí, čtou každou zprávu. Chceš odpověď nebo pomoc hned teď? Zeptej se na support serveru.",
+    "supportButton": "Support server",
+    "helpHint": "Nápady, chyby nebo milá slova? Pošli je pomocí {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Díky za poslech, bylo to {count} skladeb!",
+      "body": "Pokud ti Bypass zpříjemnil poslech, hlas nebo přidání na další server, kde jsi, mu pomůže růst.",
+      "feedback": "Něco ti chybí nebo jsi našel chybu? Dej nám vědět pomocí {command}.",
+      "vote": "Hlasovat",
+      "invite": "Přidat na další server"
+    },
+    "invite": {
+      "personal": "Tento pozvánkový odkaz je tvůj: každý nový server, který se přes něj připojí a pustí hudbu, ti dá {hours} h režimu 24/7 a studiové kvality.",
+      "referrals": "Servery, které jsi přivedl k Bypass svým odkazem: **{count}**. Každý nový, který pustí hudbu, ti dá {hours} h režimu 24/7 a studiové kvality."
+    }
   }
 }

@@ -2257,5 +2257,43 @@
     "empty": "Diese Playlist enthält keine abspielbaren Songs.",
     "imported": "**{count}** Songs in deine Sammlung **{name}** importiert.",
     "howTo": "Verbinde Konten im Dashboard und nutze dann /library play, um deine eigenen Playlists und Lieblingssongs abzuspielen."
+  },
+  "feedback": {
+    "description": "Schick dem Team eine Idee, einen Fehlerbericht oder ein paar nette Worte",
+    "modalTitle": "Feedback senden",
+    "kindLabel": "Welche Art von Feedback?",
+    "kindPlaceholder": "Wähl eins aus (optional)",
+    "kinds": {
+      "idea": "Idee",
+      "bug": "Fehler",
+      "praise": "Lob",
+      "other": "Sonstiges"
+    },
+    "kindDescriptions": {
+      "idea": "Etwas, das Bypass können soll",
+      "bug": "Etwas ist kaputt oder verhält sich seltsam",
+      "praise": "Etwas, das dir gefällt",
+      "other": "Alles andere"
+    },
+    "messageLabel": "Was sollten wir wissen?",
+    "messageDescription": "Bei Fehlern: was du gemacht hast, was passiert ist und der Song oder Link, falls es hilft.",
+    "messagePlaceholder": "Schreib so viel du willst.",
+    "thanksTitle": "Danke, ist angekommen",
+    "thanksBody": "Die Leute hinter Bypass lesen jede Nachricht. Du willst eine Antwort oder sofort Hilfe? Frag auf dem Support-Server.",
+    "supportButton": "Support-Server",
+    "helpHint": "Ideen, Fehler oder nette Worte? Schick sie mit {command}."
+  },
+  "growth": {
+    "nudge": {
+      "title": "Danke fürs Zuhören, das waren {count} Songs!",
+      "body": "Wenn Bypass diese Session besser gemacht hat, hilft ein Vote oder das Hinzufügen zu einem anderen deiner Server beim Wachsen.",
+      "feedback": "Fehlt dir etwas oder hast du einen Fehler gefunden? Sag es uns mit {command}.",
+      "vote": "Voten",
+      "invite": "Zu einem anderen Server hinzufügen"
+    },
+    "invite": {
+      "personal": "Dieser Einladungslink gehört dir: Jeder neue Server, der damit beitritt und Musik abspielt, bringt dir {hours} h 24/7 und Studioqualität.",
+      "referrals": "Server, die du mit deinem Link zu Bypass gebracht hast: **{count}**. Jeder neue, der Musik abspielt, bringt dir {hours} h 24/7 und Studioqualität."
+    }
   }
 }
