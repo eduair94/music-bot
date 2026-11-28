@@ -15,6 +15,8 @@
 - Queue tools: `/queue`, `/move`, `/remove`, `/shuffle`, `/jump`, `/clear`, `/playnext`, `/playnow`, vote-skip.
 - Effects: bass boost (3 levels), nightcore, vaporwave, 8D, karaoke and more.
 - Synced lyrics for the current song or any song, `/history`, saved playlists with `/collections`, and a guess-the-song game.
+- AI DJ: `/ai playlist <description>` builds a playlist from a mood or occasion and `/ai radio <description>` keeps an endless station on that theme. A few free requests a day.
+- Up to four Bypass bots per server for free (Bypass, Bypass 2, 3 and 4), so different voice channels can play different music at the same time.
 - Server settings: DJ role, allowed channels, volume limits, max queue size, max song length, duplicate blocking, auto-leave timer.
 - 28 languages: each member sees the bot in their Discord language, or a server sets one with `/language`.
 - Web dashboard (sign in with Discord): live player and queue, who may control the music, and every server setting without typing commands.
@@ -37,3 +39,24 @@
 - [Privacy policy](https://music-bot.checkleaked.com/privacy)
 - [Terms of service](https://music-bot.checkleaked.com/terms)
 - [Source code](https://github.com/eduair94/music-bot)
+
+## Command guides
+
+One page per command with every option, examples, who can use it and its limits:
+
+- [/play](https://music-bot.checkleaked.com/commands/play)
+- [/search](https://music-bot.checkleaked.com/commands/search)
+- [/radio](https://music-bot.checkleaked.com/commands/radio)
+- [/lyrics](https://music-bot.checkleaked.com/commands/lyrics)
+- [/effects](https://music-bot.checkleaked.com/commands/effects)
+- [/247](https://music-bot.checkleaked.com/commands/247)
+- [/volume](https://music-bot.checkleaked.com/commands/volume)
+- [/queue](https://music-bot.checkleaked.com/commands/queue)
+- [/loop](https://music-bot.checkleaked.com/commands/loop)
+- [/shuffle](https://music-bot.checkleaked.com/commands/shuffle)
+- [/skip](https://music-bot.checkleaked.com/commands/skip)
+- [/voteskip](https://music-bot.checkleaked.com/commands/voteskip)
+- [/nowplaying](https://music-bot.checkleaked.com/commands/nowplaying)
+- [/autoplay](https://music-bot.checkleaked.com/commands/autoplay)
+- [/seek](https://music-bot.checkleaked.com/commands/seek)
+- [/play_file](https://music-bot.checkleaked.com/commands/play-file)
