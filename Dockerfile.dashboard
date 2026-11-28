@@ -25,6 +25,19 @@ COPY dashboard ./dashboard
 RUN ln -s dashboard/node_modules node_modules
 
 WORKDIR /app/dashboard
+# Web analytics ids are NEXT_PUBLIC_* values, which Next inlines at build time,
+# and dashboard/.env is not in the build context: pass them as build args
+# (docker-compose.yml forwards them from the repo-root .env). Unset = no
+# analytics scripts, consent banner or verification tags in the build.
+ARG NEXT_PUBLIC_GA_ID=
+ARG NEXT_PUBLIC_CLARITY_ID=
+ARG NEXT_PUBLIC_GSC_VERIFICATION=
+ARG NEXT_PUBLIC_BING_VERIFICATION=
+ENV NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID \
+    NEXT_PUBLIC_CLARITY_ID=$NEXT_PUBLIC_CLARITY_ID \
+    NEXT_PUBLIC_GSC_VERIFICATION=$NEXT_PUBLIC_GSC_VERIFICATION \
+    NEXT_PUBLIC_BING_VERIFICATION=$NEXT_PUBLIC_BING_VERIFICATION
+
 # public/ is empty in the repo, so git never creates it — guarantee it exists
 # for the COPY in the final stage.
 RUN mkdir -p public && npm run build
