@@ -162,7 +162,7 @@ const bypass: Bot = {
     paidFrom: { value: `USD ${FOUNDER_PRICE_USD}/month (Founder, on Patreon)` },
     web: { value: "Dashboard with a live player and queue for each bot, visual permissions and every setting" },
     audio: { value: "128 kbps; up to 256 kbps with Premium, a vote or a support-server boost" },
-    alwaysOn: { value: "With Founder, or for 12 hours after a vote" },
+    alwaysOn: { value: "With Founder or a support-server boost, or for 12 hours after a vote" },
     sources: { value: "YouTube, YouTube Music, Spotify, SoundCloud, Apple Music, Deezer, audio files" },
     servers: { value: "About 25 (live count on the status page)" },
   },

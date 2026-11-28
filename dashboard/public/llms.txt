@@ -35,6 +35,7 @@
 - [Commands](https://music-bot.checkleaked.com/commands): every slash command with usage
 - [Install guide](https://music-bot.checkleaked.com/install): the three steps and what each permission is for
 - [Status](https://music-bot.checkleaked.com/status): live bot status
+- [Comparison](https://music-bot.checkleaked.com/compare): Bypass, Jockie Music, Uzox and Green-bot side by side, every claim linked to its source
 - [Support server](https://discord.gg/KwKwtasGZE)
 - [Privacy policy](https://music-bot.checkleaked.com/privacy)
 - [Terms of service](https://music-bot.checkleaked.com/terms)

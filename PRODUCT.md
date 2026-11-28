@@ -18,7 +18,7 @@ Bypass is a hi-fi Discord music bot. The web dashboard is where a server is run 
 
 ## Positioning
 
-Jockie Music's edge is several bots per server (four free) with permissions set through text commands; reviews report it has no live web player. Bypass offers the same multi-instance model (four free bots: Bypass plus three instances, more with Premium) and adds what Jockie does not: a real-time web player per instance and a visual permission system, both in one dashboard.
+Jockie Music's edge is several bots per server (four free) with permissions set through text commands; its web dashboard shows listening statistics (Patreon tiers), not a live player. Bypass offers the same multi-instance model (four free bots: Bypass plus three instances, more with Premium) and adds a real-time web player per instance and a visual permission system, both in one dashboard. A web player alone is not unique: Green-bot offers a free web player and Discord Activity. The combination (four free bots, each with its own live player, plus visible permissions) is the pitch. Sourced facts and the check date live in `dashboard/src/data/comparison.ts` (`/compare`); re-check them before quoting competitors.
 
 ## Operating Context
 
