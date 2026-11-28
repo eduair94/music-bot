@@ -80,6 +80,7 @@ export default function Footer() {
               <li><Link href="/commands" className={linkClass}>Commands</Link></li>
               <li><Link href="/install" className={linkClass}>Installation guide</Link></li>
               <li><Link href="/#pricing" className={linkClass}>Premium</Link></li>
+              <li><Link href="/compare" className={linkClass}>Compare</Link></li>
               <li><Link href="/invite?ref=site-footer" prefetch={false} data-track-location="footer" className={linkClass}>Add to Discord</Link></li>
             </ul>
           </nav>
